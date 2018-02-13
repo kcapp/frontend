@@ -1,6 +1,7 @@
-extends layout
+extends layout.pug
 
 block content
-  h1= message
-  h2= error.status
+  h2 500 Internal Server Error
+  p.
+      Got an internal Server Error #{error}
   pre #{error.stack}

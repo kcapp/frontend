@@ -1,5 +1,62 @@
 extends layout
 
+block scripts
+    script.
+        $(function () {
+            $('#sortable-player-list').sortable();
+            $('#sortable-player-list').disableSelection();
+
+            $('#all-players-list').on('click', '.player-name-label', function() {
+                var sortablePlayerList = $('#sortable-player-list');
+                $(this).parent().appendTo(sortablePlayerList).removeClass('float-left');
+            });
+            $('#sortable-player-list').on('click', '.player-name-label', function() {
+                var allPlayersList = $('#all-players-list');
+                $(this).parent().appendTo(allPlayersList).addClass('float-left');
+            });
+        });
+
 block content
-  h1= title
-  p Welcome to #{title}
+    h1 Darts Scorer
+    p.
+        Here you can start a new darts game, or view players, owes or previous matches by selecting from the menu at the top
+    p
+        button(class='btn btn-primary' type='button' data-toggle='collapse' data-target='#newMatchCollapse' aria-expanded='false' aria-controls='newMatchCollapse') Create Match »
+    div(class='collapse' id='newMatchCollapse')
+        div(class='card card-block')
+            if players.length == 0
+                p.
+                    Players must be added before you can start a new game
+            else
+                form(action='/game/new' method='POST' id='newMatchForm')
+                legend Players
+                div(class='form-group form-check float-left' id='sortable-player-list')
+
+                legend(style='clear: both;') Select Players
+                div(class='form-group form-check' id='all-players-list')
+                    each player in players
+                        div(class='form-check float-left' style='padding-bottom: 10px;')
+                            input(style='display: none;' type='checkbox' name='players' class='form-check-input' id='checkbox_player' + player.id value=player.id)
+                            label(style='margin-left: 10px; width: 160px; text-transform: uppercase;' class='player-name-label form-check-label btn btn-warning' for='checkbox_player' + player.id)= player.name
+
+                div(class='form-group' style='clear: both')
+                    label(for='matchTypeSelect') Starting Score
+                    select(class='form-control' name='startingScore' id='matchTypeSelect')
+                        option 301
+                        option(selected='selected') 501
+                        option 701
+
+                div(class='form-group')
+                    label(for='matchTypeSelect') Game Mode
+                    select(class='form-control' name='gameType' id='gameTypeSelect')
+                        each gameType in game_types
+                            option(value=gameType.id)= gameType.name
+
+                div(class='form-group')
+                    label(for='matchStakeSelect') Game Stake
+                    select(class='form-control' name='gameStake' id='gameStakeSelect')
+                        option(value=0) -
+                        each oweType in owe_types
+                            option(value=oweType.id)= oweType.item
+
+                button(type='submit' name='submit' form='newMatchForm' id='startMatchButton' class='btn btn-primary') Start
