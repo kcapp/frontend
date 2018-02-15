@@ -1,12 +1,17 @@
+var debug = require('debug')('kcapp:index');
+
 var express = require('express');
 var router = express.Router();
+
 var axios = require('axios');
+var _ = require('underscore');
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
     axios.get('http://localhost:8001/player')
         .then(response => {
             var players = response.data
+            players = _.sortBy(players, (player) => player.name);
             axios.get('http://localhost:8001/gametype')
                 .then(response => {
                     var gameTypes = response.data;

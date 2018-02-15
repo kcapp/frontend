@@ -2,18 +2,50 @@ body {
   font-family: "Open Sans"
 }
 
-a {
-  color: #00B7FF;
-}
-
-a:hover {
-	cursor:pointer;
-}
-
 #games-list-table span {
   display: block;
 }
 
 .float-left {
     float: left;
+}
+
+#player-comparison-table td:first-child {
+  text-align: left;
+}
+#player-comparison-table td, th {
+  text-align: center;
+}
+#players-table td, th {
+  text-align: center;
+}
+#player-statistics-table td, #player-scores-table td, #player-accuracy-table td, #player-hits-table td, #player-owes-table td {
+  text-align: center;
+}
+#player-hits-table label {
+  display: block;
+}
+
+.dart-score-container {
+  padding: 3px !important;
+}
+.dart-score-container label {
+  background-color: #404040;
+  color: #fff;
+  line-height: 2;
+  font-size: 15pt;
+}
+
+.dart-score-double {
+  background-color: orange
+}
+.dart-score-triple {
+  background-color: #d9534f
+}
+
+#dartboard-heatmap {
+  width: 600px;
+  height: 600px;
+  background-image: url('../images/dartboard.png');
+  background-size: 100% 100%;
 }

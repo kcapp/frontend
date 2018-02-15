@@ -1,3 +1,5 @@
+var debug = require('debug')('kcapp:app');
+
 var express = require('express');
 var path = require('path');
 var favicon = require('serve-favicon');
@@ -6,8 +8,11 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var lessMiddleware = require('less-middleware');
 
-var index = require('./routes/index');
 var games = require('./routes/games');
+var index = require('./routes/index');
+var owes = require('./routes/owes');
+var players = require('./routes/players');
+var statistics = require('./routes/statistics');
 
 var app = express();
 
@@ -27,7 +32,10 @@ app.use(lessMiddleware(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', index);
-app.use('/games', games)
+app.use('/games', games);
+app.use('/owes', owes);
+app.use('/players', players);
+app.use('/statistics', statistics);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -61,6 +69,8 @@ app.use(function(err, req, res, next) {
         // default to plain-text. send()
         res.type('txt').send('Not found');
     } else {
+        var details = err.response !== undefined ? err.response.data.trim() : undefined
+        debug("Detailed error message: " + details);
         res.render('error');
     }
 });

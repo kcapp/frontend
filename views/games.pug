@@ -14,13 +14,13 @@ block scripts
     script.
         $(function() {
             $('#games-list-table').on('click', '#continue-game-button', function () {
-                location.href = '/game/' + $(this).data('game');
+                location.href = '/games/' + $(this).data('game');
             });
             $('#games-list-table').on('click', '#spectate-game-button', function() {
-                location.href = '/game/' + $(this).data('game') + '/spectate';
+                location.href = '/games/' + $(this).data('game') + '/spectate';
             });
             $('#games-list-table').on('click', '#view-game-button', function () {
-                location.href = '/game/' + $(this).data('game') + '/results';
+                location.href = '/games/' + $(this).data('game') + '/results';
             });
         });
 

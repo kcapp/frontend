@@ -1,0 +1,75 @@
+extends layout.pug
+
+block scripts
+    script.
+        $(function() {
+            var originalFrom = $('#previous-btn').data('current-date');
+            var originalTo = $('#next-btn').data('current-date');
+            $('#previous-btn').click(function() {
+                var from = moment(originalFrom).isoWeekday(-6).format('YYYY-MM-DD');;
+                var to = originalFrom;
+                window.location.href = '/statistics/' + from + '/' + to;
+            });
+            $('#next-btn').click(function() {
+                var from = originalTo;
+                var to = moment(originalTo).isoWeekday(8).format('YYYY-MM-DD');;;
+                window.location.href = '/statistics/' + from + '/' + to;
+            });
+        });
+
+
+block content
+    div(class='row')
+        div(class='col-sm-6 text-left')
+            button(id='previous-btn' class='btn btn-primary' data-current-date=statistics.from) << Previous
+        div(class='col-sm-6 text-right')
+            button(id='next-btn' class='btn btn-primary' data-current-date=statistics.to) Next >>
+
+    div(class='col-lg-14')
+        div(class='row')
+            h2= "Statistics (" + statistics.from + " to " + statistics.to + ")"
+
+            if statistics.length === 0
+                p No matches played ...
+            else
+                div(class='table-responsive')
+                    table(id='current-week-statistics-table' class='table table-striped table-bordered')
+                        thead
+                            tr
+                                th(colspan='7')
+                                th(colspan='4') Per Game
+                                th(colspan='3') Accuracy
+                            tr
+                                th Rank
+                                th Player
+                                th Played
+                                th Won
+                                th Win %
+                                th PPD / First 9
+                                th Checkout %
+                                th 60s+
+                                th 100s+
+                                th 140s+
+                                th 180
+                                th Overall
+                                th 20s
+                                th 19s
+                        tbody
+                            - var rank = 1
+                            each stats in statistics
+                                - var player = players[stats.player_id]
+                                tr
+                                    td= rank++
+                                    td(style='width: 12%'): a(href='/players/' + player.id + '/statistics')= player.name
+                                    td= stats.games_played
+                                    td= stats.games_won === undefined ? 0 : stats.games_won
+                                    td= stats.games_won === undefined ? 0 : (stats.games_won / stats.games_played * 100).toFixed(2)
+                                    td= stats.ppd.toFixed(2) + ' / ' + stats.first_nine_ppd.toFixed(2)
+                                    td(style='width: 12%')= stats.checkout_percentage.toFixed(2)
+                                    td= (stats.scores_60s_plus / stats.games_played).toFixed(2)
+                                    td= (stats.scores_100s_plus / stats.games_played).toFixed(2)
+                                    td= (stats.scores_140s_plus / stats.games_played).toFixed(2)
+                                    td= (stats.scores_180s / stats.games_played).toFixed(2)
+                                    td= stats.accuracy_overall === null ? '-' : stats.accuracy_overall.toFixed(2)
+                                    td= stats.accuracy_20 === null ? '-' : stats.accuracy_20.toFixed(2)
+                                    td= stats.accuracy_19 === null ? '-' : stats.accuracy_19.toFixed(2)

@@ -1,35 +1,38 @@
 doctype html
 html
-  head
-    meta(name='viewport' content='width=device-width, initial-scale=1.0, user-scalable=no')
-    link(rel='stylesheet' type='text/css' href='/stylesheets/bootstrap-3.3.7.min.css')
-    link(rel='stylesheet' type='text/css' href='/stylesheets/datatables-1.10.16.min.css')
-    link(rel='stylesheet' type='text/css' href='/stylesheets/open-sans.css')
-    link(rel='stylesheet' type='text/css' href='/stylesheets/style.css')
+  block head
+    head
+      meta(name='viewport' content='width=device-width, initial-scale=1.0, user-scalable=no')
+      link(rel='stylesheet' type='text/css' href='/stylesheets/bootstrap-3.3.7.min.css')
+      link(rel='stylesheet' type='text/css' href='/stylesheets/datatables-1.10.16.min.css')
+      link(rel='stylesheet' type='text/css' href='/stylesheets/style.css')
 
-    script(src='/js/fastclick-1.0.6.min.js')
-    script(src='/js/jquery-3.1.1.min.js')
-    
-    script(src='/js/datatables-1.10.16.min.js')
-    script(src='/js/jquery-ui.1.12.1.min.js')
-    script(src='/js/jquery.ui.touch-punch-0.2.3.min.js')
-    script(src='/js/bootstrap-3.3.7.min.js')
-    script(src='/js/moment-2.20.1.min.js')  
-    
-    script(src='/js/alertify-1.11.0.min.js')
-    link(rel='stylesheet' type='text/css' href='/stylesheets/alertify-1.11.0.min.css')
-    link(rel='stylesheet' type='text/css' href='/stylesheets/alertify.bootstrap-1.11.0.min.css')
+      link(rel='stylesheet' type='text/css' href='/fonts/open-sans.css')
 
-    script.
-      // Set alertify defaults for Boostrap theme
-      alertify.defaults.theme.ok = "btn btn-primary";
-      alertify.defaults.theme.cancel = "btn btn-basic";
-      alertify.defaults.theme.input = "form-control";
+      script(src='/javascripts/fastclick-1.0.6.min.js')
+      script(src='/javascripts/jquery-3.1.1.min.js')
 
-    // TODO Put these only in head block where required
-    //script(src='/js/frontendHelpers.js')
-    //script(src='/js/webgl-heatmap.js')
-    //script(src='/js/socket.io-2.0.3.min.js')
+      script(src='/javascripts/datatables-1.10.16.min.js')
+      script(src='/javascripts/jquery-ui.1.12.1.min.js')
+      script(src='/javascripts/jquery.ui.touch-punch-0.2.3.min.js')
+      script(src='/javascripts/bootstrap-3.3.7.min.js')
+      script(src='/javascripts/moment-2.20.1.min.js')
+
+      script(src='/javascripts/frontend-helpers.js')
+
+      script(src='/javascripts/alertify-1.11.0.min.js')
+      link(rel='stylesheet' type='text/css' href='/stylesheets/alertify-1.11.0.min.css')
+      link(rel='stylesheet' type='text/css' href='/stylesheets/alertify.bootstrap-1.11.0.min.css')
+
+      script.
+        // Set alertify defaults for Boostrap theme
+        alertify.defaults.theme.ok = "btn btn-primary";
+        alertify.defaults.theme.cancel = "btn btn-basic";
+        alertify.defaults.theme.input = "form-control";
+
+      // TODO Put these only in head block where required
+      //script(src='/javascripts/webgl-heatmap.js')
+      //script(src='/javascripts/socket.io-2.0.3.min.js')
 
     title kcapp
 

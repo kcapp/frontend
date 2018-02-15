@@ -6,7 +6,6 @@ var router = express.Router();
 var axios = require('axios');
 var _ = require('underscore');
 
-
 /* Get a list of all games */
 router.get('/', function(req, res, next) {
 	axios.get('http://localhost:8001/game')
@@ -73,7 +72,7 @@ router.get('/:id/results', function (req, res, next) {
 	var id = req.params.id;
 	axios.get('http://localhost:8001/game/' + id)
         .then(response => {
-		    var game = response.data;
+			var game = response.data;
 		    axios.get('http://localhost:8001/player')
 			    .then(response => {
 				    var players = response.data;
@@ -108,10 +107,10 @@ router.post('/new', function (req, res, next) {
 		players = [ players ];
 	}
 	var body = {
-		owe_type_id: req.body.gameStake == 0 ? null : parseInt(req.body.gameStake),
-		game_type: { id: parseInt(req.body.gameType) },
+		owe_type_id: req.body.game_stake == 0 ? null : parseInt(req.body.game_stake),
+		game_type: { id: parseInt(req.body.game_type) },
 		players: players.map(Number),
-		matches: [ { starting_score: parseInt(req.body.startingScore) }]
+		matches: [ { starting_score: parseInt(req.body.starting_score) }]
 	}
 	axios.post('http://localhost:8001/game', body)
         .then(response => {

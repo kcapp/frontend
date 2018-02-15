@@ -1,0 +1,96 @@
+extends layout.pug
+
+block scripts
+    script.
+        $(function() {
+            $('#show-payback-modal-button').click(function() {
+                $('#add-payback-success-alert').hide();
+                $('#add-payback-failed-alert').hide();
+            });
+
+            $('#register-payback-button').click(function() {
+                var ower = parseInt($('#ower-combo').val());
+                var owee = parseInt($('#owee-combo').val());
+                if (isNaN(ower) || isNaN(owee)) {
+                    var alert = $('#add-payback-failed-alert');
+                    alert.show();
+                    alert.text('Both ower and owee must be selected');
+                    return;
+                }
+                var payload = {
+                    player_ower_id: ower,
+                    player_owee_id: owee,
+                    amount: parseInt($('#payback-amount').val()),
+                    owe_type: { id: parseInt($('#payback-item').val()) }
+                }
+                executePut('/owes/payback', JSON.stringify(payload), 'application/json',
+                    function(response) {
+                        location.href = window.location;
+                    },
+                    function(error) {
+                        console.log(error.responseText + '(' + error.status + ')');
+                        var alert = $('#add-payback-failed-alert');
+                        alert.show();
+                        alert.text('Unable to add payback. ' + error.responseText);
+                    }
+                );
+            });
+        });
+
+block content
+    div(id='add-payback-failed-alert' class='alert alert-danger' role='alert' hidden='true').
+        Unable to add payback. See log for details
+    div(id='add-payback-success-alert' class='alert alert-success' role='alert' hidden='true').
+        Payback successfully registered
+
+    h2 Owes
+    p.
+        This table shows which players owe eachother items for lost matches
+    table(id='player-owes-table' class='table table-striped table-bordered')
+        thead
+            tr
+                th Buyer
+                th Receiver
+                th Item
+                th Amount
+        tbody
+            each owe in owes
+                tr
+                    td= players[owe.player_ower_id].name
+                    td= players[owe.player_owee_id].name
+                    td= owe.owe_type.item
+                    td= owe.amount
+
+    button(type='button' class='btn btn-block btn-primary' id='show-payback-modal-button' data-toggle='modal' data-target='#register-payback-modal') Register Payback
+    div(class='modal fade' id='register-payback-modal' tabindex='-1' role='dialog' aria-labelledby='register-payback-modal-label')
+        div(class='modal-dialog' role='document')
+            div(class='modal-content')
+                div(class='modal-header')
+                    button(type='button' class='close' data-dismiss='modal' aria-label='Close')
+                        span(aria-hidden='true') &times;
+                    h4(class='modal-title' id='register-payback-modal-label') Register Payback between two player
+                div(class='modal-body')
+                    form(id='paybackForm')
+                        div(class='form-group')
+                            p Buyer
+                            select(id='ower-combo')
+                                option(value='' selected disabled hidden) Choose ...
+                                each player in players
+                                    option(value=player.id)= player.name
+                        div(class='form-group')
+                            p Reciever
+                            select(id='owee-combo')
+                                option(value='' selected disabled hidden) Choose ...
+                                each player in players
+                                    option(value=player.id)= player.name
+                        div(class='form-group')
+                            label(for='amount-input' class='control-label') Amount
+                                input(type='number' name='payback-amount' min='0' step='1' class='form-control' value=1 id='payback-amount')
+                        div(class='form-group')
+                            label(for='payback-item') Item:
+                            select(class='form-control' name='payback-item' id='payback-item')
+                                option(value=1) Cake
+                                option(value=2) Beer
+                    div(class='modal-footer')
+                        button(type='button' class='btn btn-default' data-dismiss='modal') Close
+                        button(type='submit' class='btn btn-primary' data-dismiss='modal' id='register-payback-button') Register

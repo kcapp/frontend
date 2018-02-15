@@ -1,0 +1,90 @@
+extends layout.pug
+
+block scripts
+    script.
+        $(function() {
+            $('.btn-view-results').click(function() {
+                var id = $(this).closest('tr').find('th').text();
+                window.location.href = '/match/' + id  + '/leg';
+            });
+        });
+
+block content
+    div(class='clearfix')
+        h2(class='pull-left') Game Result (#{game.id})
+    
+    - var duration = moment.duration(moment(game.end_time).diff(game.created_at)).asMinutes().toFixed()
+    p.
+        Type: #{game.game_type.name} <br>
+        Started: #{moment(game.created_at).format('YYYY-MM-DD HH:mm:ss')} <br>
+        Finished: #{game.end_time === undefined ? '-' : moment(game.end_time).format('YYYY-MM-DD HH:mm:ss')} <br>
+        Stakes: #{game.owe_type_id === null ? "None" : game.owe_type.item} <br>
+        Duration: #{game.end_time === undefined ? '-' : duration + ' minutes'} <br>
+
+    each playerId in game.players
+        if (game.winner_id === playerId)
+            p= 'Winner: ' + players[playerId].name
+
+    div(class='table-responsive')
+        table(id='player-comparison-table' class='table table-striped table-bordered')
+            thead
+                tr
+                    th Legs
+                    each playerId in game.players
+                        th= players[playerId].name
+                    th Results
+            tbody
+            - var idx = 1
+            each match in game.matches
+                tr
+                    th(hidden='true' scope='row')= match.id
+                    td(class='col-sm-2')= '#' + idx++
+                    each playerId in game.players
+                        td
+                            if match.winner_player_id === playerId
+                                span(class='glyphicon glyphicon-ok' aria-hidden='true')
+                            else
+                                span(class='glyphicon glyphicon-remove' aria-hidden='true')
+                    td: button(type='button' class='btn btn-primary btn-block btn-view-results') View
+            tr
+                th Statistics
+                each playerId in game.players
+                    td
+            tr
+                td(class='col-sm-2') PPD
+                each stat in stats
+                    td= stat.ppd.toFixed(2)
+            tr
+                td(class='col-sm-2') First 9 PPD
+                each stat in stats
+                    td= stat.first_nine_ppd.toFixed(2)
+            tr
+                td(class='col-sm-2') Checkout%
+                each stat in stats
+                    td= stat.checkout_percentage === 0 ? '-' : stat.checkout_percentage.toFixed(2) + '%'
+            tr
+                td(class='col-sm-2') Accuracy (All/20/19)
+                each stat in stats
+                    - var accuracy_20 = stat.accuracy_20 === null ? '-' : stat.accuracy_20.toFixed(2)
+                    - var accuracy_19 = stat.accuracy_19 === null ? '-' : stat.accuracy_19.toFixed(2)
+                    td= stat.accuracy_overall.toFixed(2) + ' / ' + accuracy_20 + ' / ' + accuracy_19
+            tr
+                td(class='separator_row')
+                    each stat in stats
+                        th(class='separator_row') High Scores
+            tr
+                td(class='col-sm-2') 60+
+                each stat in stats
+                    td= stat.scores_60s_plus
+            tr
+                td(class='col-sm-2') 100+
+                each stat in stats
+                    td= stat.scores_100s_plus
+            tr
+                td(class='col-sm-2') 140+
+                each stat in stats
+                    td= stat.scores_140s_plus
+            tr
+                td(class='col-sm-2') 180
+                each stat in stats
+                    td= stat.scores_180s
