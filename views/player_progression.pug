@@ -1,0 +1,126 @@
+extends layout.pug
+
+block append head
+    script(src='/javascripts/Chart.bundle-2.7.1.min.js')
+
+block scripts
+    script.
+        var progression = !{JSON.stringify(progression)};
+        var labels = [];
+        var valuesMap = {
+            ppd: [], first9ppd: [],
+            scores60s: [], scores100s: [], scores140s: [], scores180s: [] };
+        var values9 = [];
+        for (var date in progression) {
+            if (progression.hasOwnProperty(date)) {
+                var p = progression[date];
+                labels.push(date);
+                valuesMap.ppd.push(p.ppd);
+                valuesMap.first9ppd.push(p.first_nine_ppd);
+                valuesMap.scores60s.push(p.scores_60s_plus);
+                valuesMap.scores100s.push(p.scores_100s_plus);
+                valuesMap.scores140s.push(p.scores_140s_plus);
+                valuesMap.scores180s.push(p.scores_180s);
+            }
+        }
+
+        $(function () {
+            var datasetsPPD = [{
+                label: "PPD",
+                backgroundColor: 'rgb(54, 162, 235)',
+                borderColor: 'rgb(54, 162, 235)',
+                data: valuesMap.ppd,
+                fill: false
+            },
+            {
+                label: "First 9 PPD",
+                backgroundColor: 'rgb(255, 99, 132)',
+                borderColor: 'rgb(255, 99, 132)',
+                data: valuesMap.first9ppd,
+                fill: false
+            }]
+            var ppdChart = new Chart("canvas-ppd", getConfigChart('PPD per date', 'line', 'Date', 'PPD', labels, datasetsPPD));
+
+            var datasetsScores = [{
+                label: "60+",
+                backgroundColor: 'rgb(54, 162, 235)',
+                borderColor: 'rgb(54, 162, 235)',
+                data: valuesMap.scores60s,
+                fill: false
+            },
+            {
+                label: "100+",
+                backgroundColor: 'rgb(255, 99, 132)',
+                borderColor: 'rgb(255, 99, 132)',
+                data: valuesMap.scores100s,
+                fill: false
+            },
+            {
+                label: "140+",
+                backgroundColor: 'rgb(255, 159, 64)',
+                borderColor: 'rgb(255, 159, 64)',
+                data: valuesMap.scores140s,
+                fill: false
+            },
+            {
+                label: "180",
+                backgroundColor: 'rgb(153, 102, 255)',
+                borderColor: 'rgb(153, 102, 255)',
+                data: valuesMap.scores180s,
+                fill: false
+            }]
+            var scoresChart = new Chart("canvas-scores", getConfigChart('Scores per date', 'bar', 'Date', 'Count', labels, datasetsScores));
+        });
+
+        function getConfigChart(title, type, xAxisLabel, yAxisLabel, lables, datasets) {
+            return {
+                type: type,
+                data: {
+                    labels: lables,
+                    datasets: datasets
+                },
+                options: {
+                    responsive: true,
+                    title:{
+                        display:true,
+                        text: title
+                    },
+                    tooltips: {
+                        mode: 'index',
+                        intersect: false,
+                    },
+                    hover: {
+                        mode: 'nearest',
+                        intersect: true
+                    },
+                    scales: {
+                        xAxes: [{
+                            display: true,
+                            scaleLabel: {
+                                display: true,
+                                labelString: xAxisLabel
+                            }
+                        }],
+                        yAxes: [{
+                            display: true,
+                            scaleLabel: {
+                                display: true,
+                                labelString: yAxisLabel
+                            }
+                        }]
+                    }
+                }
+            };
+        }
+
+block content
+    h2 Progression for #{player.name}
+
+    div
+        h3 PPD
+        canvas(id="canvas-ppd")
+    div
+        h3 Scores
+        canvas(id="canvas-scores")
+
+

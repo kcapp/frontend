@@ -72,4 +72,25 @@ router.get('/compare', function (req, res, next) {
 		});
 });
 
+
+/* Get a progression for a given player */
+router.get('/:id/progression', function (req, res, next) {
+	var playerId = req.params.id;
+	axios.get('http://localhost:8001/player/' + playerId)
+		.then(function (response) {
+			var player = response.data;
+			axios.get('http://localhost:8001/player/' + playerId+ '/progression')
+				.then(response => {
+					var progression = response.data;
+					res.render('player_progression', { player: player, progression: progression });
+				}).catch(error => {
+				    debug('Error when getting player progression: ' + error);
+					next(error);
+				});
+		}).catch(function (error) {
+			debug('Error when getting player: ' + error);
+			next(error);
+		});
+});
+
 module.exports = router
