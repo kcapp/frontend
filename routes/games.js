@@ -44,7 +44,7 @@ router.get('/:id', function (req, res, next) {
 						old_match_id: game.current_match_id,
 						new_match_id: match.id
 					});
-					res.redirect('/match/' + match.id);
+					res.redirect('/matches/' + match.id);
 				}).catch(error => {
 				    debug('Unable to continue match: ' + error);
 					res.redirect('/game/' + req.params.id + '/results');
@@ -116,7 +116,7 @@ router.post('/new', function (req, res, next) {
         .then(response => {
 			var game = response.data;
 			socketHandler.setupNamespace(game.current_match_id);
-			res.redirect('/match/' + game.current_match_id);
+			res.redirect('/matches/' + game.current_match_id);
 		}).catch(error => {
             debug('Error when getting statistics: ' + error);
             next(error);
@@ -124,7 +124,7 @@ router.post('/new', function (req, res, next) {
 });
 
 
-module.exports = router;
-/*module.exports = function () {
+module.exports = function (socketHandler) {
+	this.socketHandler = socketHandler;
 	return router;
-};*/
+};

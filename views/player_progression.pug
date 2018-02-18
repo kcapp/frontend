@@ -1,16 +1,16 @@
 extends layout.pug
+include chart_helper.pug
 
 block append head
     script(src='/javascripts/Chart.bundle-2.7.1.min.js')
 
-block scripts
+block append scripts
     script.
         var progression = !{JSON.stringify(progression)};
         var labels = [];
         var valuesMap = {
             ppd: [], first9ppd: [],
             scores60s: [], scores100s: [], scores140s: [], scores180s: [] };
-        var values9 = [];
         for (var date in progression) {
             if (progression.hasOwnProperty(date)) {
                 var p = progression[date];
@@ -39,7 +39,7 @@ block scripts
                 data: valuesMap.first9ppd,
                 fill: false
             }]
-            var ppdChart = new Chart("canvas-ppd", getConfigChart('PPD per date', 'line', 'Date', 'PPD', labels, datasetsPPD));
+            var ppdChart = new Chart("canvas-ppd", getChartConfig('PPD per date', 'line', 'Date', 'PPD', labels, datasetsPPD));
 
             var datasetsScores = [{
                 label: "60+",
@@ -69,49 +69,8 @@ block scripts
                 data: valuesMap.scores180s,
                 fill: false
             }]
-            var scoresChart = new Chart("canvas-scores", getConfigChart('Scores per date', 'bar', 'Date', 'Count', labels, datasetsScores));
+            var scoresChart = new Chart("canvas-scores", getChartConfig('Scores per date', 'bar', 'Date', 'Count', labels, datasetsScores));
         });
-
-        function getConfigChart(title, type, xAxisLabel, yAxisLabel, lables, datasets) {
-            return {
-                type: type,
-                data: {
-                    labels: lables,
-                    datasets: datasets
-                },
-                options: {
-                    responsive: true,
-                    title:{
-                        display:true,
-                        text: title
-                    },
-                    tooltips: {
-                        mode: 'index',
-                        intersect: false,
-                    },
-                    hover: {
-                        mode: 'nearest',
-                        intersect: true
-                    },
-                    scales: {
-                        xAxes: [{
-                            display: true,
-                            scaleLabel: {
-                                display: true,
-                                labelString: xAxisLabel
-                            }
-                        }],
-                        yAxes: [{
-                            display: true,
-                            scaleLabel: {
-                                display: true,
-                                labelString: yAxisLabel
-                            }
-                        }]
-                    }
-                }
-            };
-        }
 
 block content
     h2 Progression for #{player.name}

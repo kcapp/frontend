@@ -8,8 +8,9 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var lessMiddleware = require('less-middleware');
 
-var games = require('./routes/games');
+var games = require('./routes/games')(undefined);
 var index = require('./routes/index');
+var matches = require('./routes/matches')(undefined);
 var owes = require('./routes/owes');
 var players = require('./routes/players');
 var statistics = require('./routes/statistics');
@@ -33,6 +34,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', index);
 app.use('/games', games);
+app.use('/matches', matches);
 app.use('/owes', owes);
 app.use('/players', players);
 app.use('/statistics', statistics);
@@ -69,8 +71,9 @@ app.use(function(err, req, res, next) {
         // default to plain-text. send()
         res.type('txt').send('Not found');
     } else {
-        var details = err.response !== undefined ? err.response.data.trim() : undefined
-        debug("Detailed error message: " + details);
+        if (err.response !== undefined) {
+            debug("Axios error message: " + err.response.data.trim());    
+        }        
         res.render('error');
     }
 });
