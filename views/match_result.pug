@@ -1,5 +1,5 @@
 extends layout.pug
-include chart_helper.pug
+include chart/chart_helper.pug
 
 block append head
     script(src='/javascripts/Chart.bundle-2.7.1.min.js')
@@ -30,30 +30,28 @@ block append scripts
                 values[visit.player_id].push(current);
             }
             else {
-                values[visit.player_id].push(current -((visit.first_dart.value * visit.first_dart.multiplier) + 
+                values[visit.player_id].push(current -((visit.first_dart.value * visit.first_dart.multiplier) +
                     (visit.second_dart.value * visit.second_dart.multiplier) +
                     (visit.third_dart.value * visit.third_dart.multiplier)));
             }
         }
 
         $(function () {
-            // TODO Create player id to RGB value function
-            var colors = ['rgb(54, 162, 235)', 'rgb(255, 99, 132)', 'rgb(255, 159, 64)', 'rgb(153, 102, 255)'];
-        
             var datasets = []
             for (var i = 0; i < match.players.length; i++) {
                 var playerId = match.players[i];
+                var color = getColorForString(players[playerId].name);
                 datasets.push({
                     label: players[playerId].name,
-                    backgroundColor: colors[i],
-                    borderColor: colors[i],
+                    backgroundColor: color,
+                    borderColor: color,
                     data: values[playerId],
                     fill: false
                 });
             }
 
             var ppdChart = new Chart("canvas-scores", getChartConfig('Scores', 'line', 'Round', 'Scores', labels, datasets));
-        });    
+        });
     script.
         var match = !{JSON.stringify(match)}
 
@@ -165,7 +163,7 @@ block append scripts
                             console.log("Unable to proceed: " + error.responseText);
                             location.reload();
                         }
-                    );                    
+                    );
                 }, function(){ /* NOOP */ });
             });
 
@@ -204,7 +202,7 @@ block append scripts
             $("#heatmap-value-selector").change(function () {
                 drawHeatmap(canvas, scoresMap, this.value, 20, 20, 50);
             });
-        });   
+        });
 
 block content
     div(class='clearfix')
@@ -425,7 +423,7 @@ block content
                                     td= (value * 100 / match.darts_thrown).toFixed(2) + '%'
 
     if !match.winner_player_id
-        h2 Player Order      
+        h2 Player Order
         div
             div(id='player-order-list')
                 each id in match.players
