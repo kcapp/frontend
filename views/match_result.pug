@@ -49,8 +49,9 @@ block append scripts
                     fill: false
                 });
             }
-
-            var ppdChart = new Chart("canvas-scores", getChartConfig('Scores', 'line', 'Round', 'Scores', labels, datasets));
+            var config = getChartConfig('Scores', 'line', 'Round', 'Scores', labels, datasets);
+            config.options.scales.yAxes[0].ticks = { max: match.starting_score, stepSize: 20, beginAtZero: true };
+            var scoresChart = new Chart("canvas-scores", config);
         });
     script.
         var match = !{JSON.stringify(match)}
@@ -188,10 +189,10 @@ block append scripts
             $('#player-order-list').disableSelection();
 
             $('#continue-game').click(function () {
-                location.href = '/game/' + $(this).data('game');
+                location.href = '/games/' + $(this).data('game');
             });
             $('#back-to-game').click(function () {
-                location.href = '/game/' + $(this).data('game') + '/results';
+                location.href = '/games/' + $(this).data('game') + '/results';
             });
         });
     script.

@@ -2,6 +2,51 @@ body {
   font-family: "Open Sans"
 }
 
+a:hover {
+	cursor:pointer;
+}
+
+#score-selector-table {
+  border-spacing: 0px;
+}
+#score-selector-table td {
+  padding: 0px;
+  border: 1px solid #000;
+  vertical-align: middle;
+}
+#score-selector-table button {
+  border: 0;
+  border-radius: 0;
+  line-height: 0.8;
+  padding: 10px;
+}
+#score-selector-table label, #player-spectate-table label {
+  display: block;
+  text-align: center;
+  border-radius: 0;
+  margin: 0;
+}
+.label-player-score {
+  padding: 5px 0px 0px 0px;
+  font-size: 20pt;
+}
+.label-player-name {
+  font-size: 10pt;
+  padding: 0px;
+  margin: 0px;
+  color: #ffffff;
+  font-weight: 500;
+  text-transform: uppercase;
+}
+.label-inactive-player {
+  background-color: #404040;
+  border-bottom: 4px solid black !important;
+}
+.label-active-player {
+  background-color: #d9534f;
+  border-bottom: 4px solid #962724 !important;
+}
+
 #games-list-table span {
   display: block;
 }
@@ -25,6 +70,9 @@ body {
 #player-hits-table label {
   display: block;
 }
+.no-border {
+  border: none !important;
+}
 
 .dart-score-container {
   padding: 3px !important;
@@ -35,12 +83,26 @@ body {
   line-height: 2;
   font-size: 15pt;
 }
-
 .dart-score-double {
   background-color: orange
 }
 .dart-score-triple {
   background-color: #d9534f
+}
+.btn-score {
+  background-color: white;
+  color: black;
+  border: 2px solid #e7e7e7;
+}
+.btn-double {
+  background-color: #ffe6cc;
+  color: black;
+  border: 2px solid #e7e7e7;
+}
+.btn-triple {
+  background-color: #ffcc66;
+  color: black;
+  border: 2px solid #e7e7e7;
 }
 
 #dartboard-heatmap {
@@ -66,4 +128,12 @@ body {
 }
 #match-hits-table label {
     display: block;
+}
+.match-information {
+  font-weight: normal !important;
+  display: inline-block !important;
+}
+
+.txt-center {
+  text-align: center;
 }

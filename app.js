@@ -8,16 +8,20 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var lessMiddleware = require('less-middleware');
 
-var games = require('./routes/games')(undefined);
+var app = express();
+
+var socket_io = require( "socket.io" );
+var io = socket_io();
+app.io = io;
+
+var socketHandler = require('./routes/lib/socketio_handler')(io);
+var games = require('./routes/games')(socketHandler);
 var index = require('./routes/index');
-var matches = require('./routes/matches')(undefined);
+var matches = require('./routes/matches')(socketHandler);
 var owes = require('./routes/owes');
 var players = require('./routes/players');
 var statistics = require('./routes/statistics');
 
-var app = express();
-
-app.locals.moment = require('moment');
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -38,6 +42,8 @@ app.use('/matches', matches);
 app.use('/owes', owes);
 app.use('/players', players);
 app.use('/statistics', statistics);
+
+app.locals.moment = require('moment');
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -72,8 +78,8 @@ app.use(function(err, req, res, next) {
         res.type('txt').send('Not found');
     } else {
         if (err.response !== undefined) {
-            debug("Axios error message: " + err.response.data.trim());    
-        }        
+            debug("Axios error message: " + err.response.data.trim());
+        }
         res.render('error');
     }
 });

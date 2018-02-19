@@ -60,7 +60,7 @@ router.get('/:id/spectate', function (req, res, next) {
 	axios.get('http://localhost:8001/game/' + req.params.id)
 	.then(response => {
 		var game = response.data;
-		res.redirect('/match/' + game.current_match_id + '/spectate');
+		res.redirect('/matches/' + game.current_match_id + '/spectate');
 	  }).catch(error => {
 	    debug('Error when getting game: ' + error);
 		next(error);
