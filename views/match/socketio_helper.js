@@ -22,33 +22,33 @@ function resetUIelements() {
 function setupSocketIO(matchId) {
     var socket = io(window.location.protocol + '//' + window.location.host + '/matches/' + matchId);
 
-    socket.on('connect', function(data) {
+    socket.on('connect', function (data) {
         socket.emit('join', 'Client Conneting');
     });
 
-    socket.on('spectator_connected', function(data) {
+    socket.on('spectator_connected', function (data) {
         alertify.success('Spectator connected');
     });
 
-    socket.on('spectator_disconnected', function(data) {
+    socket.on('spectator_disconnected', function (data) {
         alertify.warning('Spectator disconnected');
     });
 
-    socket.on('connected', function(data) {
+    socket.on('connected', function (data) {
         console.log(data);
     });
 
-    socket.on('error', function(data) {
+    socket.on('error', function (data) {
         console.log(data);
         alert('Error: ' + data.message);
     });
 
-    socket.on('match_finished', function(data) {
+    socket.on('match_finished', function (data) {
         // Forward all clients to results page when match is finished
         location.href = 'matches/' + matchId + '/leg';
     });
 
-    socket.on('score_update', function(data) {
+    socket.on('score_update', function (data) {
         $('#submit-score-button').prop('disabled', false);
 
         var match = data.match;

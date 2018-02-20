@@ -15,11 +15,11 @@ router.get('/', function (req, res, next) {
                     var owes = response.data;
                     res.render('owes', { owes: owes, players: playersMap });
                 }).catch(error => {
-                	debug('Error when getting owes: ' + error);
+                    debug('Error when getting owes: ' + error);
                     next(error);
                 });
-        }).catch(function (error) {
-           	debug('Error when getting players: ' + error);
+        }).catch(error => {
+            debug('Error when getting players: ' + error);
             next(error);
         });
 });
@@ -27,10 +27,10 @@ router.get('/', function (req, res, next) {
 /* Method to register a payback between two players */
 router.put('/payback', function (req, res) {
     axios.put('http://localhost:8001/owe/payback', req.body)
-        .then(response => {
+        .then(() => {
             res.status(200).send().end();
         }).catch(error => {
-        	debug('Error when getting owes: ' + error);
+            debug('Error when getting owes: ' + error);
             res.status(500).send().end();
         });
 });

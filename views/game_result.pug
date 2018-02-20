@@ -12,7 +12,7 @@ block scripts
 block content
     div(class='clearfix')
         h2(class='pull-left') Game Result (#{game.id})
-    
+
     - var duration = moment.duration(moment(game.end_time).diff(game.created_at)).asMinutes().toFixed()
     p.
         Type: #{game.game_type.name} <br>
@@ -30,8 +30,8 @@ block content
             thead
                 tr
                     th Legs
-                    each playerId in game.players
-                        th= players[playerId].name
+                    each stat in stats
+                        th= stat.player_name
                     th Results
             tbody
             - var idx = 1

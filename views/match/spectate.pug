@@ -168,7 +168,7 @@ block content
         - var playerId = player.player_id;
         td(id='player-score-' + playerId class=player.is_current_player ? 'label-active-player' : 'label-inactive-player')
             label(id='player-id-' + playerId class='label label-block label-player-score')= player.current_score
-            label(id='player-name-' + players[playerId].name class='label-player-name')= players[playerId].name
+            label(id='player-name-' + players[playerId].name class='label-player-name')= players[playerId].name + (player.wins ? ' (' + player.wins + ')' : '')
 
     h3 Players
     div(class='table-responsive')
@@ -184,19 +184,19 @@ block content
 
     mixin get_dart_label(dart)
         if dart.multiplier == 3
-            label(class='btn-score dart-triple')= 'T-' + dart.value
+            label(class='dart-score-triple')= 'T-' + dart.value
         else if dart.multiplier == 2
             if value == 25
-                label(class='btn-score dart-double') Bull
+                label(class='dart-score-double') Bull
             else
-                label(class='btn-score dart-double')= 'D-' + dart.value
+                label(class='dart-score-double')= 'D-' + dart.value
         else
             if dart.value == 0
-                label(class='btn-score') Miss
+                label(class='dart-score-single') Miss
             else if dart.value == 25
-                label(class='btn-score') Bull
+                label(class='dart-score-single') Bull
             else
-                label(class='btn-score')= dart.value
+                label(class='dart-score-single')= dart.value
 
     h3 Visits
     div(class='table-responsive')

@@ -352,13 +352,13 @@ block content
                         mixin dart_display(tdID, dart)
                             td(id=tdID data-multiplier=dart.multiplier data-score=dart.value class='dart-score-container')
                                 if dart.value === 0
-                                    label(id=tdID + '-label' class='background-color: black') Miss
+                                    label(id=tdID + '-label' class='dart-score-single') Miss
                                 else if dart.multiplier === 3
-                                    label(id=tdID + '-label' style='background-color: #d9534f')= 'T-' + dart.value
+                                    label(id=tdID + '-label' class='dart-score-triple')= 'T-' + dart.value
                                 else if dart.multiplier === 2
-                                    label(id=tdID + '-label' style='background-color: orange')= 'D-' + dart.value
+                                    label(id=tdID + '-label' class='dart-score-double')= 'D-' + dart.value
                                 else
-                                    label(id=tdID + '-label' class='background-color: black')= dart.value
+                                    label(id=tdID + '-label' class='dart-score-single')= dart.value
                                 +dart_selector(tdID)
 
                         +dart_display('first-dart-visit-' + throws.id, throws.first_dart)
@@ -407,19 +407,19 @@ block content
                                 tr
                                     td(class='col-sm-2 dart-score-container' data-order=key + multiplier)
                                         if multiplier == 3
-                                            label(style='background-color: #d9534f')= 'T-' + key
+                                            label(class='dart-score-triple')= 'T-' + key
                                         else if multiplier == 2
                                             if key == 25
-                                                label(style='background-color: orange') Bull
+                                                label(class='dart-score-double') Bull
                                             else
-                                                label(style='background-color: orange')= 'D-' + key
+                                                label(class='dart-score-double')= 'D-' + key
                                         else
                                             if key == 0
-                                                label Miss
+                                                label(class='dart-score-single') Miss
                                             else if key == 25
-                                                label Bull
+                                                label(class='dart-score-single') Bull
                                             else
-                                                label= key
+                                                label(class='dart-score-single')= key
                                     td= value
                                     td= (value * 100 / match.darts_thrown).toFixed(2) + '%'
 

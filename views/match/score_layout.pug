@@ -280,8 +280,7 @@ block content
                                 - td_class = 'label-active-player ' + modifier_class;
                             td(id='player-score-' + player.player_id + '' colspan=length + '' class=td_class style='padding-right: 10px;')
                                 label(id=player.is_current_player ? 'current-player' : 'player-label-' + player.player_id class='label label-block label-player-score')= player.current_score
-                                label(class='label-player-name')= players[player.player_id].name
-                                // TODO need to display wins per player + player.wins
+                                label(class='label-player-name')= players[player.player_id].name + (player.wins ? ' (' + player.wins + ')' : '')
                         +player_label(player)
                 block score_selector
                     mixin score_button(value, multiplier, text, custom_class)
