@@ -229,12 +229,12 @@ block scripts
             });
 
             $('#edit-scores-button').click(function () {
-                location.href = window.location.pathname + '/leg';
+                location.href = '/matches/' + matchId + '/leg';
             });
 
             $('#cancel-match-button').click(function () {
                 showConfirm('Game will be cancelled.', function() {
-                    executeDelete(window.location.pathname + '/cancel',
+                    executeDelete('/matches/' + matchId + '/cancel',
                         function (response) {
                             location.href = '/games/list';
                         },

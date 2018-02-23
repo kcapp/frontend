@@ -250,7 +250,7 @@ block content
                         if statistic.player_id === match.winner_player_id
                             td: span(class='glyphicon glyphicon-ok' aria-hidden='true')
                         else
-                            td: // p= players[statistic.player_id].remaining_score + ' left'
+                            td: p= players[statistic.player_id].remaining_score + ' left'
 
     h3 Match Results
     p.
@@ -272,16 +272,10 @@ block content
                     if match.winner_player_id === null
                         th(class="txt-center") Options
             tbody
-                each id in match.players
-                    - players[id].remaining_score = match.starting_score
-
-                each throws in match.visits
-                    - var player = players[throws.player_id]
-                    - var visit_score = (throws.first_dart.value * throws.first_dart.multiplier) + (throws.second_dart.value * throws.second_dart.multiplier) + (throws.third_dart.value * throws.third_dart.multiplier)
-                    if !throws.is_bust
-                        - player.remaining_score -= visit_score
-                    tr(id="visit-" + throws.id)
-                        td= player.name
+                each visit in match.visits
+                    - var visit_score = (visit.first_dart.value * visit.first_dart.multiplier) + (visit.second_dart.value * visit.second_dart.multiplier) + (visit.third_dart.value * visit.third_dart.multiplier)
+                    tr(id="visit-" + visit.id)
+                        td= players[visit.player_id].name
 
                         mixin dart_selector(selectorID)
                             select(id=selectorID + '-selector' style="width: 100%; display: none")
@@ -361,18 +355,18 @@ block content
                                     label(id=tdID + '-label' class='dart-score-single')= dart.value
                                 +dart_selector(tdID)
 
-                        +dart_display('first-dart-visit-' + throws.id, throws.first_dart)
-                        +dart_display('second-dart-visit-' + throws.id, throws.second_dart)
-                        +dart_display('third-dart-visit-' + throws.id, throws.third_dart)
+                        +dart_display('first-dart-visit-' + visit.id, visit.first_dart)
+                        +dart_display('second-dart-visit-' + visit.id, visit.second_dart)
+                        +dart_display('third-dart-visit-' + visit.id, visit.third_dart)
 
-                        td(class='total-visit-score-' + throws.id): label= visit_score
-                        td: label= player.remaining_score
-                        td(class='visit-ppd-' + throws.id)= (visit_score / 3).toFixed(2)
+                        td(class='total-visit-score-' + visit.id): label= visit_score
+                        td: label= visit.scores
+                        td(class='visit-ppd-' + visit.id)= (visit_score / 3).toFixed(2)
                         if match.winner_player_id === null
                             td(class='txt-center')
-                                button(type="button" class="btn btn-default edit-visit" data-visit=throws.id data-issave='0')
+                                button(type="button" class="btn btn-default edit-visit" data-visit=visit.id data-issave='0')
                                     span(class="glyphicon glyphicon-edit" aria-hidden="true")
-                                button(type="button" class="btn btn-default delete-visit" data-visit=throws.id)
+                                button(type="button" class="btn btn-default delete-visit" data-visit=visit.id)
                                     span(class="glyphicon glyphicon-trash" aria-hidden="true")
 
     br

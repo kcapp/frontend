@@ -11,6 +11,7 @@ block content
                     each stats in statistics
                         th= players[stats.player_id].name
             tbody
+                //- https://codepen.io/paulobrien/pen/gWoVzN
                 tr
                     td(class='col-sm-2') Won/Played
                     each stats in statistics
@@ -82,8 +83,10 @@ block content
                 tr
                     td(class='col-sm-2') 20s
                     each stats in statistics
-                        td= stats.accuracy_20.toFixed(2)
+                        - var accuracy_20 = stats.accuracy_20 ? stats.accuracy_20.toFixed(2) : '-'
+                        td= accuracy_20
                 tr
                     td(class='col-sm-2') 19s
                     each stats in statistics
-                        td= stats.accuracy_19.toFixed(2)
+                        - var accuracy_19 = stats.accuracy_19 ? stats.accuracy_19.toFixed(2) : '-'
+                        td= accuracy_19

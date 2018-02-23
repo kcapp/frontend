@@ -57,6 +57,33 @@ router.get('/:id/leg', function (req, res, next) {
             axios.get('http://localhost:8001/match/' + req.params.id)
                 .then(response => {
                     var match = response.data;
+                    _.each(match.players, (playerId) => {
+                        playersMap[playerId].remaining_score = match.starting_score;
+                    });
+                    _.each(match.visits, (visit, index) => {
+                        var player = playersMap[visit.player_id]
+                        var visitScore = (visit.first_dart.value * visit.first_dart.multiplier) +
+                            (visit.second_dart.value * visit.second_dart.multiplier) +
+                            (visit.third_dart.value * visit.third_dart.multiplier);
+                        if (!visit.is_bust) {
+                            player.remaining_score -= visitScore;
+                        }
+
+                        var scores = player.remaining_score;
+                        for (var i = 1; i < match.players.length; i++) {
+                            var nextVisit = match.visits[index + i];
+                            if (!nextVisit) {
+                                // There is no next visit, so look at previous instead
+                                // Need to look in reverese order to keep the order of scores the same
+                                nextVisit = match.visits[index - (match.players.length - i)]
+                            }
+                            if (nextVisit) {
+                                scores += ' : ' + playersMap[nextVisit.player_id].remaining_score;
+                            }
+                        }
+                        visit.scores = scores;
+                    });
+
                     axios.get('http://localhost:8001/match/' + req.params.id + '/statistics')
                         .then(response => {
                             var stats = response.data;
