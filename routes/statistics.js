@@ -11,10 +11,10 @@ var _ = require('underscore');
 router.get('/:from/:to', function (req, res, next) {
     var from = req.params.from;
     var to = req.params.to;
-    axios.get('http://localhost:8001/player')
+    axios.get(req.app.locals.kcapp.api + '/player')
         .then(response => {
             var playersMap = response.data;
-            axios.get('http://localhost:8001/statistics/x01/' + from + '/' + to)
+            axios.get(req.app.locals.kcapp.api + '/statistics/x01/' + from + '/' + to)
                 .then(response => {
                     var statistics = response.data;
                     statistics = sort(statistics);
@@ -35,10 +35,10 @@ router.get('/:from/:to', function (req, res, next) {
 router.get('/weekly', function (req, res, next) {
     var from = moment().isoWeekday(1).format('YYYY-MM-DD');
     var to = moment().isoWeekday(7).format('YYYY-MM-DD');
-    axios.get('http://localhost:8001/player')
+    axios.get(req.app.locals.kcapp.api + '/player')
         .then(response => {
             var playersMap = response.data;
-            axios.get('http://localhost:8001/statistics/x01/' + from + '/' + to)
+            axios.get(req.app.locals.kcapp.api + '/statistics/x01/' + from + '/' + to)
                 .then(response => {
                     var statistics = response.data;
                     statistics = sort(statistics);

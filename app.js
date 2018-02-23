@@ -14,10 +14,15 @@ var socket_io = require("socket.io");
 var io = socket_io();
 app.io = io;
 
+// Set application variables
+app.locals.kcapp = {};
+app.locals.kcapp.api = 'http://localhost:8001';
+
+// Create all routes
 var socketHandler = require('./routes/lib/socketio_handler')(io);
 var games = require('./routes/games')(socketHandler);
 var index = require('./routes/index');
-var matches = require('./routes/matches')(socketHandler);
+var matches = require('./routes/matches')(app, socketHandler);
 var owes = require('./routes/owes');
 var players = require('./routes/players');
 var statistics = require('./routes/statistics');
@@ -25,9 +30,8 @@ var statistics = require('./routes/statistics');
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
+app.locals.moment = require('moment');
 
-// uncomment after placing your favicon in /public
-//app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -42,16 +46,14 @@ app.use('/owes', owes);
 app.use('/players', players);
 app.use('/statistics', statistics);
 
-app.locals.moment = require('moment');
-
-// catch 404 and forward to error handler
+// Not Found (404) Handler
 app.use(function (req, res, next) {
     var err = new Error('Not Found');
     err.status = 404;
     next(err);
 });
 
-// error handler
+// Error Handler
 app.use(function (err, req, res, next) {
     // set locals, only providing error in development
     res.locals.message = err.message;

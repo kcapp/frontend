@@ -8,10 +8,10 @@ var _ = require('underscore');
 
 /* Get a list of all games */
 router.get('/', function (req, res, next) {
-    axios.get('http://localhost:8001/game')
+    axios.get(req.app.locals.kcapp.api + '/game')
         .then(response => {
             var games = response.data;
-            axios.get('http://localhost:8001/player')
+            axios.get(req.app.locals.kcapp.api + '/player')
                 .then(response => {
                     var players = response.data;
                     res.render('games', { games: games, players: players });
@@ -28,10 +28,10 @@ router.get('/', function (req, res, next) {
 
 /** Continue the given game */
 router.get('/:id', function (req, res, next) {
-    axios.get('http://localhost:8001/game/' + req.params.id)
+    axios.get(req.app.locals.kcapp.api + '/game/' + req.params.id)
         .then(response => {
             var game = response.data
-            axios.put('http://localhost:8001/game/' + req.params.id + '/continue')
+            axios.put(req.app.locals.kcapp.api + '/game/' + req.params.id + '/continue')
                 .then(response => {
                     var match = response.data;
                     // TODO Do we need to setup nsp here?
@@ -55,7 +55,7 @@ router.get('/:id', function (req, res, next) {
 
 /* Spectate the given game */
 router.get('/:id/spectate', function (req, res, next) {
-    axios.get('http://localhost:8001/game/' + req.params.id)
+    axios.get(req.app.locals.kcapp.api + '/game/' + req.params.id)
         .then(response => {
             var game = response.data;
             res.redirect('/matches/' + game.current_match_id + '/spectate');
@@ -68,13 +68,13 @@ router.get('/:id/spectate', function (req, res, next) {
 /* Render the results view */
 router.get('/:id/results', function (req, res, next) {
     var id = req.params.id;
-    axios.get('http://localhost:8001/game/' + id)
+    axios.get(req.app.locals.kcapp.api + '/game/' + id)
         .then(response => {
             var game = response.data;
-            axios.get('http://localhost:8001/player')
+            axios.get(req.app.locals.kcapp.api + '/player')
                 .then(response => {
                     var players = response.data;
-                    axios.get('http://localhost:8001/game/' + id + '/statistics')
+                    axios.get(req.app.locals.kcapp.api + '/game/' + id + '/statistics')
                         .then(response => {
                             var stats = response.data;
                             _.each(stats, stat => {
@@ -113,7 +113,7 @@ router.post('/new', function (req, res, next) {
         players: players.map(Number),
         matches: [{ starting_score: parseInt(req.body.starting_score) }]
     }
-    axios.post('http://localhost:8001/game', body)
+    axios.post(req.app.locals.kcapp.api + '/game', body)
         .then(response => {
             var game = response.data;
             this.socketHandler.setupNamespace(game.current_match_id);

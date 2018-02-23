@@ -48,12 +48,12 @@ module.exports = (io) => {
                     client.on('throw', function (data) {
                         debug('Received throw from ' + client.handshake.address);
                         var body = JSON.parse(data);
-                        axios.post('http://localhost:8001/visit', body)
+                        axios.post(req.app.locals.kcapp.api + '/visit', body)
                             .then(() => {
-                                axios.get('http://localhost:8001/match/' + body.match_id)
+                                axios.get(req.app.locals.kcapp.api + '/match/' + body.match_id)
                                     .then(response => {
                                         var match = response.data;
-                                        axios.get('http://localhost:8001/match/' + body.match_id + '/players')
+                                        axios.get(req.app.locals.kcapp.api + '/match/' + body.match_id + '/players')
                                             .then(response => {
                                                 var players = response.data;
                                                 nsp.emit('score_update', { players: players, match: match });

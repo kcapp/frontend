@@ -8,14 +8,14 @@ var _ = require('underscore');
 
 /* GET home page. */
 router.get('/', function (req, res, next) {
-    axios.get('http://localhost:8001/player')
+    axios.get(req.app.locals.kcapp.api + '/player')
         .then(response => {
             var players = response.data
             players = _.sortBy(players, (player) => player.name);
-            axios.get('http://localhost:8001/gametype')
+            axios.get(req.app.locals.kcapp.api + '/gametype')
                 .then(response => {
                     var gameTypes = response.data;
-                    axios.get('http://localhost:8001/owetype')
+                    axios.get(req.app.locals.kcapp.api + '/owetype')
                         .then(response => {
                             var oweTypes = response.data;
                             res.render('index', { players: players, game_types: gameTypes, owe_types: oweTypes });

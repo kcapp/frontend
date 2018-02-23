@@ -18,16 +18,16 @@ router.get('/:id/keyboard', function (req, res, next) {
 
 /* Render the match spectate view */
 router.get('/:id/spectate', function (req, res, next) {
-    axios.get('http://localhost:8001/player')
+    axios.get(req.app.locals.kcapp.api + '/player')
         .then(response => {
             var playersMap = response.data;
-            axios.get('http://localhost:8001/match/' + req.params.id)
+            axios.get(req.app.locals.kcapp.api + '/match/' + req.params.id)
                 .then(response => {
                     var match = response.data;
-                    axios.get('http://localhost:8001/game/' + match.game_id)
+                    axios.get(req.app.locals.kcapp.api + '/game/' + match.game_id)
                         .then(response => {
                             var game = response.data;
-                            axios.get('http://localhost:8001/match/' + req.params.id + '/players')
+                            axios.get(req.app.locals.kcapp.api + '/match/' + req.params.id + '/players')
                                 .then(response => {
                                     var matchPlayers = response.data;
                                     res.render('match/spectate', { match: match, players: playersMap, game: game, match_players: matchPlayers });
@@ -51,10 +51,10 @@ router.get('/:id/spectate', function (req, res, next) {
 
 /* Method for getting results for a given leg */
 router.get('/:id/leg', function (req, res, next) {
-    axios.get('http://localhost:8001/player')
+    axios.get(req.app.locals.kcapp.api + '/player')
         .then(response => {
             var playersMap = response.data;
-            axios.get('http://localhost:8001/match/' + req.params.id)
+            axios.get(req.app.locals.kcapp.api + '/match/' + req.params.id)
                 .then(response => {
                     var match = response.data;
                     _.each(match.players, (playerId) => {
@@ -84,10 +84,10 @@ router.get('/:id/leg', function (req, res, next) {
                         visit.scores = scores;
                     });
 
-                    axios.get('http://localhost:8001/match/' + req.params.id + '/statistics')
+                    axios.get(req.app.locals.kcapp.api + '/match/' + req.params.id + '/statistics')
                         .then(response => {
                             var stats = response.data;
-                            axios.get('http://localhost:8001/game/' + match.game_id)
+                            axios.get(req.app.locals.kcapp.api + '/game/' + match.game_id)
                                 .then(response => {
                                     var game = response.data;
                                     res.render('match_result', { match: match, players: playersMap, stats: stats, game: game });
@@ -111,7 +111,7 @@ router.get('/:id/leg', function (req, res, next) {
 
 /* Delete the given visit */
 router.delete('/:id/leg/:visitid', function (req, res, next) {
-    axios.delete('http://localhost:8001/visit/' + req.params.visitid)
+    axios.delete(req.app.locals.kcapp.api + '/visit/' + req.params.visitid)
         .then(() => {
             res.status(200).send().end();
         }).catch(error => {
@@ -122,7 +122,7 @@ router.delete('/:id/leg/:visitid', function (req, res, next) {
 
 /* Modify the score */
 router.post('/:id/leg', function (req, res, next) {
-    axios.put('http://localhost:8001/visit/' + req.body.id + '/modify', req.body)
+    axios.put(req.app.locals.kcapp.api + '/visit/' + req.body.id + '/modify', req.body)
         .then(() => {
             res.status(200).end();
         }).catch(error => {
@@ -139,7 +139,7 @@ router.delete('/:id/cancel', function (req, res) {
 
 /* Method to finalize a match */
 router.post('/:id/finish', function (req, res, next) {
-    axios.put('http://localhost:8001/match/' + req.params.id + '/finish', req.body)
+    axios.put(req.app.locals.kcapp.api + '/match/' + req.params.id + '/finish', req.body)
         .then(() => {
             res.status(200).end();
         }).catch(error => {
@@ -150,7 +150,7 @@ router.post('/:id/finish', function (req, res, next) {
 
 /** Method to change player order */
 router.put('/:id/order', function (req, res, next) {
-    axios.put('http://localhost:8001/match/' + req.params.id + '/order', req.body)
+    axios.put(req.app.locals.kcapp.api + '/match/' + req.params.id + '/order', req.body)
         .then(() => {
             res.status(200).end();
         }).catch(error => {
@@ -161,16 +161,16 @@ router.put('/:id/order', function (req, res, next) {
 
 /** TODO Comments */
 function renderMatchView(pugFile, req, res, next) {
-    axios.get('http://localhost:8001/player')
+    axios.get(req.app.locals.kcapp.api + '/player')
         .then(response => {
             var playersMap = response.data;
-            axios.get('http://localhost:8001/match/' + req.params.id)
+            axios.get(req.app.locals.kcapp.api + '/match/' + req.params.id)
                 .then(response => {
                     var match = response.data;
-                    axios.get('http://localhost:8001/game/' + match.game_id)
+                    axios.get(req.app.locals.kcapp.api + '/game/' + match.game_id)
                         .then(response => {
                             var game = response.data;
-                            axios.get('http://localhost:8001/match/' + req.params.id + '/players')
+                            axios.get(req.app.locals.kcapp.api + '/match/' + req.params.id + '/players')
                                 .then(response => {
                                     var matchPlayers = response.data;
                                     // Sort players based on order
@@ -194,11 +194,11 @@ function renderMatchView(pugFile, req, res, next) {
         });
 }
 
-module.exports = function (socketHandler) {
+module.exports = function (app, socketHandler) {
     this.socketHandler = socketHandler;
 
     // Create socket.io namespaces for all matches which are currently active
-    axios.get('http://localhost:8001/match/active')
+    axios.get(app.locals.kcapp.api + '/match/active')
         .then(response => {
             var matches = response.data;
             for (var i = 0; i < matches.length; i++) {
