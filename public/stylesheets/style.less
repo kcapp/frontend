@@ -95,20 +95,25 @@ a:hover {
     text-align: center;
 }
 
+.center-table {
+    td,
+    th {
+        text-align: center;
+    }
+}
+
 #games-list-table {
     span {
         display: block;
     }
+    .center-table
 }
 
 #player-statistics-table,
 #player-scores-table,
 #player-accuracy-table,
 #player-owes-table {
-    td,
-    th {
-        text-align: center;
-    }
+    .center-table
 }
 
 #score-selector-table {
@@ -143,26 +148,18 @@ a:hover {
     td:first-child {
         text-align: left;
     }
-    td,
-    th {
-        text-align: center;
-    }
+    .center-table
 }
 
 #players-table {
-    td,
-    th {
-        text-align: center;
-    }
+    .center-table
 }
 
 #player-hits-table {
     label {
         display: block;
     }
-    td {
-        text-align: center;
-    }
+    .center-table
 }
 
 #dartboard-heatmap {
@@ -176,21 +173,19 @@ a:hover {
     label {
         display: block;
     }
-    td {
-        text-align: center;
-    }
+    .center-table
 }
 
-#match-visits-table label {
-    display: block;
-    text-align: center;
+#match-visits-table {
+    label {
+        display: block;
+    }
+    .center-table
 }
 
 #match-hits-table {
     label {
         display: block;
     }
-    td {
-        text-align: center;
-    }
+    .center-table
 }

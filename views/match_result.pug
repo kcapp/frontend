@@ -203,6 +203,32 @@ block append scripts
             $("#heatmap-value-selector").change(function () {
                 drawHeatmap(canvas, scoresMap, this.value, 20, 20, 50);
             });
+
+            $('#btn-collapse-visits').click(function () {
+                if ($('#visits-div').hasClass('in')) {
+                    $('#btn-collapse-visits').text('Show Visits');
+                } else {
+                    $('#btn-collapse-visits').text('Hide Visits');
+                }
+            });
+            $('#btn-collapse-heatmap').click(function () {
+                if ($('#heatmap-div').hasClass('in')) {
+                    $('#btn-collapse-heatmap').text('Show Heatmap');
+                } else {
+                    $('#btn-collapse-heatmap').text('Hide Heatmap');
+                }
+            });
+            $('#btn-collapse-hits').click(function () {
+                if ($('#hits-div').hasClass('in')) {
+                    $('#btn-collapse-hits').text('Show Hits');
+                } else {
+                    $('#btn-collapse-hits').text('Hide Hits');
+                }
+            });
+
+            $('#heatmap-div').on('shown.bs.collapse', function() {
+                drawHeatmap(canvas, scoresMap, 0, 20, 20, 50);
+            });
         });
 
 block content
@@ -220,7 +246,8 @@ block content
         Duration: #{match.end_time === null ? '' : moment.duration(moment(match.end_time).diff(match.created_at)).asMinutes().toFixed() + ' minutes'} <br>
         Rounds: #{Math.ceil(match.visits.length / match.players.length)}
 
-    if match.winner_player_id !== null
+    - var isFinished = match.winner_player_id !== null
+    if isFinished
         table(id='match-result-table' class='table table-striped table-bordered')
             thead
                 tr
@@ -256,9 +283,9 @@ block content
     p.
         Starting score was #{match.starting_score}, and a total of #{match.darts_thrown} darts were thrown by #{match.players.length} players
 
-    if match.winner_player_id !== null
-        button(class='btn btn-primary btn-block' data-toggle='collapse' data-target='#visits-div') Show Visits
-    div(id='visits-div' class=match.winner_player_id === null ? 'collapse in' : 'collapse')
+    if isFinished
+        button(id='btn-collapse-visits' class='btn btn-primary btn-block' data-toggle='collapse' data-target='#visits-div')= isFinished ? 'Show Visits' : 'Hide Visits'
+    div(id='visits-div' class=isFinished ? 'collapse' : 'collapse in')
         table(class='table table-striped table-bordered' id='match-visits-table')
             thead
                 tr
@@ -370,9 +397,14 @@ block content
                                     span(class="glyphicon glyphicon-trash" aria-hidden="true")
 
     br
-    if match.winner_player_id !== null
-        button(class='btn btn-primary btn-block' data-toggle='collapse' data-target='#heatmap-div') Show Heatmap
-    div(id='heatmap-div' class=match.winner_player_id === null ? 'collapse' : 'collapse in')
+    div
+        h3 Scores
+        canvas(id='canvas-scores')
+
+    br
+    if isFinished
+        button(id='btn-collapse-heatmap' class='btn btn-primary btn-block' data-toggle='collapse' data-target='#heatmap-div')= isFinished ? 'Show Heatmap' : 'Hide Heatmap'
+    div(id='heatmap-div' class=isFinished ? 'collapse' : 'collapse in')
         h3 Match Heatmap
         select(id='heatmap-value-selector' name='dartValues')
             option(value=0 default=true) All
@@ -383,9 +415,9 @@ block content
             canvas(id='dartboard-heatmap')
 
     br
-    if match.winner_player_id !== null
-        button(class='btn btn-primary btn-block' data-toggle='collapse' data-target='#hits-div') Show Hits
-    div(id='hits-div' class=match.winner_player_id === null ? 'collapse in' : 'collapse')
+    if isFinished
+        button(id='btn-collapse-hits' class='btn btn-primary btn-block' data-toggle='collapse' data-target='#hits-div')= isFinished ? 'Show Hits' : 'Hide Hits'
+    div(id='hits-div' class=isFinished ? 'collapse' : 'collapse in')
         h3 Hits
         div(class='table-responsive')
             table(id='match-hits-table' class='table table-striped table-bordered')
@@ -417,7 +449,7 @@ block content
                                     td= value
                                     td= (value * 100 / match.darts_thrown).toFixed(2) + '%'
 
-    if !match.winner_player_id
+    if !isFinished
         h2 Player Order
         div
             div(id='player-order-list')
@@ -426,7 +458,3 @@ block content
                         input(style='display: none;' type='checkbox' class='form-check-input' id='checkbox-player-' + players[id].id value=players[id].id)
                         label(style='margin-left: 10px; width: 160px;' class='player_name_label form-check-label btn btn-warning' for='checkbox-player-' + players[id].id)= players[id].name
             button(type='submit' name='submit' style='margin-left: 10px' id='change-order-button' class='btn btn-primary') Change Order
-
-    div
-        h3 Scores
-        canvas(id='canvas-scores')
