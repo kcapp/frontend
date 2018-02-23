@@ -15,8 +15,8 @@ block append scripts
             if (progression.hasOwnProperty(date)) {
                 var p = progression[date];
                 labels.push(date);
-                valuesMap.ppd.push(p.ppd);
-                valuesMap.first9ppd.push(p.first_nine_ppd);
+                valuesMap.ppd.push(p.ppd.toFixed(2));
+                valuesMap.first9ppd.push(p.first_nine_ppd.toFixed(2));
                 valuesMap.scores60s.push(p.scores_60s_plus);
                 valuesMap.scores100s.push(p.scores_100s_plus);
                 valuesMap.scores140s.push(p.scores_140s_plus);
@@ -26,20 +26,20 @@ block append scripts
 
         $(function () {
             var datasetsPPD = [{
-                label: "PPD",
-                backgroundColor: 'rgb(54, 162, 235)',
-                borderColor: 'rgb(54, 162, 235)',
-                data: valuesMap.ppd,
-                fill: false
-            },
-            {
                 label: "First 9 PPD",
                 backgroundColor: 'rgb(255, 99, 132)',
                 borderColor: 'rgb(255, 99, 132)',
                 data: valuesMap.first9ppd,
                 fill: false
+            },
+            {
+                label: "PPD",
+                backgroundColor: 'rgb(54, 162, 235)',
+                borderColor: 'rgb(54, 162, 235)',
+                data: valuesMap.ppd,
+                fill: false
             }]
-            var ppdChart = new Chart("canvas-ppd", getChartConfig('PPD per date', 'line', 'Date', 'PPD', labels, datasetsPPD));
+            var ppdChart = new Chart("canvas-ppd", getChartConfig('PPD Per Week', 'line', 'Date', 'PPD', labels, datasetsPPD));
 
             var datasetsScores = [{
                 label: "60+",
@@ -69,7 +69,7 @@ block append scripts
                 data: valuesMap.scores180s,
                 fill: false
             }]
-            var scoresChart = new Chart("canvas-scores", getChartConfig('Scores per date', 'bar', 'Date', 'Count', labels, datasetsScores));
+            var scoresChart = new Chart("canvas-scores", getChartConfig('Scores Per Week|', 'line', 'Date', 'Count', labels, datasetsScores));
         });
 
 block content

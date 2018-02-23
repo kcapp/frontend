@@ -26,7 +26,6 @@ router.get('/', function (req, res, next) {
         });
 });
 
-
 /** Continue the given game */
 router.get('/:id', function (req, res, next) {
     axios.get('http://localhost:8001/game/' + req.params.id)
@@ -124,7 +123,6 @@ router.post('/new', function (req, res, next) {
             next(error);
         });
 });
-
 
 module.exports = function (socketHandler) {
     this.socketHandler = socketHandler;
