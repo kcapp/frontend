@@ -20,7 +20,6 @@ block scripts
             });
 
             socket.on('possible_throw', function(data) {
-                console.log(data);
                 var dart;
                 if (data.darts_thrown === 1) {
                     dart = $('#first');
@@ -37,14 +36,15 @@ block scripts
                 }
                 dart.text(data.dart_text);
 
+                dart.removeClass('dart-score-single dart-score-double dart-score-triple');
                 if (data.multiplier == 3) {
-                    dart.css('background-color', '#d9534f');
+                    dart.addClass('dart-score-triple');
                 }
                 else if (data.multiplier == 2) {
-                    dart.css('background-color', 'orange');
+                    dart.addClass('dart-score-double');
                 }
                 else {
-                    dart.css('background-color', 'black');
+                    dart.addClass('dart-score-single');
                 }
 
                 // Update player score
@@ -90,27 +90,23 @@ block scripts
                 $('#total').text(0);
 
                 // Update the visits table
-                var visit = data.visits[data.visits.length - 1];
+                var visit = data.match.visits[data.match.visits.length - 1];
                 var playerName = playersMap[visit.player_id].name;
-                var firstDartScore = getScoreString(visit.first_dart_multiplier, visit.first_dart);
-                var firstDartCSS= getDartCSS(visit.first_dart_multiplier);
-                var secondDartScore = getScoreString(visit.second_dart_multiplier, visit.second_dart);
-                var secondDartCSS = getDartCSS(visit.second_dart_multiplier);
-                var thirdDartScore = getScoreString(visit.third_dart_multiplier, visit.third_dart);
-                var thirdDartCSS = getDartCSS(visit.third_dart_multiplier);
-                var total = (visit.first_dart_multiplier * visit.first_dart ) + (visit.second_dart_multiplier * visit.second_dart) + (visit.third_dart_multiplier * visit.third_dart);
+                var total = (visit.first_dart.multiplier * visit.first_dart.value ) +
+                    (visit.second_dart.multiplier * visit.second_dart.value) +
+                    (visit.third_dart.multiplier * visit.third_dart.value);
                 if (visit.is_bust) {
                     total = 'BUST';
                 }
                 var html =
                     "<tr>" +
                         "<td>" + playerName + "</td>" +
-                        "<td class='dart-score-container no-border'><label class='" + firstDartCSS + "'>" + firstDartScore + "</label></td>" +
-                        "<td class='dart-score-container no-border'><label class='" + secondDartCSS + "'>" + secondDartScore + "</label></td>" +
-                        "<td class='dart-score-container no-border'><label class='" + thirdDartCSS + "'>" + thirdDartScore + "</label></td>" +
+                        "<td class='dart-score-container no-border'><label class='" + getDartCSS(visit.first_dart) + "'>" + getScoreString(visit.first_dart) + "</label></td>" +
+                        "<td class='dart-score-container no-border'><label class='" + getDartCSS(visit.second_dart) + "'>" + getScoreString(visit.second_dart) + "</label></td>" +
+                        "<td class='dart-score-container no-border'><label class='" + getDartCSS(visit.third_dart) + "'>" + getScoreString(visit.third_dart) + "</label></td>" +
                         "<td><label>" + total + "</label></td>" +
                     "</tr>";
-                $('#visits-table > tbody > tr:first').after(html);
+                $('#match-visits-table > tbody > tr:first').after(html);
             });
 
             socket.on('match_finished', function(data) {
@@ -120,7 +116,7 @@ block scripts
 
             // Reverse the rows in the table to show newest throws first
             var tbody = $('#match-visits-table tbody');
-            tbody.html($('tr',tbody).get().reverse());
+            tbody.html($('tr', tbody).get().reverse());
 
             // Add a row to the top of the table which contains the current throw for a given player
             if (!match.is_finished) {
@@ -135,15 +131,16 @@ block scripts
                 $('#match-visits-table').prepend(html);
             }
 
-            function getDartCSS(multiplier) {
-                switch (multiplier) {
-                    case 3: return 'dart-triple';
-                    case 2: return 'dart-double';
-                    default: return 'dart-single';
+            function getDartCSS(dart) {
+                switch (dart.multiplier) {
+                    case 3: return 'dart-score-triple';
+                    case 2: return 'dart-score-double';
+                    default: return 'dart-score-single';
                 }
             }
 
-            function getScoreString(multiplier, score) {
+            function getScoreString(dart) {
+                var score = dart.value;
                 if (score === 0) {
                     return 'Miss';
                 }
@@ -151,10 +148,10 @@ block scripts
                     score = 'Bull';
                 }
 
-                if (multiplier === 3) {
+                if (dart.multiplier === 3) {
                     return 'T-' + score;
                 }
-                else if (multiplier === 2) {
+                else if (dart.multiplier === 2) {
                     return 'D-' + score;
                 }
                 return score;

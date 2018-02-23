@@ -114,14 +114,14 @@ block content
                                     if key == 25
                                         label(class='dart-score-double') Bull
                                     else
-                                        label(style='dart-score-double')= 'D-' + key
+                                        label(class='dart-score-double')= 'D-' + key
                                 else
                                     if key == 0
-                                        label Miss
+                                        label(class='dart-score-single') Miss
                                     else if key == 25
-                                        label Bull
+                                        label(class='dart-score-single') Bull
                                     else
-                                        label= key
+                                        label(class='dart-score-single')= key
                             td= value
                             td= (value * 100 / statistics.darts_thrown).toFixed(2) + '%'
 

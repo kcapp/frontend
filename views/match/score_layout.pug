@@ -37,17 +37,20 @@ block scripts
                 currentMultiplier = 1;
                 score = 0;
             }
-            dart.css('background-color', 'black');
             if (multiplier == 3) {
                 dartText = 'T-' + score / multiplier;
-                dart.css('background-color', '#d9534f');
+                dart.removeClass('dart-score-single dart-score-double').addClass('dart-score-triple');
             }
             else if (multiplier == 2) {
                 dartText = 'D-' + score / multiplier;
-                dart.css('background-color', 'orange');
+                dart.removeClass('dart-score-single dart-score-triple').addClass('dart-score-double');
             }
             else if (score === 0) {
                 dartText = 'Miss';
+                dart.removeClass('dart-score-double dart-score-triple').addClass('dart-score-single');
+            }
+            else {
+                dart.removeClass('dart-score-double dart-score-triple').addClass('dart-score-single');
             }
             dart.text(dartText);
             dart.attr('data-score', score / multiplier);
@@ -133,7 +136,7 @@ block scripts
 
             $('[data-toggle="popover"]').popover();
             $('#submit-score-button').click(function (event) {
-                $('#submit-score-button').prop('disabled', true);
+                $(this).attr('disabled', true);
 
                 $('[data-toggle=popover]').popover('hide'); // Hide the popover when a button is pressed
                 var firstScore = parseInt($('#first').attr('data-score'));
@@ -307,13 +310,13 @@ block content
                         td: +score_button(0, 1, 'Miss')
                         +button_row([ 20, 19, 18, 17 ])
                     tr(class='throw-buttons row')
-                        td(rowspan='2' style='height:100%; background-color: #ffe6cc;')
+                        td(rowspan='2' class='btn-double' style='height:100%;')
                             +score_button(25, 1, 'Bull', 'btn-double')
                         +button_row([ 16, 15, 14, 13 ])
                     tr(class='throw-buttons row')
                         +button_row([ 12, 11, 10, 9 ])
                     tr(class='throw-buttons row')
-                        td(rowspan='2' style='height:100%; background-color: #ffcc66;')
+                        td(rowspan='2' class='btn-triple' style='height:100%;')
                             +score_button(25, 2, 'Bull', 'btn-triple')
                         +button_row([ 8, 7, 6, 5 ])
                     tr(class='throw-buttons row')

@@ -2,8 +2,9 @@ extends score_layout.pug
 
 block append scripts
     script.
+        // Enter will be disabled when confirm dialogs are open
+        var disableEnter = false;
         $(function () {
-            var disableEnter = false;
             var dartText = '';
             var currentMultiplier = 1;
 

@@ -13,16 +13,25 @@ block scripts
         });
     script.
         $(function() {
-            $('#games-list-table').on('click', '#continue-game-button', function () {
-                location.href = '/games/' + $(this).data('game');
+            $('#games-list-table').on('mouseup', '#continue-game-button', function (e) {
+                openLink('/games/' + $(this).data('game'), e);
             });
-            $('#games-list-table').on('click', '#spectate-game-button', function() {
-                location.href = '/games/' + $(this).data('game') + '/spectate';
+            $('#games-list-table').on('mouseup', '#spectate-game-button', function(e) {
+                openLink('/games/' + $(this).data('game') + '/spectate', e);
             });
-            $('#games-list-table').on('click', '#view-game-button', function () {
-                location.href = '/games/' + $(this).data('game') + '/results';
+            $('#games-list-table').on('mouseup', '#view-game-button', function (e) {
+                openLink('/games/' + $(this).data('game') + '/results', e);
             });
         });
+
+        function openLink(url, mouseEvent) {
+            if (mouseEvent.which == 1) {
+                location.href = url;
+            }
+            else if (mouseEvent.which == 2) {
+                window.open(url);
+            }
+        }
 
 block content
     h2 Games

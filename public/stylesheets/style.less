@@ -1,34 +1,15 @@
+// Variables
+@dart-board-image: '../images/dartboard.png';
+// Colors
+@dart-single: #404040;
+@dart-double: orange;
+@dart-triple: #d9534f;
 body {
     font-family: "Open Sans"
 }
 
 a:hover {
     cursor: pointer;
-}
-
-#score-selector-table {
-    border-spacing: 0px;
-}
-
-#score-selector-table td {
-    padding: 0px;
-    border: 1px solid #000;
-    vertical-align: middle;
-}
-
-#score-selector-table button {
-    border: 0;
-    border-radius: 0;
-    line-height: 0.8;
-    padding: 10px;
-}
-
-#score-selector-table label,
-#player-spectate-table label {
-    display: block;
-    text-align: center;
-    border-radius: 0;
-    margin: 0;
 }
 
 .label-player-score {
@@ -55,38 +36,8 @@ a:hover {
     border-bottom: 4px solid #962724 !important;
 }
 
-#games-list-table span {
-    display: block;
-}
-
 .float-left {
     float: left;
-}
-
-#player-comparison-table td:first-child {
-    text-align: left;
-}
-
-#player-comparison-table td,
-th {
-    text-align: center;
-}
-
-#players-table td,
-th {
-    text-align: center;
-}
-
-#player-statistics-table td,
-#player-scores-table td,
-#player-accuracy-table td,
-#player-hits-table td,
-#player-owes-table td {
-    text-align: center;
-}
-
-#player-hits-table label {
-    display: block;
 }
 
 .no-border {
@@ -95,30 +46,26 @@ th {
 
 .dart-score-container {
     padding: 3px !important;
-}
-
-.dart-score-container label {
-    color: #fff;
-    line-height: 2;
-    font-size: 15pt;
+    label {
+        color: #fff;
+        line-height: 2;
+        font-size: 15pt;
+    }
 }
 
 .dart-score-single {
-    background-color: #404040;
+    background-color: @dart-single;
     border: 2px solid #e7e7e7;
-    color: black;
 }
 
 .dart-score-double {
-    background-color: orange;
+    background-color: @dart-double;
     border: 2px solid #e7e7e7;
-    color: black;
 }
 
 .dart-score-triple {
-    background-color: #d9534f;
+    background-color: @dart-triple;
     border: 2px solid #e7e7e7;
-    color: black;
 }
 
 .btn-score {
@@ -139,34 +86,6 @@ th {
     border: 2px solid #e7e7e7;
 }
 
-#dartboard-heatmap {
-    width: 600px;
-    height: 600px;
-    background-image: url('../images/dartboard.png');
-    background-size: 100% 100%;
-}
-
-#match-result-table td {
-    text-align: center;
-}
-
-#match-result-table label {
-    display: block;
-}
-
-#match-visits-table label {
-    display: block;
-    text-align: center;
-}
-
-#match-hits-table td {
-    text-align: center;
-}
-
-#match-hits-table label {
-    display: block;
-}
-
 .match-information {
     font-weight: normal !important;
     display: inline-block !important;
@@ -174,4 +93,104 @@ th {
 
 .txt-center {
     text-align: center;
+}
+
+#games-list-table {
+    span {
+        display: block;
+    }
+}
+
+#player-statistics-table,
+#player-scores-table,
+#player-accuracy-table,
+#player-owes-table {
+    td,
+    th {
+        text-align: center;
+    }
+}
+
+#score-selector-table {
+    border-spacing: 0px;
+    td {
+        padding: 0px;
+        border: 1px solid #000;
+        vertical-align: middle;
+    }
+    button {
+        border: 0;
+        border-radius: 0;
+        line-height: 0.8;
+        padding: 10px;
+    }
+    label {
+        display: block;
+        text-align: center;
+        border-radius: 0;
+        margin: 0;
+    }
+}
+
+#player-spectate-table label {
+    display: block;
+    text-align: center;
+    border-radius: 0;
+    margin: 0;
+}
+
+#player-comparison-table {
+    td:first-child {
+        text-align: left;
+    }
+    td,
+    th {
+        text-align: center;
+    }
+}
+
+#players-table {
+    td,
+    th {
+        text-align: center;
+    }
+}
+
+#player-hits-table {
+    label {
+        display: block;
+    }
+    td {
+        text-align: center;
+    }
+}
+
+#dartboard-heatmap {
+    width: 600px;
+    height: 600px;
+    background-image: url(@dart-board-image);
+    background-size: 100% 100%;
+}
+
+#match-result-table {
+    label {
+        display: block;
+    }
+    td {
+        text-align: center;
+    }
+}
+
+#match-visits-table label {
+    display: block;
+    text-align: center;
+}
+
+#match-hits-table {
+    label {
+        display: block;
+    }
+    td {
+        text-align: center;
+    }
 }

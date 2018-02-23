@@ -22,7 +22,7 @@ router.get('/', function (req, res, next) {
                 });
         }).catch(error => {
             debug('Error when getting games: ' + error);
-            next(error)
+            next(error);
         });
 });
 
