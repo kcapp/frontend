@@ -1,7 +1,7 @@
 var debug = require('debug')('kcapp:socketio-handler');
-const axios = require('axios');
+var axios = require('axios');
 
-module.exports = (io) => {
+module.exports = (io, app) => {
     this.io = io;
     return {
         emitMessage: (matchId, type, message) => {
@@ -48,12 +48,12 @@ module.exports = (io) => {
                     client.on('throw', function (data) {
                         debug('Received throw from ' + client.handshake.address);
                         var body = JSON.parse(data);
-                        axios.post(req.app.locals.kcapp.api + '/visit', body)
+                        axios.post(app.locals.kcapp.api + '/visit', body)
                             .then(() => {
-                                axios.get(req.app.locals.kcapp.api + '/match/' + body.match_id)
+                                axios.get(app.locals.kcapp.api + '/match/' + body.match_id)
                                     .then(response => {
                                         var match = response.data;
-                                        axios.get(req.app.locals.kcapp.api + '/match/' + body.match_id + '/players')
+                                        axios.get(app.locals.kcapp.api + '/match/' + body.match_id + '/players')
                                             .then(response => {
                                                 var players = response.data;
                                                 nsp.emit('score_update', { players: players, match: match });

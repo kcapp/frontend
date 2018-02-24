@@ -19,7 +19,7 @@ app.locals.kcapp = {};
 app.locals.kcapp.api = 'http://localhost:8001';
 
 // Create all routes
-var socketHandler = require('./routes/lib/socketio_handler')(io);
+var socketHandler = require('./routes/lib/socketio_handler')(io, app);
 var games = require('./routes/games')(socketHandler);
 var index = require('./routes/index');
 var matches = require('./routes/matches')(app, socketHandler);
