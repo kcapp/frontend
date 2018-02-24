@@ -15,7 +15,7 @@ block content
 
     - var duration = moment.duration(moment(game.end_time).diff(game.created_at)).asMinutes().toFixed()
     p.
-        Type: #{game.game_type.name} <br>
+        Type: #{game.game_mode.name} <br>
         Started: #{moment(game.created_at).format('YYYY-MM-DD HH:mm:ss')} <br>
         Finished: #{game.end_time === undefined ? '-' : moment(game.end_time).format('YYYY-MM-DD HH:mm:ss')} <br>
         Stakes: #{game.owe_type_id === null ? "None" : game.owe_type.item} <br>

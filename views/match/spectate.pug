@@ -174,7 +174,7 @@ block content
                 tr
                     td(class='txt-center' style='width: 6%;')
                         label(id='round-number' class='match_information')= 'R' + (Math.floor(match.visits.length / match.players.length) + 1)
-                        label(class='match_information')= game.game_type.short_name
+                        label(class='match_information')= game.game_mode.short_name
                     each player in match_players
                         +get_player_cell(player)
 

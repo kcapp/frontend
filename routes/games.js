@@ -110,6 +110,7 @@ router.post('/new', function (req, res, next) {
     var body = {
         owe_type_id: req.body.game_stake == 0 ? null : parseInt(req.body.game_stake),
         game_type: { id: parseInt(req.body.game_type) },
+        game_mode: { id: parseInt(req.body.game_mode) },
         players: players.map(Number),
         matches: [{ starting_score: parseInt(req.body.starting_score) }]
     }

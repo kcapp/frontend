@@ -44,7 +44,8 @@ block content
                 tr
                     th(hidden=true)
                     th Start Time
-                    th Game type
+                    th Mode
+                    th type
                     th Players
                     th Winner
                     th Results
@@ -53,7 +54,8 @@ block content
                     tr
                         th(hidden='true' scope='row')= game.id
                         td(class='col-sm-2')= moment(game.created_at).format('YYYY-MM-DD HH:mm:ss')
-                        td(class='col-sm-2')= game.game_type.name
+                        td(class='col-sm-1')= game.game_type.name
+                        td(class='col-sm-1')= game.game_mode.name
                         td(class='col-sm-1')
                             each id in game.players
                                 div(style='margin-bottom: 5px;')

@@ -16,7 +16,7 @@ block script_check_visit_finished
             if (lastDart) {
                 visits++;
             }
-            isFinished = ((visits * 3) % (9 * match.players.length) === 0);
+            isFinished = visits > 0 && ((visits * 3) % (9 * match.players.length) === 0);
 
             var currentPlayer = $('#current-player');
             var currentPlayerScore = parseInt(currentPlayer.text());

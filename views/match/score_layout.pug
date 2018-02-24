@@ -274,7 +274,7 @@ block content
                 tr(class='row')
                     td(class='txt-center')
                         label(id='round-number' class='match-information')= 'R' + (Math.floor(match.visits.length / match.players.length) + 1)
-                        label(class='match-information')= '/' +game.game_type.short_name
+                        label(class='match-information')= '/' +game.game_mode.short_name
                     - var length = 12 / Object.keys(match.players).length
                     each player in match_players
                         mixin player_label(player)

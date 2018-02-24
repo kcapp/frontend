@@ -12,19 +12,26 @@ router.get('/', function (req, res, next) {
         .then(response => {
             var players = response.data
             players = _.sortBy(players, (player) => player.name);
-            axios.get(req.app.locals.kcapp.api + '/gametype')
+            axios.get(req.app.locals.kcapp.api + '/game/modes')
                 .then(response => {
-                    var gameTypes = response.data;
+                    var gameModes = response.data;
                     axios.get(req.app.locals.kcapp.api + '/owetype')
                         .then(response => {
                             var oweTypes = response.data;
-                            res.render('index', { players: players, game_types: gameTypes, owe_types: oweTypes });
+                            axios.get(req.app.locals.kcapp.api + '/game/types')
+                                .then(response => {
+                                    var gameTypes = response.data;
+                                    res.render('index', { players: players, game_modes: gameModes, game_types: gameTypes, owe_types: oweTypes });
+                                }).catch(error => {
+                                    debug('Error when getting owe types: ' + error);
+                                    next(error);
+                                });
                         }).catch(error => {
                             debug('Error when getting owe types: ' + error);
                             next(error);
                         });
                 }).catch(error => {
-                    debug('Error when getting game types: ' + error);
+                    debug('Error when getting game modes: ' + error);
                     next(error);
                 });
         }).catch(error => {

@@ -8,6 +8,7 @@ block append head
 block append scripts
     script.
         var match = !{JSON.stringify(match)}
+        var game = !{JSON.stringify(game)}
         var players = !{JSON.stringify(players)}
         var visits = match.visits;
 
@@ -19,6 +20,8 @@ block append scripts
         }
         var round = 1;
         labels.push(round);
+
+        var chartMaxValue = game.game_type.id == 1 ? match.starting_score : 0;
         for (var i = 0; i < visits.length; i++) {
             var visit = visits[i];
             if (i % match.players.length === 0) {
@@ -30,9 +33,19 @@ block append scripts
                 values[visit.player_id].push(current);
             }
             else {
-                values[visit.player_id].push(current -((visit.first_dart.value * visit.first_dart.multiplier) +
+                var visitScore = ((visit.first_dart.value * visit.first_dart.multiplier) +
                     (visit.second_dart.value * visit.second_dart.multiplier) +
-                    (visit.third_dart.value * visit.third_dart.multiplier)));
+                    (visit.third_dart.value * visit.third_dart.multiplier))
+                if (game.game_type.id == 2) {
+                    current = current + visitScore
+                    values[visit.player_id].push(current);
+                    if (current > chartMaxValue) {
+                        chartMaxValue = current;
+                    }
+                }
+                else {
+                    values[visit.player_id].push(current - visitScore);
+                }
             }
         }
 
@@ -50,7 +63,7 @@ block append scripts
                 });
             }
             var config = getChartConfig('Scores', 'line', 'Round', 'Scores', labels, datasets);
-            config.options.scales.yAxes[0].ticks = { max: match.starting_score, stepSize: 20, beginAtZero: true };
+            config.options.scales.yAxes[0].ticks = { max: chartMaxValue, stepSize: 20, beginAtZero: true };
             var scoresChart = new Chart("canvas-scores", config);
         });
     script.
