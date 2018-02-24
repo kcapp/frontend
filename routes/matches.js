@@ -16,6 +16,11 @@ router.get('/:id/keyboard', function (req, res, next) {
     renderMatchView('match/keyboard_entry', req, res, next);
 });
 
+/** Render the match view (keyboard entry) */
+router.get('/:id/nine', function (req, res, next) {
+    renderMatchView('match/nine_darts', req, res, next);
+});
+
 /* Render the match spectate view */
 router.get('/:id/spectate', function (req, res, next) {
     axios.get(req.app.locals.kcapp.api + '/player')

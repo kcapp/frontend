@@ -57,75 +57,6 @@ block scripts
             dart.attr('data-multiplier', multiplier);
         }
 
-        function checkVisitFinished(dart, currentPlayerScore, currentPlayerId, scoreNumeric) {
-            var isBust = false;
-            var isFinished = false;
-
-            var scoreAfterThrow = parseInt(currentPlayerScore - scoreNumeric);
-            if (scoreAfterThrow == 0) {
-                if (dart.attr('data-multiplier') == 2) {
-                    disableEnter = true;
-                    showConfirm('Game will be finished.', function() {
-                        isFinished = true;
-                        socket.emit('possible_throw', {
-                                current_player_id: currentPlayerId,
-                                score: scoreNumeric,
-                                dart_text: dart.text(),
-                                multiplier: dart.attr('data-multiplier'),
-                                is_bust: isBust,
-                                is_finished: isFinished,
-                                darts_thrown: window.darts_thrown + 1
-                        });
-
-                        // End game, 'click' submit
-                        $('#submit-score-button').data('finished', 1).trigger('click');
-                    }, function(){
-                        $('#undoButton').trigger('click');
-                    });
-                    return;
-                }
-                else {
-                    isBust = true;
-                }
-            }
-            else if (scoreAfterThrow <= 1) {
-                isBust = true;
-            }
-
-            if (isBust) {
-                disableEnter = true;
-                showConfirm('Player busted', function() {
-                    // Emit a dart throw for spectators
-                    socket.emit('possible_throw', {
-                            current_player_id: currentPlayerId,
-                            score: scoreNumeric,
-                            dart_text: dart.text(),
-                            multiplier: dart.attr('data-multiplier'),
-                            is_bust: isBust,
-                            is_finished: isFinished,
-                            darts_thrown: window.darts_thrown + 1
-                    });
-                    alertify.success('Player busted');
-                    $('#submit-score-button').data('busted', 1).trigger('click');
-                }, function(){
-                    // Clear the score for thrown dart
-                    $('#undo-button').trigger('click');
-                });
-            }
-            else {
-                // Emit a dart throw for spectators
-                this.socket.emit('possible_throw', {
-                        current_player_id: currentPlayerId,
-                        score: scoreNumeric,
-                        dart_text: dart.text(),
-                        multiplier: dart.attr('data-multiplier'),
-                        is_bust: isBust,
-                        is_finished: isFinished,
-                        darts_thrown: window.darts_thrown + 1
-                });
-            }
-        }
-
         $(function () {
             FastClick.attach(document.body);
 
@@ -184,12 +115,8 @@ block scripts
                 var score = $(this).attr('title')
                 updateScore(dart, score, multiplier)
 
-                var currentPlayer = $('#current-player');
                 var scoreNumeric = parseInt(score)
-                var currentPlayerScore = parseInt(currentPlayer.text());
-                var currentPlayerId = $('#submit-score-button').data('current-player-id');
-                checkVisitFinished(dart, currentPlayerScore, currentPlayerId, scoreNumeric)
-                currentPlayer.text(currentPlayerScore - scoreNumeric);
+                checkVisitFinished(dart, scoreNumeric)
 
                 scores[window.darts_thrown] = scoreNumeric;
                 window.darts_thrown++;
@@ -250,6 +177,83 @@ block scripts
                 }, function(){ /* NOOP */ });
             });
         });
+
+    block script_check_visit_finished
+        script.
+            function checkVisitFinished(dart, scoreNumeric) {
+                var isBust = false;
+                var isFinished = false;
+
+                var currentPlayer = $('#current-player');
+                var currentPlayerScore = parseInt(currentPlayer.text());
+                var currentPlayerId = $('#submit-score-button').data('current-player-id');
+
+                var scoreAfterThrow = parseInt(currentPlayerScore - scoreNumeric);
+                if (scoreAfterThrow == 0) {
+                    if (dart.attr('data-multiplier') == 2) {
+                        disableEnter = true;
+                        showConfirm('Game will be finished.', function() {
+                            isFinished = true;
+                            socket.emit('possible_throw', {
+                                    current_player_id: currentPlayerId,
+                                    score: scoreNumeric,
+                                    dart_text: dart.text(),
+                                    multiplier: dart.attr('data-multiplier'),
+                                    is_bust: isBust,
+                                    is_finished: isFinished,
+                                    darts_thrown: window.darts_thrown + 1
+                            });
+
+                            // End game, 'click' submit
+                            $('#submit-score-button').data('finished', 1).trigger('click');
+                        }, function(){
+                            $('#undoButton').trigger('click');
+                        });
+                        return;
+                    }
+                    else {
+                        isBust = true;
+                    }
+                }
+                else if (scoreAfterThrow <= 1) {
+                    isBust = true;
+                }
+
+                if (isBust) {
+                    disableEnter = true;
+                    showConfirm('Player busted', function() {
+                        // Emit a dart throw for spectators
+                        socket.emit('possible_throw', {
+                                current_player_id: currentPlayerId,
+                                score: scoreNumeric,
+                                dart_text: dart.text(),
+                                multiplier: dart.attr('data-multiplier'),
+                                is_bust: isBust,
+                                is_finished: isFinished,
+                                darts_thrown: window.darts_thrown + 1
+                        });
+                        alertify.success('Player busted');
+                        $('#submit-score-button').data('busted', 1).trigger('click');
+                    }, function(){
+                        // Clear the score for thrown dart
+                        $('#undo-button').trigger('click');
+                    });
+                }
+                else {
+                    // Emit a dart throw for spectators
+                    this.socket.emit('possible_throw', {
+                            current_player_id: currentPlayerId,
+                            score: scoreNumeric,
+                            dart_text: dart.text(),
+                            multiplier: dart.attr('data-multiplier'),
+                            is_bust: isBust,
+                            is_finished: isFinished,
+                            darts_thrown: window.darts_thrown + 1
+                    });
+                }
+                currentPlayer.text(currentPlayerScore - scoreNumeric);
+            }
+
 
 block content
     div(id='cancel-match-failed-alert' class='alert alert-danger' role='alert' hidden='true').

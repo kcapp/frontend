@@ -14,6 +14,19 @@ block scripts
                 var allPlayersList = $('#all-players-list');
                 $(this).parent().appendTo(allPlayersList).addClass('float-left');
             });
+
+
+            $('#game-type-select').on('change', function() {
+                // FIXME: need to introduce a "game mode"?
+                if (this.value == 7) {
+                    $('#match-type-select').prop('disabled', true);
+                    $('#match-type-select').val('0');
+                }
+                else {
+                    $('#match-type-select').prop('disabled', false);
+                    $('#match-type-select').val('501');
+                }
+            });
         });
 
 block content
@@ -22,7 +35,7 @@ block content
         Start a new darts game, view players, owes, statistics or previous games
     p
         button(class='btn btn-primary' type='button' data-toggle='collapse' data-target='#new-match-collapse' aria-expanded='false' aria-controls='new-match-collapse') Create Match »
-    
+
     div(class='collapse' id='new-match-collapse')
         div(class='card card-block')
             if players.length == 0
@@ -46,6 +59,7 @@ block content
                             option 301
                             option(selected='selected') 501
                             option 701
+                            option(hidden='true') 0
 
                     div(class='form-group')
                         label(for='game-type-select') Game Mode

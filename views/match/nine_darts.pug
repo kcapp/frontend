@@ -1,0 +1,34 @@
+extends score_layout.pug
+
+block append scripts
+    script.
+        $(function () {
+
+        });
+
+block script_check_visit_finished
+    script.
+        function checkVisitFinished(dart, scoreNumeric) {
+            var currentPlayer = $('#current-player');
+            var currentPlayerScore = parseInt(currentPlayer.text());
+            var playerId = $('#submit-score-button').data('current-player-id');
+
+            // Emit a dart throw for spectators
+            this.socket.emit('possible_throw', {
+                    current_player_id: playerId,
+                    score: scoreNumeric,
+                    dart_text: dart.text(),
+                    multiplier: dart.attr('data-multiplier'),
+                    is_bust: false,
+                    is_finished: false,
+                    darts_thrown: window.darts_thrown + 1
+            });
+            currentPlayer.text(currentPlayerScore + scoreNumeric);
+        }
+
+block title
+    h2 Match (Nine Shootout)
+
+block advanced_options
+    li: a(id='edit-scores-button') Edit scores
+    li: a(id='cancel-match-button') Cancel Match
