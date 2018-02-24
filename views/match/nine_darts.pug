@@ -1,14 +1,23 @@
 extends score_layout.pug
 
-block append scripts
-    script.
-        $(function () {
-
-        });
-
 block script_check_visit_finished
     script.
+        function updatePlayerScore(score) {
+            var currentPlayer = $('#current-player');
+            var currentScore = parseInt(currentPlayer.text());
+            currentPlayer.text(currentScore + score);
+        }
+
         function checkVisitFinished(dart, scoreNumeric) {
+            var isFinished = false;
+
+            var lastDart = Object.keys(scores).length === 3;
+            var visits = match.visits.length;
+            if (lastDart) {
+                visits++;
+            }
+            isFinished = ((visits * 3) % (9 * match.players.length) === 0);
+
             var currentPlayer = $('#current-player');
             var currentPlayerScore = parseInt(currentPlayer.text());
             var playerId = $('#submit-score-button').data('current-player-id');
@@ -20,10 +29,20 @@ block script_check_visit_finished
                     dart_text: dart.text(),
                     multiplier: dart.attr('data-multiplier'),
                     is_bust: false,
-                    is_finished: false,
+                    is_finished: isFinished,
                     darts_thrown: window.darts_thrown + 1
             });
-            currentPlayer.text(currentPlayerScore + scoreNumeric);
+
+            updatePlayerScore(scoreNumeric);
+
+            if (isFinished) {
+                showConfirm('Game will be finished.', function() {
+                    // End game, 'click' submit
+                    $('#submit-score-button').data('finished', 1).trigger('click');
+                }, function(){
+                    $('#undo-button').trigger('click');
+                });
+            }
         }
 
 block title

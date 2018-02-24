@@ -116,9 +116,9 @@ block scripts
                 updateScore(dart, score, multiplier)
 
                 var scoreNumeric = parseInt(score)
-                checkVisitFinished(dart, scoreNumeric)
-
                 scores[window.darts_thrown] = scoreNumeric;
+
+                checkVisitFinished(dart, scoreNumeric)
                 window.darts_thrown++;
             });
 
@@ -127,15 +127,15 @@ block scripts
                 if (window.darts_thrown < 1) {
                     return;
                 }
-                var currentPlayerId = $('#submit-score-button').data('current-player-id');
-                var currentPlayer = $('#current-player');
-                var currentPlayerScore = parseInt(currentPlayer.text());
+                var playerId = $('#submit-score-button').data('current-player-id');
+                var currentPlayerScore = parseInt($('#current-player').text());
                 window.darts_thrown--;
-                currentPlayer.text(currentPlayerScore + scores[window.darts_thrown]);
+                updatePlayerScore(-scores[window.darts_thrown]);
+                delete scores[window.darts_thrown]
 
                 // Emit a undo throw to spectators
                 socket.emit('undo_throw', {
-                        current_player_id: currentPlayerId,
+                        current_player_id: playerId,
                         score: -scores[window.darts_thrown],
                         dart_text: '',
                         multiplier: 1,
@@ -144,16 +144,7 @@ block scripts
                         darts_thrown: window.darts_thrown + 1
                 });
 
-                var dart;
-                if (window.darts_thrown === 0) {
-                    dart = $('#first');
-                }
-                else if (window.darts_thrown === 1) {
-                    dart = $('#second');
-                }
-                else if (window.darts_thrown === 2) {
-                    dart = $('#third');
-                }
+                var dart = getCurrentDart();
                 dart.text('');
                 dart.removeAttr('data-score');
             });
@@ -180,6 +171,12 @@ block scripts
 
     block script_check_visit_finished
         script.
+            function updatePlayerScore(score) {
+                var currentPlayer = $('#current-player');
+                var currentScore = parseInt(currentPlayer.text());
+                currentPlayer.text(currentScore - score);
+            }
+
             function checkVisitFinished(dart, scoreNumeric) {
                 var isBust = false;
                 var isFinished = false;
@@ -207,7 +204,7 @@ block scripts
                             // End game, 'click' submit
                             $('#submit-score-button').data('finished', 1).trigger('click');
                         }, function(){
-                            $('#undoButton').trigger('click');
+                            $('#undo-button').trigger('click');
                         });
                         return;
                     }
@@ -251,7 +248,7 @@ block scripts
                             darts_thrown: window.darts_thrown + 1
                     });
                 }
-                currentPlayer.text(currentPlayerScore - scoreNumeric);
+                updatePlayerScore(scoreNumeric);
             }
 
 

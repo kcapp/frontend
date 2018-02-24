@@ -51,7 +51,10 @@ function setupSocketIO(matchId) {
     socket.on('score_update', function (data) {
         $('#submit-score-button').prop('disabled', false);
 
-        var match = data.match;
+        // Set the global match object
+        match = data.match;
+        scores = {};
+
         $('#round-number').text('R' + (Math.floor(match.visits.length / match.players.length) + 1));
 
         // Set updated score per player
