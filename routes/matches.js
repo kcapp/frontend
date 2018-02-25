@@ -49,6 +49,40 @@ router.get('/:id/spectate', function (req, res, next) {
         });
 });
 
+/* Render the match umpire view */
+router.get('/:id/umpire', function (req, res, next) {
+    axios.get(req.app.locals.kcapp.api + '/player')
+        .then(response => {
+            var playersMap = response.data;
+            axios.get(req.app.locals.kcapp.api + '/match/' + req.params.id)
+                .then(response => {
+                    var match = response.data;
+                    axios.get(req.app.locals.kcapp.api + '/game/' + match.game_id)
+                        .then(response => {
+                            var game = response.data;
+                            axios.get(req.app.locals.kcapp.api + '/match/' + req.params.id + '/players')
+                                .then(response => {
+                                    var matchPlayers = response.data;
+                                    res.render('match/umpire', { match: match, players: playersMap, game: game, match_players: matchPlayers });
+                                }).catch(error => {
+                                    debug('Error when getting match players: ' + error);
+                                    next(error);
+                                });
+                        }).catch(error => {
+                            debug('Error when getting game: ' + error);
+                            next(error);
+                        });
+                }).catch(error => {
+                    debug('Error when getting match: ' + error);
+                    next(error);
+                });
+        }).catch(error => {
+            debug('Error when getting players: ' + error);
+            next(error);
+        });
+});
+
+
 /* Method for getting results for a given leg */
 router.get('/:id/leg', function (req, res, next) {
     axios.get(req.app.locals.kcapp.api + '/player')
