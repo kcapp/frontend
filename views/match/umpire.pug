@@ -1,0 +1,232 @@
+extends ../layout.pug
+
+block scripts
+    script(src='/javascripts/socket.io-2.0.3.min.js')
+    script.
+        var match = !{JSON.stringify(match)}
+        var playersMap = !{JSON.stringify(players)}
+        $(function () {
+            var matchId = match.id;
+            var socket = io(window.location.protocol + '//' + window.location.host + '/matches/' + matchId);
+            socket.on('connect', function(data) {
+                socket.emit('join', 'Client Conneting');
+            });
+
+            socket.on('connected', function(data) {
+                // Send message to client announcing that we are spectating
+                socket.emit('spectator_connected', '');
+            });
+
+            socket.on('possible_throw', function(data) {
+                var dart;
+                if (data.darts_thrown === 1) {
+                    dart = $('#first');
+                }
+                else if (data.darts_thrown === 2) {
+                    dart = $('#second');
+                }
+                else if (data.darts_thrown === 3) {
+                    dart = $('#third');
+                }
+                else {
+                    console.log("Unknown darts_thrown: " + data.darts_thrown);
+                    return;
+                }
+                dart.text(data.dart_text);
+
+                dart.removeClass('dart-score-single dart-score-double dart-score-triple');
+                if (data.multiplier == 3) {
+                    dart.addClass('dart-score-triple');
+                }
+                else if (data.multiplier == 2) {
+                    dart.addClass('dart-score-double');
+                }
+                else {
+                    dart.addClass('dart-score-single');
+                }
+
+                // Update player score
+                var playerScore = $('#player-id-' + data.current_player_id);
+                playerScore.text(parseInt(playerScore.text()) - data.score);
+                $('#total').text(data.score + parseInt($('#total').text()));
+
+                if (data.is_finished) {
+                    var text = playersMap[data.current_player_id].name + ' won the leg';
+                    showAlert(text, function() {
+                        alertify.success('Leg finished');
+                    });
+                }
+            });
+
+            socket.on('score_update', function(data) {
+                console.log(data);
+                var players = data.players;
+                for (key in players) {
+                    var player = players[key];
+                    var playerLabel = $('#player-id-' + player.player_id);
+                    var playerTD = $('#player-score-' + player.player_id);
+                    var playerLegsTD = $('#player-legs-' + player.player_id);
+                    playerLabel.text(player.current_score);
+                    //$('#player-id-' + player.id + '-ppd').text(player.ppd.toFixed(2));
+                    if (player.is_current_player) {
+                        playerTD.removeClass('uv-inactive-player-score');
+                        playerTD.addClass('uv-active-player-score');
+                        playerLegsTD.removeClass('uv-inactive-player-legs');
+                        playerLegsTD.addClass('uv-active-player-legs');
+                        $('#current-player').text(player.name);
+                    } else {
+                        playerTD.addClass('uv-inactive-player-score');
+                        playerTD.removeClass('uv-active-player-score');
+                        playerLegsTD.addClass('uv-inactive-player-legs');
+                        playerLegsTD.removeClass('uv-active-player-legs');
+                    }
+                }
+                // Set round number
+                $('#round-number').text('R' + (Math.floor(data.match.visits.length / data.match.players.length) + 1));
+
+                // Reset UI elements
+                $('#first').text('');
+                $('#second').text('');
+                $('#third').text('');
+                $('#total').text(0);
+
+                // Update the visits table
+                var visit = data.match.visits[data.match.visits.length - 1];
+                var playerName = playersMap[visit.player_id].name;
+                var total = (visit.first_dart.multiplier * visit.first_dart.value ) +
+                    (visit.second_dart.multiplier * visit.second_dart.value) +
+                    (visit.third_dart.multiplier * visit.third_dart.value);
+                if (visit.is_bust) {
+                    total = 'BUST';
+                }
+                var html =
+                    "<tr>" +
+                        "<td>" + playerName + "</td>" +
+                        "<td class='dart-score-container no-border'><label class='" + getDartCSS(visit.first_dart) + "'>" + getScoreString(visit.first_dart) + "</label></td>" +
+                        "<td class='dart-score-container no-border'><label class='" + getDartCSS(visit.second_dart) + "'>" + getScoreString(visit.second_dart) + "</label></td>" +
+                        "<td class='dart-score-container no-border'><label class='" + getDartCSS(visit.third_dart) + "'>" + getScoreString(visit.third_dart) + "</label></td>" +
+                        "<td><label>" + total + "</label></td>" +
+                    "</tr>";
+                $('#match-visits-table > tbody > tr:first').after(html);
+            });
+
+            socket.on('match_finished', function(data) {
+                console.log(data);
+                location.href = '/match/' + data.new_match_id + '/umpire';
+            });
+
+            // Reverse the rows in the table to show newest throws first
+            var tbody = $('#match-visits-table tbody');
+            tbody.html($('tr', tbody).get().reverse());
+
+            // Add a row to the top of the table which contains the current throw for a given player
+            if (!match.is_finished) {
+                var html =
+                    "<tr>" +
+                        "<td id='current-player' style='height: 50px;'>" + playersMap[match.current_player_id].name + "</td>" +
+                        "<td class='dart-score-container no-border'><label id='first' text='0'></label></td>" +
+                        "<td class='dart-score-container no-border'><label id='second' text='0'></label></td>" +
+                        "<td class='dart-score-container no-border'><label id='third' text='0'></label></td>" +
+                        "<td><label id='total' text='0'>0</label></td>" +
+                    "</tr>";
+                $('#match-visits-table').prepend(html);
+            }
+
+            function getDartCSS(dart) {
+                switch (dart.multiplier) {
+                    case 3: return 'dart-score-triple';
+                    case 2: return 'dart-score-double';
+                    default: return 'dart-score-single';
+                }
+            }
+
+            function getScoreString(dart) {
+                var score = dart.value;
+                if (score === 0) {
+                    return 'Miss';
+                }
+                else if (score === 25) {
+                    score = 'Bull';
+                }
+
+                if (dart.multiplier === 3) {
+                    return 'T-' + score;
+                }
+                else if (dart.multiplier === 2) {
+                    return 'D-' + score;
+                }
+                return score;
+            }
+        });
+
+block content
+    mixin get_player_cell(player)
+        - var playerId = player.player_id;
+        td(id='player-score-' + playerId class=player.is_current_player ? 'uv-active-player-score' : 'uv-inactive-player-score')
+            label(id='player-name-' + playerId class='label-player-name')= players[playerId].name + (player.wins ? ' (' + player.wins + ')' : '')
+            label(id='player-id-' + playerId class='label label-block label-player-score-umpire')= player.current_score
+    
+    mixin get_player_legs(player)
+        - var playerId = player.player_id;
+        td(id='player-legs-' + playerId class=player.is_current_player ? 'uv-active-player-legs' : 'uv-inactive-player-legs')
+            label= (player.wins ? ' (' + player.wins + ')' : '0')
+
+    div(class='table-responsive no-border')
+        table(class='uv-table-players' id='player-spectate-table' style='table-layout: fixed')
+            tbody
+                tr
+                    each player in match_players
+                        +get_player_cell(player)
+                tr
+                    each player in match_players
+                        +get_player_legs(player)
+
+    div(class='table-responsive no-border')
+        table(class='uv-table-mode' style='table-layout: fixed')
+            tbody
+                tr
+                    td= game.game_type.short_name + ' / ' + 'R' + (Math.floor(match.visits.length / match.players.length) + 1)
+
+    mixin get_dart_label(dart)
+        if dart.multiplier == 3
+            label(class='dart-score-triple')= 'T-' + dart.value
+        else if dart.multiplier == 2
+            if value == 25
+                label(class='dart-score-double') Bull
+            else
+                label(class='dart-score-double')= 'D-' + dart.value
+        else
+            if dart.value == 0
+                label(class='dart-score-single') Miss
+            else if dart.value == 25
+                label(class='dart-score-single') Bull
+            else
+                label(class='dart-score-single')= dart.value
+
+    h3 Visits
+    div(class='table-responsive')
+        table(class='table table-striped table-bordered' id='match-visits-table' style='table-layout: fixed;')
+            thead
+                tr
+                    th Player
+                    th First
+                    th Second
+                    th Third
+                    th Total
+            tbody
+                each visit in match.visits
+                    tr
+                        td= players[visit.player_id].name
+                        td(class='dart-score-container no-border')
+                            +get_dart_label(visit.first_dart)
+
+                        td(class='dart-score-container no-border')
+                            +get_dart_label(visit.second_dart)
+
+                        td(class='dart-score-container no-border')
+                            +get_dart_label(visit.third_dart)
+                        td
+                            if visit.is_bust
+                                label BUST
+                            else
+                                label= (visit.first_dart.multiplier * visit.first_dart.value ) + (visit.second_dart.multiplier * visit.second_dart.value) + (visit.third_dart.multiplier * visit.third_dart.value)

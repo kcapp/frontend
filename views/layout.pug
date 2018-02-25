@@ -29,9 +29,9 @@ html
         alertify.defaults.theme.cancel = "btn btn-basic";
         alertify.defaults.theme.input = "form-control";
 
-    title kcapp
+      title kcapp
 
-    block scripts
+      block scripts
   body
     div(class='container')
       nav(class='navbar navbar-default')
@@ -45,10 +45,9 @@ html
             a(class='navbar-brand' href='/') Darts Scorer
           div(id='navbar' class='navbar-collapse collapse')
             ul(class='nav navbar-nav')
-              li(class='active')
-                li: a(href='/players') Players
-                li: a(href='/owes') Owes
-                li: a(href='/statistics/weekly') Statistics
-                li: a(href='/games') Games
+              li: a(href='/players') Players
+              li: a(href='/owes') Owes
+              li: a(href='/statistics/weekly') Statistics
+              li: a(href='/games') Games
       div(id='jumbotron' class='jumbotron')
         block content
