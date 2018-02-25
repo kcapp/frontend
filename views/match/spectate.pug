@@ -65,19 +65,21 @@ block scripts
                 var players = data.players;
                 for (key in players) {
                     var player = players[key];
-                    var playerLabel = $('#player-id-' + player.player_id);
                     var playerTD = $('#player-score-' + player.player_id);
-                    playerLabel.text(player.current_score);
-                    //$('#player-id-' + player.id + '-ppd').text(player.ppd.toFixed(2));
 
+                    var playerLabel2 = playerTD.children('label')[0];
+                    var playerLabel = $('#player-id-' + player.player_id);
+
+                    console.log(playerLabel2 === playerLabel);
+                    playerLabel.text(player.current_score);
+
+                    playerTD.removeClass('label-inactive-player label-active-player');
                     if (player.is_current_player) {
-                        playerTD.addClass('label-active-player')
-                        playerTD.removeClass('label-inactive-player');
+                        playerTD.addClass('label-active-player');
                         $('#current-player').text(player.name);
                     }
                     else {
                         playerTD.addClass('label-inactive-player');
-                        playerTD.removeClass('label-active-player');
                     }
                 }
                 // Set round number
@@ -98,6 +100,7 @@ block scripts
                 if (visit.is_bust) {
                     total = 'BUST';
                 }
+                // Append the score to the beginning of the table
                 var html =
                     "<tr>" +
                         "<td>" + playerName + "</td>" +
@@ -110,8 +113,7 @@ block scripts
             });
 
             socket.on('match_finished', function(data) {
-                console.log(data);
-                location.href = '/match/' + data.new_match_id + '/spectate';
+                location.href = '/matches/' + data.new_match_id + '/spectate';
             });
 
             // Reverse the rows in the table to show newest throws first
