@@ -112,7 +112,7 @@ block scripts
 
             socket.on('match_finished', function(data) {
                 console.log(data);
-                location.href = '/match/' + data.new_match_id + '/umpire';
+                location.href = '/matches/' + data.new_match_id + '/umpire';
             });
 
             // Reverse the rows in the table to show newest throws first
