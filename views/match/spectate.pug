@@ -65,12 +65,12 @@ block scripts
                 var players = data.players;
                 for (key in players) {
                     var player = players[key];
-                    var playerLabel = $('#player-id-' + player.id);
-                    var playerTD = $('#player-score-' + player.id);
+                    var playerLabel = $('#player-id-' + player.player_id);
+                    var playerTD = $('#player-score-' + player.player_id);
                     playerLabel.text(player.current_score);
                     //$('#player-id-' + player.id + '-ppd').text(player.ppd.toFixed(2));
 
-                    if (player.current) {
+                    if (player.is_current_player) {
                         playerTD.addClass('label-active-player')
                         playerTD.removeClass('label-inactive-player');
                         $('#current-player').text(player.name);
@@ -165,7 +165,7 @@ block content
         - var playerId = player.player_id;
         td(id='player-score-' + playerId class=player.is_current_player ? 'label-active-player' : 'label-inactive-player')
             label(id='player-id-' + playerId class='label label-block label-player-score')= player.current_score
-            label(id='player-name-' + players[playerId].name class='label-player-name')= players[playerId].name + (player.wins ? ' (' + player.wins + ')' : '')
+            label(class='label-player-name')= players[playerId].name + (player.wins ? ' (' + player.wins + ')' : '')
 
     h3 Players
     div(class='table-responsive')
