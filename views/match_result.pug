@@ -70,7 +70,7 @@ block append scripts
         var match = !{JSON.stringify(match)}
 
         $(function () {
-            $('#hits_table').DataTable({
+            $('#match-hits-table').DataTable({
                 searching: false,
                 bInfo : false,
                 iDisplayLength: 50,
@@ -261,36 +261,61 @@ block content
 
     - var isFinished = match.winner_player_id !== null
     if isFinished
-        table(id='match-result-table' class='table table-striped table-bordered')
-            thead
-                tr
-                    th Player
-                    th PPD / First 9
-                    th Checkout %
-                    th Scores
-                    th Accuracy
-                    th Winner
-            tbody
-                each statistic in stats
+        if game.game_type.id == 2
+            table(id='match-result-table' class='table table-striped table-bordered')
+                thead
                     tr
-                        td: p= players[statistic.player_id].name
-                        td: p= statistic.ppd.toFixed(2) + ' / ' + statistic.first_nine_ppd.toFixed(2)
-                        if statistic.player_id === match.winner_player_id
-                            td: p= statistic.checkout_percentage === null ? '-' : statistic.checkout_percentage.toFixed(2)
-                        else
-                            td: p -
-                        td
-                            p= statistic.scores_60s_plus === 0 ? "" : "60+: " + statistic.scores_60s_plus
-                            p= statistic.scores_100s_plus === 0 ? "" : "100+: " + statistic.scores_100s_plus
-                            p= statistic.scores_140s_plus=== 0 ? "" : "140+: " + statistic.scores_140s_plus
-                            p= statistic.scores_180s === 0 ? "" : "180:  " + statistic.scores_180s
-                        - var accuracy_20 = statistic.accuracy_20 === null ? '-' : statistic.accuracy_20.toFixed(2)
-                        - var accuracy_19 = statistic.accuracy_19 === null ? '-' : statistic.accuracy_19.toFixed(2)
-                        td: p= statistic.accuracy_overall.toFixed(2) + ' / ' + accuracy_20 + ' / ' + accuracy_19
-                        if statistic.player_id === match.winner_player_id
-                            td: span(class='glyphicon glyphicon-ok' aria-hidden='true')
-                        else
-                            td: p= players[statistic.player_id].remaining_score + ' left'
+                        th Player
+                        th PPD
+                        th High Scores
+                        th Score
+                        th Winner
+                tbody
+                    each statistic in stats
+                        tr
+                            td: p= players[statistic.player_id].name
+                            td: p= statistic.ppd.toFixed(2)
+                            td
+                                p= statistic.scores_60s_plus === 0 ? "" : "60+: " + statistic.scores_60s_plus
+                                p= statistic.scores_100s_plus === 0 ? "" : "100+: " + statistic.scores_100s_plus
+                                p= statistic.scores_140s_plus=== 0 ? "" : "140+: " + statistic.scores_140s_plus
+                                p= statistic.scores_180s === 0 ? "" : "180:  " + statistic.scores_180s
+                            td: p= players[statistic.player_id].remaining_score
+                            if statistic.player_id === match.winner_player_id
+                                td: span(class='glyphicon glyphicon-ok' aria-hidden='true')
+                            else
+                                td
+        else
+            table(id='match-result-table' class='table table-striped table-bordered')
+                thead
+                    tr
+                        th Player
+                        th PPD / First 9
+                        th Checkout %
+                        th Scores
+                        th Accuracy
+                        th Winner
+                tbody
+                    each statistic in stats
+                        tr
+                            td: p= players[statistic.player_id].name
+                            td: p= statistic.ppd.toFixed(2) + ' / ' + statistic.first_nine_ppd.toFixed(2)
+                            if statistic.player_id === match.winner_player_id
+                                td: p= statistic.checkout_percentage === null ? '-' : statistic.checkout_percentage.toFixed(2)
+                            else
+                                td: p -
+                            td
+                                p= statistic.scores_60s_plus === 0 ? "" : "60+: " + statistic.scores_60s_plus
+                                p= statistic.scores_100s_plus === 0 ? "" : "100+: " + statistic.scores_100s_plus
+                                p= statistic.scores_140s_plus=== 0 ? "" : "140+: " + statistic.scores_140s_plus
+                                p= statistic.scores_180s === 0 ? "" : "180:  " + statistic.scores_180s
+                            - var accuracy_20 = statistic.accuracy_20 === null ? '-' : statistic.accuracy_20.toFixed(2)
+                            - var accuracy_19 = statistic.accuracy_19 === null ? '-' : statistic.accuracy_19.toFixed(2)
+                            td: p= statistic.accuracy_overall.toFixed(2) + ' / ' + accuracy_20 + ' / ' + accuracy_19
+                            if statistic.player_id === match.winner_player_id
+                                td: span(class='glyphicon glyphicon-ok' aria-hidden='true')
+                            else
+                                td: p= players[statistic.player_id].remaining_score + ' left'
 
     h3 Match Results
     p.
