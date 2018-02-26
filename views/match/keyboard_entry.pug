@@ -41,9 +41,8 @@ block append scripts
                                 var currentPlayer = $('#current-player');
                                 scoreNumeric = parseInt(dartText) * dart.attr('data-multiplier');
                                 var currentPlayerScore = parseInt(currentPlayer.text());
-                                var currentPlayerId = $('#submit-score-button').data('current-player-id');
 
-                                checkVisitFinished(dart, currentPlayerScore, currentPlayerId, scoreNumeric);
+                                checkVisitFinished(dart, scoreNumeric);
                                 currentPlayer.text(currentPlayerScore - scoreNumeric);
                             }
                             scores[window.darts_thrown] = scoreNumeric;
