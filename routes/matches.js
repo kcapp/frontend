@@ -8,17 +8,41 @@ const axios = require('axios');
 
 /* Render the match view (button entry) */
 router.get('/:id', function (req, res, next) {
-    renderMatchView('match/button_entry', req, res, next);
-});
-
-/** Render the match view (keyboard entry) */
-router.get('/:id/keyboard', function (req, res, next) {
-    renderMatchView('match/keyboard_entry', req, res, next);
-});
-
-/** Render the match view (keyboard entry) */
-router.get('/:id/nine', function (req, res, next) {
-    renderMatchView('match/nine_darts', req, res, next);
+    var pugView = 'match/button_entry.pug';
+    axios.get(req.app.locals.kcapp.api + '/player')
+        .then(response => {
+            var playersMap = response.data;
+            axios.get(req.app.locals.kcapp.api + '/match/' + req.params.id)
+                .then(response => {
+                    var match = response.data;
+                    axios.get(req.app.locals.kcapp.api + '/game/' + match.game_id)
+                        .then(response => {
+                            var game = response.data;
+                            if (game.game_type.id === 2) {
+                                pugView = 'match/shootout_entry.pug';
+                            }
+                            axios.get(req.app.locals.kcapp.api + '/match/' + req.params.id + '/players')
+                                .then(response => {
+                                    var matchPlayers = response.data;
+                                    // Sort players based on order
+                                    matchPlayers = _.sortBy(matchPlayers, (player) => player.order)
+                                    res.render(pugView, { match: match, players: playersMap, game: game, match_players: matchPlayers });
+                                }).catch(error => {
+                                    debug('Error when getting match players: ' + error);
+                                    next(error);
+                                });
+                        }).catch(error => {
+                            debug('Error when getting game: ' + error);
+                            next(error);
+                        });
+                }).catch(error => {
+                    debug('Error when getting match: ' + error);
+                    next(error);
+                });
+        }).catch(error => {
+            debug('Error when getting players: ' + error);
+            next(error);
+        });
 });
 
 /* Render the match spectate view */
@@ -142,9 +166,15 @@ router.post('/:id/leg', function (req, res, next) {
 });
 
 /* Method to cancel a match in progress */
-router.delete('/:id/cancel', function (req, res) {
+router.delete('/:id/cancel', function (req, res, next) {
     var matchId = req.params.id;
-    // TODO
+    axios.delete(req.app.locals.kcapp.api + '/match/' + matchId)
+        .then(() => {
+            res.status(204).end();
+        }).catch(error => {
+            debug('Error when modifying scores: ' + error);
+            next(error);
+        });
 });
 
 /* Method to finalize a match */
@@ -168,41 +198,6 @@ router.put('/:id/order', function (req, res, next) {
             next(error);
         });
 });
-
-/** TODO Comments */
-function renderMatchView(pugFile, req, res, next) {
-    axios.get(req.app.locals.kcapp.api + '/player')
-        .then(response => {
-            var playersMap = response.data;
-            axios.get(req.app.locals.kcapp.api + '/match/' + req.params.id)
-                .then(response => {
-                    var match = response.data;
-                    axios.get(req.app.locals.kcapp.api + '/game/' + match.game_id)
-                        .then(response => {
-                            var game = response.data;
-                            axios.get(req.app.locals.kcapp.api + '/match/' + req.params.id + '/players')
-                                .then(response => {
-                                    var matchPlayers = response.data;
-                                    // Sort players based on order
-                                    matchPlayers = _.sortBy(matchPlayers, (player) => player.order)
-                                    res.render(pugFile, { match: match, players: playersMap, game: game, match_players: matchPlayers });
-                                }).catch(error => {
-                                    debug('Error when getting match players: ' + error);
-                                    next(error);
-                                });
-                        }).catch(error => {
-                            debug('Error when getting game: ' + error);
-                            next(error);
-                        });
-                }).catch(error => {
-                    debug('Error when getting match: ' + error);
-                    next(error);
-                });
-        }).catch(error => {
-            debug('Error when getting players: ' + error);
-            next(error);
-        });
-}
 
 module.exports = function (app, socketHandler) {
     this.socketHandler = socketHandler;

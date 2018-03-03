@@ -67,12 +67,8 @@ block scripts
                     var player = players[key];
                     var playerTD = $('#player-score-' + player.player_id);
 
-                    var playerLabel2 = playerTD.children('label')[0];
                     var playerLabel = $('#player-id-' + player.player_id);
-
-                    console.log(playerLabel2 === playerLabel);
                     playerLabel.text(player.current_score);
-
                     playerTD.removeClass('label-inactive-player label-active-player');
                     if (player.is_current_player) {
                         playerTD.addClass('label-active-player');
@@ -143,6 +139,9 @@ block scripts
 
             function getScoreString(dart) {
                 var score = dart.value;
+                if (score === null) {
+                    return '';
+                }
                 if (score === 0) {
                     return 'Miss';
                 }
