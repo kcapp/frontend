@@ -65,17 +65,22 @@ block scripts
                 var players = data.players;
                 for (key in players) {
                     var player = players[key];
-                    var playerTD = $('#player-score-' + player.player_id);
-
                     var playerLabel = $('#player-id-' + player.player_id);
+                    var playerTD = $('#player-score-' + player.player_id);
+                    var playerLegsTD = $('#player-legs-' + player.player_id);
                     playerLabel.text(player.current_score);
-                    playerTD.removeClass('label-inactive-player label-active-player');
+                    //$('#player-id-' + player.id + '-ppd').text(player.ppd.toFixed(2));
                     if (player.is_current_player) {
-                        playerTD.addClass('label-active-player');
+                        playerTD.removeClass('uv-inactive-player-score');
+                        playerTD.addClass('uv-active-player-score');
+                        playerLegsTD.removeClass('uv-inactive-player-legs');
+                        playerLegsTD.addClass('uv-active-player-legs');
                         $('#current-player').text(player.name);
-                    }
-                    else {
-                        playerTD.addClass('label-inactive-player');
+                    } else {
+                        playerTD.addClass('uv-inactive-player-score');
+                        playerTD.removeClass('uv-active-player-score');
+                        playerLegsTD.addClass('uv-inactive-player-legs');
+                        playerLegsTD.removeClass('uv-active-player-legs');
                     }
                 }
                 // Set round number
@@ -120,7 +125,7 @@ block scripts
             if (!match.is_finished) {
                 var html =
                     "<tr>" +
-                        "<td id='current-player' style='height: 50px;'>" + playersMap[match.current_player_id].name + "</td>" +
+                        "<td id='current-player' style='vertical-align: baseline;'>" + playersMap[match.current_player_id].name + "</td>" +
                         "<td class='dart-score-container no-border'><label id='first' text='0'></label></td>" +
                         "<td class='dart-score-container no-border'><label id='second' text='0'></label></td>" +
                         "<td class='dart-score-container no-border'><label id='third' text='0'></label></td>" +
@@ -160,25 +165,34 @@ block scripts
         });
 
 block content
-    h2 Spectate
 
     mixin get_player_cell(player)
         - var playerId = player.player_id;
-        td(id='player-score-' + playerId class=player.is_current_player ? 'label-active-player' : 'label-inactive-player')
-            label(id='player-id-' + playerId class='label label-block label-player-score')= player.current_score
-            label(class='label-player-name')= players[playerId].name + (player.wins ? ' (' + player.wins + ')' : '')
+        td(id='player-score-' + playerId class=player.is_current_player ? 'uv-active-player-score' : 'uv-inactive-player-score')
+            label(id='player-name-' + playerId class='label-player-name')= players[playerId].name + (player.wins ? ' (' + player.wins + ')' : '')
+            label(id='player-id-' + playerId class='label label-block label-player-score-umpire')= player.current_score
 
-    h3 Players
-    div(class='table-responsive')
-        table(class='table table-striped table-bordered' id='player-spectate-table' style='table-layout: fixed')
+    mixin get_player_legs(player)
+        - var playerId = player.player_id;
+        td(id='player-legs-' + playerId class=player.is_current_player ? 'uv-active-player-legs' : 'uv-inactive-player-legs')
+            label= (player.wins ? ' (' + player.wins + ')' : '0')
+
+
+    div(class='table-responsive no-border')
+        table(class='uv-table-mode' style='table-layout: fixed')
             tbody
                 tr
-                    td(class='txt-center' style='width: 6%;')
-                        label(id='round-number' class='match_information')= 'R' + (Math.floor(match.visits.length / match.players.length) + 1)
-                        label(class='match_information')= game.game_mode.short_name
+                    td= game.game_mode.name + ' / ' + 'R' + (Math.floor(match.visits.length / match.players.length) + 1)
+
+    div(class='table-responsive no-border')
+        table(class='uv-table-players' id='player-spectate-table' style='table-layout: fixed')
+            tbody
+                tr
                     each player in match_players
                         +get_player_cell(player)
-
+                tr
+                    each player in match_players
+                        +get_player_legs(player)
 
     mixin get_dart_label(dart)
         if dart.multiplier == 3
@@ -198,7 +212,7 @@ block content
 
     h3 Visits
     div(class='table-responsive')
-        table(class='table table-striped table-bordered' id='match-visits-table' style='table-layout: fixed;')
+        table(class='table table-scores' id='match-visits-table' style='table-layout: fixed;')
             thead
                 tr
                     th Player

@@ -1,11 +1,38 @@
 // Variables
 @dart-board-image: '../images/dartboard.png';
 // Colors
-@dart-single: #404040;
-@dart-double: orange;
-@dart-triple: #d9534f;
+@dart-single: #08364b;
+@dart-double: #56767b;
+@dart-triple: #e68200;
 body {
     font-family: "Open Sans"
+}
+
+.navbar {
+    margin-bottom: 0px;
+}
+
+.navbar-default {
+    font-size: 12pt;
+    font-weight: 300;
+    border: none;
+    border-bottom: 1px solid #ddd;
+    background: none;
+    border-radius: 0px;
+    color: black;
+}
+
+#match-visits-table tr {
+    border-bottom: 1px solid #ddd;
+}
+
+#match-visits-table td {
+    height: 40px;
+    vertical-align: baseline;
+}
+
+.table-responsive {
+    margin-bottom: 10px;
 }
 
 a:hover {
@@ -45,27 +72,26 @@ a:hover {
 }
 
 .dart-score-container {
-    padding: 3px !important;
     label {
         color: #fff;
         line-height: 2;
         font-size: 15pt;
+        border-radius: 3px;
+        font-size: 12pt;
+        font-weight: 300;
     }
 }
 
 .dart-score-single {
     background-color: @dart-single;
-    border: 2px solid #e7e7e7;
 }
 
 .dart-score-double {
     background-color: @dart-double;
-    border: 2px solid #e7e7e7;
 }
 
 .dart-score-triple {
     background-color: @dart-triple;
-    border: 2px solid #e7e7e7;
 }
 
 .btn-score {
@@ -120,7 +146,7 @@ a:hover {
     border-spacing: 0px;
     td {
         padding: 0px;
-        border: 1px solid #000;
+        border: 1px solid #fff;
         vertical-align: middle;
     }
     button {

@@ -254,7 +254,33 @@ block content
     div(id='cancel-match-failed-alert' class='alert alert-danger' role='alert' hidden='true').
         Unable to cancel match
 
-    block title
+    mixin get_player_cell(player)
+        - var playerId = player.player_id;
+        td(id='player-score-' + playerId class=player.is_current_player ? 'uv-active-player-score' : 'uv-inactive-player-score')
+            label(id='player-name-' + playerId class='label-player-name')= players[playerId].name + (player.wins ? ' (' + player.wins + ')' : '')
+            label(id='player-id-' + playerId class='label label-block label-player-score-umpire')= player.current_score
+
+    mixin get_player_legs(player)
+        - var playerId = player.player_id;
+        td(id='player-legs-' + playerId class=player.is_current_player ? 'uv-active-player-legs' : 'uv-inactive-player-legs')
+            label= (player.wins ? ' (' + player.wins + ')' : '0')
+
+
+    div(class='table-responsive no-border')
+        table(class='uv-table-mode' style='table-layout: fixed')
+            tbody
+                tr
+                    td= game.game_mode.name + ' / ' + 'R' + (Math.floor(match.visits.length / match.players.length) + 1)
+
+    div(class='table-responsive no-border')
+        table(class='uv-table-players' id='player-spectate-table' style='table-layout: fixed')
+            tbody
+                tr
+                    each player in match_players
+                        +get_player_cell(player)
+                tr
+                    each player in match_players
+                        +get_player_legs(player)
 
     div(class='table-responsive')
         table(id='score-selector-table' class='table')
@@ -269,21 +295,6 @@ block content
                     td(colspan='2')
                         button(id='undo-button' type='button' class='btn-score btn-info btn-lg btn-block')
                             span(class='glyphicon glyphicon-arrow-left' style='line-height:1.5' aria-hidden='true')
-                tr(class='row')
-                    td(class='txt-center')
-                        label(id='round-number' class='match-information')= 'R' + (Math.floor(match.visits.length / match.players.length) + 1)
-                        label(class='match-information')= '/' +game.game_mode.short_name
-                    - var length = 12 / Object.keys(match.players).length
-                    each player in match_players
-                        mixin player_label(player)
-                            - var modifier_class = player.modifier_class;
-                            - var td_class = 'label-inactive-player ' + modifier_class;
-                            if player.is_current_player
-                                - td_class = 'label-active-player ' + modifier_class;
-                            td(id='player-score-' + player.player_id + '' colspan=length + '' class=td_class style='padding-right: 10px;')
-                                label(id=player.is_current_player ? 'current-player' : 'player-label-' + player.player_id class='label label-block label-player-score')= player.current_score
-                                label(class='label-player-name')= players[player.player_id].name + (player.wins ? ' (' + player.wins + ')' : '')
-                        +player_label(player)
                 block score_selector
                     mixin score_button(value, multiplier, text, custom_class)
                         - var score_button_class = 'btn-score btn-info btn-lg btn-block'
