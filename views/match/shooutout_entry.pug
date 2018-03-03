@@ -1,0 +1,57 @@
+extends score_layout.pug
+
+block append scripts
+    script
+        include keyboard_scripts.js
+
+block script_check_visit_finished
+    script.
+        function updatePlayerScore(score) {
+            var currentPlayer = $('#current-player');
+            var currentScore = parseInt(currentPlayer.text());
+            currentPlayer.text(currentScore + score);
+        }
+
+        function checkVisitFinished(dart, scoreNumeric) {
+            var isFinished = false;
+
+            var lastDart = Object.keys(scores).length === 3;
+            var visits = match.visits.length;
+            if (lastDart) {
+                visits++;
+            }
+            isFinished = visits > 0 && ((visits * 3) % (9 * match.players.length) === 0);
+
+            var currentPlayer = $('#current-player');
+            var currentPlayerScore = parseInt(currentPlayer.text());
+            var playerId = $('#submit-score-button').data('current-player-id');
+
+            // Emit a dart throw for spectators
+            this.socket.emit('possible_throw', {
+                    current_player_id: playerId,
+                    score: scoreNumeric,
+                    dart_text: dart.text(),
+                    multiplier: dart.attr('data-multiplier'),
+                    is_bust: false,
+                    is_finished: isFinished,
+                    darts_thrown: currentDart + 1
+            });
+
+            updatePlayerScore(scoreNumeric);
+
+            if (isFinished) {
+                showConfirm('Game will be finished.', function() {
+                    // End game, 'click' submit
+                    $('#submit-score-button').data('finished', 1).trigger('click');
+                }, function(){
+                    $('#undo-button').trigger('click');
+                });
+            }
+        }
+
+block title
+    h2 Match (Nine Shootout)
+
+block advanced_options
+    li: a(id='edit-scores-button') Edit scores
+    li: a(id='cancel-match-button') Cancel Match

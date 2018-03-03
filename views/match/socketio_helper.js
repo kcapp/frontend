@@ -2,7 +2,7 @@ var socket = null;
 
 function resetUIelements() {
     // Reset UI elements
-    window.darts_thrown = 0;
+    currentDart = 1;
     $('#first').text('');
     $('#first').removeAttr('data-score');
     $('#first').attr('data-multiplier', 1);
@@ -51,7 +51,10 @@ function setupSocketIO(matchId) {
     socket.on('score_update', function (data) {
         $('#submit-score-button').prop('disabled', false);
 
-        var match = data.match;
+        // Set the global match object
+        match = data.match;
+        scores = {};
+
         $('#round-number').text('R' + (Math.floor(match.visits.length / match.players.length) + 1));
 
         // Set updated score per player
@@ -64,22 +67,15 @@ function setupSocketIO(matchId) {
             label.text(player.current_score);
 
             if (player.player_id === currentPlayerId) {
-                td.removeClass(1);
-                td.addClass('label-active-player ' + player.modifier_class)
+                td.removeClass().addClass('label-active-player ' + player.modifier_class)
                 label.attr('id', 'current-player');
                 $('#submit-score-button').data('current-player-id', player.player_id);
             }
             else {
-                td.removeClass();
-                td.addClass('label-inactive-player ' + player.modifier_class);
+                td.removeClass().addClass('label-inactive-player ' + player.modifier_class);
                 label.attr('id', 'player-label-' + player.player_id);
                 label.removeAttr('data-current-player-id');
             }
-
-            // TODO Fix this
-            // Update the popover with First 9 and PPD
-            //var popoverContent = 'First 9: ' + player.first9ppd.toFixed(2) + ', PPD: ' + player.ppd.toFixed(2);
-            //label.attr('data-content', popoverContent).data('bs.popover').setContent();
         }
         resetUIelements();
     });

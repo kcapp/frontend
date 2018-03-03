@@ -65,19 +65,17 @@ block scripts
                 var players = data.players;
                 for (key in players) {
                     var player = players[key];
-                    var playerLabel = $('#player-id-' + player.id);
-                    var playerTD = $('#player-score-' + player.id);
-                    playerLabel.text(player.current_score);
-                    //$('#player-id-' + player.id + '-ppd').text(player.ppd.toFixed(2));
+                    var playerTD = $('#player-score-' + player.player_id);
 
-                    if (player.current) {
-                        playerTD.addClass('label-active-player')
-                        playerTD.removeClass('label-inactive-player');
+                    var playerLabel = $('#player-id-' + player.player_id);
+                    playerLabel.text(player.current_score);
+                    playerTD.removeClass('label-inactive-player label-active-player');
+                    if (player.is_current_player) {
+                        playerTD.addClass('label-active-player');
                         $('#current-player').text(player.name);
                     }
                     else {
                         playerTD.addClass('label-inactive-player');
-                        playerTD.removeClass('label-active-player');
                     }
                 }
                 // Set round number
@@ -98,6 +96,7 @@ block scripts
                 if (visit.is_bust) {
                     total = 'BUST';
                 }
+                // Append the score to the beginning of the table
                 var html =
                     "<tr>" +
                         "<td>" + playerName + "</td>" +
@@ -110,8 +109,7 @@ block scripts
             });
 
             socket.on('match_finished', function(data) {
-                console.log(data);
-                location.href = '/match/' + data.new_match_id + '/spectate';
+                location.href = '/matches/' + data.new_match_id + '/spectate';
             });
 
             // Reverse the rows in the table to show newest throws first
@@ -141,6 +139,9 @@ block scripts
 
             function getScoreString(dart) {
                 var score = dart.value;
+                if (score === null) {
+                    return '';
+                }
                 if (score === 0) {
                     return 'Miss';
                 }
@@ -165,7 +166,7 @@ block content
         - var playerId = player.player_id;
         td(id='player-score-' + playerId class=player.is_current_player ? 'label-active-player' : 'label-inactive-player')
             label(id='player-id-' + playerId class='label label-block label-player-score')= player.current_score
-            label(id='player-name-' + players[playerId].name class='label-player-name')= players[playerId].name + (player.wins ? ' (' + player.wins + ')' : '')
+            label(class='label-player-name')= players[playerId].name + (player.wins ? ' (' + player.wins + ')' : '')
 
     h3 Players
     div(class='table-responsive')
@@ -174,7 +175,7 @@ block content
                 tr
                     td(class='txt-center' style='width: 6%;')
                         label(id='round-number' class='match_information')= 'R' + (Math.floor(match.visits.length / match.players.length) + 1)
-                        label(class='match_information')= game.game_type.short_name
+                        label(class='match_information')= game.game_mode.short_name
                     each player in match_players
                         +get_player_cell(player)
 

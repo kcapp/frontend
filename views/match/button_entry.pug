@@ -1,22 +1,8 @@
 extends score_layout.pug
 
 block append scripts
-    script.
-        $(function () {
-            $('#toggle-keyboard-button').click(function () {
-                location.href = window.location.pathname + '/keyboard';
-            });
-
-            var enterPress = 0;
-            $(document).keypress(function(e) {
-                if (e.key === 'Enter') {
-                    enterPress++;
-                    if (enterPress >= 2) {
-                        location.href = window.location.pathname + '/keyboard';
-                    }
-                }
-            });
-        });
+    script
+        include keyboard_scripts.js
 
 block title
     h2 Match
