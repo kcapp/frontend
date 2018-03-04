@@ -127,7 +127,7 @@ block scripts
                     return;
                 }
                 var playerId = $('#submit-score-button').data('current-player-id');
-                var currentPlayerScore = parseInt($('#current-player').text());
+                var currentPlayerScore = parseInt($('.current-player').text());
                 currentDart--;
                 var lastScore = scores[currentDart];
                 updatePlayerScore(-lastScore);
@@ -172,7 +172,7 @@ block scripts
     block script_check_visit_finished
         script.
             function updatePlayerScore(score) {
-                var currentPlayer = $('#current-player');
+                var currentPlayer = $('.current-player');
                 var currentScore = parseInt(currentPlayer.text());
                 currentPlayer.text(currentScore - score);
             }
@@ -181,7 +181,7 @@ block scripts
                 var isBust = false;
                 var isFinished = false;
 
-                var currentPlayer = $('#current-player');
+                var currentPlayer = $('.current-player');
                 var currentPlayerScore = parseInt(currentPlayer.text());
                 var currentPlayerId = $('#submit-score-button').data('current-player-id');
 
@@ -260,7 +260,7 @@ block content
         - var playerId = player.player_id;
         td(id='player-score-' + playerId class=player.is_current_player ? 'uv-active-player-score' : 'uv-inactive-player-score')
             label(id='player-name-' + playerId class='label-player-name')= players[playerId].name + (player.wins ? ' (' + player.wins + ')' : '')
-            label(id='player-id-' + playerId class='label label-block label-player-score-umpire')= player.current_score
+            label(id='player-id-' + playerId class='label label-block label-player-score-umpire' + (player.is_current_player ? ' current-player' : ''))= player.current_score
 
     mixin get_player_legs(player)
         - var playerId = player.player_id;

@@ -65,21 +65,22 @@ function setupSocketIO(matchId) {
             var td = $('#player-score-' + player.player_id);
             var tdLegs = $('#player-legs-' + player.player_id);
             var tdVisit = $('#player-visit-' + player.player_id);
-            var label = td.find('.label-player-score');
+            var label = td.find('.label-player-score-umpire');
             label.text(player.current_score);
 
             if (player.player_id === currentPlayerId) {
-                td.removeClass().addClass('uv-active-player-score ' + player.modifier_class)
-                tdLegs.removeClass().addClass('uv-active-player-legs ' + player.modifier_class)
-                tdVisit.removeClass().addClass('uv-active-player-visits ' + player.modifier_class)
-                label.attr('id', 'current-player');
+                td.removeClass().addClass('uv-active-player-score ' + player.modifier_class);
+                tdLegs.removeClass().addClass('uv-active-player-legs ' + player.modifier_class);
+                tdVisit.removeClass().addClass('uv-active-player-visits ' + player.modifier_class);
                 $('#submit-score-button').data('current-player-id', player.player_id);
+                label.addClass('current-player');
             }
             else {
                 td.removeClass().addClass('uv-inactive-player-score ' + player.modifier_class);
-                tdLegs.removeClass().addClass('uv-inactive-player-legs ' + player.modifier_class)
-                tdVisit.removeClass().addClass('uv-inactive-player-visits ' + player.modifier_class)
-                label.attr('id', 'player-label-' + player.player_id);
+                tdLegs.removeClass().addClass('uv-inactive-player-legs ' + player.modifier_class);
+                tdVisit.removeClass().addClass('uv-inactive-player-visits ' + player.modifier_class);
+                //label.attr('id', 'player-label-' + player.player_id);
+                label.removeClass('current-player');
                 label.removeAttr('data-current-player-id');
                 // Display scores as 'inactive'
                 //$('.uv-inactive-player-visits .first').empty();
