@@ -1,7 +1,7 @@
 // Variables
 @dart-board-image: '../images/dartboard.png';
 // Colors
-@dart-single: #08364b;
+@dart-single: #000000;
 @dart-double: #56767b;
 @dart-triple: #e68200;
 body {
@@ -22,13 +22,14 @@ body {
     color: black;
 }
 
-#match-visits-table tr {
-    border-bottom: 1px solid #ddd;
-}
-
-#match-visits-table td {
-    height: 40px;
-    vertical-align: baseline;
+#match-visits-table #players-table {
+    tr {
+        border-bottom: 1px solid #ddd;
+    }
+    td {
+        height: 40px;
+        vertical-align: baseline;
+    }
 }
 
 .table-responsive {
@@ -72,13 +73,29 @@ a:hover {
 }
 
 .dart-score-container {
+    td {
+        padding: 3px;
+    }
     label {
+        min-width: 50px;
         color: #fff;
         line-height: 2;
         font-size: 15pt;
         border-radius: 3px;
         font-size: 12pt;
         font-weight: 300;
+    }
+}
+
+#players-table {
+    button {
+        border: none;
+        min-width: 50px;
+        color: #fff;
+        font-size: 14px;
+        border-radius: 3px;
+        font-weight: 300;
+        background-color: #a6a0ff;        
     }
 }
 
@@ -95,9 +112,8 @@ a:hover {
 }
 
 .btn-score {
-    background-color: white;
+    background-color: #f5f5f5;
     color: black;
-    border: 2px solid #e7e7e7;
 }
 
 .btn-double {
@@ -163,11 +179,16 @@ a:hover {
     }
 }
 
-#player-spectate-table label {
-    display: block;
-    text-align: center;
-    border-radius: 0;
-    margin: 0;
+#player-spectate-table {
+    label {
+        display: block;
+        text-align: center;
+        border-radius: 0;
+        margin: 0;
+    }
+    .dart-score-container label {
+        border-radius: 3px;
+    }
 }
 
 #player-comparison-table {
@@ -205,6 +226,7 @@ a:hover {
 #match-visits-table {
     label {
         display: block;
+        margin-bottom: 0px;
     }
     .center-table
 }
@@ -222,9 +244,14 @@ a:hover {
     border-collapse: initial;
 }
 
-.uv-table-players td {
-    padding: 10px;
-    border-right: 10px solid #eeeeee;
+.uv-table-players {
+    td {
+        padding: 10px;
+        border-right: 10px solid #ffffff;
+    }
+    .dart-score-container {
+        padding: 1px;
+    }
 }
 
 .uv-table-players td:last-child {
@@ -256,6 +283,12 @@ a:hover {
     background-color: #000000;
     color: white;
     font-size: 15px;
+}
+
+.uv-inactive-player-visits {
+    .inactive-score {
+        background-color: #afafaf;
+    }
 }
 
 .uv-table-mode {

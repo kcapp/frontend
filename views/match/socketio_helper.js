@@ -3,18 +3,18 @@ var socket = null;
 function resetUIelements() {
     // Reset UI elements
     currentDart = 1;
-    $('#first').text('');
-    $('#first').removeAttr('data-score');
-    $('#first').attr('data-multiplier', 1);
-    $('#first').attr('data-checkout', 0);
-    $('#second').text('');
-    $('#second').removeAttr('data-score');
-    $('#second').attr('data-multiplier', 1);
-    $('#second').attr('data-checkout', 0);
-    $('#third').text('');
-    $('#third').removeAttr('data-score');
-    $('#third').attr('data-multiplier', 1);
-    $('#third').attr('data-checkout', 0);
+    $('.uv-active-player-visits .first').text('');
+    $('.uv-active-player-visits .first').removeAttr('data-score');
+    $('.uv-active-player-visits .first').attr('data-multiplier', 1);
+    $('.uv-active-player-visits .first').attr('data-checkout', 0);
+    $('.uv-active-player-visits .second').text('');
+    $('.uv-active-player-visits .second').removeAttr('data-score');
+    $('.uv-active-player-visits .second').attr('data-multiplier', 1);
+    $('.uv-active-player-visits .second').attr('data-checkout', 0);
+    $('.uv-active-player-visits .third').text('');
+    $('.uv-active-player-visits .third').removeAttr('data-score');
+    $('.uv-active-player-visits .third').attr('data-multiplier', 1);
+    $('.uv-active-player-visits .third').attr('data-checkout', 0);
     $('#submit-score-button').data('busted', 0);
     $('#submit-score-button').data('finished', 0);
 }
@@ -63,18 +63,28 @@ function setupSocketIO(matchId) {
         for (var i = 0; i < players.length; i++) {
             var player = players[i];
             var td = $('#player-score-' + player.player_id);
+            var tdLegs = $('#player-legs-' + player.player_id);
+            var tdVisit = $('#player-visit-' + player.player_id);
             var label = td.find('.label-player-score');
             label.text(player.current_score);
 
             if (player.player_id === currentPlayerId) {
-                td.removeClass().addClass('label-active-player ' + player.modifier_class)
+                td.removeClass().addClass('uv-active-player-score ' + player.modifier_class)
+                tdLegs.removeClass().addClass('uv-active-player-legs ' + player.modifier_class)
+                tdVisit.removeClass().addClass('uv-active-player-visits ' + player.modifier_class)
                 label.attr('id', 'current-player');
                 $('#submit-score-button').data('current-player-id', player.player_id);
             }
             else {
-                td.removeClass().addClass('label-inactive-player ' + player.modifier_class);
+                td.removeClass().addClass('uv-inactive-player-score ' + player.modifier_class);
+                tdLegs.removeClass().addClass('uv-inactive-player-legs ' + player.modifier_class)
+                tdVisit.removeClass().addClass('uv-inactive-player-visits ' + player.modifier_class)
                 label.attr('id', 'player-label-' + player.player_id);
                 label.removeAttr('data-current-player-id');
+                // Display scores as 'inactive'
+                //$('.uv-inactive-player-visits .first').empty();
+                //$('.uv-inactive-player-visits .second').empty();
+                //$('.uv-inactive-player-visits .third').empty();
             }
         }
         resetUIelements();

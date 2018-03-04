@@ -1,10 +1,8 @@
 extends ../layout.pug
 
-block append head
+block scripts
     script(src='/javascripts/fastclick-1.0.6.min.js')
     script(src='/javascripts/socket.io-2.0.3.min.js')
-
-block scripts
     script
         include socketio_helper.js
     script.
@@ -17,13 +15,13 @@ block scripts
         function getCurrentDart() {
             var dart;
             if (currentDart === 1) {
-                dart = $('#first');
+                dart = $('.uv-active-player-visits .first');
             }
             else if (currentDart === 2) {
-                dart = $('#second');
+                dart = $('.uv-active-player-visits .second');
             }
             else if (currentDart === 3) {
-                dart = $('#third');
+                dart = $('.uv-active-player-visits .third');
             }
             else {
                 return null;
@@ -72,12 +70,12 @@ block scripts
             $('#submit-score-button').click(function (event) {
                 $(this).attr('disabled', true);
 
-                var firstScore = parseInt($('#first').attr('data-score'));
-                var firstMultiplier = parseInt($('#first').attr('data-multiplier'));
-                var secondScore = parseInt($('#second').attr('data-score'));
-                var secondMultiplier = parseInt($('#second').attr('data-multiplier'));
-                var thirdScore = parseInt($('#third').attr('data-score'));
-                var thirdMultiplier =  parseInt($('#third').attr('data-multiplier'));
+                var firstScore = parseInt($('.uv-active-player-visits .first').attr('data-score'));
+                var firstMultiplier = parseInt($('.uv-active-player-visits .first').attr('data-multiplier'));
+                var secondScore = parseInt($('.uv-active-player-visits .second').attr('data-score'));
+                var secondMultiplier = parseInt($('.uv-active-player-visits .second').attr('data-multiplier'));
+                var thirdScore = parseInt($('.uv-active-player-visits .third').attr('data-score'));
+                var thirdMultiplier =  parseInt($('.uv-active-player-visits .third').attr('data-multiplier'));
 
                 var currentPlayerId = $(this).data('current-player-id');
                 var data = JSON.stringify({
@@ -103,6 +101,10 @@ block scripts
                     socket.emit('throw', data);
                 }
                 event.preventDefault();
+            });
+
+            $('.toggle-buttons').click(function () {
+                $('#score-selector-table').toggle();
             });
 
             $('#score-selector-table .throw-buttons :button').click(function () {
@@ -265,6 +267,24 @@ block content
         td(id='player-legs-' + playerId class=player.is_current_player ? 'uv-active-player-legs' : 'uv-inactive-player-legs')
             label= (player.wins ? ' (' + player.wins + ')' : '0')
 
+    mixin get_current_player_visit(player)
+        - var playerId = player.player_id;
+        if player.is_current_player
+            td(id='player-visit-' + playerId class='uv-active-player-visits')
+                table(style='width: 100%;')
+                    tbody
+                        tr
+                            td(class='dart-score-container no-border'): label(class='first' text='0' data-multiplier='1')
+                            td(class='dart-score-container no-border'): label(class='second' text='0' data-multiplier='1')
+                            td(class='dart-score-container no-border'): label(class='third' text='0' data-multiplier='1')
+        else
+            td(id='player-visit-' + playerId class='uv-inactive-player-visits')
+                table(style='width: 100%;')
+                    tbody
+                        tr
+                            td(class='dart-score-container no-border'): label(class='first' text='0' data-multiplier='1')
+                            td(class='dart-score-container no-border'): label(class='second' text='0' data-multiplier='1')
+                            td(class='dart-score-container no-border'): label(class='third' text='0' data-multiplier='1')
 
     div(class='table-responsive no-border')
         table(class='uv-table-mode' style='table-layout: fixed')
@@ -281,15 +301,16 @@ block content
                 tr
                     each player in match_players
                         +get_player_legs(player)
+                tr
+                    each player in match_players
+                        +get_current_player_visit(player)
 
+    div(class='toggle-buttons' style='border-bottom: 1px solid #efefef; padding: 5px;') show / hide
     div(class='table-responsive')
         table(id='score-selector-table' class='table')
             tbody
                 tr(class='row')
-                    td(colspan='3' class='no-border')
-                    td(colspan='2' class='dart-score-container no-border'): label(id='first' text='0' data-multiplier='1')
-                    td(colspan='2' class='dart-score-container no-border'): label(id='second' text='0' data-multiplier='1')
-                    td(colspan='2' class='dart-score-container no-border'): label(id='third' text='0' data-multiplier='1')
+                    td(colspan='9' class='no-border')
                     td(colspan='2')
                         button(id='submit-score-button' type='button' style='line-height:1.5' class='needsclick btn-score btn-info btn-lg btn-block' data-match-id=match.id data-current-player-id=match.current_player_id data-players-in-match=match.player2match data-busted='0' data-finished='0') Submit
                     td(colspan='2')
