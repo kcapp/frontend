@@ -40,6 +40,7 @@ block script_check_visit_finished
             updatePlayerScore(scoreNumeric);
 
             if (isFinished) {
+                disableEnter = true;
                 showConfirm('Game will be finished.', function() {
                     // End game, 'click' submit
                     $('#submit-score-button').data('finished', 1).trigger('click');
