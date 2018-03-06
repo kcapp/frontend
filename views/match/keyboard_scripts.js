@@ -44,12 +44,9 @@ $(function () {
                         setDartValue(dart, 0, 1);
                     }
                     else {
-                        var currentPlayer = $('#current-player');
                         scoreNumeric = parseInt(dartText) * dart.attr('data-multiplier');
-                        var currentPlayerScore = parseInt(currentPlayer.text());
-                        checkVisitFinished(dart, scoreNumeric);
                     }
-                    currentDart++;
+                    checkVisitFinished(dart, scoreNumeric);
                 }
                 dartText = '';
                 currentMultiplier = 1;
@@ -91,7 +88,9 @@ $(function () {
             disableEnter = true;
             showAlert('Invalid value', function () { });
         }
-        setDartValue(dart, dartText * currentMultiplier, currentMultiplier);
+        if (dartText !== '') {
+            setDartValue(dart, dartText * currentMultiplier, currentMultiplier);
+        }
     });
 
     $('#toggle-keyboard-button').click(function () {

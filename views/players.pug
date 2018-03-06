@@ -31,7 +31,11 @@ block scripts
 			});
 
 			function addPlayer() {
-				var player = { name: $('#player-name-input').val(), nickname: $('#player-nickname-input').val() };
+				var nickname = $('#player-nickname-input').val();
+				var player = {
+					name: $('#player-name-input').val(),
+					nickname: nickname === '' ? null : nickname
+				};
 				executePost('/players', JSON.stringify(player), 'application/json',
 					function(response) {
 						location.href = '/players';

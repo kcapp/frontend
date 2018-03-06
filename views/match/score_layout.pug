@@ -40,6 +40,7 @@ block scripts
                 currentMultiplier = 1;
                 score = 0;
             }
+
             if (multiplier == 3) {
                 dartText = 'T-' + score / multiplier;
                 dart.removeClass('dart-score-single dart-score-double').addClass('dart-score-triple');
@@ -59,7 +60,6 @@ block scripts
             dart.attr('data-score', score / multiplier);
             dart.attr('data-multiplier', multiplier);
 
-            //currentMultiplier = multiplier;
             scores[currentDart] = scoreInt;
         }
 
@@ -117,7 +117,9 @@ block scripts
 
                 var scoreNumeric = parseInt(score)
                 checkVisitFinished(dart, scoreNumeric)
-                currentDart++;
+
+                // Remove focus from the button incase keyboard is used to enter next score
+                $(this).blur();
             });
 
             $('#undo-button').click(function () {
@@ -139,7 +141,7 @@ block scripts
                         multiplier: 1,
                         is_bust: false,
                         is_finished: false,
-                        darts_thrown: currentDart + 1
+                        darts_thrown: currentDart
                 });
 
                 var dart = getCurrentDart();
@@ -196,7 +198,7 @@ block scripts
                                     multiplier: dart.attr('data-multiplier'),
                                     is_bust: isBust,
                                     is_finished: isFinished,
-                                    darts_thrown: currentDart - 1
+                                    darts_thrown: currentDart
                             });
 
                             // End game, 'click' submit
@@ -246,6 +248,7 @@ block scripts
                             darts_thrown: currentDart
                     });
                 }
+                currentDart++;
                 updatePlayerScore(scoreNumeric);
             }
 
@@ -265,10 +268,10 @@ block content
                     td(colspan='2' class='dart-score-container no-border'): label(id='second' text='0' data-multiplier='1')
                     td(colspan='2' class='dart-score-container no-border'): label(id='third' text='0' data-multiplier='1')
                     td(colspan='2')
-                        button(id='submit-score-button' type='button' style='line-height:1.5' class='needsclick btn-score btn-info btn-lg btn-block' data-match-id=match.id data-current-player-id=match.current_player_id data-players-in-match=match.player2match data-busted='0' data-finished='0') Submit
+                        button(id='submit-score-button' type='button' style='line-height:1.7' class='needsclick btn-score btn-info btn-lg btn-block' data-match-id=match.id data-current-player-id=match.current_player_id data-players-in-match=match.player2match data-busted='0' data-finished='0') Submit
                     td(colspan='2')
                         button(id='undo-button' type='button' class='btn-score btn-info btn-lg btn-block')
-                            span(class='glyphicon glyphicon-arrow-left' style='line-height:1.5' aria-hidden='true')
+                            span(class='glyphicon glyphicon-arrow-left' style='line-height:1.7' aria-hidden='true')
                 tr(class='row')
                     td(class='txt-center')
                         label(id='round-number' class='match-information')= 'R' + (Math.floor(match.visits.length / match.players.length) + 1)

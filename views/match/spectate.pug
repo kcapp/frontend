@@ -20,6 +20,7 @@ block scripts
             });
 
             socket.on('possible_throw', function(data) {
+                console.log(data);
                 var dart;
                 if (data.darts_thrown === 1) {
                     dart = $('#first');
