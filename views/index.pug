@@ -1,9 +1,17 @@
 extends layout
 
+block append head
+    script(src='/javascripts/jquery-ui.1.12.1.min.js')
+    script(src='/javascripts/jquery.ui.touch-punch-0.2.3.min.js')
+
 block scripts
     script.
         $(function () {
-            $('#sortable-player-list').sortable();
+            $('#sortable-player-list').sortable({
+                stop: function(event, ui) {
+                    $( event.originalEvent.target ).one('click', function(e){ e.stopImmediatePropagation(); } );
+                }
+            });
             $('#sortable-player-list').disableSelection();
 
             $('#all-players-list').on('click', '.player-name-label', function() {
@@ -30,6 +38,28 @@ block scripts
             $('#create-match-button').click(function() {
                 $(this).blur();
             });
+            $('#start-match-button').click(function(e) {
+                var stake = parseInt($('#game-stake-select').val());
+                var body = {
+                    starting_score: parseInt($('#match-type-select').val()),
+                    game_type: parseInt($('#game-type-select').val()),
+                    game_mode: parseInt($('#game-mode-select').val()),
+                    game_stake: stake === 0 ? null : stake,
+                    players: []
+
+                }
+                $('#sortable-player-list :input').each(function() {
+                    body.players.push(parseInt($(this).val()));
+                });
+                executePost(window.location.origin + '/games/new', JSON.stringify(body), 'application/json',
+                    function(response){
+                        location.href = 'matches/' + response.current_match_id
+                    }, function(error) {
+                        console.log(error);
+                    }
+                );
+                e.preventDefault();
+            });
         });
     script.
         var playerId = '';
@@ -52,7 +82,7 @@ block scripts
                 case '8': playerId += '8'; break;
                 case '9': playerId += '9'; break;
                 case '0': playerId += '0'; break;
-                default: console.log(e); break;
+                default: /* NOOP */; break;
             }
         });
 
@@ -69,7 +99,7 @@ block content
                 p.
                     Players must be added before you can start a new game
             else
-                form(action='/games/new' method='POST' id='new-match-form')
+                form(id='new-match-form')
                     legend Players
                     div(class='form-group form-check float-left' id='sortable-player-list')
 

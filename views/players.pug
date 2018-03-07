@@ -58,7 +58,15 @@ block content
 		table(id='players-table' class='table table-striped table-bordered' style='layout:fixed;')
 			thead
 				tr
+					th
+					th(colspan=3) Games
+					th(colspan=3) Legs
+					th(colspan=2)
+				tr
 					th Name
+					th Played
+					th Won
+					th Win %
 					th Played
 					th Won
 					th Win %
@@ -71,9 +79,12 @@ block content
 						td= player.name + (player.nickname !== null ? (" the '" + player.nickname + "'") : '')
 						td= player.games_played
 						td= player.games_won
-						td= player.games_played == 0 ? 0 : (player.games_won * 100 / player.games_played).toFixed(2)
+						td= player.games_played == 0 ? '0.00' : (player.games_won * 100 / player.games_played).toFixed(2)
+						td= player.matches_played
+						td= player.matches_won
+						td= player.matches_played == 0 ? '0.00' : (player.matches_won * 100 / player.matches_played).toFixed(2)
 						td
-							button(class='btn btn-primary view-player-btn' data-player-id=player.id disabled=player.games_played === 0) View
+							button(class='btn btn-primary view-player-btn btn-block' data-player-id=player.id disabled=player.games_played === 0) View
 						td
 							input(type='checkbox' name=player.name value=player.id disabled=player.games_played === 0)
 

@@ -102,25 +102,20 @@ router.post('/new', function (req, res, next) {
         debug('No players specified, unable to start match');
         return res.redirect('/');
     }
-    if (players.constructor !== Array) {
-        // If this is only a single player players is sent as a String, so make it an
-        // array so that we select from the array instead of a substring below
-        players = [players];
-    }
     var body = {
-        owe_type_id: req.body.game_stake == 0 ? null : parseInt(req.body.game_stake),
-        game_type: { id: parseInt(req.body.game_type) },
-        game_mode: { id: parseInt(req.body.game_mode) },
+        owe_type_id: req.body.game_stake == 0 ? null : req.body.game_stake,
+        game_type: { id: req.body.game_type },
+        game_mode: { id: req.body.game_mode },
         players: players.map(Number),
-        matches: [{ starting_score: parseInt(req.body.starting_score) }]
+        matches: [{ starting_score: req.body.starting_score }]
     }
     axios.post(req.app.locals.kcapp.api + '/game', body)
         .then(response => {
             var game = response.data;
             this.socketHandler.setupNamespace(game.current_match_id);
-            res.redirect('/matches/' + game.current_match_id);
+            res.status(200).send(game).end();
         }).catch(error => {
-            debug('Error when getting statistics: ' + error);
+            debug('Error when starting new game: ' + error);
             next(error);
         });
 });

@@ -34,9 +34,10 @@ block script_check_visit_finished
                     multiplier: dart.attr('data-multiplier'),
                     is_bust: false,
                     is_finished: isFinished,
-                    darts_thrown: currentDart + 1
+                    darts_thrown: currentDart
             });
 
+            currentDart++;
             updatePlayerScore(scoreNumeric);
 
             if (isFinished) {
