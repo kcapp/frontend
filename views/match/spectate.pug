@@ -113,6 +113,12 @@ block scripts
                 location.href = '/matches/' + data.new_match_id + '/spectate';
             });
 
+            socket.on('chat_message', function(data) {
+                var textArea = $('#chat-history');
+                textArea.append(data);
+                textArea.scrollTop(textArea[0].scrollHeight);
+            });
+
             // Reverse the rows in the table to show newest throws first
             var tbody = $('#match-visits-table tbody');
             tbody.html($('tr', tbody).get().reverse());
@@ -158,10 +164,38 @@ block scripts
                 }
                 return score;
             }
+
+            $(function() {
+                $("#btn-open-chat").click(function () {
+                    $('#chat-popup').toggleClass('popup-box-on');
+                    $('#chat-message').focus()
+                    var textArea = $('#chat-history');
+                    textArea.scrollTop(textArea[0].scrollHeight);
+                });
+
+                $("#btn-close-chat").click(function () {
+                    $('#chat-popup').removeClass('popup-box-on');
+                });
+
+                $('#btn-send-message').click(function() {
+                    var input = $('#chat-message');
+                    socket.emit('chat_message', input.val());
+                    input.val('');
+                });
+                $('#chat-popup').keypress(function (e) {
+                    if (e.key === 'Enter') {
+                        $('#btn-send-message').trigger('click');
+                    }
+                });
+            });
         });
 
 block content
     h2 Spectate
+    div(class='text-right')
+        button(type='button' class='btn btn-primary' id='btn-open-chat')
+            span(class='glyphicon glyphicon-comment') Chat
+    div(class='row')
 
     mixin get_player_cell(player)
         - var playerId = player.player_id;
@@ -224,3 +258,17 @@ block content
                                 label BUST
                             else
                                 label= (visit.first_dart.multiplier * visit.first_dart.value ) + (visit.second_dart.multiplier * visit.second_dart.value) + (visit.third_dart.multiplier * visit.third_dart.value)
+
+    //- Chat
+    div(class='popup-box chat-popup' id='chat-popup')
+        div(class='popup-head')
+            div(class='popup-head-left pull-left') Match Chat
+
+            button(type='button' class='chat-header-button pull-right' id='btn-close-chat')
+                i(class='glyphicon glyphicon-off')
+        div(class='chat-popup-messages')
+            textarea(id='chat-history' rows='15' name='message' disabled)
+
+        div(class='popup-messages-footer')
+            input(type='text' id='chat-message' placeholder='Type a message...' name='message')
+            button(type='button' class='btn btn-primary btn-block' id='btn-send-message') Send
