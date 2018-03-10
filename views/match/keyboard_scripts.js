@@ -28,6 +28,8 @@ $(function () {
     });
 
     $(document).keypress(function (e) {
+        var totalScoreContainer = $('.uv-active-player-visits .dart-score-total');
+        var totalScoreForCurrentPlayer = parseInt(totalScoreContainer.html());
         var dart = getCurrentDart();
         switch (e.key) {
             case 'Enter':
@@ -90,6 +92,9 @@ $(function () {
         }
         if (dartText !== '') {
             setDartValue(dart, dartText * currentMultiplier, currentMultiplier);
+        }
+        if (disableEnter) {
+            totalScoreContainer.html(totalScoreForCurrentPlayer);
         }
     });
 
