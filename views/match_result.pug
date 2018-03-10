@@ -248,12 +248,14 @@ block append scripts
 
 block content
     div(class='clearfix')
-        h2(class='pull-left') Leg Result (#{match.id})
+        div(class='pull-left')
+            h2 Leg Result (#{match.id})
 
-        if game.is_finished
-            button(type='button' class='btn btn-primary pull-right mt-30' id='back-to-game' data-game=match.game_id) Back to Game
-        else
-            button(type='button' class='btn btn-primary pull-right mt-30' id='continue-game' data-game=game.id) Continue Game
+        div(class='pull-right' style='padding-top: 20px;')
+            if game.is_finished
+                button(type='button' class='btn btn-primary pull-right mt-30' id='back-to-game' data-game=match.game_id) Back to Game
+            else
+                button(type='button' class='btn btn-primary pull-right mt-30' id='continue-game' data-game=game.id) Continue Game
 
     p.
         Started: #{moment(match.created_at).format('YYYY-MM-DD HH:mm:ss')} <br>
@@ -264,7 +266,7 @@ block content
     - var isFinished = match.winner_player_id !== null
     if isFinished
         if game.game_type.id == 2
-            table(id='match-result-table' class='table table-striped table-bordered')
+            table(id='match-result-table' class='table')
                 thead
                     tr
                         th Player
@@ -288,7 +290,7 @@ block content
                             else
                                 td
         else
-            table(id='match-result-table' class='table table-striped table-bordered')
+            table(id='match-result-table' class='table')
                 thead
                     tr
                         th Player
@@ -326,7 +328,7 @@ block content
     if isFinished
         button(id='btn-collapse-visits' class='btn btn-primary btn-block' data-toggle='collapse' data-target='#visits-div')= isFinished ? 'Show Visits' : 'Hide Visits'
     div(id='visits-div' class=isFinished ? 'collapse' : 'collapse in')
-        table(class='table table-striped table-bordered' id='match-visits-table')
+        table(class='table' id='match-visits-table')
             thead
                 tr
                     th Player
@@ -465,7 +467,7 @@ block content
     div(id='hits-div' class='collapse')
         h3 Hits
         div(class='table-responsive')
-            table(id='match-hits-table' class='table table-striped table-bordered')
+            table(id='match-hits-table' class='table')
                 thead
                     tr
                         th Dart

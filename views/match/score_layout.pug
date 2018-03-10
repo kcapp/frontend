@@ -29,6 +29,12 @@ block scripts
             return dart;
         }
 
+        function updateTotalVisitScore(score) {
+            var totalScoreContainer = $('.uv-active-player-visits .dart-score-total');
+            var total = parseInt(totalScoreContainer.html()) + parseInt(score);
+            totalScoreContainer.html(total);
+        }
+
         function setDartValue(dart, score, multiplier) {
             var scoreInt = parseInt(score);
             var dartText = score
@@ -57,6 +63,9 @@ block scripts
             dart.text(dartText);
             dart.attr('data-score', score / multiplier);
             dart.attr('data-multiplier', multiplier);
+
+            // Total score
+            updateTotalVisitScore(score)
 
             scores[currentDart] = scoreInt;
         }
@@ -103,7 +112,7 @@ block scripts
                 event.preventDefault();
             });
 
-            $('.toggle-buttons').click(function () {
+            $('#toggle-buttons').click(function () {
                 $('#score-selector-table').toggle();
             });
 
@@ -133,6 +142,7 @@ block scripts
                 currentDart--;
                 var lastScore = scores[currentDart];
                 updatePlayerScore(-lastScore);
+                updateTotalVisitScore(-lastScore);
                 delete scores[currentDart]
 
                 // Emit a undo throw to spectators
@@ -277,17 +287,25 @@ block content
                 table(style='width: 100%;')
                     tbody
                         tr
-                            td(class='dart-score-container no-border'): label(class='first' text='0' data-multiplier='1')
-                            td(class='dart-score-container no-border'): label(class='second' text='0' data-multiplier='1')
-                            td(class='dart-score-container no-border'): label(class='third' text='0' data-multiplier='1')
+                            td(class='dart-score-container'): label(class='first' text='0' data-multiplier='1')
+                            td(class='dart-score-container'): label(class='second' text='0' data-multiplier='1')
+                            td(class='dart-score-container'): label(class='third' text='0' data-multiplier='1')
+                        tr
+                            td(style='padding: 3px;')
+                        tr
+                            td(colspan='3' class='dart-score-total')= 0
         else
             td(id='player-visit-' + playerId class='uv-inactive-player-visits')
                 table(style='width: 100%;')
                     tbody
                         tr
-                            td(class='dart-score-container no-border'): label(class='first' text='0' data-multiplier='1')
-                            td(class='dart-score-container no-border'): label(class='second' text='0' data-multiplier='1')
-                            td(class='dart-score-container no-border'): label(class='third' text='0' data-multiplier='1')
+                            td(class='dart-score-container'): label(class='first' text='0' data-multiplier='1')
+                            td(class='dart-score-container'): label(class='second' text='0' data-multiplier='1')
+                            td(class='dart-score-container'): label(class='third' text='0' data-multiplier='1')
+                        tr
+                            td(style='padding: 3px;')
+                        tr
+                            td(colspan='3' class='dart-score-total')= 0
 
     div(class='table-responsive no-border')
         table(class='uv-table-mode' style='table-layout: fixed')
@@ -308,9 +326,21 @@ block content
                     each player in match_players
                         +get_current_player_visit(player)
 
-    div(class='toggle-buttons' style='border-bottom: 1px solid #efefef; padding: 5px;') show / hide
+    hr
+
+    div(class='btn-group')
+        button(type='button' class='btn btn-primary') Options
+        button(type='button' class='btn btn-primary dropdown-toggle' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false')
+            span(class='caret')
+            span(class='sr-only')
+        ul(class='dropdown-menu')
+            block advanced_options
+                li: a(id='toggle-buttons') Toggle buttons
+                li: a(id='edit-scores-button') Edit scores
+                li(role='separator' class='divider')
+                li: a(id='cancel-match-button') Cancel Match
     div(class='table-responsive')
-        table(id='score-selector-table' class='table')
+        table(id='score-selector-table' class='table' style='display: none;')
             tbody
                 tr(class='row')
                     td(colspan='9' class='no-border')
@@ -319,21 +349,6 @@ block content
                     td(colspan='2')
                         button(id='undo-button' type='button' class='btn-score btn-info btn-lg btn-block')
                             span(class='glyphicon glyphicon-arrow-left' style='line-height:1.7' aria-hidden='true')
-                tr(class='row')
-                    td(class='txt-center')
-                        label(id='round-number' class='match-information')= 'R' + (Math.floor(match.visits.length / match.players.length) + 1)
-                        label(class='match-information')= '/' +game.game_mode.short_name
-                    - var length = 12 / Object.keys(match.players).length
-                    each player in match_players
-                        mixin player_label(player)
-                            - var modifier_class = player.modifier_class;
-                            - var td_class = 'label-inactive-player ' + modifier_class;
-                            if player.is_current_player
-                                - td_class = 'label-active-player ' + modifier_class;
-                            td(id='player-score-' + player.player_id + '' colspan=length + '' class=td_class style='padding-right: 10px;')
-                                label(id=player.is_current_player ? 'current-player' : 'player-label-' + player.player_id class='label label-block label-player-score')= player.current_score
-                                label(class='label-player-name')= players[player.player_id].name + (player.wins ? ' (' + player.wins + ')' : '')
-                        +player_label(player)
                 block score_selector
                     mixin score_button(value, multiplier, text, custom_class)
                         - var score_button_class = 'btn-score btn-info btn-lg btn-block'
@@ -370,11 +385,3 @@ block content
                         +button_row([ 8, 7, 6, 5 ])
                     tr(class='throw-buttons row')
                         +button_row([ 4, 3, 2, 1 ])
-
-    div(class='btn-group')
-        button(type='button' class='btn btn-primary btn-block dropdown-toggle' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false') Advanced
-            span(class='caret')
-        ul(class='dropdown-menu')
-            block advanced_options
-                li: a(id='edit-scores-button') Edit scores
-                li: a(id='cancel-match-button') Cancel Match

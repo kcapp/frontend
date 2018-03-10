@@ -37,12 +37,13 @@ block scripts
         }
 
 block content
-    h2 Games
-    p.
-        Overview over all played games
+    div
+        h2 Games
+        p.
+            Overview over all played games
 
     div(class='table-responsive')
-        table(class='table table-striped table-bordered' id='games-list-table')
+        table(class='table' id='games-list-table')
             thead
                 tr
                     th(hidden=true)

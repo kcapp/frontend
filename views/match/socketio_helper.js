@@ -74,18 +74,18 @@ function setupSocketIO(matchId) {
                 tdVisit.removeClass().addClass('uv-active-player-visits ' + player.modifier_class);
                 $('#submit-score-button').data('current-player-id', player.player_id);
                 label.addClass('current-player');
+                $('.uv-active-player-visits .dart-score-total').html(0);
             }
             else {
                 td.removeClass().addClass('uv-inactive-player-score ' + player.modifier_class);
                 tdLegs.removeClass().addClass('uv-inactive-player-legs ' + player.modifier_class);
                 tdVisit.removeClass().addClass('uv-inactive-player-visits ' + player.modifier_class);
-                //label.attr('id', 'player-label-' + player.player_id);
                 label.removeClass('current-player');
                 label.removeAttr('data-current-player-id');
                 // Display scores as 'inactive'
-                //$('.uv-inactive-player-visits .first').empty();
-                //$('.uv-inactive-player-visits .second').empty();
-                //$('.uv-inactive-player-visits .third').empty();
+                //$('.uv-inactive-player-visits .first').addClass('dart-score-inactive');
+                //$('.uv-inactive-player-visits .second').addClass('dart-score-inactive');
+                //$('.uv-inactive-player-visits .third').addClass('dart-score-inactive');
             }
         }
         resetUIelements();

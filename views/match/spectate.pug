@@ -261,13 +261,13 @@ block content
                 each visit in match.visits
                     tr
                         td= players[visit.player_id].name
-                        td(class='dart-score-container no-border')
+                        td(class='dart-score-container')
                             +get_dart_label(visit.first_dart)
 
-                        td(class='dart-score-container no-border')
+                        td(class='dart-score-container')
                             +get_dart_label(visit.second_dart)
 
-                        td(class='dart-score-container no-border')
+                        td(class='dart-score-container')
                             +get_dart_label(visit.third_dart)
                         td
                             if visit.is_bust

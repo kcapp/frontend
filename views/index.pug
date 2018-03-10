@@ -87,20 +87,15 @@ block scripts
         });
 
 block content
-    p(style='padding: 15px;') Start a new darts game, view players, owes, statistics or previous games
-    p
-        button(id='create-match-button' class='btn btn-primary' type='button' data-toggle='collapse' data-target='#new-match-collapse' aria-expanded='false' aria-controls='new-match-collapse') Create Match »
-
-    div(class='collapse' id='new-match-collapse')
+    div(id='new-match-collapse')
         div(class='card card-block')
             if players.length == 0
                 p.
                     Players must be added before you can start a new game
             else
-                form(id='new-match-form')
+                form(style='padding-top: 15px;' id='new-match-form')
                     legend Players
                     div(class='form-group form-check float-left' id='sortable-player-list')
-
                     legend(style='clear: both;') Select Players
                     div(class='form-group form-check' id='all-players-list')
                         each player in players
