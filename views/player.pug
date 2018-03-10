@@ -12,6 +12,10 @@ block scripts
                 order: [[ 1,  'desc' ]],
                 columnDefs: [ { targets: [ 1 ], visible: true } ]
             });
+
+            $('#btn-view-progression').click(function() {
+                location.href = '/players/' + $(this).data('player') + '/progression'
+            });
         });
     script.
         var scoresMap = !{JSON.stringify(statistics.hits)};
@@ -37,6 +41,7 @@ block content
     h2 Statistics for #{player.name}
 
     div(class='table-responsive')
+        h3 Overview
         table(id='player-statistics-table' class='table table-striped table-bordered')
             thead
                 tr
@@ -46,6 +51,7 @@ block content
                     th First 9 PPD
                     th Overall PPD
                     th Checkout%
+                    th Progression
             tbody
                     tr
                         td= player.games_played
@@ -53,10 +59,8 @@ block content
                         td= player.games_played == 0 ? 0 : (player.games_won * 100 / player.games_played).toFixed(2)
                         td= statistics.first_nine_ppd.toFixed(2)
                         td= statistics.ppd.toFixed(2)
-                        if player.games_won === 0
-                            td= '-'
-                        else
-                            td= statistics.checkout_percentage.toFixed(2) + '%'
+                        td= player.games_won === 0 ? '-' : statistics.checkout_percentage.toFixed(2) + '%'
+                        td: button(type='button' class='btn btn-primary btn-block' id='btn-view-progression' data-player=player.id) View
 
         h3 High Scores
         table(id='player-scores-table' class='table table-striped table-bordered')

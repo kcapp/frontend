@@ -1,5 +1,8 @@
 extends layout.pug
 
+block append head
+    script(src='/javascripts/moment-2.20.1.min.js')
+
 block scripts
     script.
         $(function() {
@@ -39,16 +42,16 @@ block content
                 tr
                     th(hidden='true' scope='row')= match.id
                     td(class='col-sm-2')= '#' + idx++
-                    each playerId in game.players
+                    each stat in stats
                         td
-                            if match.winner_player_id === playerId
+                            if match.winner_player_id === stat.player_id
                                 span(class='glyphicon glyphicon-ok' aria-hidden='true')
                             else
                                 span(class='glyphicon glyphicon-remove' aria-hidden='true')
                     td: button(type='button' class='btn btn-primary btn-block btn-view-results') View
             tr
                 th Statistics
-                each playerId in game.players
+                each stat in stats
                     td
             tr
                 td(class='col-sm-2') PPD

@@ -2,13 +2,16 @@ var debug = require('debug')('kcapp:app');
 
 var express = require('express');
 var path = require('path');
-//var favicon = require('serve-favicon');
-var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var lessMiddleware = require('less-middleware');
+var logger = require('morgan');
+var rfs = require('rotating-file-stream')
 
 var app = express();
+
+// Make sure we get correct user IP when running behind a reverse proxy
+app.enable('trust proxy');
 
 var socket_io = require("socket.io");
 var io = socket_io();
@@ -32,7 +35,11 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
 app.locals.moment = require('moment');
 
-app.use(logger('dev'));
+// Write access log to a daily rotated file in /log
+var logDirectory = path.join(__dirname, 'log')
+var accessLogStream = rfs('access.log', { interval: '1d', path: logDirectory });
+app.use(logger('combined', { stream: accessLogStream }));
+
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());

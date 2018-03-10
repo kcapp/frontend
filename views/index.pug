@@ -1,23 +1,30 @@
 extends layout
 
+block append head
+    script(src='/javascripts/jquery-ui.1.12.1.min.js')
+    script(src='/javascripts/jquery.ui.touch-punch-0.2.3.min.js')
+
 block scripts
     script.
         $(function () {
-            $('#sortable-player-list').sortable();
+            $('#sortable-player-list').sortable({
+                stop: function(event, ui) {
+                    $( event.originalEvent.target ).one('click', function(e){ e.stopImmediatePropagation(); } );
+                }
+            });
             $('#sortable-player-list').disableSelection();
 
             $('#all-players-list').on('click', '.player-name-label', function() {
                 var sortablePlayerList = $('#sortable-player-list');
                 $(this).parent().appendTo(sortablePlayerList).removeClass('float-left');
             });
+
             $('#sortable-player-list').on('click', '.player-name-label', function() {
                 var allPlayersList = $('#all-players-list');
                 $(this).parent().appendTo(allPlayersList).addClass('float-left');
             });
 
-
             $('#game-type-select').on('change', function() {
-                // FIXME: need to introduce a "game mode"?
                 if (this.value == 2) {
                     $('#match-type-select').prop('disabled', true);
                     $('#match-type-select').val('0');
@@ -27,12 +34,62 @@ block scripts
                     $('#match-type-select').val('501');
                 }
             });
+
+            $('#create-match-button').click(function() {
+                $(this).blur();
+            });
+            $('#start-match-button').click(function(e) {
+                var stake = parseInt($('#game-stake-select').val());
+                var body = {
+                    starting_score: parseInt($('#match-type-select').val()),
+                    game_type: parseInt($('#game-type-select').val()),
+                    game_mode: parseInt($('#game-mode-select').val()),
+                    game_stake: stake === 0 ? null : stake,
+                    players: []
+
+                }
+                $('#sortable-player-list :input').each(function() {
+                    body.players.push(parseInt($(this).val()));
+                });
+                executePost(window.location.origin + '/games/new', JSON.stringify(body), 'application/json',
+                    function(response){
+                        location.href = 'matches/' + response.current_match_id
+                    }, function(error) {
+                        console.log(error);
+                    }
+                );
+                e.preventDefault();
+            });
+        });
+    script.
+        var playerId = '';
+        $(document).keypress(function (e) {
+            switch (e.key) {
+                case 'Enter':
+                    var playerChck = $('#checkbox-player-' + playerId);
+                    if (playerChck.length) {
+                        playerChck.parent().children('.player-name-label').trigger('click');
+                    }
+                    playerId = '';
+                    break;
+                case '1': playerId += '1'; break;
+                case '2': playerId += '2'; break;
+                case '3': playerId += '3'; break;
+                case '4': playerId += '4'; break;
+                case '5': playerId += '5'; break;
+                case '6': playerId += '6'; break;
+                case '7': playerId += '7'; break;
+                case '8': playerId += '8'; break;
+                case '9': playerId += '9'; break;
+                case '0': playerId += '0'; break;
+                default: /* NOOP */; break;
+            }
         });
 
 block content
     p(style='padding: 15px;') Start a new darts game, view players, owes, statistics or previous games
     p
-        button(class='btn btn-primary' type='button' data-toggle='collapse' data-target='#new-match-collapse' aria-expanded='false' aria-controls='new-match-collapse') Create Match »
+        button(id='create-match-button' class='btn btn-primary' type='button' data-toggle='collapse' data-target='#new-match-collapse' aria-expanded='false' aria-controls='new-match-collapse') Create Match »
 
     div(class='collapse' id='new-match-collapse')
         div(class='card card-block')
@@ -40,7 +97,7 @@ block content
                 p.
                     Players must be added before you can start a new game
             else
-                form(action='/games/new' method='POST' id='new-match-form')
+                form(id='new-match-form')
                     legend Players
                     div(class='form-group form-check float-left' id='sortable-player-list')
 

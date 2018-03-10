@@ -4,6 +4,9 @@ include chart/chart_helper.pug
 block append head
     script(src='/javascripts/Chart.bundle-2.7.1.min.js')
     script(src='/javascripts/webgl-heatmap.js')
+    script(src='/javascripts/jquery-ui.1.12.1.min.js')
+    script(src='/javascripts/jquery.ui.touch-punch-0.2.3.min.js')
+    script(src='/javascripts/moment-2.20.1.min.js')
 
 block append scripts
     script.
@@ -142,7 +145,6 @@ block append scripts
                         function (error) {
                             alert("Error when updating score, please reload!");
                             console.log("Unable to proceed: " + error.responseText);
-                            alert('Error changing score.');
                             location.reload();
                         }
                     )
@@ -319,7 +321,7 @@ block content
 
     h3 Match Results
     p.
-        Starting score was #{match.starting_score}, and a total of #{match.darts_thrown} darts were thrown by #{match.players.length} players
+        Starting score was #{match.starting_score}, and a total of #{match.darts_thrown ? match.darts_thrown : 0} darts were thrown by #{match.players.length} players
 
     if isFinished
         button(id='btn-collapse-visits' class='btn btn-primary btn-block' data-toggle='collapse' data-target='#visits-div')= isFinished ? 'Show Visits' : 'Hide Visits'
@@ -334,7 +336,7 @@ block content
                     th Total
                     th Remaining
                     th PPD
-                    if match.winner_player_id === null
+                    if !isFinished
                         th(class="txt-center") Options
             tbody
                 each visit in match.visits
@@ -427,22 +429,28 @@ block content
                         td(class='total-visit-score-' + visit.id): label= visit_score
                         td: label= visit.scores
                         td(class='visit-ppd-' + visit.id)= (visit_score / 3).toFixed(2)
-                        if match.winner_player_id === null
+                        if !isFinished
                             td(class='txt-center')
                                 button(type="button" class="btn btn-default edit-visit" data-visit=visit.id data-issave='0')
                                     span(class="glyphicon glyphicon-edit" aria-hidden="true")
                                 button(type="button" class="btn btn-default delete-visit" data-visit=visit.id)
                                     span(class="glyphicon glyphicon-trash" aria-hidden="true")
-
     br
+    if !isFinished
+        h3 Player Order
+        div
+            div(id='player-order-list')
+                each id in match.players
+                    div(class='float-left')
+                        input(style='display: none;' type='checkbox' class='form-check-input' id='checkbox-player-' + players[id].id value=players[id].id)
+                        label(style='margin-left: 10px; width: 160px;' class='player-name-label form-check-label btn btn-warning' for='checkbox-player-' + players[id].id)= players[id].name
+            button(type='submit' name='submit' style='margin-left: 10px' id='change-order-button' class='btn btn-primary') Change Order
     div
         h3 Scores
         canvas(id='canvas-scores')
-
     br
-    if isFinished
-        button(id='btn-collapse-heatmap' class='btn btn-primary btn-block' data-toggle='collapse' data-target='#heatmap-div')= isFinished ? 'Show Heatmap' : 'Hide Heatmap'
-    div(id='heatmap-div' class=isFinished ? 'collapse' : 'collapse in')
+    button(id='btn-collapse-heatmap' class='btn btn-primary btn-block' data-toggle='collapse' data-target='#heatmap-div') Show Heatmap
+    div(id='heatmap-div' class='collapse')
         h3 Match Heatmap
         select(id='heatmap-value-selector' name='dartValues')
             option(value=0 default=true) All
@@ -453,9 +461,8 @@ block content
             canvas(id='dartboard-heatmap')
 
     br
-    if isFinished
-        button(id='btn-collapse-hits' class='btn btn-primary btn-block' data-toggle='collapse' data-target='#hits-div')= isFinished ? 'Show Hits' : 'Hide Hits'
-    div(id='hits-div' class=isFinished ? 'collapse' : 'collapse in')
+    button(id='btn-collapse-hits' class='btn btn-primary btn-block' data-toggle='collapse' data-target='#hits-div') Show Hits
+    div(id='hits-div' class='collapse')
         h3 Hits
         div(class='table-responsive')
             table(id='match-hits-table' class='table table-striped table-bordered')
@@ -486,13 +493,3 @@ block content
                                                 label(class='dart-score-single')= key
                                     td= value
                                     td= (value * 100 / match.darts_thrown).toFixed(2) + '%'
-
-    if !isFinished
-        h2 Player Order
-        div
-            div(id='player-order-list')
-                each id in match.players
-                    div(class='float-left')
-                        input(style='display: none;' type='checkbox' class='form-check-input' id='checkbox-player-' + players[id].id value=players[id].id)
-                        label(style='margin-left: 10px; width: 160px;' class='player_name_label form-check-label btn btn-warning' for='checkbox-player-' + players[id].id)= players[id].name
-            button(type='submit' name='submit' style='margin-left: 10px' id='change-order-button' class='btn btn-primary') Change Order

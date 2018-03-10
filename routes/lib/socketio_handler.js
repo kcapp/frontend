@@ -1,5 +1,11 @@
 var debug = require('debug')('kcapp:socketio-handler');
 var axios = require('axios');
+var moment = require('moment');
+
+function getClientIP(client) {
+    var realIP = client.handshake.headers["x-real-ip"]
+    return realIP ? realIP : client.handshake.address;
+}
 
 module.exports = (io, app) => {
     this.io = io;
@@ -21,21 +27,25 @@ module.exports = (io, app) => {
                 return;
             }
             var namespace = '/matches/' + matchId;
+            var chatHistory = [];
             if (this.io.nsps[namespace] === undefined) {
                 var nsp = this.io.of(namespace);
                 nsp.on('connection', function (client) {
-                    debug('Client connected: ' + client.handshake.address);
+                    var ip = getClientIP(client);
+                    debug('Client connected: ' + ip);
 
                     client.on('join', function () {
                         client.emit('connected', 'Connected to server');
+                        client.emit('chat_message', chatHistory.join(''));
                     });
 
                     client.on('spectator_connected', function (data) {
+                        debug('Client connected: ' + ip);
                         nsp.emit('spectator_connected', data);
                     });
 
                     client.on('disconnect', function () {
-                        debug('Client disconnected: ' + client.handshake.address);
+                        debug('Client disconnected: ' + ip);
                         nsp.emit('spectator_disconnected');
                     });
                     client.on('possible_throw', function (data) {
@@ -45,9 +55,16 @@ module.exports = (io, app) => {
                         nsp.emit('possible_throw', data);
                     });
 
+                    client.on('chat_message', function (data) {
+                        debug('Received chat message from %s: %s', ip, data)
+                        var message = '[' + moment().format('HH:mm') + ']: ' + data + '\r\n';
+                        chatHistory.push(message);
+                        nsp.emit('chat_message', message);
+                    });
+
                     client.on('throw', function (data) {
-                        debug('Received throw from ' + client.handshake.address);
                         var body = JSON.parse(data);
+                        debug('Received throw from %s (%o)', ip, body);
                         axios.post(app.locals.kcapp.api + '/visit', body)
                             .then(() => {
                                 axios.get(app.locals.kcapp.api + '/match/' + body.match_id)
