@@ -3,15 +3,24 @@ var socket = null;
 function resetUIelements() {
     // Reset UI elements
     currentDart = 1;
-    $('.uv-active-player-visits .first').text('');
+    $('.uv-active-player-visits .first').text('')
+        .removeClass('dart-score-single')
+        .removeClass('dart-score-double')
+        .removeClass('dart-score-triple');
     $('.uv-active-player-visits .first').removeAttr('data-score');
     $('.uv-active-player-visits .first').attr('data-multiplier', 1);
     $('.uv-active-player-visits .first').attr('data-checkout', 0);
-    $('.uv-active-player-visits .second').text('');
+    $('.uv-active-player-visits .second').text('')
+        .removeClass('dart-score-single')
+        .removeClass('dart-score-double')
+        .removeClass('dart-score-triple');
     $('.uv-active-player-visits .second').removeAttr('data-score');
     $('.uv-active-player-visits .second').attr('data-multiplier', 1);
     $('.uv-active-player-visits .second').attr('data-checkout', 0);
-    $('.uv-active-player-visits .third').text('');
+    $('.uv-active-player-visits .third').text('')
+        .removeClass('dart-score-single')
+        .removeClass('dart-score-double')
+        .removeClass('dart-score-triple');
     $('.uv-active-player-visits .third').removeAttr('data-score');
     $('.uv-active-player-visits .third').attr('data-multiplier', 1);
     $('.uv-active-player-visits .third').attr('data-checkout', 0);
