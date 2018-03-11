@@ -181,13 +181,6 @@ a:hover {
     }
 }
 
-#games-list-table {
-    span {
-        display: block;
-    }
-    .center-table
-}
-
 #player-statistics-table,
 #player-scores-table,
 #player-accuracy-table,
@@ -209,6 +202,8 @@ a:hover {
     }
     .center-table
 }
+
+#player-scores-table,
 
 #score-selector-table {
     border-spacing: 0px;
@@ -461,8 +456,145 @@ a:hover {
     }
 }
 
+#games-list-table {
+    span {
+        display: block;
+    }
+    .center-table
+    thead {
+        tr:first-child {
+            background-color: #efefef;
+            border: 3px solid #ddd;
+        }
+        .th-bordered {
+            background-color: #efefef;
+            border: 3px solid #ddd;
+            text-align: center;
+        }
+    }
+    tr:last-child {
+        border-bottom: 3px solid #dddddd;
+    }
+    td:nth-child(2) {
+        border-left: 3px solid #dddddd;
+    }
+    td:last-child {
+        border-right: 3px solid #dddddd;
+    }
+}
+
 .dart-score-container {
     label {
         min-height: 32px;
+    }
+}
+
+#table-overview, #table-accuracy {
+    width: 100%;
+    td {
+        text-align: center;
+        border-right: 10px solid white;
+    }
+    .glyph {
+        font-size: 25pt;
+        color: #666666;
+        padding-top: 10px;
+    }
+    .number {
+        font-size: 30pt;
+        font-weight: 700px; 
+        text-align: center;
+        padding: 10px 10px 0px 10px;
+    }
+    td.olabel {
+        font-size: 15pt;
+        text-align: center;
+        text-transform: uppercase;
+        color: #5f5d5d;
+        font-weight: 500;
+        padding-bottom: 20px;
+    }
+    hr {
+        width: 60%;
+        margin-top: 0px;
+        margin-bottom: 10px;
+        border-top: 1px solid #cecece;
+    }
+}
+
+#table-highscores {
+    width: 100%;
+    td {
+        width: 25%;
+        border-right: 10px solid white;
+    }
+    .glyph {
+        text-align: center;
+        font-size: 25pt;
+        color: #666666;
+        padding-top: 10px;
+    }
+    .glyph60 {
+        color: #fdd000;
+    }
+    .glyph100 {
+        color: #fc9c00;
+    }
+    .glyph140 {
+        color: #fa5c00;
+    }
+    .glyph180 {
+        color: #fa1100;
+    }
+    .number {
+        font-size: 30pt;
+        font-weight: 700px; 
+        text-align: center;
+        padding: 10px 10px 0px 10px;
+    }
+    .olabel {
+        font-size: 15pt;
+        text-align: center;
+        text-transform: uppercase;
+        color: #5f5d5d;
+        font-weight: 500;
+        padding-bottom: 20px;
+    }
+    hr {
+        width: 60%;
+        margin-top: 0px;
+        margin-bottom: 10px;
+        border-top: 1px solid #cecece;
+    }
+}
+
+.txt-italic {
+    font-style: italic;
+}
+
+#player-hits-table {
+    span {
+        display: block;
+    }
+    .center-table
+    thead {
+        tr:first-child {
+            background-color: #efefef;
+            border: 3px solid #ddd;
+        }
+        .th-bordered {
+            background-color: #efefef;
+            border: 3px solid #ddd;
+            text-align: center;
+        }
+    }
+    tr:last-child {
+        border-bottom: 3px solid #dddddd;
+    }
+    td:nth-child(1) {
+        border-left: 3px solid #dddddd;
+    }
+    td:last-child {
+        border-right: 3px solid #dddddd;
     }
 }

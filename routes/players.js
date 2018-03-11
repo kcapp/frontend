@@ -39,7 +39,14 @@ router.get('/:id/statistics', function (req, res, next) {
             axios.get(req.app.locals.kcapp.api + '/player/' + playerId + '/statistics')
                 .then(response => {
                     var statistics = response.data;
-                    res.render('player', { player: player, statistics: statistics });
+                    axios.get(req.app.locals.kcapp.api + '/player/' + playerId + '/progression')
+                    .then(response => {
+                        var progression = response.data;
+                        res.render('player', { player: player, statistics: statistics, progression: progression });
+                    }).catch(error => {
+                        debug('Error when getting player progression: ' + error);
+                        next(error);
+                    });
                 }).catch(error => {
                     debug('Error when getting player statistics: ' + error);
                     next(error);
