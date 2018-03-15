@@ -23,17 +23,19 @@ block scripts
 
 block content
     div(class='row')
-        div(class='col-sm-6 text-left')
-            button(id='previous-btn' class='btn btn-primary' data-current-date=statistics.from) << Previous
-        div(class='col-sm-6 text-right')
-            button(id='next-btn' class='btn btn-primary' data-current-date=statistics.to) Next >>
+        div(class='col-sm-2 text-left')
+            button(id='previous-btn' class='btn btn-primary' data-current-date=statistics_x01.from) << Previous
+        div(class='col-sm-8 text-center')
+            h2= "Statistics (" + statistics_x01.from + " to " + statistics_x01.to + ")"
+        div(class='col-sm-2 text-right')
+            button(id='next-btn' class='btn btn-primary' data-current-date=statistics_x01.to) Next >>
 
     div(class='col-lg-14')
         div(class='row')
-            h2= "Statistics (" + statistics.from + " to " + statistics.to + ")"
+            h3 X01
 
-            if statistics.length === 0
-                p No matches played ...
+            if statistics_x01.length === 0
+                p No games played ...
             else
                 div(class='table-responsive')
                     table(id='current-week-statistics-table' class='table table-striped table-bordered')
@@ -59,7 +61,7 @@ block content
                                 th 19s
                         tbody
                             - var rank = 1
-                            each stats in statistics
+                            each stats in statistics_x01
                                 - var player = players[stats.player_id]
                                 tr
                                     td= rank++
@@ -76,3 +78,43 @@ block content
                                     td= stats.accuracy_overall === null ? '-' : stats.accuracy_overall.toFixed(2)
                                     td= stats.accuracy_20 === null ? '-' : stats.accuracy_20.toFixed(2)
                                     td= stats.accuracy_19 === null ? '-' : stats.accuracy_19.toFixed(2)
+
+    div(class='col-lg-14')
+        div(class='row')
+            h3 Shootout
+
+            if statistics_shootout.length === 0
+                p No games played ...
+            else
+                div(class='table-responsive')
+                    table(id='current-week-statistics-table' class='table table-striped table-bordered')
+                        thead
+                            tr
+                                th(colspan='6')
+                                th(colspan='4') Per Game
+                            tr
+                                th Rank
+                                th Player
+                                th Played
+                                th Won
+                                th Win %
+                                th PPD
+                                th 60s+
+                                th 100s+
+                                th 140s+
+                                th 180
+                        tbody
+                            - var rank = 1
+                            each stats in statistics_shootout
+                                - var player = players[stats.player_id]
+                                tr
+                                    td= rank++
+                                    td(style='width: 12%'): a(href='/players/' + player.id + '/statistics')= player.name
+                                    td= stats.games_played
+                                    td= stats.games_won === undefined ? 0 : stats.games_won
+                                    td= stats.games_won === undefined ? 0 : (stats.games_won / stats.games_played * 100).toFixed(2)
+                                    td= stats.ppd.toFixed(2)
+                                    td= (stats.scores_60s_plus / stats.games_played).toFixed(2)
+                                    td= (stats.scores_100s_plus / stats.games_played).toFixed(2)
+                                    td= (stats.scores_140s_plus / stats.games_played).toFixed(2)
+                                    td= (stats.scores_180s / stats.games_played).toFixed(2)
