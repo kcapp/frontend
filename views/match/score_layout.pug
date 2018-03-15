@@ -63,10 +63,75 @@ block scripts
             scores[currentDart] = scoreInt;
         }
 
+        function resetUIelements() {
+            // Reset UI elements
+            currentDart = 1;
+            $('#first').text('');
+            $('#first').removeAttr('data-score');
+            $('#first').attr('data-multiplier', 1);
+            $('#first').attr('data-checkout', 0);
+            $('#second').text('');
+            $('#second').removeAttr('data-score');
+            $('#second').attr('data-multiplier', 1);
+            $('#second').attr('data-checkout', 0);
+            $('#third').text('');
+            $('#third').removeAttr('data-score');
+            $('#third').attr('data-multiplier', 1);
+            $('#third').attr('data-checkout', 0);
+            $('#submit-score-button').data('busted', 0);
+            $('#submit-score-button').data('finished', 0);
+        }
+
         $(function () {
             FastClick.attach(document.body);
 
-            var socket = setupSocketIO(matchId);
+            var socket = getSocketIO(matchId);
+            socket.on('spectator_connected', function (data) {
+                alertify.success(data + ' connected');
+            });
+            socket.on('spectator_disconnected', function (data) {
+                alertify.warning(data + ' disconnected');
+            });
+            socket.on('connected', function (data) {
+                console.log(data);
+            });
+            socket.on('match_finished', function (data) {
+                // Forward all clients to results page when match is finished
+                location.href = 'matches/' + matchId + '/leg';
+            });
+            socket.on('score_update', function (data) {
+                $('#submit-score-button').prop('disabled', false);
+
+                // Set the global match object
+                match = data.match;
+                scores = {};
+
+                $('#round-number').text('R' + (Math.floor(match.visits.length / match.players.length) + 1));
+
+                // Set updated score per player
+                var currentPlayerId = match.current_player_id;
+                var players = data.players;
+                for (var i = 0; i < players.length; i++) {
+                    var player = players[i];
+                    var td = $('#player-score-' + player.player_id);
+                    var label = td.find('.label-player-score');
+                    label.text(player.current_score);
+
+                    if (player.player_id === currentPlayerId) {
+                        td.removeClass().addClass('label-active-player ' + player.modifier_class)
+                        label.attr('id', 'current-player');
+                        $('#submit-score-button').data('current-player-id', player.player_id);
+                    }
+                    else {
+                        td.removeClass().addClass('label-inactive-player ' + player.modifier_class);
+                        label.attr('id', 'player-label-' + player.player_id);
+                        label.removeAttr('data-current-player-id');
+                    }
+                }
+                resetUIelements();
+            });
+
+
             $(document).scrollTop(170);
 
             $('#submit-score-button').click(function (event) {
@@ -329,5 +394,9 @@ block content
             span(class='caret')
         ul(class='dropdown-menu')
             block advanced_options
+                li: a(id='btn-open-chat') Open Chat
                 li: a(id='edit-scores-button') Edit scores
                 li: a(id='cancel-match-button') Cancel Match
+
+    //- Spectator chat
+    include ../chat/chat.pug

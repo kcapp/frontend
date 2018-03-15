@@ -1,6 +1,7 @@
 var debug = require('debug')('kcapp:socketio-handler');
 var axios = require('axios');
 var moment = require('moment');
+var lookup = require('./dns_lookup');
 
 function getClientIP(client) {
     var realIP = client.handshake.headers["x-real-ip"]
@@ -32,32 +33,43 @@ module.exports = (io, app) => {
                 var nsp = this.io.of(namespace);
                 nsp.on('connection', function (client) {
                     var ip = getClientIP(client);
+                    var host = 'Unknown';
+
                     debug('Client connected: ' + ip);
+                    lookup.reverse(ip, function (err, hostname) {
+                        if (err) {
+                            debug(err);
+                            return;
+                        }
+                        host = hostname.substring(0, hostname.indexOf('.'));
+                    });
 
                     client.on('join', function () {
                         client.emit('connected', 'Connected to server');
                         client.emit('chat_message', chatHistory.join(''));
                     });
 
-                    client.on('spectator_connected', function (data) {
-                        debug('Client connected: ' + ip);
-                        nsp.emit('spectator_connected', data);
+                    client.on('spectator_connected', function () {
+                        debug('Spectator connected: %s [%s]', host, ip);
+                        nsp.emit('spectator_connected', host);
                     });
 
                     client.on('disconnect', function () {
-                        debug('Client disconnected: ' + ip);
-                        nsp.emit('spectator_disconnected');
+                        debug('Client disconnected: %s [%s]', host, ip);
+                        nsp.emit('spectator_disconnected', host);
                     });
+
                     client.on('possible_throw', function (data) {
                         nsp.emit('possible_throw', data);
                     });
+
                     client.on('undo_throw', function (data) {
                         nsp.emit('possible_throw', data);
                     });
 
                     client.on('chat_message', function (data) {
-                        debug('Received chat message from %s: %s', ip, data)
-                        var message = '[' + moment().format('HH:mm') + ']: ' + data + '\r\n';
+                        debug('Received chat message from %s [%s]: %s', host, ip, data)
+                        var message = '[' + moment().format('HH:mm') + '] ' + host + ': ' + data + '\r\n';
                         chatHistory.push(message);
                         nsp.emit('chat_message', message);
                     });

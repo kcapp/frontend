@@ -4,15 +4,16 @@ block append head
     script(src='/javascripts/socket.io-2.0.3.min.js')
 
 block scripts
+    script
+        include socketio_helper.js
+
     script.
         var match = !{JSON.stringify(match)}
+        var matchId = match.id;
         var playersMap = !{JSON.stringify(players)}
+
         $(function () {
-            var matchId = match.id;
-            var socket = io(window.location.protocol + '//' + window.location.host + '/matches/' + matchId);
-            socket.on('connect', function(data) {
-                socket.emit('join', 'Client Conneting');
-            });
+            socket = getSocketIO(matchId);
 
             socket.on('connected', function(data) {
                 // Send message to client announcing that we are spectating
@@ -113,12 +114,6 @@ block scripts
                 location.href = '/matches/' + data.new_match_id + '/spectate';
             });
 
-            socket.on('chat_message', function(data) {
-                var textArea = $('#chat-history');
-                textArea.append(data);
-                textArea.scrollTop(textArea[0].scrollHeight);
-            });
-
             // Reverse the rows in the table to show newest throws first
             var tbody = $('#match-visits-table tbody');
             tbody.html($('tr', tbody).get().reverse());
@@ -164,30 +159,6 @@ block scripts
                 }
                 return score;
             }
-
-            $(function() {
-                $("#btn-open-chat").click(function () {
-                    $('#chat-popup').toggleClass('popup-box-on');
-                    $('#chat-message').focus()
-                    var textArea = $('#chat-history');
-                    textArea.scrollTop(textArea[0].scrollHeight);
-                });
-
-                $("#btn-close-chat").click(function () {
-                    $('#chat-popup').removeClass('popup-box-on');
-                });
-
-                $('#btn-send-message').click(function() {
-                    var input = $('#chat-message');
-                    socket.emit('chat_message', input.val());
-                    input.val('');
-                });
-                $('#chat-popup').keypress(function (e) {
-                    if (e.key === 'Enter') {
-                        $('#btn-send-message').trigger('click');
-                    }
-                });
-            });
         });
 
 block content
@@ -259,16 +230,5 @@ block content
                             else
                                 label= (visit.first_dart.multiplier * visit.first_dart.value ) + (visit.second_dart.multiplier * visit.second_dart.value) + (visit.third_dart.multiplier * visit.third_dart.value)
 
-    //- Chat
-    div(class='popup-box chat-popup' id='chat-popup')
-        div(class='popup-head')
-            div(class='popup-head-left pull-left') Match Chat
-
-            button(type='button' class='chat-header-button pull-right' id='btn-close-chat')
-                i(class='glyphicon glyphicon-off')
-        div(class='chat-popup-messages')
-            textarea(id='chat-history' rows='15' name='message' disabled)
-
-        div(class='popup-messages-footer')
-            input(type='text' id='chat-message' placeholder='Type a message...' name='message')
-            button(type='button' class='btn btn-primary btn-block' id='btn-send-message') Send
+    //- Spectator chat
+    include ../chat/chat.pug

@@ -190,51 +190,21 @@ a:hover {
     .center-table
 }
 
-// CHAT CSS
 .glyphicon-comment:before {
     margin-right: 5px;
 }
 
-.popup-box {
-    background-color: #ffffff;
+.chat-popup-box {
     border: 1px solid #b0b0b0;
     bottom: 0;
     display: none;
     height: 415px;
     position: fixed;
-    right: 70px;
-    width: 300px;
-    font-family: 'Open Sans', sans-serif;
+    right: 10px;
+    width: 350px;
 }
 
-.popup-messages-footer {
-    background: #fff none repeat scroll 0 0;
-    bottom: 0;
-    position: absolute;
-    width: 100%;
-}
-
-.popup-messages-footer input {
-    width: 100%;
-}
-
-.chat-popup-messages textarea {
-    width: 100%;
-    overflow-y: scroll;
-}
-
-.popup-box .popup-head {
-    background-color: #fff;
-    clear: both;
-    color: #7b7b7b;
-    display: inline-table;
-    font-size: 21px;
-    padding: 7px 10px;
-    width: 100%;
-    font-family: 'Open Sans', sans-serif;
-}
-
-.popup-box-on {
+.chat-popup-box-on {
     display: block !important;
 }
 
@@ -245,4 +215,30 @@ a:hover {
     font-size: 14px;
     height: 30px;
     width: 30px;
+}
+
+.chat-popup-head {
+    clear: both;
+    color: #7b7b7b;
+    display: inline-table;
+    font-size: 21px;
+    padding: 7px 10px;
+    width: 100%;
+}
+
+.chat-popup-messages textarea {
+    width: 100%;
+    overflow-y: scroll;
+    resize: none;
+    background-color: #ffffff;
+}
+
+.chat-popup-messages-footer {
+    background: #fff none repeat scroll 0 0;
+    bottom: 0;
+    position: absolute;
+    width: 100%;
+    input {
+        width: 100%;
+    }
 }

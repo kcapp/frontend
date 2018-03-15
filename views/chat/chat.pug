@@ -1,0 +1,46 @@
+script.
+    $(function() {
+        var socket = getSocketIO(matchId);
+        socket.on('chat_message', function(data) {
+            var textArea = $('#chat-history');
+            textArea.append(data);
+            textArea.scrollTop(textArea[0].scrollHeight);
+        });
+
+        $("#btn-open-chat").click(function () {
+            $('#chat-popup').toggleClass('chat-popup-box-on');
+            $('#chat-message').focus()
+            var textArea = $('#chat-history');
+            textArea.scrollTop(textArea[0].scrollHeight);
+        });
+
+        $("#btn-close-chat").click(function () {
+            $('#chat-popup').removeClass('chat-popup-box-on');
+        });
+
+        $('#btn-send-message').click(function() {
+            var input = $('#chat-message');
+            socket.emit('chat_message', input.val());
+            input.val('');
+        });
+
+        $('#chat-popup').keypress(function (e) {
+            if (e.key === 'Enter') {
+                $('#btn-send-message').trigger('click');
+            }
+        });
+    });
+
+
+div(class='chat-popup-box chat-popup' id='chat-popup')
+    div(class='chat-popup-head')
+        div(class='pull-left') Match Chat
+
+        button(type='button' class='chat-header-button pull-right' id='btn-close-chat')
+            i(class='glyphicon glyphicon-remove')
+    div(class='chat-popup-messages')
+        textarea(rows='15' name='message' disabled id='chat-history')
+
+    div(class='chat-popup-messages-footer')
+        input(type='text' id='chat-message' placeholder='Type a message...' name='message')
+        button(type='button' class='btn btn-primary btn-block' id='btn-send-message') Send
