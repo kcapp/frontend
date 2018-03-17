@@ -20,13 +20,27 @@ script.
 
         $('#btn-send-message').click(function() {
             var input = $('#chat-message');
-            socket.emit('chat_message', input.val());
-            input.val('');
+            var message = input.val().trim();
+            if (message.length > 0) {
+                socket.emit('chat_message', message);
+                input.val('');
+            }
         });
 
         $('#chat-popup').keypress(function (e) {
             if (e.key === 'Enter') {
                 $('#btn-send-message').trigger('click');
+                e.preventDefault();
+            }
+        });
+
+        $(document).keydown(function (e) {
+            //- Show/Hide chat with Home/End
+            if (e.key === 'Home') {
+                $('#chat-popup').addClass('chat-popup-box-on');
+            }
+            else if (e.key === 'End') {
+                $('#chat-popup').removeClass('chat-popup-box-on');
             }
         });
     });

@@ -38,7 +38,6 @@ module.exports = (io, app) => {
                     debug('Client connected: ' + ip);
                     lookup.reverse(ip, function (err, hostname) {
                         if (err) {
-                            debug(err);
                             return;
                         }
                         host = hostname.substring(0, hostname.indexOf('.'));
