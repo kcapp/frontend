@@ -121,13 +121,19 @@ block scripts
                         td.removeClass().addClass('label-active-player')
                         label.attr('id', 'current-player');
                         $('#submit-score-button').data('current-player-id', player.player_id);
+                        if (player.modifiers.is_beer_game) {
+                            td.addClass('player-modifier-beer');
+                        }
                     }
                     else {
                         td.removeClass().addClass('label-inactive-player');
                         label.attr('id', 'player-label-' + player.player_id);
                         label.removeAttr('data-current-player-id');
+                        if (player.modifiers.is_beer_game) {
+                            td.addClass('player-modifier-beer');
+                        }
                         if (player.modifiers.is_vilius_visit) {
-                            td.addClass('vilius-visit');
+                            td.addClass('player-modifier-vilius');
                         }
                     }
                 }
@@ -344,13 +350,10 @@ block content
                     td(class='txt-center')
                         label(id='round-number' class='match-information')= 'R' + (Math.floor(match.visits.length / match.players.length) + 1)
                         label(class='match-information')= '/' +game.game_mode.short_name
-                    - var length = 12 / Object.keys(match.players).length
+                    - var colspan = 12 / Object.keys(match.players).length
                     each player in match_players
                         mixin player_label(player)
-                            - var td_class = 'label-inactive-player'
-                            if player.is_current_player
-                                - td_class = 'label-active-player'
-                            td(id='player-score-' + player.player_id + '' colspan=length + '' class=td_class style='padding-right: 10px;')
+                            td(id='player-score-' + player.player_id colspan=colspan class=player.is_current_player ? 'label-active-player' : 'label-inactive-player')
                                 label(id=player.is_current_player ? 'current-player' : 'player-label-' + player.player_id class='label label-block label-player-score')= player.current_score
                                 label(class='label-player-name')= players[player.player_id].name + (player.wins ? ' (' + player.wins + ')' : '')
                         +player_label(player)
