@@ -81,7 +81,7 @@ module.exports = (io, app) => {
                                 axios.get(app.locals.kcapp.api + '/match/' + body.match_id)
                                     .then(response => {
                                         var match = response.data;
-                                        axios.get(app.locals.kcapp.api + '/match/' + body.match_id + '/players')
+                                        axios.get(app.locals.kcapp.api + '/match/' + match.id + '/players')
                                             .then(response => {
                                                 var players = response.data;
                                                 nsp.emit('score_update', { players: players, match: match });
