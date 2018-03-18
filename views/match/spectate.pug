@@ -3,6 +3,8 @@ extends ../layout.pug
 block append head
     script(src='/javascripts/socket.io-2.0.3.min.js')
 
+include ../mixins/dart.pug
+
 block scripts
     script
         include socketio_helper.js
@@ -102,9 +104,9 @@ block scripts
                 var html =
                     "<tr>" +
                         "<td>" + playerName + "</td>" +
-                        "<td class='dart-score-container no-border'><label class='" + getDartCSS(visit.first_dart) + "'>" + getScoreString(visit.first_dart) + "</label></td>" +
-                        "<td class='dart-score-container no-border'><label class='" + getDartCSS(visit.second_dart) + "'>" + getScoreString(visit.second_dart) + "</label></td>" +
-                        "<td class='dart-score-container no-border'><label class='" + getDartCSS(visit.third_dart) + "'>" + getScoreString(visit.third_dart) + "</label></td>" +
+                        "<td class='col-sm-2 dart-score-container no-border'><label class='" + getDartCSS(visit.first_dart) + "'>" + getScoreString(visit.first_dart) + "</label></td>" +
+                        "<td class='col-sm-2 dart-score-container no-border'><label class='" + getDartCSS(visit.second_dart) + "'>" + getScoreString(visit.second_dart) + "</label></td>" +
+                        "<td class='col-sm-2 dart-score-container no-border'><label class='" + getDartCSS(visit.third_dart) + "'>" + getScoreString(visit.third_dart) + "</label></td>" +
                         "<td><label>" + total + "</label></td>" +
                     "</tr>";
                 $('#match-visits-table > tbody > tr:first').after(html);
@@ -123,9 +125,9 @@ block scripts
                 var html =
                     "<tr>" +
                         "<td id='current-player' style='height: 50px;'>" + playersMap[match.current_player_id].name + "</td>" +
-                        "<td class='dart-score-container no-border'><label id='first' text='0'></label></td>" +
-                        "<td class='dart-score-container no-border'><label id='second' text='0'></label></td>" +
-                        "<td class='dart-score-container no-border'><label id='third' text='0'></label></td>" +
+                        "<td class='col-sm-2 dart-score-container no-border'><label id='first' text='0'></label></td>" +
+                        "<td class='col-sm-2 dart-score-container no-border'><label id='second' text='0'></label></td>" +
+                        "<td class='col-sm-2 dart-score-container no-border'><label id='third' text='0'></label></td>" +
                         "<td><label id='total' text='0'>0</label></td>" +
                     "</tr>";
                 $('#match-visits-table').prepend(html);
@@ -185,23 +187,6 @@ block content
                     each player in match_players
                         +get_player_cell(player)
 
-
-    mixin get_dart_label(dart)
-        if dart.multiplier == 3
-            label(class='dart-score-triple')= 'T-' + dart.value
-        else if dart.multiplier == 2
-            if value == 25
-                label(class='dart-score-double') Bull
-            else
-                label(class='dart-score-double')= 'D-' + dart.value
-        else
-            if dart.value == 0
-                label(class='dart-score-single') Miss
-            else if dart.value == 25
-                label(class='dart-score-single') Bull
-            else
-                label(class='dart-score-single')= dart.value
-
     h3 Visits
     div(class='table-responsive')
         table(class='table table-striped table-bordered' id='match-visits-table' style='table-layout: fixed;')
@@ -216,14 +201,9 @@ block content
                 each visit in match.visits
                     tr
                         td= players[visit.player_id].name
-                        td(class='dart-score-container no-border')
-                            +get_dart_label(visit.first_dart)
-
-                        td(class='dart-score-container no-border')
-                            +get_dart_label(visit.second_dart)
-
-                        td(class='dart-score-container no-border')
-                            +get_dart_label(visit.third_dart)
+                        +dart_container(visit.first_dart.value, visit.first_dart.multiplier)
+                        +dart_container(visit.second_dart.value, visit.second_dart.multiplier)
+                        +dart_container(visit.third_dart.value, visit.third_dart.multiplier)
                         td
                             if visit.is_bust
                                 label BUST

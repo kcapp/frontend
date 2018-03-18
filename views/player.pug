@@ -1,5 +1,7 @@
 extends layout.pug
 
+include mixins/dart.pug
+
 block append head
     script(src='/javascripts/webgl-heatmap.js')
 
@@ -9,8 +11,14 @@ block scripts
             $('#player-hits-table').DataTable({
                 searching: false,
                 bInfo : false,
-                order: [[ 1,  'desc' ]],
-                columnDefs: [ { targets: [ 1 ], visible: true } ]
+                order: [[ 1,  'desc' ]]
+            });
+
+            $('#player-visits-table').DataTable({
+                searching: false,
+                bInfo : false,
+                order: [[ 3,  'desc' ]],
+                columnDefs: [ { targets: [ 1, 2 ], orderable: false, searchable: false } ]
             });
 
             $('#btn-view-progression').click(function() {
@@ -111,21 +119,7 @@ block content
                 each score, key in statistics.hits
                     each value, multiplier in statistics.hits[key]
                         tr
-                            td(class='col-sm-2 dart-score-container' data-order=key + multiplier)
-                                if multiplier == 3
-                                    label(class='dart-score-triple')= 'T-' + key
-                                else if multiplier == 2
-                                    if key == 25
-                                        label(class='dart-score-double') Bull
-                                    else
-                                        label(class='dart-score-double')= 'D-' + key
-                                else
-                                    if key == 0
-                                        label(class='dart-score-single') Miss
-                                    else if key == 25
-                                        label(class='dart-score-single') Bull
-                                    else
-                                        label(class='dart-score-single')= key
+                            +dart_container(key, multiplier)
                             td= value
                             td= (value * 100 / statistics.darts_thrown).toFixed(2) + '%'
 
@@ -137,3 +131,19 @@ block content
         option(value=3) Trebles
     div(style='text-align: center;')
         canvas(id='dartboard-heatmap')
+
+    h3 Visits
+    table(id='player-visits-table' class='table table-striped table-bordered')
+        thead
+            tr
+                th Vist
+                th
+                th
+                th Count
+        tbody
+            each visit in statistics.visits
+                tr
+                    +dart_container(visit.first_dart.value, visit.first_dart.multiplier)
+                    +dart_container(visit.second_dart.value, visit.second_dart.multiplier)
+                    +dart_container(visit.third_dart.value, visit.third_dart.multiplier)
+                    td= visit.count
