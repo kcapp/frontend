@@ -80,7 +80,7 @@ $(function () {
             case '8': dartText += '8'; break;
             case '9': dartText += '9'; break;
             case '0': dartText += '0'; break;
-            default: console.log(e); break;
+            default: /* NOOP */; break;
         }
         var value = parseInt(dartText);
         if (value > 20 && value !== 25) {
