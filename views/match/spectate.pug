@@ -76,7 +76,7 @@ block scripts
                     playerTD.removeClass('label-inactive-player label-active-player');
                     if (player.is_current_player) {
                         playerTD.addClass('label-active-player');
-                        $('#current-player').text(player.name);
+                        $('#current-player').text(playersMap[player.player_id].name);
                     }
                     else {
                         playerTD.addClass('label-inactive-player');

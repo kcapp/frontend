@@ -79,10 +79,10 @@ block content
 						td= player.name + (player.nickname !== null ? (" the '" + player.nickname + "'") : '')
 						td= player.games_played
 						td= player.games_won
-						td= player.games_played == 0 ? '0.00' : (player.games_won * 100 / player.games_played).toFixed(2)
+						td= player.games_played == 0 ? '0.00%' : (player.games_won * 100 / player.games_played).toFixed(2) + '%'
 						td= player.matches_played
 						td= player.matches_won
-						td= player.matches_played == 0 ? '0.00' : (player.matches_won * 100 / player.matches_played).toFixed(2)
+						td= player.matches_played == 0 ? '0.00%' : (player.matches_won * 100 / player.matches_played).toFixed(2) + '%'
 						td
 							button(class='btn btn-primary view-player-btn btn-block' data-player-id=player.id disabled=player.games_played === 0) View
 						td

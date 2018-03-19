@@ -53,22 +53,34 @@ block content
         table(id='player-statistics-table' class='table table-striped table-bordered')
             thead
                 tr
+                    th(colspan=3) Games
+                    th(colspan=3) Legs
+                    th(colspan=4)
+                tr
                     th Played
                     th Won
                     th Win %
-                    th First 9 PPD
-                    th Overall PPD
-                    th Checkout%
-                    th Progression
+                    th Played
+                    th Won
+                    th Win %
             tbody
                     tr
                         td= player.games_played
                         td= player.games_won
-                        td= player.games_played == 0 ? 0 : (player.games_won * 100 / player.games_played).toFixed(2)
+                        td= player.games_played == 0 ? '0.00%' : (player.games_won * 100 / player.games_played).toFixed(2) + '%'
+                        td= player.matches_played
+                        td= player.matches_won
+                        td= player.matches_played == 0 ? '0.00%' : (player.matches_won * 100 / player.matches_played).toFixed(2) + '%'
+                    tr
+                        th First 9 PPD
+                        th Overall PPD
+                        th Checkout%
+                        th(colspan=3) Progression
+                    tr
                         td= statistics.first_nine_ppd.toFixed(2)
                         td= statistics.ppd.toFixed(2)
                         td= player.games_won === 0 ? '-' : statistics.checkout_percentage.toFixed(2) + '%'
-                        td: button(type='button' class='btn btn-primary btn-block' id='btn-view-progression' data-player=player.id) View
+                        td(colspan=3): button(type='button' class='btn btn-primary btn-block' id='btn-view-progression' data-player=player.id) View
 
         h3 High Scores
         table(id='player-scores-table' class='table table-striped table-bordered')
@@ -78,22 +90,24 @@ block content
                     th 100+
                     th 140+
                     th 180s
+                    th Highest Checkout
             tbody
                     tr
                         td= statistics.scores_60s_plus
                         td= statistics.scores_100s_plus
                         td= statistics.scores_140s_plus
                         td= statistics.scores_180s
+                        td= statistics.highest_checkout
                     tr
                         th Best PPD / First 9
                         th Best 301
                         th Best 501
-                        th Highest Checkout
+                        th Best 701
                     tr
                         td= statistics.best_ppd.toFixed(2) + ' / ' + statistics.best_first_nine_ppd.toFixed(2)
-                        td= statistics.best_301
-                        td= statistics.best_501
-                        td= statistics.highest_checkout
+                        td= statistics.best_301 ? statistics.best_301 : '-'
+                        td= statistics.best_501 ? statistics.best_501 : '-'
+                        td= statistics.best_701 ? statistics.best_701 : '-'
 
         h3 Accuracy
         table(id='player-accuracy-table' class='table table-striped table-bordered')
@@ -104,17 +118,23 @@ block content
                     th Accuracy 19s
             tbody
                     tr
-                        td= statistics.accuracy_overall === null ? 'Not Available' : statistics.accuracy_overall.toFixed(2)
-                        td= statistics.accuracy_20 === null ? 'Not Available' : statistics.accuracy_20.toFixed(2)
-                        td= statistics.accuracy_19 === null ? 'Not Available' : statistics.accuracy_19.toFixed(2)
+                        td= statistics.accuracy_overall === null ? '-' : statistics.accuracy_overall.toFixed(2)
+                        td= statistics.accuracy_20 === null ? '-' : statistics.accuracy_20.toFixed(2)
+                        td= statistics.accuracy_19 === null ? '-' : statistics.accuracy_19.toFixed(2)
 
         h3 Hits
         table(id='player-hits-table' class='table table-striped table-bordered')
             thead
                 tr
+                    th(colspan=3)
+                    th(colspan=3) Per
+                tr
                     th Dart
                     th Count
                     th Hit %
+                    th Visit
+                    th Leg
+                    th Game
             tbody
                 each score, key in statistics.hits
                     each value, multiplier in statistics.hits[key]
@@ -122,6 +142,9 @@ block content
                             +dart_container(key, multiplier)
                             td= value
                             td= (value * 100 / statistics.darts_thrown).toFixed(2) + '%'
+                            td= (value / statistics.total_visits).toFixed(2)
+                            td= (value / player.matches_played).toFixed(2)
+                            td= (value / player.games_played).toFixed(2)
 
     h3 Heatmap
     select(id='heatmap-value-selector' name='dart-values')
@@ -136,10 +159,16 @@ block content
     table(id='player-visits-table' class='table table-striped table-bordered')
         thead
             tr
+                th(colspan=5)
+                th(colspan=2) Per
+            tr
                 th Vist
                 th
                 th
                 th Count
+                th Visit %
+                th Leg
+                th Game
         tbody
             each visit in statistics.visits
                 tr
@@ -147,3 +176,6 @@ block content
                     +dart_container(visit.second_dart.value, visit.second_dart.multiplier)
                     +dart_container(visit.third_dart.value, visit.third_dart.multiplier)
                     td= visit.count
+                    td= (visit.count * 100 / statistics.total_visits).toFixed(2) + '%'
+                    td= (visit.count / player.matches_played).toFixed(2)
+                    td= (visit.count / player.games_played).toFixed(2)
