@@ -4,7 +4,6 @@
 @dart-single: #404040;
 @dart-double: orange;
 @dart-triple: #d9534f;
-
 body {
     font-family: "Open Sans"
 }
@@ -158,7 +157,8 @@ a:hover {
     .center-table
 }
 
-#player-hits-table, #player-visits-table {
+#player-hits-table,
+#player-visits-table {
     label {
         display: block;
     }
@@ -187,6 +187,18 @@ a:hover {
 }
 
 #match-hits-table {
+    label {
+        display: block;
+    }
+    .center-table
+}
+
+#player-checkouts-table {
+    .center-table
+}
+
+#player-checkouts-visits-table {
+    margin-bottom: 0px;
     label {
         display: block;
     }
@@ -245,6 +257,7 @@ a:hover {
         width: 100% !important;
     }
 }
+
 .emojiPickerIcon {
     width: 25px !important;
     height: 25px !important;
@@ -255,6 +268,7 @@ a:hover {
     background-repeat: no-repeat;
     background-image: url(../images/beer.png);
 }
+
 .player-modifier-vilius {
     background-position: left;
     background-repeat: no-repeat;

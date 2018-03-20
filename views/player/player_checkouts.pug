@@ -1,0 +1,35 @@
+extends ../layout.pug
+
+include ../mixins/dart.pug
+
+block scripts
+
+block content
+    h2 Checkouts for #{player.name}
+    div.
+        Overview of all checkouts done, and the different visits done to achive the given checkout
+
+    div(class='table-responsive')
+        table(id='player-checkouts-table' class='table table-striped table-bordered')
+            thead
+                tr
+                    th Checkout
+                    th Done
+                    th Visits
+            tbody
+                each visits, checkout in checkouts
+                    tr
+                        td= checkout
+                        if visits  !== null
+                            td: span(class='glyphicon glyphicon-ok' aria-hidden='true')
+                            td
+                                table(id='player-checkouts-visits-table' class='table')
+                                    tbody
+                                        each visit in visits
+                                            tr
+                                                +dart_container(visit.first_dart.value, visit.first_dart.multiplier)
+                                                +dart_container(visit.second_dart.value, visit.second_dart.multiplier)
+                                                +dart_container(visit.third_dart.value, visit.third_dart.multiplier)
+                        else
+                            td: span(class='glyphicon glyphicon-remove' aria-hidden='true')
+                            td
