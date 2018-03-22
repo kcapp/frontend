@@ -1,22 +1,20 @@
 mixin get_score_header(game_mode, round_number, players, add_player_visit)
     div(class='table-responsive no-border')
         table(class='uv-table-mode' style='table-layout: fixed')
-            tbody
-                tr
-                    td= game_mode.short_name + ' / ' + 'R' + round_number
+            tbody: tr: td= game_mode.short_name + ' / ' + 'R' + round_number
 
     div(class='table-responsive no-border')
         table(class='uv-table-players' id='player-spectate-table' style='table-layout: fixed')
             tbody
                 tr
-                    each player in match_players
+                    each player in players
                         +get_player_cell(player)
                 tr
-                    each player in match_players
+                    each player in players
                         +get_player_legs(player)
                 if add_player_visit
                     tr
-                        each player in match_players
+                        each player in players
                             +get_current_player_visit(player)
     hr
 
@@ -27,33 +25,24 @@ mixin get_player_cell(player)
         label(id='player-id-' + playerId class='label label-block label-player-score' + (player.is_current_player ? ' current-player' : ''))= player.current_score
 
 mixin get_player_legs(player)
-    - var playerId = player.player_id;
-    td(id='player-legs-' + playerId class=player.is_current_player ? 'uv-active-player-legs' : 'uv-inactive-player-legs')
+    td(id='player-legs-' + player.player_id class=player.is_current_player ? 'uv-active-player-legs' : 'uv-inactive-player-legs')
         label= (player.wins ? ' (' + player.wins + ')' : '0')
 
 mixin get_current_player_visit(player)
-    - var playerId = player.player_id;
+    mixin visit_table(clazz)
+        td(id='player-visit-' + player.player_id class=clazz)
+            table(style='width: 100%;')
+                tbody
+                    tr
+                        td(class='col-sm-2 dart-score-container no-border'): label(class='first' text='0' data-multiplier='1')
+                        td(class='col-sm-2 dart-score-container no-border'): label(class='second' text='0' data-multiplier='1')
+                        td(class='col-sm-2 dart-score-container no-border'): label(class='third' text='0' data-multiplier='1')
+                    tr
+                        td(style='padding: 3px;')
+                    tr
+                        td(colspan='3' class='dart-score-total')= 0
+
     if player.is_current_player
-        td(id='player-visit-' + playerId class='uv-active-player-visits')
-            table(style='width: 100%;')
-                tbody
-                    tr
-                        td(class='dart-score-container'): label(class='first' text='0' data-multiplier='1')
-                        td(class='dart-score-container'): label(class='second' text='0' data-multiplier='1')
-                        td(class='dart-score-container'): label(class='third' text='0' data-multiplier='1')
-                    tr
-                        td(style='padding: 3px;')
-                    tr
-                        td(colspan='3' class='dart-score-total')= 0
+        +visit_table('uv-active-player-visits')
     else
-        td(id='player-visit-' + playerId class='uv-inactive-player-visits')
-            table(style='width: 100%;')
-                tbody
-                    tr
-                        td(class='dart-score-container'): label(class='first' text='0' data-multiplier='1')
-                        td(class='dart-score-container'): label(class='second' text='0' data-multiplier='1')
-                        td(class='dart-score-container'): label(class='third' text='0' data-multiplier='1')
-                    tr
-                        td(style='padding: 3px;')
-                    tr
-                        td(colspan='3' class='dart-score-total')= 0
+        +visit_table('uv-inactive-player-visits')

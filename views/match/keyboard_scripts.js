@@ -7,18 +7,21 @@ $(function () {
 
     $(document).keydown(function (e) {
         if (e.key === 'Backspace') {
+            var totalScoreContainer = $('.uv-active-player-visits .dart-score-total');
+            var currentPlayerScore = parseInt(totalScoreContainer.html());
+
             var dart = getCurrentDart();
             if (dartText !== '') {
                 dartText = dartText.substring(0, dartText.length - 1);
                 if (dartText === '') {
-                    dart.text('');
-                    dart.attr('data-score', 0);
-                    dart.attr('data-multiplier', 1);
+                    clearDart(dart);
                     scores[currentDart] = 0;
                 }
                 else {
                     setDartValue(dart, dartText * currentMultiplier, currentMultiplier);
                 }
+                // Make sure we don't change score for current player before we press ENTER
+                totalScoreContainer.html(currentPlayerScore);
             } else {
                 $('#undo-button').trigger('click');
             }

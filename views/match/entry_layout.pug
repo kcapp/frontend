@@ -95,6 +95,14 @@ block scripts
             $('#submit-score-button').data('finished', 0);
         }
 
+        function clearDart(dart) {
+            dart.text('');
+            dart.attr('data-score', 0);
+            dart.attr('data-multiplier', 1);
+            dart.removeClass('dart-score-single dart-score-double dart-score-triple');
+            dart.removeAttr('data-score');
+        }
+
         $(function () {
             FastClick.attach(document.body);
 
@@ -138,7 +146,6 @@ block scripts
                         tdVisit.removeClass().addClass('uv-active-player-visits');
                         $('#submit-score-button').data('current-player-id', player.player_id);
                         label.addClass('current-player');
-                        $('.uv-active-player-visits .dart-score-total').html(0);
                     }
                     else {
                         td.removeClass().addClass('uv-inactive-player-score');
@@ -153,6 +160,7 @@ block scripts
                         //$('.uv-inactive-player-visits .third').addClass('dart-score-inactive');
                     }
                 }
+                $('.uv-active-player-visits .dart-score-total').html(0);
                 resetUIelements();
             });
 
@@ -239,9 +247,7 @@ block scripts
                 });
 
                 var dart = getCurrentDart();
-                dart.text('');
-                dart.removeClass('dart-score-single dart-score-double dart-score-triple');
-                dart.removeAttr('data-score');
+                clearDart(dart);
 
                 // Remove focus from the button incase keyboard is used to enter next score
                 $(this).blur();
