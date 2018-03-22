@@ -1,6 +1,5 @@
 // Variables
-@dart-board-image: '../images/dartboard.png';
-// Colors
+@dart-board-image: '../images/dartboard.png'; // Colors
 @dart-inactive: #dddddd;
 @dart-single: #000000;
 @dart-double: #ffd69f;
@@ -61,13 +60,12 @@ body {
         font-size: 11px;
         border-radius: 3px;
         font-weight: 300;
-        background-color: #337ab7;        
+        background-color: #337ab7;
     }
     .text-left {
         text-align: left;
     }
 }
-
 
 .table-responsive {
     margin-bottom: 10px;
@@ -94,11 +92,13 @@ a:hover {
 .label-inactive-player {
     background-color: #404040;
     border-bottom: 4px solid black !important;
+    padding-right: 10px;
 }
 
 .label-active-player {
     background-color: #d9534f;
     border-bottom: 4px solid #962724 !important;
+    padding-right: 10px;
 }
 
 .float-left {
@@ -204,7 +204,6 @@ a:hover {
 }
 
 #player-scores-table,
-
 #score-selector-table {
     border-spacing: 0px;
     td {
@@ -264,7 +263,7 @@ a:hover {
     .center-table
 }
 
-#player-hits-table {
+#player-visits-table {
     label {
         display: block;
     }
@@ -328,9 +327,7 @@ a:hover {
 
 .uv-table-players td:last-child {
     border-right: none;
-}
-
-// umpire view section
+} // umpire view section
 .label-player-score-umpire {
     padding: 5px 0px 0px 0px;
     font-size: 20pt;
@@ -376,52 +373,70 @@ a:hover {
     color: white;
 }
 
-// CHAT CSS
+#player-checkouts-visits-table {
+    margin-bottom: 0px;
+    label {
+        display: block;
+    }
+    .center-table
+}
+
 .glyphicon-comment:before {
     margin-right: 5px;
 }
 
-.popup-box {
-    background-color: #ffffff;
+.chat-popup-box {
     border: 1px solid #b0b0b0;
     bottom: 0;
     display: none;
     height: 415px;
     position: fixed;
-    right: 70px;
-    width: 300px;
-    font-family: 'Open Sans', sans-serif;
+    right: 10px;
+    width: 350px;
 }
 
-.popup-messages-footer {
-    background: #fff none repeat scroll 0 0;
-    bottom: 0;
-    position: absolute;
-    width: 100%;
+.chat-popup-box-on {
+    display: block !important;
 }
 
-.popup-messages-footer input {
-    width: 100%;
+.chat-header-button {
+    background: transparent none repeat scroll 0 0;
+    border: 1px solid #636364;
+    border-radius: 50%;
+    font-size: 14px;
+    height: 30px;
+    width: 30px;
 }
 
-.chat-popup-messages textarea {
-    width: 100%;
-    overflow-y: scroll;
-}
-
-.popup-box .popup-head {
-    background-color: #fff;
+.chat-popup-header {
     clear: both;
-    color: #7b7b7b;
+    background: #ffffff;
     display: inline-table;
     font-size: 21px;
     padding: 7px 10px;
     width: 100%;
-    font-family: 'Open Sans', sans-serif;
 }
 
-.popup-box-on {
-    display: block !important;
+.chat-popup-messages textarea {
+    width: 100% !important;
+    overflow-y: scroll;
+    resize: none;
+    background-color: #ffffff;
+}
+
+.chat-popup-messages-footer {
+    background: #fff none repeat scroll 0 0;
+    bottom: 0;
+    position: absolute;
+    width: 100%;
+    input {
+        width: 100% !important;
+    }
+}
+
+.emojiPickerIcon {
+    width: 25px !important;
+    height: 25px !important;
 }
 
 .chat-header-button {
@@ -460,8 +475,7 @@ a:hover {
     span {
         display: block;
     }
-    .center-table
-    thead {
+    .center-table thead {
         tr:first-child {
             background-color: #efefef;
             border: 3px solid #ddd;
@@ -489,7 +503,8 @@ a:hover {
     }
 }
 
-#table-overview, #table-accuracy {
+#table-overview,
+#table-accuracy {
     width: 100%;
     td {
         text-align: center;
@@ -502,7 +517,7 @@ a:hover {
     }
     .number {
         font-size: 30pt;
-        font-weight: 700px; 
+        font-weight: 700px;
         text-align: center;
         padding: 10px 10px 0px 10px;
     }
@@ -548,7 +563,7 @@ a:hover {
     }
     .number {
         font-size: 30pt;
-        font-weight: 700px; 
+        font-weight: 700px;
         text-align: center;
         padding: 10px 10px 0px 10px;
     }
@@ -573,10 +588,12 @@ a:hover {
 }
 
 #player-hits-table {
+    label {
+        display: block;
+    }
     span {
         display: block;
     }
-    .center-table
     thead {
         tr:first-child {
             background-color: #efefef;
@@ -597,6 +614,7 @@ a:hover {
     td:last-child {
         border-right: 3px solid #dddddd;
     }
+    .center-table
 }
 
 .player-card {
@@ -627,15 +645,27 @@ a:hover {
         font-weight: 700;
     }
     .label-winner {
-        background-color: #337ab7; 
+        background-color: #337ab7;
         color: white;
         border-radius: 5px;
         padding: 5px;
     }
     .label-loser {
-        background-color: #000000; 
+        background-color: #000000;
         color: #fff;
         border-radius: 5px;
         padding: 5px;
     }
+}
+
+.player-modifier-beer {
+    background-position: left;
+    background-repeat: no-repeat;
+    background-image: url(../images/beer.png);
+}
+
+.player-modifier-vilius {
+    background-position: left;
+    background-repeat: no-repeat;
+    background-image: url(../images/vilius.png);
 }

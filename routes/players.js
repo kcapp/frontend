@@ -40,15 +40,35 @@ router.get('/:id/statistics', function (req, res, next) {
                 .then(response => {
                     var statistics = response.data;
                     axios.get(req.app.locals.kcapp.api + '/player/' + playerId + '/progression')
-                    .then(response => {
-                        var progression = response.data;
-                        res.render('player', { player: player, statistics: statistics, progression: progression });
-                    }).catch(error => {
-                        debug('Error when getting player progression: ' + error);
-                        next(error);
-                    });
+                        .then(response => {
+                            var progression = response.data;
+                            res.render('player', { player: player, statistics: statistics, progression: progression });
+                        }).catch(error => {
+                            debug('Error when getting player progression: ' + error);
+                            next(error);
+                        });
                 }).catch(error => {
                     debug('Error when getting player statistics: ' + error);
+                    next(error);
+                });
+        }).catch(error => {
+            debug('Error when getting player: ' + error);
+            next(error);
+        });
+});
+
+/* Get specific statistics for a given player */
+router.get('/:id/checkouts', function (req, res, next) {
+    var playerId = req.params.id;
+    axios.get(req.app.locals.kcapp.api + '/player/' + playerId)
+        .then(response => {
+            var player = response.data;
+            axios.get(req.app.locals.kcapp.api + '/player/' + playerId + '/checkouts')
+                .then(response => {
+                    var checkouts = response.data;
+                    res.render('player/player_checkouts', { player: player, checkouts: checkouts });
+                }).catch(error => {
+                    debug('Error when getting player checkouts: ' + error);
                     next(error);
                 });
         }).catch(error => {
@@ -68,7 +88,7 @@ router.get('/compare', function (req, res, next) {
             axios.get(req.app.locals.kcapp.api + '/player/compare?id=' + playerIds.join("&id="))
                 .then(response => {
                     var statistics = response.data;
-                    res.render('players_comparison', { players: players, statistics: statistics });
+                    res.render('player/players_comparison', { players: players, statistics: statistics });
                 }).catch(error => {
                     debug('Error when comparing players: ' + error);
                     next(error);
@@ -89,7 +109,7 @@ router.get('/:id/progression', function (req, res, next) {
             axios.get(req.app.locals.kcapp.api + '/player/' + playerId + '/progression')
                 .then(response => {
                     var progression = response.data;
-                    res.render('player_progression', { player: player, progression: progression });
+                    res.render('player/player_progression', { player: player, progression: progression });
                 }).catch(error => {
                     debug('Error when getting player progression: ' + error);
                     next(error);

@@ -1,5 +1,7 @@
 extends layout.pug
+
 include chart/chart_helper.pug
+include mixins/dart.pug
 
 block append head
     script(src='/javascripts/Chart.bundle-2.7.1.min.js')
@@ -77,8 +79,7 @@ block append scripts
                 searching: false,
                 bInfo : false,
                 iDisplayLength: 50,
-                order: [[ 1,  'desc' ]],
-                columnDefs: [ { targets: [ 1 ], visible: true } ]
+                order: [[ 1,  'desc' ]]
             });
             $('#continue-game').focus();
 
@@ -350,87 +351,9 @@ block content
                     tr(id="visit-" + visit.id)
                         td= players[visit.player_id].name
 
-                        mixin dart_selector(selectorID)
-                            select(id=selectorID + '-selector' style="width: 100%; display: none")
-                                option(value="1-1") 1
-                                option(value="2-1") D-1
-                                option(value="3-1") T-1
-                                option(value="1-2") 2
-                                option(value="2-2") D-2
-                                option(value="3-2") T-2
-                                option(value="1-3") 3
-                                option(value="2-3") D-3
-                                option(value="3-3") T-3
-                                option(value="1-4") 4
-                                option(value="2-4") D-4
-                                option(value="3-4") T-4
-                                option(value="1-5") 5
-                                option(value="2-5") D-5
-                                option(value="3-5") T-5
-                                option(value="1-6") 6
-                                option(value="2-6") D-6
-                                option(value="3-6") T-6
-                                option(value="1-7") 7
-                                option(value="2-7") D-7
-                                option(value="3-7") T-7
-                                option(value="1-8") 8
-                                option(value="2-8") D-8
-                                option(value="3-8") T-8
-                                option(value="1-9") 9
-                                option(value="2-9") D-9
-                                option(value="3-9") T-9
-                                option(value="1-10") 10
-                                option(value="2-10") D-10
-                                option(value="3-10") T-10
-                                option(value="1-11") 11
-                                option(value="2-11") D-11
-                                option(value="3-11") T-11
-                                option(value="1-12") 12
-                                option(value="2-12") D-12
-                                option(value="3-12") T-12
-                                option(value="1-13") 13
-                                option(value="2-13") D-13
-                                option(value="3-13") T-13
-                                option(value="1-14") 14
-                                option(value="2-14") D-14
-                                option(value="3-14") T-14
-                                option(value="1-15") 15
-                                option(value="2-15") D-15
-                                option(value="3-15") T-15
-                                option(value="1-16") 16
-                                option(value="2-16") D-16
-                                option(value="3-16") T-16
-                                option(value="1-17") 17
-                                option(value="2-17") D-17
-                                option(value="3-17") T-17
-                                option(value="1-18") 18
-                                option(value="2-18") D-18
-                                option(value="3-18") T-18
-                                option(value="1-19") 19
-                                option(value="2-19") D-19
-                                option(value="3-19") T-19
-                                option(value="1-20") 20
-                                option(value="2-20") D-20
-                                option(value="3-20") T-20
-                                option(value="1-25") Bull
-                                option(value="2-25") D-Bull
-                                option(value="1-0") Miss
-
-                        mixin dart_display(tdID, dart)
-                            td(id=tdID data-multiplier=dart.multiplier data-score=dart.value class='dart-score-container')
-                                if dart.value === 0
-                                    label(id=tdID + '-label' class='dart-score-single') Miss
-                                else if dart.multiplier === 3
-                                    label(id=tdID + '-label' class='dart-score-triple')= 'T-' + dart.value
-                                else if dart.multiplier === 2
-                                    label(id=tdID + '-label' class='dart-score-double')= 'D-' + dart.value
-                                else
-                                    label(id=tdID + '-label' class='dart-score-single')= dart.value
-                                +dart_selector(tdID)
-
-                        +dart_display('first-dart-visit-' + visit.id, visit.first_dart)
-                        +dart_display('second-dart-visit-' + visit.id, visit.second_dart)
-                        +dart_display('third-dart-visit-' + visit.id, visit.third_dart)
+                        +dart_container(visit.first_dart.value, visit.first_dart.multiplier, 'first-dart-visit-' + visit.id, true)
+                        +dart_container(visit.second_dart.value, visit.second_dart.multiplier, 'second-dart-visit-' + visit.id, true)
+                        +dart_container(visit.third_dart.value, visit.third_dart.multiplier, 'third-dart-visit-' + visit.id, true)
 
                         td(class='total-visit-score-' + visit.id): label= visit_score
                         td: label= visit.scores
@@ -479,23 +402,9 @@ block content
                         th Hit %
                 tbody
                     each score, key in match.hits
-                        each value, multiplier in match.hits[key]
-                            if value !== 0
+                        each count, multiplier in match.hits[key]
+                            if count !== 0
                                 tr
-                                    td(class='col-sm-2 dart-score-container' data-order=key + multiplier)
-                                        if multiplier == 3
-                                            label(class='dart-score-triple')= 'T-' + key
-                                        else if multiplier == 2
-                                            if key == 25
-                                                label(class='dart-score-double') Bull
-                                            else
-                                                label(class='dart-score-double')= 'D-' + key
-                                        else
-                                            if key == 0
-                                                label(class='dart-score-single') Miss
-                                            else if key == 25
-                                                label(class='dart-score-single') Bull
-                                            else
-                                                label(class='dart-score-single')= key
-                                    td= value
-                                    td= (value * 100 / match.darts_thrown).toFixed(2) + '%'
+                                    +dart_container(key, multiplier)
+                                    td= count
+                                    td= (count * 100 / match.darts_thrown).toFixed(2) + '%'

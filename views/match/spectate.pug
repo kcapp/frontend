@@ -3,16 +3,19 @@ extends ../layout.pug
 block append head
     script(src='/javascripts/socket.io-2.0.3.min.js')
 
+include ../mixins/dart.pug
+
 block scripts
+    script
+        include socketio_helper.js
+
     script.
         var match = !{JSON.stringify(match)}
+        var matchId = match.id;
         var playersMap = !{JSON.stringify(players)}
+
         $(function () {
-            var matchId = match.id;
-            var socket = io(window.location.protocol + '//' + window.location.host + '/matches/' + matchId);
-            socket.on('connect', function(data) {
-                socket.emit('join', 'Client Conneting');
-            });
+            socket = getSocketIO(matchId);
 
             socket.on('connected', function(data) {
                 // Send message to client announcing that we are spectating
@@ -106,9 +109,9 @@ block scripts
                 var html =
                     "<tr>" +
                         "<td>" + playerName + "</td>" +
-                        "<td class='dart-score-container no-border'><label class='" + getDartCSS(visit.first_dart) + "'>" + getScoreString(visit.first_dart) + "</label></td>" +
-                        "<td class='dart-score-container no-border'><label class='" + getDartCSS(visit.second_dart) + "'>" + getScoreString(visit.second_dart) + "</label></td>" +
-                        "<td class='dart-score-container no-border'><label class='" + getDartCSS(visit.third_dart) + "'>" + getScoreString(visit.third_dart) + "</label></td>" +
+                        "<td class='col-sm-2 dart-score-container no-border'><label class='" + getDartCSS(visit.first_dart) + "'>" + getScoreString(visit.first_dart) + "</label></td>" +
+                        "<td class='col-sm-2 dart-score-container no-border'><label class='" + getDartCSS(visit.second_dart) + "'>" + getScoreString(visit.second_dart) + "</label></td>" +
+                        "<td class='col-sm-2 dart-score-container no-border'><label class='" + getDartCSS(visit.third_dart) + "'>" + getScoreString(visit.third_dart) + "</label></td>" +
                         "<td><label>" + total + "</label></td>" +
                     "</tr>";
                 $('#match-visits-table > tbody > tr:first').after(html);
@@ -116,12 +119,6 @@ block scripts
 
             socket.on('match_finished', function(data) {
                 location.href = '/matches/' + data.new_match_id + '/spectate';
-            });
-
-            socket.on('chat_message', function(data) {
-                var textArea = $('#chat-history');
-                textArea.append(data);
-                textArea.scrollTop(textArea[0].scrollHeight);
             });
 
             // Reverse the rows in the table to show newest throws first
@@ -133,9 +130,9 @@ block scripts
                 var html =
                     "<tr>" +
                         "<td id='current-player' style='vertical-align: baseline;'>" + playersMap[match.current_player_id].name + "</td>" +
-                        "<td class='dart-score-container no-border'><label id='first' text='0'></label></td>" +
-                        "<td class='dart-score-container no-border'><label id='second' text='0'></label></td>" +
-                        "<td class='dart-score-container no-border'><label id='third' text='0'></label></td>" +
+                        "<td class='col-sm-2 dart-score-container no-border'><label id='first' text='0'></label></td>" +
+                        "<td class='col-sm-2 dart-score-container no-border'><label id='second' text='0'></label></td>" +
+                        "<td class='col-sm-2dart-score-container no-border'><label id='third' text='0'></label></td>" +
                         "<td><label id='total' text='0'>0</label></td>" +
                     "</tr>";
                 $('#match-visits-table').prepend(html);
@@ -169,30 +166,6 @@ block scripts
                 }
                 return score;
             }
-
-            $(function() {
-                $("#btn-open-chat").click(function () {
-                    $('#chat-popup').toggleClass('popup-box-on');
-                    $('#chat-message').focus()
-                    var textArea = $('#chat-history');
-                    textArea.scrollTop(textArea[0].scrollHeight);
-                });
-
-                $("#btn-close-chat").click(function () {
-                    $('#chat-popup').removeClass('popup-box-on');
-                });
-
-                $('#btn-send-message').click(function() {
-                    var input = $('#chat-message');
-                    socket.emit('chat_message', input.val());
-                    input.val('');
-                });
-                $('#chat-popup').keypress(function (e) {
-                    if (e.key === 'Enter') {
-                        $('#btn-send-message').trigger('click');
-                    }
-                });
-            });
         });
 
 block content
@@ -227,25 +200,6 @@ block content
                 tr
                     each player in match_players
                         +get_player_cell(player)
-                tr
-                    each player in match_players
-                        +get_player_legs(player)
-
-    mixin get_dart_label(dart)
-        if dart.multiplier == 3
-            label(class='dart-score-triple')= 'T-' + dart.value
-        else if dart.multiplier == 2
-            if value == 25
-                label(class='dart-score-double') Bull
-            else
-                label(class='dart-score-double')= 'D-' + dart.value
-        else
-            if dart.value == 0
-                label(class='dart-score-single') Miss
-            else if dart.value == 25
-                label(class='dart-score-single') Bull
-            else
-                label(class='dart-score-single')= dart.value
 
     h3 Visits
     div(class='table-responsive')
@@ -261,30 +215,14 @@ block content
                 each visit in match.visits
                     tr
                         td= players[visit.player_id].name
-                        td(class='dart-score-container')
-                            +get_dart_label(visit.first_dart)
-
-                        td(class='dart-score-container')
-                            +get_dart_label(visit.second_dart)
-
-                        td(class='dart-score-container')
-                            +get_dart_label(visit.third_dart)
+                        +dart_container(visit.first_dart.value, visit.first_dart.multiplier)
+                        +dart_container(visit.second_dart.value, visit.second_dart.multiplier)
+                        +dart_container(visit.third_dart.value, visit.third_dart.multiplier)
                         td
                             if visit.is_bust
                                 label BUST
                             else
                                 label= (visit.first_dart.multiplier * visit.first_dart.value ) + (visit.second_dart.multiplier * visit.second_dart.value) + (visit.third_dart.multiplier * visit.third_dart.value)
 
-    //- Chat
-    div(class='popup-box chat-popup' id='chat-popup')
-        div(class='popup-head')
-            div(class='popup-head-left pull-left') Match Chat
-
-            button(type='button' class='chat-header-button pull-right' id='btn-close-chat')
-                i(class='glyphicon glyphicon-off')
-        div(class='chat-popup-messages')
-            textarea(id='chat-history' rows='15' name='message' disabled)
-
-        div(class='popup-messages-footer')
-            input(type='text' id='chat-message' placeholder='Type a message...' name='message')
-            button(type='button' class='btn btn-primary btn-block' id='btn-send-message') Send
+    //- Spectator chat
+    include ../chat/chat.pug

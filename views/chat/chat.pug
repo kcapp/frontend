@@ -1,0 +1,78 @@
+block append head
+    link(rel='stylesheet' href='/stylesheets/emojionearea-3.4.0.min.css')
+    link(rel='stylesheet' href='/stylesheets/emojione-sprite-32.css')
+    script(type='text/javascript' src='/javascripts/emojionearea-3.4.0.min.js')
+    script(type='text/javascript' src='/javascripts/emojione.min.js')
+
+script.
+    $(function() {
+        var socket = getSocketIO(matchId);
+        socket.on('chat_message', function(data) {
+            var textArea = $('#chat-history');
+            textArea.append(data);
+            textArea.scrollTop(textArea[0].scrollHeight);
+        });
+
+        $("#btn-open-chat").click(function () {
+            $('#chat-popup').toggleClass('chat-popup-box-on');
+            $('#chat-message').focus()
+            var textArea = $('#chat-history');
+            textArea.scrollTop(textArea[0].scrollHeight);
+        });
+
+        $("#btn-close-chat").click(function () {
+            $('#chat-popup').removeClass('chat-popup-box-on');
+        });
+
+        $('#btn-send-message').click(function() {
+            var message = $('#chat-message').val();
+            if (message === '') {
+                message = $('#chat-message-container .emojionearea-editor').text();
+            }
+            if (message.length > 0) {
+                socket.emit('chat_message', message);
+                $('#chat-message').val('');
+                $('#chat-message-container .emojionearea-editor').text('');
+            }
+        });
+
+        $(document).keydown(function (e) {
+            //- Show/Hide chat with Home/End
+            if (e.key === 'Home') {
+                $("#btn-open-chat").click();
+            }
+            else if (e.key === 'End') {
+                $("#btn-close-chat").click();
+            }
+
+        });
+
+        $("#chat-message").emojioneArea({
+            searchPlaceholder: "Search", shortnames: true, inline: true, container: "#chat-message-container",
+            autocomplete: false,
+            events: {
+                keydown:  function (editor, event) {
+                    if (event.key === 'Enter') {
+                        $('#btn-send-message').trigger('click');
+                    } else if (event.key == 'Backspace') {
+                        event.stopImmediatePropagation();
+                    }
+                }
+            }
+        });
+    });
+
+
+div(class='chat-popup-box chat-popup' id='chat-popup')
+    div(class='chat-popup-header')
+        div(class='pull-left') Match Chat
+
+        button(type='button' class='chat-header-button pull-right' id='btn-close-chat')
+            i(class='glyphicon glyphicon-remove')
+    div(class='chat-popup-messages')
+        textarea(rows='15' name='message' disabled id='chat-history')
+
+    div(class='chat-popup-messages-footer')
+        input(type='text' id='chat-message' placeholder='Type a message...' name='message')
+        div(id='chat-message-container')
+        button(type='button' class='btn btn-primary btn-block' id='btn-send-message') Send
