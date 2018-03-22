@@ -295,7 +295,7 @@ block content
                 tbody
                     tr
                         each statistic in stats
-                            td(class='txt-center')
+                            td(class='text-center')
                                 div(class='player-card')
                                     div(class='glyph')
                                         span(class="glyphicon glyphicon-user")
@@ -344,7 +344,7 @@ block content
                     th Remaining
                     th PPD
                     if !isFinished
-                        th(class="txt-center") Options
+                        th(class="text-center") Options
             tbody
                 each visit in match.visits
                     - var visit_score = (visit.first_dart.value * visit.first_dart.multiplier) + (visit.second_dart.value * visit.second_dart.multiplier) + (visit.third_dart.value * visit.third_dart.multiplier)
@@ -359,7 +359,7 @@ block content
                         td: label= visit.scores
                         td(class='visit-ppd-' + visit.id)= (visit_score / 3).toFixed(2)
                         if !isFinished
-                            td(class='txt-center')
+                            td(class='text-center')
                                 button(type="button" class="btn btn-default edit-visit" data-visit=visit.id data-issave='0')
                                     span(class="glyphicon glyphicon-edit" aria-hidden="true")
                                 button(type="button" class="btn btn-default delete-visit" data-visit=visit.id)

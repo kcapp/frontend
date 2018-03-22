@@ -162,18 +162,6 @@ a:hover {
     display: inline-block !important;
 }
 
-.txt-center {
-    text-align: center;
-}
-
-.txt-left {
-    text-align: left;
-}
-
-.txt-right {
-    text-align: right;
-}
-
 .center-table {
     td,
     th {
@@ -260,13 +248,6 @@ a:hover {
 }
 
 #players-table {
-    .center-table
-}
-
-#player-visits-table {
-    label {
-        display: block;
-    }
     .center-table
 }
 
@@ -373,14 +354,6 @@ a:hover {
     color: white;
 }
 
-#player-checkouts-visits-table {
-    margin-bottom: 0px;
-    label {
-        display: block;
-    }
-    .center-table
-}
-
 .glyphicon-comment:before {
     margin-right: 5px;
 }
@@ -448,7 +421,8 @@ a:hover {
     width: 30px;
 }
 
-#current-week-statistics-table {
+#table-shootout-statistics,
+#table-x01-statistics {
     thead {
         tr:nth-child(2) {
             background-color: #efefef;
@@ -504,7 +478,7 @@ a:hover {
 }
 
 #table-overview,
-#table-accuracy {
+#table-checkouts {
     width: 100%;
     td {
         text-align: center;
@@ -587,7 +561,14 @@ a:hover {
     font-style: italic;
 }
 
-#player-hits-table {
+#player-checkouts-table {
+    margin-bottom: 0px;
+}
+
+#table-player-checkouts,
+#table-player-visits,
+#table-player-hits {
+    width: 100%;
     label {
         display: block;
     }

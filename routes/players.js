@@ -12,7 +12,7 @@ router.get('/', function (req, res, next) {
         .then(response => {
             var players = response.data;
             players = _.sortBy(players, (player) => player.name)
-            res.render('players', { players: players });
+            res.render('player/players', { players: players });
         }).catch(error => {
             debug('Error when getting players: ' + error);
             next(error);
@@ -42,33 +42,23 @@ router.get('/:id/statistics', function (req, res, next) {
                     axios.get(req.app.locals.kcapp.api + '/player/' + playerId + '/progression')
                         .then(response => {
                             var progression = response.data;
-                            res.render('player', { player: player, statistics: statistics, progression: progression });
+                            axios.get(req.app.locals.kcapp.api + '/player/' + playerId + '/checkouts')
+                                .then(response => {
+                                    var checkouts = response.data;
+                                    res.render('player/player', {
+                                        player: player, statistics: statistics,
+                                        progression: progression, checkouts: checkouts
+                                    });
+                                }).catch(error => {
+                                    debug('Error when getting player checkouts: ' + error);
+                                    next(error);
+                                });
                         }).catch(error => {
                             debug('Error when getting player progression: ' + error);
                             next(error);
                         });
                 }).catch(error => {
                     debug('Error when getting player statistics: ' + error);
-                    next(error);
-                });
-        }).catch(error => {
-            debug('Error when getting player: ' + error);
-            next(error);
-        });
-});
-
-/* Get specific statistics for a given player */
-router.get('/:id/checkouts', function (req, res, next) {
-    var playerId = req.params.id;
-    axios.get(req.app.locals.kcapp.api + '/player/' + playerId)
-        .then(response => {
-            var player = response.data;
-            axios.get(req.app.locals.kcapp.api + '/player/' + playerId + '/checkouts')
-                .then(response => {
-                    var checkouts = response.data;
-                    res.render('player/player_checkouts', { player: player, checkouts: checkouts });
-                }).catch(error => {
-                    debug('Error when getting player checkouts: ' + error);
                     next(error);
                 });
         }).catch(error => {
@@ -95,27 +85,6 @@ router.get('/compare', function (req, res, next) {
                 });
         }).catch(error => {
             debug('Error when getting players: ' + error);
-            next(error);
-        });
-});
-
-
-/* Get a progression for a given player */
-router.get('/:id/progression', function (req, res, next) {
-    var playerId = req.params.id;
-    axios.get(req.app.locals.kcapp.api + '/player/' + playerId)
-        .then(response => {
-            var player = response.data;
-            axios.get(req.app.locals.kcapp.api + '/player/' + playerId + '/progression')
-                .then(response => {
-                    var progression = response.data;
-                    res.render('player/player_progression', { player: player, progression: progression });
-                }).catch(error => {
-                    debug('Error when getting player progression: ' + error);
-                    next(error);
-                });
-        }).catch(error => {
-            debug('Error when getting player: ' + error);
             next(error);
         });
 });

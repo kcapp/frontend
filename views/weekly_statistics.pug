@@ -22,97 +22,98 @@ block scripts
 
 
 block content
-    div(style='margin-top: 20px;')
-        div(class='pull-left text-left' style='margin-bottom: 20px;')
-            button(id='previous-btn' class='btn btn-primary' data-current-date=statistics.from) << Previous
-        div(class='pull-right text-right')
-            button(id='next-btn' class='btn btn-primary' data-current-date=statistics.to) Next >>
+    div(class='row')
+        div(class='col-sm-2 text-left')
+            button(id='previous-btn' class='btn btn-primary' data-current-date=statistics_x01.from) << Previous
+        div(class='col-sm-8 text-center')
+            h2= "Statistics (" + statistics_x01.from + " to " + statistics_x01.to + ")"
+        div(class='col-sm-2 text-right')
+            button(id='next-btn' class='btn btn-primary' data-current-date=statistics_x01.to) Next >>
 
     div
-        div(style='clear: both;')
-            h2= "Statistics (" + statistics.from + " to " + statistics.to + ")"
-
-        if statistics.length === 0
-            p No matches played ...
-        else
-            div(class='table')
-                table(id='current-week-statistics-table' class='table')
-                    thead
-                        tr
-                            th(colspan='7')
-                            th(colspan='4' class='th-bordered') Per Game
-                            th(colspan='3' class='th-bordered') Accuracy
-                        tr
-                            th(class='txt-right') Rank
-                            th Player
-                            th(class='txt-center') Played
-                            th(class='txt-center') Won
-                            th(class='txt-right') Win %
-                            th(class='txt-center') PPD / First 9
-                            th(class='txt-right') Checkout
-                            th(class='txt-right') 60s+
-                            th(class='txt-right') 100s+
-                            th(class='txt-right') 140s+
-                            th(class='txt-right') 180
-                            th(class='txt-right') Overall
-                            th(class='txt-right') 20s
-                            th(class='txt-right') 19s
-                    tbody
+        div(class='row')
+            h3 X01
+            if statistics_x01.length === 0
+                p No matches played ...
+            else
+                div(class='table')
+                    table(id='table-x01-statistics' class='table')
+                        thead
+                            tr
+                                th(colspan='7')
+                                th(colspan='4' class='th-bordered') Per Game
+                                th(colspan='3' class='th-bordered') Accuracy
+                            tr
+                                th(class='text-right') Rank
+                                th Player
+                                th(class='text-center') Played
+                                th(class='text-center') Won
+                                th(class='text-right') Win %
+                                th(class='text-center') PPD / First 9
+                                th(class='text-right') Checkout
+                                th(class='text-right') 60s+
+                                th(class='text-right') 100s+
+                                th(class='text-right') 140s+
+                                th(class='text-right') 180
+                                th(class='text-right') Overall
+                                th(class='text-right') 20s
+                                th(class='text-right') 19s
+                        tbody
                         - var rank = 1
-                        each stats in statistics
+                        each stats in statistics_x01
                             - var player = players[stats.player_id]
                             tr
-                                td(class='txt-right')= rank++
+                                td(class='text-right')= rank++
                                 td(style='width: 12%'): a(href='/players/' + player.id + '/statistics')= player.name
-                                td(class='txt-center')= stats.games_played
-                                td(class='txt-center')= stats.games_won === undefined ? 0 : stats.games_won
-                                td(class='txt-right')= stats.games_won === undefined ? 0 : (stats.games_won / stats.games_played * 100).toFixed(2)
-                                td(class='txt-center')= stats.ppd.toFixed(2) + ' / ' + stats.first_nine_ppd.toFixed(2)
-                                td(class='txt-right')= stats.checkout_percentage.toFixed(2) + ' %'
-                                td(class='txt-right')= (stats.scores_60s_plus / stats.games_played).toFixed(2)
-                                td(class='txt-right')= (stats.scores_100s_plus / stats.games_played).toFixed(2)
-                                td(class='txt-right')= (stats.scores_140s_plus / stats.games_played).toFixed(2)
-                                td(class='txt-right')= (stats.scores_180s / stats.games_played).toFixed(2)
-                                td(class='txt-right')= stats.accuracy_overall === null ? '-' : stats.accuracy_overall.toFixed(2)
-                                td(class='txt-right')= stats.accuracy_20 === null ? '-' : stats.accuracy_20.toFixed(2)
-                                td(class='txt-right')= stats.accuracy_19 === null ? '-' : stats.accuracy_19.toFixed(2)
+                                td(class='text-center')= stats.games_played
+                                td(class='text-center')= stats.games_won === undefined ? 0 : stats.games_won
+                                td(class='text-right')= stats.games_won === undefined ? '0.00%' : (stats.games_won / stats.games_played * 100).toFixed(2) + '%'
+                                td(class='text-center')= stats.ppd.toFixed(2) + ' / ' + stats.first_nine_ppd.toFixed(2)
+                                td(class='text-right')= stats.checkout_percentage.toFixed(2) + ' %'
+                                td(class='text-right')= (stats.scores_60s_plus / stats.games_played).toFixed(2)
+                                td(class='text-right')= (stats.scores_100s_plus / stats.games_played).toFixed(2)
+                                td(class='text-right')= (stats.scores_140s_plus / stats.games_played).toFixed(2)
+                                td(class='text-right')= (stats.scores_180s / stats.games_played).toFixed(2)
+                                td(class='text-right')= stats.accuracy_overall === null ? '-' : stats.accuracy_overall.toFixed(2)
+                                td(class='text-right')= stats.accuracy_20 === null ? '-' : stats.accuracy_20.toFixed(2)
+                                td(class='text-right')= stats.accuracy_19 === null ? '-' : stats.accuracy_19.toFixed(2)
 
-    div(class='col-lg-14')
+    div
         div(class='row')
             h3 Shootout
 
             if statistics_shootout.length === 0
                 p No games played ...
             else
-                div(class='table-responsive')
-                    table(id='current-week-statistics-table' class='table table-striped table-bordered')
+                div(class='table')
+                    table(id='table-shootout-statistics' class='table')
                         thead
                             tr
                                 th(colspan='6')
-                                th(colspan='4') Per Game
+                                th(colspan='4' class='th-bordered') Per Game
                             tr
-                                th Rank
+                                th(class='text-right') Rank
                                 th Player
-                                th Played
-                                th Won
-                                th Win %
-                                th PPD
-                                th 60s+
-                                th 100s+
-                                th 140s+
-                                th 180
+                                th(class='text-center') Played
+                                th(class='text-center') Won
+                                th(class='text-right') Win %
+                                th(class='text-center') PPD
+                                th(class='text-right') 60s+
+                                th(class='text-right') 100s+
+                                th(class='text-right') 140s+
+                                th(class='text-right') 180
                         tbody
                             - var rank = 1
                             each stats in statistics_shootout
                                 - var player = players[stats.player_id]
                                 tr
-                                    td= rank++
+                                    td(class='text-right')= rank++
                                     td(style='width: 12%'): a(href='/players/' + player.id + '/statistics')= player.name
-                                    td= stats.games_played
-                                    td= stats.games_won === undefined ? 0 : stats.games_won
-                                    td= stats.games_won === undefined ? 0 : (stats.games_won / stats.games_played * 100).toFixed(2)
-                                    td= stats.ppd.toFixed(2)
-                                    td= (stats.scores_60s_plus / stats.games_played).toFixed(2)
-                                    td= (stats.scores_100s_plus / stats.games_played).toFixed(2)
-                                    td= (stats.scores_140s_plus / stats.games_played).toFixed(2)
-                                    td= (stats.scores_180s / stats.games_played).toFixed(2)
+                                    td(class='text-center')= stats.games_played
+                                    td(class='text-center')= stats.games_won === undefined ? 0 : stats.games_won
+                                    td(class='text-right')= stats.games_won === undefined ? '0.00%' : (stats.games_won / stats.games_played * 100).toFixed(2) + '%'
+                                    td(class='text-center')= stats.ppd.toFixed(2)
+                                    td(class='text-right')= (stats.scores_60s_plus / stats.games_played).toFixed(2)
+                                    td(class='text-right')= (stats.scores_100s_plus / stats.games_played).toFixed(2)
+                                    td(class='text-right')= (stats.scores_140s_plus / stats.games_played).toFixed(2)
+                                    td(class='text-right')= (stats.scores_180s / stats.games_played).toFixed(2)
