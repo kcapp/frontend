@@ -1,5 +1,7 @@
 extends ../layout.pug
 
+include ../mixins/score_header.pug
+
 block scripts
     script(src='/javascripts/fastclick-1.0.6.min.js')
     script(src='/javascripts/socket.io-2.0.3.min.js')
@@ -64,9 +66,7 @@ block scripts
             dart.attr('data-score', score / multiplier);
             dart.attr('data-multiplier', multiplier);
 
-            // Total score
             updateTotalVisitScore(score)
-
             scores[currentDart] = scoreInt;
         }
 
@@ -129,21 +129,21 @@ block scripts
                     var td = $('#player-score-' + player.player_id);
                     var tdLegs = $('#player-legs-' + player.player_id);
                     var tdVisit = $('#player-visit-' + player.player_id);
-                    var label = td.find('.label-player-score-umpire');
+                    var label = td.find('.label-player-score');
                     label.text(player.current_score);
 
                     if (player.player_id === currentPlayerId) {
-                        td.removeClass().addClass('uv-active-player-score ' + player.modifier_class);
-                        tdLegs.removeClass().addClass('uv-active-player-legs ' + player.modifier_class);
-                        tdVisit.removeClass().addClass('uv-active-player-visits ' + player.modifier_class);
+                        td.removeClass().addClass('uv-active-player-score');
+                        tdLegs.removeClass().addClass('uv-active-player-legs');
+                        tdVisit.removeClass().addClass('uv-active-player-visits');
                         $('#submit-score-button').data('current-player-id', player.player_id);
                         label.addClass('current-player');
                         $('.uv-active-player-visits .dart-score-total').html(0);
                     }
                     else {
-                        td.removeClass().addClass('uv-inactive-player-score ' + player.modifier_class);
-                        tdLegs.removeClass().addClass('uv-inactive-player-legs ' + player.modifier_class);
-                        tdVisit.removeClass().addClass('uv-inactive-player-visits ' + player.modifier_class);
+                        td.removeClass().addClass('uv-inactive-player-score');
+                        tdLegs.removeClass().addClass('uv-inactive-player-legs');
+                        tdVisit.removeClass().addClass('uv-inactive-player-visits');
                         label.removeClass('current-player');
                         label.removeAttr('data-current-player-id');
 
@@ -240,7 +240,11 @@ block scripts
 
                 var dart = getCurrentDart();
                 dart.text('');
+                dart.removeClass('dart-score-single dart-score-double dart-score-triple');
                 dart.removeAttr('data-score');
+
+                // Remove focus from the button incase keyboard is used to enter next score
+                $(this).blur();
             });
 
             $('#edit-scores-button').click(function () {
@@ -350,65 +354,10 @@ block scripts
 block content
     div(id='cancel-match-failed-alert' class='alert alert-danger' role='alert' hidden='true').
         Unable to cancel match
+    block title
 
-    mixin get_player_cell(player)
-        - var playerId = player.player_id;
-        td(id='player-score-' + playerId class=player.is_current_player ? 'uv-active-player-score' : 'uv-inactive-player-score')
-            label(id='player-name-' + playerId class='label-player-name')= players[playerId].name + (player.wins ? ' (' + player.wins + ')' : '')
-            label(id='player-id-' + playerId class='label label-block label-player-score-umpire' + (player.is_current_player ? ' current-player' : ''))= player.current_score
-
-    mixin get_player_legs(player)
-        - var playerId = player.player_id;
-        td(id='player-legs-' + playerId class=player.is_current_player ? 'uv-active-player-legs' : 'uv-inactive-player-legs')
-            label= (player.wins ? ' (' + player.wins + ')' : '0')
-
-    mixin get_current_player_visit(player)
-        - var playerId = player.player_id;
-        if player.is_current_player
-            td(id='player-visit-' + playerId class='uv-active-player-visits')
-                table(style='width: 100%;')
-                    tbody
-                        tr
-                            td(class='dart-score-container'): label(class='first' text='0' data-multiplier='1')
-                            td(class='dart-score-container'): label(class='second' text='0' data-multiplier='1')
-                            td(class='dart-score-container'): label(class='third' text='0' data-multiplier='1')
-                        tr
-                            td(style='padding: 3px;')
-                        tr
-                            td(colspan='3' class='dart-score-total')= 0
-        else
-            td(id='player-visit-' + playerId class='uv-inactive-player-visits')
-                table(style='width: 100%;')
-                    tbody
-                        tr
-                            td(class='dart-score-container'): label(class='first' text='0' data-multiplier='1')
-                            td(class='dart-score-container'): label(class='second' text='0' data-multiplier='1')
-                            td(class='dart-score-container'): label(class='third' text='0' data-multiplier='1')
-                        tr
-                            td(style='padding: 3px;')
-                        tr
-                            td(colspan='3' class='dart-score-total')= 0
-
-    div(class='table-responsive no-border')
-        table(class='uv-table-mode' style='table-layout: fixed')
-            tbody
-                tr
-                    td= game.game_mode.name + ' / ' + 'R' + (Math.floor(match.visits.length / match.players.length) + 1)
-
-    div(class='table-responsive no-border')
-        table(class='uv-table-players' id='player-spectate-table' style='table-layout: fixed')
-            tbody
-                tr
-                    each player in match_players
-                        +get_player_cell(player)
-                tr
-                    each player in match_players
-                        +get_player_legs(player)
-                tr
-                    each player in match_players
-                        +get_current_player_visit(player)
-
-    hr
+    - var round_number = Math.floor(match.visits.length / match.players.length) + 1;
+    +get_score_header(game.game_mode, round_number, match_players, true)
 
     div(class='table-responsive')
         table(id='score-selector-table' class='table' style='display: none;')

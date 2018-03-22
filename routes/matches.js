@@ -6,9 +6,9 @@ const _ = require('underscore');
 
 const axios = require('axios');
 
-/* Render the match view (button entry) */
+/* Render the match view */
 router.get('/:id', function (req, res, next) {
-    var pugView = 'match/button_entry.pug';
+    var pugView = 'match/entry_x01.pug';
     axios.get(req.app.locals.kcapp.api + '/player')
         .then(response => {
             var playersMap = response.data;
@@ -19,7 +19,7 @@ router.get('/:id', function (req, res, next) {
                         .then(response => {
                             var game = response.data;
                             if (game.game_type.id === 2) {
-                                pugView = 'match/shootout_entry.pug';
+                                pugView = 'match/entry_shootout.pug';
                             }
                             axios.get(req.app.locals.kcapp.api + '/match/' + req.params.id + '/players')
                                 .then(response => {

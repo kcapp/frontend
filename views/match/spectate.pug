@@ -4,6 +4,7 @@ block append head
     script(src='/javascripts/socket.io-2.0.3.min.js')
 
 include ../mixins/dart.pug
+include ../mixins/score_header.pug
 
 block scripts
     script
@@ -169,37 +170,15 @@ block scripts
         });
 
 block content
-
     h2 Spectate
+
     div(class='text-right')
         button(type='button' class='btn btn-primary' id='btn-open-chat')
             span(class='glyphicon glyphicon-comment') Chat
     div(class='row')
 
-    mixin get_player_cell(player)
-        - var playerId = player.player_id;
-        td(id='player-score-' + playerId class=player.is_current_player ? 'uv-active-player-score' : 'uv-inactive-player-score')
-            label(id='player-name-' + playerId class='label-player-name')= players[playerId].name + (player.wins ? ' (' + player.wins + ')' : '')
-            label(id='player-id-' + playerId class='label label-block label-player-score-umpire')= player.current_score
-
-    mixin get_player_legs(player)
-        - var playerId = player.player_id;
-        td(id='player-legs-' + playerId class=player.is_current_player ? 'uv-active-player-legs' : 'uv-inactive-player-legs')
-            label= (player.wins ? ' (' + player.wins + ')' : '0')
-
-
-    div(class='table-responsive no-border')
-        table(class='uv-table-mode' style='table-layout: fixed')
-            tbody
-                tr
-                    td= game.game_mode.name + ' / ' + 'R' + (Math.floor(match.visits.length / match.players.length) + 1)
-
-    div(class='table-responsive no-border')
-        table(class='uv-table-players' id='player-spectate-table' style='table-layout: fixed')
-            tbody
-                tr
-                    each player in match_players
-                        +get_player_cell(player)
+    - var round_number = Math.floor(match.visits.length / match.players.length) + 1;
+    +get_score_header(game.game_mode, round_number, match_players)
 
     h3 Visits
     div(class='table-responsive')

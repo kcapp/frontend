@@ -1,5 +1,8 @@
 extends ../layout.pug
 
+include ../mixins/dart.pug
+include ../mixins/score_header.pug
+
 block scripts
     script(src='/javascripts/socket.io-2.0.3.min.js')
     script.
@@ -160,48 +163,10 @@ block scripts
         });
 
 block content
-    mixin get_player_cell(player)
-        - var playerId = player.player_id;
-        td(id='player-score-' + playerId class=player.is_current_player ? 'uv-active-player-score' : 'uv-inactive-player-score')
-            label(id='player-name-' + playerId class='label-player-name')= players[playerId].name + (player.wins ? ' (' + player.wins + ')' : '')
-            label(id='player-id-' + playerId class='label label-block label-player-score-umpire')= player.current_score
-    
-    mixin get_player_legs(player)
-        - var playerId = player.player_id;
-        td(id='player-legs-' + playerId class=player.is_current_player ? 'uv-active-player-legs' : 'uv-inactive-player-legs')
-            label= (player.wins ? ' (' + player.wins + ')' : '0')
+    h2 Scorer
 
-    div(class='table-responsive no-border')
-        table(class='uv-table-players' id='player-spectate-table' style='table-layout: fixed')
-            tbody
-                tr
-                    each player in match_players
-                        +get_player_cell(player)
-                tr
-                    each player in match_players
-                        +get_player_legs(player)
-
-    div(class='table-responsive no-border')
-        table(class='uv-table-mode' style='table-layout: fixed')
-            tbody
-                tr
-                    td= game.game_type.short_name + ' / ' + 'R' + (Math.floor(match.visits.length / match.players.length) + 1)
-
-    mixin get_dart_label(dart)
-        if dart.multiplier == 3
-            label(class='dart-score-triple')= 'T-' + dart.value
-        else if dart.multiplier == 2
-            if value == 25
-                label(class='dart-score-double') Bull
-            else
-                label(class='dart-score-double')= 'D-' + dart.value
-        else
-            if dart.value == 0
-                label(class='dart-score-single') Miss
-            else if dart.value == 25
-                label(class='dart-score-single') Bull
-            else
-                label(class='dart-score-single')= dart.value
+    - var round_number = Math.floor(match.visits.length / match.players.length) + 1;
+    +get_score_header(game.game_mode, round_number, match_players)
 
     h3 Visits
     div(class='table-responsive')
@@ -217,14 +182,9 @@ block content
                 each visit in match.visits
                     tr
                         td= players[visit.player_id].name
-                        td(class='dart-score-container no-border')
-                            +get_dart_label(visit.first_dart)
-
-                        td(class='dart-score-container no-border')
-                            +get_dart_label(visit.second_dart)
-
-                        td(class='dart-score-container no-border')
-                            +get_dart_label(visit.third_dart)
+                        +dart_container(visit.first_dart.value, visit.first_dart.multiplier)
+                        +dart_container(visit.second_dart.value, visit.second_dart.multiplier)
+                        +dart_container(visit.third_dart.value, visit.third_dart.multiplier)
                         td
                             if visit.is_bust
                                 label BUST
