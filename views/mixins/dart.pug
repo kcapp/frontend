@@ -15,7 +15,7 @@ mixin dart_container(value, multiplier, id, addSelector)
                 label(id=labelID class='dart-score-single') Miss
             else if value == 25
                 label(id=labelID class='dart-score-single') Bull
-            else
+            else if value
                 label(id=labelID class='dart-score-single')= value
         if (addSelector)
             +dart_selector(id)

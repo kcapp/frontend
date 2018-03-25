@@ -75,6 +75,7 @@ $(function () {
                 currentMultiplier++;
                 currentMultiplier = currentMultiplier > 3 ? 1 : currentMultiplier;
                 setDartValue(dart, dartText * currentMultiplier, currentMultiplier);
+                totalScoreContainer.html(currentPlayerScore);
                 return;
             case '1': dartText += '1'; break;
             case '2': dartText += '2'; break;

@@ -315,10 +315,10 @@ block content
                                     else
                                         div -
                                     div(class='info') Scores
-                                    div= statistic.scores_60s_plus === 0 ? "60+: 0" : "60+: " + statistic.scores_60s_plus
-                                    div= statistic.scores_100s_plus === 0 ? "100+: 0" : "100+: " + statistic.scores_100s_plus
-                                    div= statistic.scores_140s_plus=== 0 ? "140+: 0" : "140+: " + statistic.scores_140s_plus
-                                    div= statistic.scores_180s === 0 ? "180: 0" : "180:  " + statistic.scores_180s
+                                    div= "60+: " + statistic.scores_60s_plus
+                                    div= "100+: " + statistic.scores_100s_plus
+                                    div= "140+: " + statistic.scores_140s_plus
+                                    div= "180: " + statistic.scores_180s
                                     div(style='margin-top: 20px;')
                                         hr
                                     if statistic.player_id === match.winner_player_id
@@ -342,6 +342,7 @@ block content
                     th Third Dart
                     th Total
                     th Remaining
+                    th Thrown
                     th PPD
                     if !isFinished
                         th(class="text-center") Options
@@ -357,6 +358,7 @@ block content
 
                         td(class='total-visit-score-' + visit.id): label= visit_score
                         td: label= visit.scores
+                        td= visit.darts_thrown
                         td(class='visit-ppd-' + visit.id)= (visit_score / 3).toFixed(2)
                         if !isFinished
                             td(class='text-center')
