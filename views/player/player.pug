@@ -12,24 +12,18 @@ block scripts
     script.
         $(function () {
             $('#table-player-hits').DataTable({
-                searching: false,
-                bInfo : false,
+                searching: false, bInfo : false, bLengthChange: false,
                 pageLength: 15,
-                bLengthChange: false,
                 order: [[ 1,  'desc' ]]
             });
             $('#table-player-visits').DataTable({
-                searching: false,
-                bInfo : false,
-                bLengthChange: false,
+                searching: false, bInfo : false, bLengthChange: false,
                 pageLength: 15,
                 order: [[ 3,  'desc' ]],
                 columnDefs: [ { targets: [ 1, 2 ], orderable: false, searchable: false } ]
             });
             $('#table-player-checkouts').DataTable({
-                searching: false,
-                bInfo : false,
-                bLengthChange: false,
+                searching: false, bInfo : false, bLengthChange: false,
                 pageLength: 10,
                 order: [[ 1,  'desc' ]],
                 columnDefs: [ { "orderable": false, "targets": 3 } ]
@@ -291,7 +285,7 @@ block content
                         th Checkout
                         th Done
                         th Count
-                        th Visits
+                        th Checkouts
                 tbody
                     each checkout in checkouts
                         tr
@@ -302,13 +296,18 @@ block content
                                 td(data-order=0): span(class='glyphicon glyphicon-remove' aria-hidden='true')
                             td= checkout.count
                             if checkout.visits
-                                td:  table(id='player-checkouts-visits-table' class='table')
+                                td:  table(class='table')
+                                        thead
+                                            tr
+                                                th(colspan='3') Visits
+                                                th Count
                                         tbody
                                             each visit in checkout.visits
                                                 tr
                                                     +dart_container(visit.first_dart.value, visit.first_dart.multiplier)
                                                     +dart_container(visit.second_dart.value, visit.second_dart.multiplier)
                                                     +dart_container(visit.third_dart.value, visit.third_dart.multiplier)
+                                                    td= visit.count
                             else
                                 td
 

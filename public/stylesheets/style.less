@@ -17,7 +17,6 @@ body {
     font-weight: 300;
     border: none;
     border-bottom: 1px solid #ddd;
-    background: none;
     border-radius: 0px;
     color: black;
 }
@@ -170,16 +169,24 @@ a:hover {
     }
 }
 
-#player-statistics-table,
-#player-scores-table,
-#player-accuracy-table,
-#player-owes-table {
+.table-header {
     thead {
         tr:first-child {
             background-color: #efefef;
             border: 3px solid #ddd;
         }
+        .th-bordered {
+            background-color: #efefef;
+            border: 3px solid #ddd;
+            text-align: center;
+        }
     }
+}
+
+#player-statistics-table,
+#player-scores-table,
+#player-accuracy-table,
+#player-owes-table {
     tr:last-child {
         border-bottom: 3px solid #dddddd;
     }
@@ -189,7 +196,8 @@ a:hover {
     td:last-child {
         border-right: 3px solid #dddddd;
     }
-    .center-table
+    .center-table;
+    .table-header;
 }
 
 #player-scores-table,
@@ -445,17 +453,6 @@ a:hover {
     span {
         display: block;
     }
-    .center-table thead {
-        tr:first-child {
-            background-color: #efefef;
-            border: 3px solid #ddd;
-        }
-        .th-bordered {
-            background-color: #efefef;
-            border: 3px solid #ddd;
-            text-align: center;
-        }
-    }
     tr:last-child {
         border-bottom: 3px solid #dddddd;
     }
@@ -465,6 +462,7 @@ a:hover {
     td:last-child {
         border-right: 3px solid #dddddd;
     }
+    .table-header;
 }
 
 .dart-score-container {
@@ -561,6 +559,19 @@ a:hover {
     margin-bottom: 0px;
 }
 
+.player-top-checkouts-table,
+.player-top-visits-table {
+    width: 100%;
+    label {
+        display: block;
+    }
+    td {
+        padding-left: 3px;
+        padding-right: 3px;
+    }
+    .center-table
+}
+
 #table-player-checkouts,
 #table-player-visits,
 #table-player-hits {
@@ -571,17 +582,6 @@ a:hover {
     span {
         display: block;
     }
-    thead {
-        tr:first-child {
-            background-color: #efefef;
-            border: 3px solid #ddd;
-        }
-        .th-bordered {
-            background-color: #efefef;
-            border: 3px solid #ddd;
-            text-align: center;
-        }
-    }
     tr:last-child {
         border-bottom: 3px solid #dddddd;
     }
@@ -591,7 +591,8 @@ a:hover {
     td:last-child {
         border-right: 3px solid #dddddd;
     }
-    .center-table
+    .center-table;
+    .table-header;
 }
 
 .player-card {
@@ -645,4 +646,12 @@ a:hover {
     background-position: left;
     background-repeat: no-repeat;
     background-image: url(../images/vilius.png);
+}
+
+.head-to-head-player1 {
+    text-align: right;
+
+}
+.head-to-head-player2 {
+    text-align: left;
 }

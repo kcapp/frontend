@@ -89,4 +89,32 @@ router.get('/compare', function (req, res, next) {
         });
 });
 
+/* Get head to head statistics between two players */
+router.get('/:player1/vs/:player2', function (req, res, next) {
+    var player1 = req.params.player1;
+    var player2 = req.params.player2;
+
+    axios.get(req.app.locals.kcapp.api + '/player')
+        .then(response => {
+            var players = response.data;
+            axios.get(req.app.locals.kcapp.api + '/player/' + player1 + '/vs/' + player2)
+                .then(response => {
+                    var head2head = response.data;
+                    head2head.player_visits[player1] = _.sortBy(head2head.player_visits[player1], function (visit) { return -visit.count; })
+                    head2head.player_visits[player2] = _.sortBy(head2head.player_visits[player2], function (visit) { return -visit.count; })
+
+                    head2head.player_checkouts[player1] = _.sortBy(head2head.player_checkouts[player1], function (checkout) { return -checkout.count; })
+                    head2head.player_checkouts[player2] = _.sortBy(head2head.player_checkouts[player2], function (checkout) { return -checkout.count; })
+
+                    res.render('player/head_to_head', { player1: players[player1], player2: players[player2], head2head: head2head });
+                }).catch(error => {
+                    debug('Error when getting head to head statistics: ' + error);
+                    next(error);
+                });
+        }).catch(error => {
+            debug('Error when getting players: ' + error);
+            next(error);
+        });
+});
+
 module.exports = router

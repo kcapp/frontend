@@ -1,0 +1,137 @@
+extends ../layout.pug
+
+include ../mixins/dart.pug
+
+block content
+    h2(style='padding: 10px 0px 20px 0px;') Head to Head
+
+    - var statistics1 = head2head.player_statistics[player1.id]
+    - var statistics2 = head2head.player_statistics[player2.id]
+    div(class='table-responsive')
+        table(class='table'  style='table-layout: fixed;')
+            thead
+                tr
+                    td(class='head-to-head-player1'): h2= player1.name
+                    th(class='text-center'): h2 vs
+                    td(class='head-to-head-player2'): h2= player2.name
+                tr
+                    td(class='head-to-head-player1')= player1.games_won + ' / ' + player1.games_played
+                    th(class='text-center') Games Won / Played
+                    td(class='head-to-head-player2')= player2.games_won + ' / ' + player2.games_played
+                tr
+                    td(class='head-to-head-player1')= player1.matches_won + ' / ' + player1.matches_played
+                    th(class='text-center') Matches Won / Played
+                    td(class='head-to-head-player2')= player2.matches_won + ' / ' + player2.matches_played
+                tr
+                    td(class='head-to-head-player1')= ((player1.games_won * 100) / player1.games_played).toFixed(2) + ' / ' + ((player1.matches_won * 100) / player1.matches_played).toFixed(2) + '%'
+                    th(class='text-center') Games / Matches Win %
+                    td(class='head-to-head-player2')= ((player2.games_won * 100) / player2.games_played).toFixed(2) + ' / ' + ((player2.matches_won * 100) / player2.matches_played).toFixed(2) + '%'
+                tr
+                    td(class='head-to-head-player1')= statistics1.ppd.toFixed(2)
+                    th(class='text-center') PPD
+                    td(class='head-to-head-player2')= statistics2.ppd.toFixed(2)
+                tr
+                    td(class='head-to-head-player1')= statistics1.first_nine_ppd.toFixed(2)
+                    th(class='text-center') First 9 PPD
+                    td(class='head-to-head-player2')= statistics2.first_nine_ppd.toFixed(2)
+                tr
+                    td(class='head-to-head-player1')= statistics1.checkout_percentage.toFixed(2) + '%'
+                    th(class='text-center') Checkout %
+                    td(class='head-to-head-player2')= statistics2.checkout_percentage.toFixed(2) + '%'
+                tr
+                    td(class='head-to-head-player1')= statistics1.best_ppd.toFixed(2)
+                    th(class='text-center') Best PPD
+                    td(class='head-to-head-player2')= statistics2.best_ppd.toFixed(2)
+                tr
+                    td(class='head-to-head-player1')= statistics1.best_first_nine_ppd.toFixed(2)
+                    th(class='text-center') Best First 9 PPD
+                    td(class='head-to-head-player2')= statistics2.best_first_nine_ppd.toFixed(2)
+                tr
+                    td(class='head-to-head-player1')= statistics1.highest_checkout
+                    th(class='text-center') Highest Checkout
+                    td(class='head-to-head-player2')= statistics2.highest_checkout
+                tr
+                    mixin get_accuracy(statistics, clazz)
+                        - var accuracy20 = statistics.accuracy_20 == null ? '-' : statistics.accuracy_20.toFixed(2)
+                        - var accuracy19 = statistics.accuracy_19 == null ? '-' : statistics.accuracy_19.toFixed(2)
+                        td(class=clazz)!= '<br>' + statistics.accuracy_overall.toFixed(2) + ' / ' + accuracy20 + ' / ' + accuracy19
+                    +get_accuracy(statistics1, 'head-to-head-player1')
+                    th(class='text-center') Accuracy<br> Overall / 20s / 19s
+                    +get_accuracy(statistics2, 'head-to-head-player2')
+                tr
+                    mixin player_form_table(games, playerID, align)
+                        table(align=align style='width: 100%; table-layout: fixed;')
+                            tr
+                                //- Need to loop though in reverse order
+                                each idx in [4, 3, 2, 1, 0]
+                                    if games[idx] == null
+                                        td
+                                    else
+                                        if games[idx].winner_id === null
+                                            td(style='background-color: #5bc0de; font-weight: bold;'): label(style='display: block;') D
+                                        else if games[idx].winner_id === playerID
+                                            td(style='background-color: #5cb85c; font-weight: bold;'): label(style='display: block;') W
+                                        else
+                                            td(style='background-color: #e02a2a; font-weight: bold;'): label(style='display: block;') L
+
+                    td(class='text-center')
+                        +player_form_table(head2head.last_games[player1.id], player1.id, 'right')
+                    th(class='text-center') Form
+                    td(class='text-center')
+                        +player_form_table(head2head.last_games[player2.id], player2.id, 'left')
+                tr
+                    td(class='text-center')
+                        +player_form_table(head2head.last_games_head_to_head, player1.id, 'right')
+                    th(class='text-center') VS. Form
+                    td(class='text-center')
+                        +player_form_table(head2head.last_games_head_to_head, player2.id, 'left')
+                tr
+                    td
+                    th(class='text-center') Top Visits
+                    td
+                tr
+                    mixin player_top_visits_table(visits, player, align)
+                        table(class='player-top-visits-table' align=align)
+                            thead
+                                tr
+                                    th(colspan='3') Visit
+                                    th Per Game
+                            tbody
+                                each round in [0, 1, 2]
+                                    tr
+                                        +dart_container(visits[round].first_dart.value, visits[round].first_dart.multiplier)
+                                        +dart_container(visits[round].second_dart.value, visits[round].second_dart.multiplier)
+                                        +dart_container(visits[round].third_dart.value, visits[round].third_dart.multiplier)
+                                        td(width='12%')= (visits[round].count / player.games_played).toFixed(2)
+                    td
+                        +player_top_visits_table(head2head.player_visits[player1.id], player1, 'right')
+                    th
+                    td
+                        +player_top_visits_table(head2head.player_visits[player2.id], player2, 'left')
+                tr
+                    td
+                    th(class='text-center') Top Checkouts
+                    td
+                tr
+                    mixin player_top_checkouts_table(checkouts, align)
+                        table(class='player-top-checkouts-table' align=align)
+                            tbody
+                                each round in [0, 1, 2]
+                                    tr
+                                        if checkouts[round].completed
+                                            +dart_container(checkouts[round].visits[0].first_dart.value, checkouts[round].visits[0].first_dart.multiplier)
+                                            +dart_container(checkouts[round].visits[0].second_dart.value, checkouts[round].visits[0].second_dart.multiplier)
+                                            +dart_container(checkouts[round].visits[0].third_dart.value, checkouts[round].visits[0].third_dart.multiplier)
+                                        else
+                                            td
+                                            td
+                                            td
+
+                    td
+                        +player_top_checkouts_table(head2head.player_checkouts[player1.id], 'right')
+                    th
+                    td
+                        +player_top_checkouts_table(head2head.player_checkouts[player2.id], 'left')
+
+
+
