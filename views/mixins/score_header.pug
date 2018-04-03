@@ -21,7 +21,7 @@ mixin get_score_header(game_mode, round_number, players, add_player_visit)
 mixin get_player_cell(player)
     - var playerId = player.player_id;
     td(id='player-score-' + playerId class=player.is_current_player ? 'uv-active-player-score' : 'uv-inactive-player-score')
-        label(id='player-name-' + playerId class='label-player-name')= players[playerId].name + (player.wins ? ' (' + player.wins + ')' : '')
+        label(id='player-name-' + playerId class='label-player-name')= players[playerId].name
         label(id='player-id-' + playerId class='label label-block label-player-score' + (player.is_current_player ? ' current-player' : ''))= player.current_score
 
 mixin get_player_legs(player)

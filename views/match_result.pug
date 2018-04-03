@@ -1,6 +1,5 @@
 extends layout.pug
 
-include chart/chart_helper.pug
 include mixins/dart.pug
 
 block append head
@@ -9,8 +8,11 @@ block append head
     script(src='/javascripts/jquery-ui.1.12.1.min.js')
     script(src='/javascripts/jquery.ui.touch-punch-0.2.3.min.js')
     script(src='/javascripts/moment-2.20.1.min.js')
+    script(src='/javascripts/md5.min.js')
 
 block append scripts
+    script
+        include chart/chart_helper.js
     script.
         var match = !{JSON.stringify(match)}
         var game = !{JSON.stringify(game)}

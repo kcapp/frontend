@@ -20,13 +20,13 @@ block scripts
                 searching: false, bInfo : false, bLengthChange: false,
                 pageLength: 15,
                 order: [[ 3,  'desc' ]],
-                columnDefs: [ { targets: [ 1, 2 ], orderable: false, searchable: false } ]
+                columnDefs: [ { targets: [ 0, 1, 2 ], orderable: false, searchable: false } ]
             });
             $('#table-player-checkouts').DataTable({
                 searching: false, bInfo : false, bLengthChange: false,
                 pageLength: 10,
                 order: [[ 1,  'desc' ]],
-                columnDefs: [ { "orderable": false, "targets": 3 } ]
+                columnDefs: [ { orderable: false, targets: 3 } ]
             });
         });
     script.
