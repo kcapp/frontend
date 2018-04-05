@@ -25,7 +25,7 @@ block append scripts
             var playerId = match.players[i];
             values[playerId] = [ match.starting_score ];
         }
-        var round = 1;
+        var round = 0;
         labels.push(round);
 
         var chartMaxValue = game.game_type.id == 1 ? match.starting_score : 0;

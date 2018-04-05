@@ -70,6 +70,9 @@ router.get('/:id/statistics', function (req, res, next) {
 /* Get comparable statistics for the given players */
 router.get('/compare', function (req, res, next) {
     var playerIds = req.query.player_id;
+    if (!Array.isArray(playerIds)) {
+        playerIds = [playerIds]
+    }
     debug('Comparing players %s', playerIds);
 
     axios.get(req.app.locals.kcapp.api + '/player')

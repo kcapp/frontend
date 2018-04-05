@@ -7,7 +7,7 @@ block append scripts
 block script_check_visit_finished
     script.
         function updatePlayerScore(score) {
-            var currentPlayer = $('#current-player');
+            var currentPlayer = $('.current-player');
             var currentScore = parseInt(currentPlayer.text());
             currentPlayer.text(currentScore + score);
         }

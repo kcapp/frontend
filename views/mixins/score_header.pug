@@ -1,7 +1,9 @@
 mixin get_score_header(game_mode, round_number, players, add_player_visit)
     div(class='table-responsive no-border')
         table(class='uv-table-mode' style='table-layout: fixed')
-            tbody: tr: td= game_mode.short_name + ' / ' + 'R' + round_number
+            tbody: tr: td
+                    label= game_mode.short_name + '/'
+                    label(id='round-number')= 'R' + round_number
 
     div(class='table-responsive no-border')
         table(class='uv-table-players' id='player-spectate-table' style='table-layout: fixed')
@@ -26,7 +28,7 @@ mixin get_player_cell(player)
 
 mixin get_player_legs(player)
     td(id='player-legs-' + player.player_id class=player.is_current_player ? 'uv-active-player-legs' : 'uv-inactive-player-legs')
-        label= (player.wins ? ' (' + player.wins + ')' : '0')
+        label= (player.wins ? player.wins : '0')
 
 mixin get_current_player_visit(player)
     mixin visit_table(clazz)

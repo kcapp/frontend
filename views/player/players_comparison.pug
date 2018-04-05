@@ -1,5 +1,7 @@
 extends ../layout.pug
 
+include ../mixins/statistics.pug
+
 block content
     h2 Player Comparison
 
@@ -31,11 +33,11 @@ block content
                 tr
                     td(class='col-sm-2') Best PPD
                     each stats in statistics
-                        td= stats.best_ppd.toFixed(2)
+                        +best_statistics(stats.best_ppd)
                 tr
                     td(class='col-sm-2') Best First 9 PPD
                     each stats in statistics
-                        td= stats.best_first_nine_ppd.toFixed(2)
+                        +best_statistics(stats.best_first_nine_ppd)
                 tr
                     td(class='col-sm-2') Checkout%
                     each stats in statistics
@@ -43,15 +45,15 @@ block content
                 tr
                     td(class='col-sm-2') Highest Checkout
                     each stats in statistics
-                        td= stats.highest_checkout === undefined ? '-' : stats.highest_checkout
+                        +best_statistics(stats.highest_checkout)
                 tr
                     td(class='col-sm-2') Best 301
                     each stats in statistics
-                        td= stats.best_301 == undefined ? '-' : stats.best_301
+                        +best_statistics(stats.best_301)
                 tr
                     td(class='col-sm-2') Best 501
                     each stats in statistics
-                        td= stats.best_501 == undefined ? '-' : stats.best_501
+                        +best_statistics(stats.best_501)
                 tr
                     td(class='separator-row')
                         each stats in statistics

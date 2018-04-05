@@ -1,6 +1,7 @@
 extends ../layout.pug
 
 include ../mixins/dart.pug
+include ../mixins/statistics.pug
 
 block append head
     script(src='/javascripts/webgl-heatmap.js')
@@ -25,10 +26,22 @@ block scripts
             $('#table-player-checkouts').DataTable({
                 searching: false, bInfo : false, bLengthChange: false,
                 pageLength: 10,
-                order: [[ 1,  'desc' ]],
+                order: [[ 0,  'desc' ]],
                 columnDefs: [ { orderable: false, targets: 3 } ]
             });
         });
+    script.
+        $(function () {
+            var hash = document.location.hash;
+            if (hash) {
+                $('.nav-pills a[href="' + hash + '"]').tab('show');
+            }
+            // Change hash for page-reload
+            $('.nav-pills a').on('shown.bs.tab', function (e) {
+                console.log("Change")
+                window.location.hash = e.target.hash;
+            });
+         });
     script.
         var scoresMap = !{JSON.stringify(statistics.hits)};
         $(function () {
@@ -204,10 +217,15 @@ block content
                     td(class='glyph txt-italic') 501
                     td(class='glyph txt-italic') 701
                 tr
-                    td(class='number')= statistics.best_ppd.toFixed(2) + ' / ' + statistics.best_first_nine_ppd.toFixed(2)
-                    td(class='number')= statistics.best_301 ? statistics.best_301 : '-'
-                    td(class='number')= statistics.best_501 ? statistics.best_501 : '-'
-                    td(class='number')= statistics.best_701 ? statistics.best_701 : '-'
+                    //td(class='number')= statistics.best_ppd.value.toFixed(2) + ' / ' + statistics.best_first_nine_ppd.value.toFixed(2)
+                    td(class='number')
+                        a(href='/matches/' + statistics.best_ppd.match_id + '/leg')= statistics.best_ppd.value.toFixed(2)
+                        label(style='font-weight: 300;')= ' / '
+                        a(href='/matches/' + statistics.best_first_nine_ppd.match_id + '/leg')= statistics.best_first_nine_ppd.value.toFixed(2)
+                    +best_statistics(statistics.best_ppd, 'number')
+                    +best_statistics(statistics.best_301, 'number')
+                    +best_statistics(statistics.best_501, 'number')
+                    +best_statistics(statistics.best_701, 'number')
                 tr
                     td(class='olabel') Best PPD / First 9
                     td(class='olabel') Best 301
@@ -275,7 +293,7 @@ block content
                         span(class="glyphicon glyphicon-screenshot" aria-hidden="true")
                 tr
                     td(class='number')= player.games_won === 0 ? '-' : statistics.checkout_percentage.toFixed(2) + '%'
-                    td(class='number')= statistics.highest_checkout
+                    +best_statistics(statistics.highest_checkout, 'number')
                 tr
                     td(class='olabel') Checkout %
                     td(class='olabel') Highest Checkout
@@ -296,7 +314,7 @@ block content
                                 td(data-order=0): span(class='glyphicon glyphicon-remove' aria-hidden='true')
                             td= checkout.count
                             if checkout.visits
-                                td:  table(class='table')
+                                td: table(class='table')
                                         thead
                                             tr
                                                 th(colspan='3') Visits
