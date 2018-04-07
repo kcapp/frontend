@@ -65,6 +65,12 @@ $(function () {
                 break;
             case ',': // Triple
             case '-': // Triple
+                var value = parseInt(dartText);
+                if (value === 25) {
+                    disableEnter = true;
+                    showAlert('Invalid value', function () { });
+                    return;
+                }
                 currentMultiplier = 3;
                 break;
             case '+': // Cycle through multipliers
@@ -73,7 +79,11 @@ $(function () {
                     return;
                 }
                 currentMultiplier++;
-                currentMultiplier = currentMultiplier > 3 ? 1 : currentMultiplier;
+                if (value === 25) {
+                    currentMultiplier = currentMultiplier > 2 ? 1 : currentMultiplier;
+                } else {
+                    currentMultiplier = currentMultiplier > 3 ? 1 : currentMultiplier;
+                }
                 setDartValue(dart, dartText * currentMultiplier, currentMultiplier);
                 totalScoreContainer.html(currentPlayerScore);
                 return;
@@ -90,7 +100,7 @@ $(function () {
             default: /* NOOP */; break;
         }
         var value = parseInt(dartText);
-        if (value > 20 && value !== 25) {
+        if ((value > 20 && value !== 25) || (value == 25 && currentMultiplier > 2)) {
             dartText = dartText.substring(0, dartText.length - 1);
             disableEnter = true;
             showAlert('Invalid value', function () { });
