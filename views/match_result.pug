@@ -212,6 +212,10 @@ block append scripts
             $('#back-to-game').click(function () {
                 location.href = '/games/' + $(this).data('game') + '/results';
             });
+
+            $('.glyphicon-user').click(function(){
+                location.href = '/players/' + $(this).data('player') + '/statistics'
+            });
         });
     script.
         var scoresMap = !{JSON.stringify(match.hits)};
@@ -268,41 +272,26 @@ block content
 
     - var isFinished = match.winner_player_id !== null
     if isFinished
-        if game.game_type.id == 2
-            table(id='match-result-table' class='table')
-                thead
-                    tr
-                        th Player
-                        th PPD
-                        th High Scores
-                        th Score
-                        th Winner
-                tbody
+        table(style='width: 100%; table-layout: fixed;')
+            tbody
+                tr
                     each statistic in stats
-                        tr
-                            td: p= players[statistic.player_id].name
-                            td: p= statistic.ppd.toFixed(2)
-                            td
-                                p= statistic.scores_60s_plus === 0 ? "" : "60+: " + statistic.scores_60s_plus
-                                p= statistic.scores_100s_plus === 0 ? "" : "100+: " + statistic.scores_100s_plus
-                                p= statistic.scores_140s_plus=== 0 ? "" : "140+: " + statistic.scores_140s_plus
-                                p= statistic.scores_180s === 0 ? "" : "180:  " + statistic.scores_180s
-                            td: p= players[statistic.player_id].remaining_score
-                            if statistic.player_id === match.winner_player_id
-                                td: span(class='glyphicon glyphicon-ok' aria-hidden='true')
-                            else
-                                td
-        else
-            table(style='width: 100%; table-layout: fixed;')
-                tbody
-                    tr
-                        each statistic in stats
-                            td(class='text-center')
-                                div(class='player-card')
-                                    div(class='glyph')
-                                        span(class='glyphicon glyphicon-user')
-                                    div(class='playername')= players[statistic.player_id].name
-                                    div: hr
+                        - var player = players[statistic.player_id]
+                        td(class='text-center')
+                            div(class='player-card')
+                                div(class='glyph')
+                                    if player.profile_pic_url
+                                        img(class='glyphicon glyphicon-user' height='143' width='111' src=player.profile_pic_url data-player=statistic.player_id)
+                                    else
+                                        span(class='glyphicon glyphicon-user' data-player=statistic.player_id)
+                                div(class='playername'): a(href='/players/' + statistic.player_id + '/statistics')= player.name
+                                div: hr
+                                if game.game_type.id == 2
+                                    div(class='info') PPD
+                                    div= statistic.ppd.toFixed(2)
+                                    div(class='info') Score
+                                    div= player.remaining_score
+                                else
                                     div(class='info') PPD / First 9
                                     div= statistic.ppd.toFixed(2) + ' / ' + statistic.first_nine_ppd.toFixed(2)
                                     div(class='info') Accuracy Overall / 20 / 19
@@ -315,24 +304,31 @@ block content
                                         div= statistic.checkout_percentage === null ? '-' : statistic.checkout_percentage.toFixed(2)
                                     else
                                         div -
-                                    div(class='info') Scores
-                                    div= "60+: " + statistic.scores_60s_plus
-                                    div= "100+: " + statistic.scores_100s_plus
-                                    div= "140+: " + statistic.scores_140s_plus
-                                    div= "180: " + statistic.scores_180s
-                                    div(class='info') Darts Thrown
+                                div(class='info') Scores
+                                div= "60+: " + statistic.scores_60s_plus
+                                div= "100+: " + statistic.scores_100s_plus
+                                div= "140+: " + statistic.scores_140s_plus
+                                div= "180s: " + statistic.scores_180s
 
-                                    //- Get darts thrown per player
+                                //- Get darts thrown per player
+                                if game.game_type.id == 1
+                                    div(class='info') Darts Thrown
                                     - var dartsThrown = 0
                                     each visit in match.visits
                                         if statistic.player_id == visit.player_id
                                             - dartsThrown = visit.darts_thrown
                                     div= dartsThrown
-                                    div(style='margin-top: 20px;'): hr
+                                div(style='margin-top: 20px;'): hr
+                                if game.game_type.id == 1
                                     if statistic.player_id === match.winner_player_id
                                         div(class='label-winner') WINNER
                                     else
-                                        div(class='label-loser')= players[statistic.player_id].remaining_score + ' left'
+                                        div(class='label-loser')= player.remaining_score + ' left'
+                                else
+                                    if statistic.player_id === match.winner_player_id
+                                        div(class='label-winner') WINNER
+                                    else
+                                        div(class='label-loser') &nbsp;
 
     h3 Match Results
     p.
