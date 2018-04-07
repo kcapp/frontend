@@ -1,21 +1,20 @@
 extends ../layout.pug
 
 include ../mixins/dart.pug
+include ../mixins/statistics.pug
 
 block content
     h2(style='padding: 10px 0px 20px 0px;') Head to Head
 
     div(class='table-responsive')
-        table(class='table'  style='table-layout: fixed;')
+        table(id='table-player-head-to-head' class='table'  style='table-layout: fixed;')
             thead
                 tr
                     td(class='head-to-head-player1'): h2= player1.name
                     th(class='head-to-head-header'): h2 vs
                     td(class='head-to-head-player2'): h2= player2.name
                 tr
-                    td
-                    th(class='head-to-head-header'): h3 Overall
-                    td
+                    th(colspan='3' class='head-to-head-header'): h3 Overall
                 tr
                     td(class='head-to-head-player1')= player1.games_won + ' / ' + player1.games_played
                     th(class='head-to-head-header') Games Won / Played
@@ -33,9 +32,7 @@ block content
                     th(class='head-to-head-header') Matches Win %
                     td(class='head-to-head-player2')= ((player2.matches_won * 100) / player2.matches_played).toFixed(2) + '%'
                 tr
-                    td
-                    th(class='head-to-head-header'): h3 Form
-                    td
+                    th(colspan='3' class='head-to-head-header'): h3 Form
                 tr
                     mixin player_form_table(games, playerID, align)
                         table(align=align style='width: 100%; table-layout: fixed;')
@@ -63,150 +60,100 @@ block content
                     th(class='head-to-head-header') VS.
                     td(class='text-center')
                         +player_form_table(head2head.head_to_head_games, player2.id, 'left')
+                - var player1Wins = head2head.head_to_head_wins[player1.id] ? head2head.head_to_head_wins[player1.id] : 0
+                - var player2Wins = head2head.head_to_head_wins[player2.id] ? head2head.head_to_head_wins[player2.id] : 0
+                - var draws = head2head.head_to_head_wins[0] ? head2head.head_to_head_wins[0] : 0
+                - var total_games = player1Wins + player2Wins + draws
                 tr
-                    - var player1Wins = head2head.head_to_head_wins[player1.id] ? head2head.head_to_head_wins[player1.id] : 0
-                    - var player2Wins = head2head.head_to_head_wins[player2.id] ? head2head.head_to_head_wins[player2.id] : 0
-                    - var total_games = player1Wins + player2Wins
+                    td(class='head-to-head-player1')= player1Wins + ' / ' + draws + ' / ' + player2Wins
+                    th(class='head-to-head-header') W / L / D
+                    td(class='head-to-head-player2')= player2Wins + ' / ' + draws + ' / ' + player1Wins
+                tr
                     td(class='head-to-head-player1')= total_games == 0 ? '-' : (player1Wins / total_games * 100).toFixed(2) + '%'
                     th(class='head-to-head-header') VS. Win %
                     td(class='head-to-head-player2')= total_games == 0 ? '-' : (player2Wins / total_games * 100).toFixed(2) + '%'
 
-                - var player1stats301 = head2head.player_301_statistics[player1.id]
-                - var player2stats301 = head2head.player_301_statistics[player2.id]
-                if player1stats301 && player2stats301
+                mixin x01_statistics(stats1, stats2)
                     tr
-                        td
-                        th(class='head-to-head-header'): h3 301
-                        td
+                        th(colspan='3' class='head-to-head-header'): h3 501
                     tr
-                        td(class='head-to-head-player1')= player1stats301.ppd.toFixed(2)
+                        td(class='head-to-head-player1')= stats1.ppd.toFixed(2)
                         th(class='head-to-head-header') PPD
-                        td(class='head-to-head-player2')= player2stats301.ppd.toFixed(2)
+                        td(class='head-to-head-player2')= stats2.ppd.toFixed(2)
                     tr
-                        td(class='head-to-head-player1')= player1stats301.first_nine_ppd.toFixed(2)
+                        td(class='head-to-head-player1')= stats1.first_nine_ppd.toFixed(2)
                         th(class='head-to-head-header') First 9 PPD
-                        td(class='head-to-head-player2')= player2stats301.first_nine_ppd.toFixed(2)
+                        td(class='head-to-head-player2')= stats2.first_nine_ppd.toFixed(2)
                     tr
-                        td(class='head-to-head-player1')= player1stats301.checkout_percentage.toFixed(2) + '%'
+                        td(class='head-to-head-player1')= stats1.checkout_percentage.toFixed(2) + '%'
                         th(class='head-to-head-header') Checkout %
-                        td(class='head-to-head-player2')= player2stats301.checkout_percentage.toFixed(2) + '%'
+                        td(class='head-to-head-player2')= stats2.checkout_percentage.toFixed(2) + '%'
                     tr
-                        td(class='head-to-head-player1')= player1stats301.best_ppd.toFixed(2)
+                        +best_statistics(stats1.best_ppd, 'head-to-head-player1')
                         th(class='head-to-head-header') Best PPD
-                        td(class='head-to-head-player2')= player2stats301.best_ppd.toFixed(2)
+                        +best_statistics(stats2.best_ppd, 'head-to-head-player2')
                     tr
-                        td(class='head-to-head-player1')= player1stats301.best_first_nine_ppd.toFixed(2)
+                        +best_statistics(stats1.best_first_nine_ppd, 'head-to-head-player1')
                         th(class='head-to-head-header') Best First 9 PPD
-                        td(class='head-to-head-player2')= player2stats301.best_first_nine_ppd.toFixed(2)
+                        +best_statistics(stats2.best_first_nine_ppd, 'head-to-head-player2')
                     tr
-                        td(class='head-to-head-player1')= player1stats301.highest_checkout
+                        +best_statistics(stats1.highest_checkout, 'head-to-head-player1')
                         th(class='head-to-head-header') Highest Checkout
-                        td(class='head-to-head-player2')= player2stats301.highest_checkout
+                        +best_statistics(stats2.highest_checkout, 'head-to-head-player2')
                     tr
-                        td
-                        th(class='head-to-head-header'): h4 Accuracy
-                        td
+                        th(colspan='3' class='head-to-head-header'): h4 Accuracy
                     tr
                         mixin get_accuracy(statistics, clazz)
                             - var accuracy20 = statistics.accuracy_20 == null ? '-' : statistics.accuracy_20.toFixed(2)
                             - var accuracy19 = statistics.accuracy_19 == null ? '-' : statistics.accuracy_19.toFixed(2)
                             td(class=clazz)=  statistics.accuracy_overall.toFixed(2) + ' / ' + accuracy20 + ' / ' + accuracy19
-                        +get_accuracy(player1stats301, 'head-to-head-player1')
+
+                        +get_accuracy(stats1, 'head-to-head-player1')
                         th(class='head-to-head-header') Overall / 20s / 19s
-                        +get_accuracy(player2stats301, 'head-to-head-player2')
+                        +get_accuracy(stats2, 'head-to-head-player2')
                     tr
-                        td
-                        th(class='head-to-head-header'): h4 Scores
-                        td
-                        mixin scores_table(count, legs_played, align)
+                        th(colspan='3' class='head-to-head-header'): h4 Scores
+                    tr
+                        mixin scores_table(scores, legs_played, align)
                             table(class='table-player-scores' align=align)
                                 thead
                                     th Count
                                     th Per Leg
                                 tbody
                                     tr
-                                        td= count
-                                        td= count == 0 ? '-' : (count / legs_played).toFixed(2)
-                    tr
-                        td(class='head-to-head-player1'): +scores_table(player1stats301.scores_60s_plus, player1stats301.matches_played, 'right')
-                        th(class='head-to-head-header') 60+
-                        td(class='head-to-head-player2'): +scores_table(player2stats301.scores_60s_plus, player2stats301.matches_played, 'left')
-                    tr
-                        td(class='head-to-head-player1'): +scores_table(player1stats301.scores_100s_plus, player1stats301.matches_played, 'right')
-                        th(class='head-to-head-header') 100+
-                        td(class='head-to-head-player2'): +scores_table(player2stats301.scores_100s_plus, player2stats301.matches_played, 'left')
-                    tr
-                        td(class='head-to-head-player1'): +scores_table(player1stats301.scores_140s_plus, player1stats301.matches_played, 'right')
-                        th(class='head-to-head-header') 140+
-                        td(class='head-to-head-player2'): +scores_table(player2stats301.scores_140s_plus, player2stats301.matches_played, 'left')
-                    tr
-                        td(class='head-to-head-player1'): +scores_table(player1stats301.scores_180s, player1stats301.matches_played, 'right')
-                        th(class='head-to-head-header') 180+
-                        td(class='head-to-head-player2'): +scores_table(player2stats301.scores_180s, player2stats301.matches_played, 'left')
+                                        td= scores.scores_60s_plus
+                                        td= scores.scores_60s_plus == 0 ? '-' : (scores.scores_60s_plus / legs_played).toFixed(2)
+                                    tr
+                                        td= scores.scores_100s_plus
+                                        td= scores.scores_100s_plus == 0 ? '-' : (scores.scores_100s_plus / legs_played).toFixed(2)
+                                    tr
+                                        td= scores.scores_140s_plus
+                                        td= scores.scores_140s_plus == 0 ? '-' : (scores.scores_140s_plus / legs_played).toFixed(2)
+                                    tr
+                                        td= scores.scores_180s
+                                        td= scores.scores_180s == 0 ? '-' : (scores.scores_180s / legs_played).toFixed(2)
+
+                        td(class='head-to-head-player1'): +scores_table(stats1, stats1.matches_played, 'right')
+                        th(class='head-to-head-header')
+                            table(class='table-player-scores' align=align)
+                                thead
+                                    tr: th 60+
+                                    tr: th 100+
+                                    tr: th 140+
+                                    tr: th 180s
+                        td(class='head-to-head-player2'): +scores_table(stats2, stats2.matches_played, 'left')
+
+                - var player1stats301 = head2head.player_301_statistics[player1.id]
+                - var player2stats301 = head2head.player_301_statistics[player2.id]
+                if player1stats301 && player2stats301
+                    +x01_statistics(player1stats301, player2stats301)
 
                 - var player1stats501 = head2head.player_501_statistics[player1.id]
                 - var player2stats501 = head2head.player_501_statistics[player2.id]
                 if player1stats501 && player2stats501
-                    tr
-                        td
-                        th(class='head-to-head-header'): h3 501
-                        td
-                    tr
-                        td(class='head-to-head-player1')= player1stats501.ppd.toFixed(2)
-                        th(class='head-to-head-header') PPD
-                        td(class='head-to-head-player2')= player2stats501.ppd.toFixed(2)
-                    tr
-                        td(class='head-to-head-player1')= player1stats501.first_nine_ppd.toFixed(2)
-                        th(class='head-to-head-header') First 9 PPD
-                        td(class='head-to-head-player2')= player2stats501.first_nine_ppd.toFixed(2)
-                    tr
-                        td(class='head-to-head-player1')= player1stats501.checkout_percentage.toFixed(2) + '%'
-                        th(class='head-to-head-header') Checkout %
-                        td(class='head-to-head-player2')= player2stats501.checkout_percentage.toFixed(2) + '%'
-                    tr
-                        td(class='head-to-head-player1')= player1stats501.best_ppd.toFixed(2)
-                        th(class='head-to-head-header') Best PPD
-                        td(class='head-to-head-player2')= player2stats501.best_ppd.toFixed(2)
-                    tr
-                        td(class='head-to-head-player1')= player1stats501.best_first_nine_ppd.toFixed(2)
-                        th(class='head-to-head-header') Best First 9 PPD
-                        td(class='head-to-head-player2')= player2stats501.best_first_nine_ppd.toFixed(2)
-                    tr
-                        td(class='head-to-head-player1')= player1stats501.highest_checkout
-                        th(class='head-to-head-header') Highest Checkout
-                        td(class='head-to-head-player2')= player2stats501.highest_checkout
-                    tr
-                        td
-                        th(class='head-to-head-header'): h4 Accuracy
-                        td
-                    tr
-                        +get_accuracy(player1stats501, 'head-to-head-player1')
-                        th(class='head-to-head-header') Overall / 20s / 19s
-                        +get_accuracy(player2stats501, 'head-to-head-player2')
-                    tr
-                        td
-                        th(class='head-to-head-header'): h4 Scores
-                        td
-                    tr
-                        td(class='head-to-head-player1'): +scores_table(player1stats501.scores_60s_plus, player1stats501.matches_played, 'right')
-                        th(class='head-to-head-header') 60+
-                        td(class='head-to-head-player2'): +scores_table(player2stats501.scores_60s_plus, player2stats501.matches_played, 'left')
-                    tr
-                        td(class='head-to-head-player1'): +scores_table(player1stats501.scores_100s_plus, player1stats501.matches_played, 'right')
-                        th(class='head-to-head-header') 100+
-                        td(class='head-to-head-player2'): +scores_table(player2stats501.scores_100s_plus, player2stats501.matches_played, 'left')
-                    tr
-                        td(class='head-to-head-player1'): +scores_table(player1stats501.scores_140s_plus, player1stats501.matches_played, 'right')
-                        th(class='head-to-head-header') 140+
-                        td(class='head-to-head-player2'): +scores_table(player2stats501.scores_140s_plus, player2stats501.matches_played, 'left')
-                    tr
-                        td(class='head-to-head-player1'): +scores_table(player1stats501.scores_180s, player1stats501.matches_played, 'right')
-                        th(class='head-to-head-header') 180+
-                        td(class='head-to-head-player2'): +scores_table(player2stats501.scores_180s, player2stats501.matches_played, 'left')
+                    +x01_statistics(player1stats501, player2stats501)
                 tr
-                    td
-                    th(class='head-to-head-header'): h4 Visits
-                    td
+                    th(colspan='3' class='head-to-head-header'): h4 Visits
                 tr
                     mixin player_top_visits_table(visits, player, align)
                         table(class='table-player-top-visits' align=align)
@@ -227,29 +174,21 @@ block content
                     td
                         +player_top_visits_table(head2head.player_visits[player2.id], player2, 'left')
                 tr
-                    td
-                    th(class='head-to-head-header'): h4 Checkouts
-                    td
+                    th(colspan='3' class='head-to-head-header'): h4 Checkouts
                 tr
                     mixin player_top_checkouts_table(checkouts, align)
-                        table(class='table-player-top-checkouts' align=align)
-                            tbody
-                                each round in [0, 1, 2]
-                                    tr
-                                        if checkouts[round].completed
-                                            +dart_container(checkouts[round].visits[0].first_dart.value, checkouts[round].visits[0].first_dart.multiplier)
-                                            +dart_container(checkouts[round].visits[0].second_dart.value, checkouts[round].visits[0].second_dart.multiplier)
-                                            +dart_container(checkouts[round].visits[0].third_dart.value, checkouts[round].visits[0].third_dart.multiplier)
-                                        else
-                                            td
-                                            td
-                                            td
+                        td
+                            table(class='table-player-top-checkouts' align=align)
+                                tbody
+                                    each round in [0, 1, 2]
+                                        tr
+                                            if checkouts[round].completed
+                                                +dart_container(checkouts[round].visits[0].first_dart.value, checkouts[round].visits[0].first_dart.multiplier)
+                                                +dart_container(checkouts[round].visits[0].second_dart.value, checkouts[round].visits[0].second_dart.multiplier)
+                                                +dart_container(checkouts[round].visits[0].third_dart.value, checkouts[round].visits[0].third_dart.multiplier)
+                                            else
+                                                td(colspan='3')
 
-                    td
-                        +player_top_checkouts_table(head2head.player_checkouts[player1.id], 'right')
+                    +player_top_checkouts_table(head2head.player_checkouts[player1.id], 'right')
                     th
-                    td
-                        +player_top_checkouts_table(head2head.player_checkouts[player2.id], 'left')
-
-
-
+                    +player_top_checkouts_table(head2head.player_checkouts[player2.id], 'left')

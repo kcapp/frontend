@@ -222,7 +222,6 @@ block content
                         a(href='/matches/' + statistics.best_ppd.match_id + '/leg')= statistics.best_ppd.value.toFixed(2)
                         label(style='font-weight: 300;')= ' / '
                         a(href='/matches/' + statistics.best_first_nine_ppd.match_id + '/leg')= statistics.best_first_nine_ppd.value.toFixed(2)
-                    +best_statistics(statistics.best_ppd, 'number')
                     +best_statistics(statistics.best_301, 'number')
                     +best_statistics(statistics.best_501, 'number')
                     +best_statistics(statistics.best_701, 'number')

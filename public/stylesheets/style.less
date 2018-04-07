@@ -650,8 +650,8 @@ a:hover {
 }
 
 .head-to-head-header {
-    vertical-align: 'middle';
     text-align: center;
+    vertical-align: middle !important;
 }
 
 .head-to-head-player1 {
@@ -660,4 +660,11 @@ a:hover {
 
 .head-to-head-player2 {
     text-align: left;
+}
+
+#table-player-head-to-head {
+    td,
+    th {
+        padding: 0;
+    }
 }

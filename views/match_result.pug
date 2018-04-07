@@ -300,10 +300,9 @@ block content
                             td(class='text-center')
                                 div(class='player-card')
                                     div(class='glyph')
-                                        span(class="glyphicon glyphicon-user")
+                                        span(class='glyphicon glyphicon-user')
                                     div(class='playername')= players[statistic.player_id].name
-                                    div
-                                        hr
+                                    div: hr
                                     div(class='info') PPD / First 9
                                     div= statistic.ppd.toFixed(2) + ' / ' + statistic.first_nine_ppd.toFixed(2)
                                     div(class='info') Accuracy Overall / 20 / 19
@@ -321,8 +320,15 @@ block content
                                     div= "100+: " + statistic.scores_100s_plus
                                     div= "140+: " + statistic.scores_140s_plus
                                     div= "180: " + statistic.scores_180s
-                                    div(style='margin-top: 20px;')
-                                        hr
+                                    div(class='info') Darts Thrown
+
+                                    //- Get darts thrown per player
+                                    - var dartsThrown = 0
+                                    each visit in match.visits
+                                        if statistic.player_id == visit.player_id
+                                            - dartsThrown = visit.darts_thrown
+                                    div= dartsThrown
+                                    div(style='margin-top: 20px;'): hr
                                     if statistic.player_id === match.winner_player_id
                                         div(class='label-winner') WINNER
                                     else

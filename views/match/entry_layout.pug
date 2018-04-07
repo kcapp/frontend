@@ -146,6 +146,9 @@ block scripts
                         tdVisit.removeClass().addClass('uv-active-player-visits');
                         $('#submit-score-button').data('current-player-id', player.player_id);
                         label.addClass('current-player');
+                        if (player.modifiers.is_beer_game) {
+                            td.addClass('player-modifier-beer');
+                        }
                     }
                     else {
                         td.removeClass().addClass('uv-inactive-player-score');
@@ -153,11 +156,12 @@ block scripts
                         tdVisit.removeClass().addClass('uv-inactive-player-visits');
                         label.removeClass('current-player');
                         label.removeAttr('data-current-player-id');
-
-                        // Display scores as 'inactive'
-                        //$('.uv-inactive-player-visits .first').addClass('dart-score-inactive');
-                        //$('.uv-inactive-player-visits .second').addClass('dart-score-inactive');
-                        //$('.uv-inactive-player-visits .third').addClass('dart-score-inactive');
+                        if (player.modifiers.is_beer_game) {
+                            td.addClass('player-modifier-beer');
+                        }
+                        if (player.modifiers.is_vilius_visit) {
+                            td.addClass('player-modifier-vilius');
+                        }
                     }
                 }
                 $('.uv-active-player-visits .dart-score-total').html(0);
