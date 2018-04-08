@@ -4,6 +4,9 @@ include ../mixins/dart.pug
 include ../mixins/statistics.pug
 
 block append head
+    link(rel='stylesheet' type='text/css' href='/stylesheets/datatables-1.10.16.min.css')
+    script(src='/javascripts/datatables-1.10.16.min.js')
+
     script(src='/javascripts/webgl-heatmap.js')
     script(src='/javascripts/Chart.bundle-2.7.1.min.js')
 

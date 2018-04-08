@@ -3,6 +3,9 @@ extends layout.pug
 include mixins/dart.pug
 
 block append head
+    link(rel='stylesheet' type='text/css' href='/stylesheets/datatables-1.10.16.min.css')
+    script(src='/javascripts/datatables-1.10.16.min.js')
+
     script(src='/javascripts/Chart.bundle-2.7.1.min.js')
     script(src='/javascripts/webgl-heatmap.js')
     script(src='/javascripts/jquery-ui.1.12.1.min.js')

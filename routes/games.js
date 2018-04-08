@@ -6,15 +6,33 @@ var router = express.Router();
 var axios = require('axios');
 var _ = require('underscore');
 
-/* Get a list of all games */
+/* Redirect requests to /games to /games/1 */
 router.get('/', function (req, res, next) {
+    res.redirect('/games/1');
+});
+
+/* Get the given page of games */
+router.get('/:page', function (req, res, next) {
+    var limit = 25;
+    var start = req.params.page * limit;
     axios.get(req.app.locals.kcapp.api + '/game')
         .then(response => {
-            var games = response.data;
+            var total = Math.floor(response.data.length / limit);
             axios.get(req.app.locals.kcapp.api + '/player')
                 .then(response => {
                     var players = response.data;
-                    res.render('games', { games: games, players: players });
+                    axios.get(req.app.locals.kcapp.api + '/game/' + start + '/' + limit)
+                        .then(response => {
+                            var games = response.data;
+                            res.render('games', {
+                                games: games, players: players,
+                                total_pages: total, page_num: req.params.page
+                            });
+                        })
+                        .catch(error => {
+                            debug('Error when getting games: ' + error);
+                            next(error);
+                        });
                 })
                 .catch(error => {
                     debug('Error when getting players: ' + error);

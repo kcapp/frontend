@@ -2,27 +2,35 @@ extends layout.pug
 
 block append head
     script(src='/javascripts/moment-2.20.1.min.js')
+    script(src='/javascripts/jquery.twbsPagination-1.4.1.min.js')
 
 block scripts
     script.
+        var total = !{JSON.stringify(total_pages)}
+        var page = parseInt(!{JSON.stringify(page_num)})
         $(function() {
-            $('#games-list-table').DataTable({
-                searching: false,
-                pageLength: 25,
-                bLengthChange: false,
-                bInfo : false,
-                order: [[ 1,  'desc' ]]
+            $('.sync-pagination').twbsPagination({
+                totalPages: total,
+                visiblePages: 7,
+                initiateStartPageClick: false,
+                startPage: page,
+                cssStyle: '',
+                prevText: '<span aria-hidden="true">&laquo;</span>',
+                nextText: '<span aria-hidden="true">&raquo;</span>',
+                onPageClick: function (event, page) {
+                    location.href = '/games/' + page;
+                }
             });
         });
     script.
         $(function() {
-            $('#games-list-table').on('mouseup', '#continue-game-button', function (e) {
+            $('#table-games-list').on('mouseup', '#continue-game-button', function (e) {
                 openLink('/games/' + $(this).data('game'), e);
             });
-            $('#games-list-table').on('mouseup', '#spectate-game-button', function(e) {
+            $('#table-games-list').on('mouseup', '#spectate-game-button', function(e) {
                 openLink('/games/' + $(this).data('game') + '/spectate', e);
             });
-            $('#games-list-table').on('mouseup', '#view-game-button', function (e) {
+            $('#table-games-list').on('mouseup', '#view-game-button', function (e) {
                 openLink('/games/' + $(this).data('game') + '/results', e);
             });
         });
@@ -33,6 +41,7 @@ block scripts
             }
             else if (mouseEvent.which == 2) {
                 window.open(url);
+                mouseEvent.preventDefault()
             }
         }
 
@@ -42,8 +51,10 @@ block content
         p.
             Overview over all played games
 
-    div(class='table-responsive')
-        table(class='table' id='games-list-table')
+    div(class='col-md-14 text-right')
+        ul(class="sync-pagination")
+
+    table(class='table' id='table-games-list')
             thead
                 tr
                     th(hidden=true)
@@ -78,3 +89,6 @@ block content
                                 button(type='button' id='spectate-game-button' data-game=game.id class='btn btn-primary btn-block') Spectate
                             else
                                 button(type='button' id='view-game-button' data-game=game.id class='btn btn-primary btn-block') View
+
+    div(class='col-md-14 text-right')
+        ul(id='pagination-games' class="sync-pagination pagination-md")
