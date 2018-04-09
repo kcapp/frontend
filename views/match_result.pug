@@ -61,12 +61,12 @@ block append scripts
         $(function () {
             var datasets = []
             for (var i = 0; i < match.players.length; i++) {
-                var playerId = match.players[i];
+                var player = players[match.players[i]];
                 datasets.push({
-                    label: players[playerId].name,
+                    label: player.name,
                     backgroundColor: player.color,
                     borderColor: player.color,
-                    data: values[playerId],
+                    data: values[player.id],
                     fill: false
                 });
             }
