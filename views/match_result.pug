@@ -11,7 +11,6 @@ block append head
     script(src='/javascripts/jquery-ui.1.12.1.min.js')
     script(src='/javascripts/jquery.ui.touch-punch-0.2.3.min.js')
     script(src='/javascripts/moment-2.20.1.min.js')
-    script(src='/javascripts/md5.min.js')
 
 block append scripts
     script
@@ -63,11 +62,10 @@ block append scripts
             var datasets = []
             for (var i = 0; i < match.players.length; i++) {
                 var playerId = match.players[i];
-                var color = getColorForString(players[playerId].name);
                 datasets.push({
                     label: players[playerId].name,
-                    backgroundColor: color,
-                    borderColor: color,
+                    backgroundColor: player.color,
+                    borderColor: player.color,
                     data: values[playerId],
                     fill: false
                 });
@@ -340,7 +338,7 @@ block content
     if isFinished
         button(id='btn-collapse-visits' class='btn btn-primary btn-block' data-toggle='collapse' data-target='#visits-div')= isFinished ? 'Show Visits' : 'Hide Visits'
     div(id='visits-div' class=isFinished ? 'collapse' : 'collapse in')
-        table(class='table' id='match-visits-table')
+        table(class='table' id='table-match-visits')
             thead
                 tr
                     th Player
@@ -352,11 +350,11 @@ block content
                     th Thrown
                     th PPD
                     if !isFinished
-                        th(class="text-center") Options
+                        th(class='text-center') Options
             tbody
                 each visit in match.visits
                     - var visit_score = (visit.first_dart.value * visit.first_dart.multiplier) + (visit.second_dart.value * visit.second_dart.multiplier) + (visit.third_dart.value * visit.third_dart.multiplier)
-                    tr(id="visit-" + visit.id)
+                    tr(id='visit-' + visit.id)
                         td= players[visit.player_id].name
 
                         +dart_container(visit.first_dart.value, visit.first_dart.multiplier, 'first-dart-visit-' + visit.id, true)

@@ -21,7 +21,7 @@ body {
     color: black;
 }
 
-#match-visits-table {
+#table-match-visits {
     tr {
         border-bottom: 1px solid #ddd;
     }
@@ -29,6 +29,11 @@ body {
         height: 40px;
         vertical-align: baseline;
     }
+    label {
+        display: block;
+        margin-bottom: 0px;
+    }
+    .center-table
 }
 
 #players-table {
@@ -281,17 +286,6 @@ a:hover {
     .center-table
 }
 
-#match-visits-table {
-    label {
-        display: block;
-        margin-bottom: 0px;
-    }
-    td {
-        vertical-align: baseline;
-    }
-    .center-table
-}
-
 #match-hits-table {
     label {
         display: block;
@@ -477,6 +471,7 @@ a:hover {
     }
 }
 
+#table-player,
 #table-overview,
 #table-checkouts {
     width: 100%;
@@ -561,10 +556,6 @@ a:hover {
     font-style: italic;
 }
 
-#player-checkouts-table {
-    margin-bottom: 0px;
-}
-
 .table-player-top-checkouts,
 .table-player-top-visits,
 .table-player-scores {
@@ -581,6 +572,7 @@ a:hover {
 
 #table-player-checkouts,
 #table-player-visits,
+#table-player-checkouts-details,
 #table-player-hits {
     width: 100%;
     label {
@@ -672,5 +664,12 @@ a:hover {
     td,
     th {
         padding: 0;
+    }
+}
+
+#table-player-checkouts-details {
+    td {
+        padding-left: 1px;
+        padding-right: 1px;
     }
 }

@@ -83,9 +83,9 @@ block content
                     th(class='head-to-head-header') VS. Win %
                     td(class='head-to-head-player2')= total_games == 0 ? '-' : (player2Wins / total_games * 100).toFixed(2) + '%'
 
-                mixin x01_statistics(stats1, stats2)
+                mixin x01_statistics(header, stats1, stats2)
                     tr
-                        th(colspan='3' class='head-to-head-header'): h3 501
+                        th(colspan='3' class='head-to-head-header'): h3= header
                     tr
                         td(class='head-to-head-player1')= stats1.ppd.toFixed(2)
                         th(class='head-to-head-header') PPD
@@ -157,12 +157,12 @@ block content
                 - var player1stats301 = head2head.player_301_statistics[player1.id]
                 - var player2stats301 = head2head.player_301_statistics[player2.id]
                 if player1stats301 && player2stats301
-                    +x01_statistics(player1stats301, player2stats301)
+                    +x01_statistics('301', player1stats301, player2stats301)
 
                 - var player1stats501 = head2head.player_501_statistics[player1.id]
                 - var player2stats501 = head2head.player_501_statistics[player2.id]
                 if player1stats501 && player2stats501
-                    +x01_statistics(player1stats501, player2stats501)
+                    +x01_statistics('501', player1stats501, player2stats501)
                 tr
                     th(colspan='3' class='head-to-head-header'): h4 Visits
                 tr

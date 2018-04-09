@@ -1,8 +1,3 @@
-function getColorForString(str) {
-    var hash = md5(str);
-    return "#" + hash.substring(hash.length - 6, hash.length);
-}
-
 function getChartConfig(title, type, xAxisLabel, yAxisLabel, lables, datasets) {
     var config = {
         type: type,

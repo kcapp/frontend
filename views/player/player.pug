@@ -29,7 +29,7 @@ block scripts
             $('#table-player-checkouts').DataTable({
                 searching: false, bInfo : false, bLengthChange: false,
                 pageLength: 10,
-                order: [[ 0,  'desc' ]],
+                order: [[ 0,  'asc' ]],
                 columnDefs: [ { orderable: false, targets: 3 } ]
             });
         });
@@ -139,6 +139,7 @@ block content
 
     ul(class='nav nav-pills')
         li(role='presentation' class='active'): a(href='#overview' data-toggle='tab') Overview
+        li(role='presentation'): a(href='#player' data-toggle='tab') Player
         li(role='presentation'): a(href='#highscores' data-toggle='tab') High scores
         li(role='presentation'): a(href='#hits' data-toggle='tab') Hits
         li(role='presentation'): a(href='#heatmap' data-toggle='tab') Heatmap
@@ -192,6 +193,33 @@ block content
                     td(class='olabel') Accuracy 20s
                     td(class='olabel') Accuracy 19s
 
+        div(role='tabpanel' id='player' class='tab-pane')
+            table(id='table-player' style='width: 100%;')
+                tr
+                    td(class='glyph')
+                        span(class='glyphicon glyphicon-user' aria-hidden='true')
+                    td(class='glyph')
+                        span(class='glyphicon glyphicon-bullhorn' aria-hidden='true')
+                    td(class='glyph')
+                        span(class='glyphicon glyphicon-star-empty' aria-hidden='true')
+                    td(class='glyph')
+                        span(class='glyphicon glyphicon-picture' aria-hidden='true')
+                tr
+                    td(class='number')= player.name
+                    td(class='number')= player.nickname ? player.nickname : '-'
+                    td(class='number'): label(style='background-color: ' + player.color + '; color: ' + player.color + ';')= player.color
+                    td(class='number')
+                        if player.profile_pic_url
+                            img(class='glyphicon glyphicon-user' height='130' width='98' src=player.profile_pic_url)
+                        else
+                            span(class='glyphicon glyphicon-user')
+                tr
+                    td(class='olabel') Name
+                    td(class='olabel') Nickname
+                    td(class='olabel') Color
+                    td(class='olabel') Player
+
+
         div(role='tabpanel' id='highscores' class='tab-pane')
             table(id='table-highscores' style='width: 100%;')
                 tr
@@ -235,7 +263,7 @@ block content
                     td(class='olabel') Best 701
 
         div(role='tabpanel' id='hits' class='tab-pane')
-            table(id='table-player-hits' style='width: 100%;')
+            table(id='table-player-hits')
                 thead
                     tr
                         th Dart
@@ -265,7 +293,7 @@ block content
                 canvas(id='dartboard-heatmap')
 
         div(role='tabpanel' id='visits' class='tab-pane')
-            table(id='table-player-visits' style='width: 100%;')
+            table(id='table-player-visits')
                 thead
                     tr
                         th Vist
@@ -299,7 +327,7 @@ block content
                 tr
                     td(class='olabel') Checkout %
                     td(class='olabel') Highest Checkout
-            table(id='table-player-checkouts' style='width: 100%;')
+            table(id='table-player-checkouts')
                 thead
                     tr
                         th Checkout
@@ -316,7 +344,8 @@ block content
                                 td(data-order=0): span(class='glyphicon glyphicon-remove' aria-hidden='true')
                             td= checkout.count
                             if checkout.visits
-                                td: table(class='table')
+                                td(width='70%')
+                                    table(id='table-player-checkouts-details')
                                         thead
                                             tr
                                                 th(colspan='3') Visits
@@ -327,9 +356,9 @@ block content
                                                     +dart_container(visit.first_dart.value, visit.first_dart.multiplier)
                                                     +dart_container(visit.second_dart.value, visit.second_dart.multiplier)
                                                     +dart_container(visit.third_dart.value, visit.third_dart.multiplier)
-                                                    td= visit.count
+                                                    td(width='10%')= visit.count
                             else
-                                td
+                                td -
 
         div(role='tabpanel' id='progression' class='tab-pane')
             div(style='width: 100%')

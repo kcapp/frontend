@@ -1,22 +1,28 @@
-//- Mixin for creating a <label> inside a <td> displaying a dart throw
-mixin dart_container(value, multiplier, id, addSelector)
+
+//- Mixin for creating a <label> displaying a dart thrown
+mixin dart_label(value, multiplier, id)
+        if multiplier == 3
+            label(id=id class='dart-score-triple')= 'T-' + value
+        else if multiplier == 2
+            if value == 25
+                label(id=id class='dart-score-double') Bull
+            else
+                label(id=id class='dart-score-double')= 'D-' + value
+        else
+            if value == 0
+                label(id=id class='dart-score-single') Miss
+            else if value == 25
+                label(id=id class='dart-score-single') Bull
+            else if value
+                label(id=id class='dart-score-single')= value
+
+
+//- Mixin for creating a <label> inside a <td> displaying a dart thrown
+mixin dart_container(value, multiplier, id, addSelector, clazz)
     - var labelID = id === undefined ? undefiend : id + '-label';
 
     td(id=id class='col-sm-2 dart-score-container no-border' data-order=value + multiplier data-multiplier=multiplier data-score=value)
-        if multiplier == 3
-            label(id=labelID class='dart-score-triple')= 'T-' + value
-        else if multiplier == 2
-            if value == 25
-                label(id=labelID class='dart-score-double') Bull
-            else
-                label(id=labelID class='dart-score-double')= 'D-' + value
-        else
-            if value == 0
-                label(id=labelID class='dart-score-single') Miss
-            else if value == 25
-                label(id=labelID class='dart-score-single') Bull
-            else if value
-                label(id=labelID class='dart-score-single')= value
+        +dart_label(value, multiplier, labelID)
         if (addSelector)
             +dart_selector(id)
 

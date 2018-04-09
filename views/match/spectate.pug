@@ -115,7 +115,7 @@ block scripts
                         "<td class='col-sm-2 dart-score-container no-border'><label class='" + getDartCSS(visit.third_dart) + "'>" + getScoreString(visit.third_dart) + "</label></td>" +
                         "<td><label>" + total + "</label></td>" +
                     "</tr>";
-                $('#match-visits-table > tbody > tr:first').after(html);
+                $('#table-match-visits > tbody > tr:first').after(html);
             });
 
             socket.on('match_finished', function(data) {
@@ -123,7 +123,7 @@ block scripts
             });
 
             // Reverse the rows in the table to show newest throws first
-            var tbody = $('#match-visits-table tbody');
+            var tbody = $('#table-match-visits tbody');
             tbody.html($('tr', tbody).get().reverse());
 
             // Add a row to the top of the table which contains the current throw for a given player
@@ -136,7 +136,7 @@ block scripts
                         "<td class='col-sm-2dart-score-container no-border'><label id='third' text='0'></label></td>" +
                         "<td><label id='total' text='0'>0</label></td>" +
                     "</tr>";
-                $('#match-visits-table').prepend(html);
+                $('#table-match-visits').prepend(html);
             }
 
             function getDartCSS(dart) {
@@ -182,7 +182,7 @@ block content
 
     h3 Visits
     div(class='table-responsive')
-        table(class='table table-scores' id='match-visits-table' style='table-layout: fixed;')
+        table(class='table table-scores' id='table-match-visits' style='table-layout: fixed;')
             thead
                 tr
                     th Player

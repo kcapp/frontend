@@ -7,17 +7,17 @@ var axios = require('axios');
 var _ = require('underscore');
 
 /* Redirect requests to /games to /games/1 */
-router.get('/', function (req, res, next) {
-    res.redirect('/games/1');
+router.get('/', function (req, res) {
+    res.redirect('/games/page/1');
 });
 
 /* Get the given page of games */
-router.get('/:page', function (req, res, next) {
+router.get('/page/:page', function (req, res, next) {
     var limit = 25;
-    var start = req.params.page * limit;
+    var start = (req.params.page - 1) * limit;
     axios.get(req.app.locals.kcapp.api + '/game')
         .then(response => {
-            var total = Math.floor(response.data.length / limit);
+            var total = Math.ceil(response.data.length / limit);
             axios.get(req.app.locals.kcapp.api + '/player')
                 .then(response => {
                     var players = response.data;
