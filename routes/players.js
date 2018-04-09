@@ -30,6 +30,17 @@ router.post('/', function (req, res, next) {
         });
 });
 
+/* Edit player */
+router.put('/:id', function (req, res, next) {
+    axios.put(req.app.locals.kcapp.api + '/player/' + req.params.id, req.body)
+        .then(() => {
+            res.redirect(303, '/players');
+        }).catch(error => {
+            debug('Error when editing player: ' + error);
+            next(error);
+        });
+});
+
 /* Get specific statistics for a given player */
 router.get('/:id/statistics', function (req, res, next) {
     var playerId = req.params.id;
