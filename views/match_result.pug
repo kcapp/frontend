@@ -18,22 +18,27 @@ block append scripts
     script.
         var match = !{JSON.stringify(match)}
         var game = !{JSON.stringify(game)}
-        var players = !{JSON.stringify(players)}
+        var matchPlayers = !{JSON.stringify(match_players)}
+        var playersMap = !{JSON.stringify(players)}
         var visits = match.visits;
 
+        var chartMaxValue = game.game_type.id == 1 || game.game_type.id == 3 ? match.starting_score : 0;
         var labels = [];
         var values = { }
-        for (var i = 0; i < match.players.length; i++) {
-            var playerId = match.players[i];
-            values[playerId] = [ match.starting_score ];
+        for (var i = 0; i < matchPlayers.length; i++) {
+            var player = matchPlayers[i];
+            var score = match.starting_score + player.handicap
+            values[player.player_id] = [ score ];
+            if (score > chartMaxValue) {
+                chartMaxValue = score;
+            }
         }
         var round = 0;
         labels.push(round);
 
-        var chartMaxValue = game.game_type.id == 1 ? match.starting_score : 0;
         for (var i = 0; i < visits.length; i++) {
             var visit = visits[i];
-            if (i % match.players.length === 0) {
+            if (i % matchPlayers.length === 0) {
                 round++;
                 labels.push(round);
             }
@@ -60,8 +65,8 @@ block append scripts
 
         $(function () {
             var datasets = []
-            for (var i = 0; i < match.players.length; i++) {
-                var player = players[match.players[i]];
+            for (var i = 0; i < matchPlayers.length; i++) {
+                var player = playersMap[matchPlayers[i].player_id];
                 datasets.push({
                     label: player.name,
                     backgroundColor: player.color,

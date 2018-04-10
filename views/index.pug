@@ -17,17 +17,26 @@ block scripts
             $('#all-players-list').on('click', '.player-name-label', function() {
                 var sortablePlayerList = $('#sortable-player-list');
                 $(this).parent().appendTo(sortablePlayerList).removeClass('float-left');
+
+                if ($('#game-type-select').val() == 3) {
+                    $(this).closest('.form-check').find('.input-player-handicap').show();
+                }
             });
 
             $('#sortable-player-list').on('click', '.player-name-label', function() {
                 var allPlayersList = $('#all-players-list');
                 $(this).parent().appendTo(allPlayersList).addClass('float-left');
+                $(this).closest('.form-check').find('.input-player-handicap').hide();
             });
 
             $('#game-type-select').on('change', function() {
+                $('#sortable-player-list .input-player-handicap').hide();
                 if (this.value == 2) {
                     $('#match-type-select').prop('disabled', true);
                     $('#match-type-select').val('0');
+                }
+                else if (this.value == 3) {
+                    $('#sortable-player-list .input-player-handicap').show();
                 }
                 else {
                     $('#match-type-select').prop('disabled', false);
@@ -38,6 +47,7 @@ block scripts
             $('#create-match-button').click(function() {
                 $(this).blur();
             });
+
             $('#start-match-button').click(function(e) {
                 var stake = parseInt($('#game-stake-select').val());
                 var body = {
@@ -45,11 +55,15 @@ block scripts
                     game_type: parseInt($('#game-type-select').val()),
                     game_mode: parseInt($('#game-mode-select').val()),
                     game_stake: stake === 0 ? null : stake,
-                    players: []
-
+                    players: [],
+                    player_handicaps: {}
                 }
-                $('#sortable-player-list :input').each(function() {
-                    body.players.push(parseInt($(this).val()));
+                $('#sortable-player-list .form-check-input').each(function() {
+                    var playerId = parseInt($(this).val());
+                    body.players.push(playerId);
+                    if (body.game_type === 3) {
+                        body.player_handicaps[playerId] = parseInt($(this).closest('.form-check').find('.input-player-handicap').val());
+                    }
                 });
                 executePost(window.location.origin + '/games/new', JSON.stringify(body), 'application/json',
                     function(response){
@@ -102,6 +116,7 @@ block content
                             div(class='form-check float-left' style='padding-bottom: 10px;')
                                 input(style='display: none;' type='checkbox' name='players' class='form-check-input' id='checkbox-player-' + player.id value=player.id)
                                 label(style='margin-left: 10px; width: 150px;' class='player-name-label form-check-label btn btn-primary' for='checkbox-player-' + player.id)= player.name
+                                input(style='margin-left: 10px; width: 50px;' type='textbox' name='player_handicap' class='form input-player-handicap' hidden='true' value=0)
 
                     div(class='form-group' style='clear: both')
                         label(for='match-type-select') Starting Score

@@ -125,6 +125,7 @@ router.post('/new', function (req, res, next) {
         game_type: { id: req.body.game_type },
         game_mode: { id: req.body.game_mode },
         players: players.map(Number),
+        player_handicaps: req.body.player_handicaps,
         matches: [{ starting_score: req.body.starting_score }]
     }
     axios.post(req.app.locals.kcapp.api + '/game', body)
