@@ -31,16 +31,15 @@ block scripts
 
             $('#game-type-select').on('change', function() {
                 $('#sortable-player-list .input-player-handicap').hide();
+                $('#match-type-select').prop('disabled', false);
+                $('#match-type-select').val('501');
+
                 if (this.value == 2) {
                     $('#match-type-select').prop('disabled', true);
                     $('#match-type-select').val('0');
                 }
                 else if (this.value == 3) {
                     $('#sortable-player-list .input-player-handicap').show();
-                }
-                else {
-                    $('#match-type-select').prop('disabled', false);
-                    $('#match-type-select').val('501');
                 }
             });
 
@@ -77,9 +76,21 @@ block scripts
         });
     script.
         var playerId = '';
+        $(document).keydown(function (e) {
+            if (e.key === 'Backspace' || e.key === ',') {
+                // Remove last player if Backspace or DEL is pressed
+                $('#sortable-player-list').find('.player-name-label').last().trigger('click');
+                e.preventDefault();
+            }
+        });
         $(document).keypress(function (e) {
             switch (e.key) {
+                // Add players by entering player id and ENTER
                 case 'Enter':
+                    if (playerId == '00') {
+                        $('#start-match-button').trigger('click');
+                        return;
+                    }
                     var playerChck = $('#checkbox-player-' + playerId);
                     if (playerChck.length) {
                         playerChck.parent().children('.player-name-label').trigger('click');
@@ -96,6 +107,34 @@ block scripts
                 case '8': playerId += '8'; break;
                 case '9': playerId += '9'; break;
                 case '0': playerId += '0'; break;
+                case '/':
+                    var next = $('#match-type-select option:selected').next();
+                    if (next.length === 0) {
+                        next = $('#match-type-select').children('option:first');
+                    }
+                    next.prop('selected', true);
+                    break;
+                case '*':
+                    var next = $('#game-type-select option:selected').next();
+                    if (next.length === 0) {
+                        next = $('#game-type-select').children('option:first');
+                    }
+                    next.prop('selected', true);
+                    break;
+                case '-':
+                    var next = $('#game-mode-select option:selected').next();
+                    if (next.length === 0) {
+                        next = $('#game-mode-select').children('option:first');
+                    }
+                    next.prop('selected', true);
+                    break;
+                case '+':
+                    var next = $('#game-stake-select option:selected').next();
+                    if (next.length === 0) {
+                        next = $('#game-stake-select').children('option:first');
+                    }
+                    next.prop('selected', true);
+                    break;
                 default: /* NOOP */; break;
             }
         });
