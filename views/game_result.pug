@@ -64,7 +64,7 @@ block content
             tr
                 td(class='col-sm-2') Checkout%
                 each stat in stats
-                    td= stat.checkout_percentage === 0 ? '-' : stat.checkout_percentage.toFixed(2) + '%'
+                    td= stat.checkout_percentage === null ? '-' : stat.checkout_percentage.toFixed(2) + '%'
             tr
                 td(class='col-sm-2') Accuracy (All/20/19)
                 each stat in stats

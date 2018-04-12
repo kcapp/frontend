@@ -41,7 +41,7 @@ block content
                 tr
                     td(class='col-sm-2') Checkout%
                     each stats in statistics
-                        td= stats.checkout_percentage.toFixed(2) + '%'
+                        td= stats.checkout_percentage === null ? '-' : stats.checkout_percentage.toFixed(2) + '%'
                 tr
                     td(class='col-sm-2') Highest Checkout
                     each stats in statistics
@@ -55,9 +55,9 @@ block content
                     each stats in statistics
                         +best_statistics(stats.best_501)
                 tr
-                    td(class='separator-row')
-                        each stats in statistics
-                            th(class='separator-row') High Scores
+                    th(class='separator-row') High Scores
+                    each stats in statistics
+                        td
                 tr
                     td(class='col-sm-2') 60+
                     each stats in statistics
@@ -75,9 +75,9 @@ block content
                     each stats in statistics
                         td= stats.scores_180s
                 tr
-                    td(class='separator-row')
-                        each stats in statistics
-                            th(class='separator-row') Accuracy
+                    th(class='separator-row') Accuracy
+                    each stats in statistics
+                        td
                 tr
                     td(class='col-sm-2') Overall
                     each stats in statistics

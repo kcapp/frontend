@@ -69,7 +69,7 @@ block content
                                 td(class='text-center')= stats.games_won === undefined ? 0 : stats.games_won
                                 td(class='text-right')= stats.games_won === undefined ? '0.00%' : (stats.games_won / stats.games_played * 100).toFixed(2) + '%'
                                 td(class='text-center')= stats.ppd.toFixed(2) + ' / ' + stats.first_nine_ppd.toFixed(2)
-                                td(class='text-right')= stats.checkout_percentage.toFixed(2) + ' %'
+                                td(class='text-right')= stats.checkout_percentage === null ? '-' : stats.checkout_percentage.toFixed(2) + ' %'
                                 td(class='text-right')= (stats.scores_60s_plus / stats.games_played).toFixed(2)
                                 td(class='text-right')= (stats.scores_100s_plus / stats.games_played).toFixed(2)
                                 td(class='text-right')= (stats.scores_140s_plus / stats.games_played).toFixed(2)

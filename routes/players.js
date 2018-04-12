@@ -91,7 +91,7 @@ router.get('/compare', function (req, res, next) {
             var players = response.data;
             axios.get(req.app.locals.kcapp.api + '/player/compare?id=' + playerIds.join("&id="))
                 .then(response => {
-                    var statistics = response.data;
+                    var statistics = _.sortBy(response.data, function (stat) { return players[stat.player_id].name; });
                     res.render('player/players_comparison', { players: players, statistics: statistics });
                 }).catch(error => {
                     debug('Error when comparing players: ' + error);
