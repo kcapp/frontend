@@ -325,7 +325,7 @@ block content
                                             - dartsThrown = visit.darts_thrown
                                     div= dartsThrown
                                 div(style='margin-top: 20px;'): hr
-                                if game.game_type.id == 1
+                                if game.game_type.id == 1 || game.game_type.id == 3
                                     if statistic.player_id === match.winner_player_id
                                         div(class='label-winner') WINNER
                                     else
