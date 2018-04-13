@@ -305,11 +305,12 @@ block content
                                     - var accuracy_20 = statistic.accuracy_20 === null ? '-' : statistic.accuracy_20.toFixed(2)
                                     - var accuracy_19 = statistic.accuracy_19 === null ? '-' : statistic.accuracy_19.toFixed(2)
                                     div= statistic.accuracy_overall.toFixed(2) + ' / ' + accuracy_20 + ' / ' + accuracy_19
-                                    div(class='info') Checkout %
+                                    div(class='info') Checkout % / Attempts
                                     if statistic.player_id === match.winner_player_id
-                                        div= statistic.checkout_percentage === null ? '-' : statistic.checkout_percentage.toFixed(2)
+                                        div= statistic.checkout_percentage.toFixed(2) + '% / ' + statistic.checkout_attempts
                                     else
-                                        div -
+                                        div= '- / ' + (statistic.checkout_attempts ? statistic.checkout_attempts : '-')
+
                                 div(class='info') Scores
                                 div= "60+: " + statistic.scores_60s_plus
                                 div= "100+: " + statistic.scores_100s_plus
