@@ -175,7 +175,7 @@ block content
                 tr
                     td(class='number')= statistics.first_nine_ppd.toFixed(2)
                     td(class='number')= statistics.ppd.toFixed(2)
-                    td(class='number')= player.games_won === 0 ? '-' : statistics.checkout_percentage.toFixed(2) + '%'
+                    td(class='number')= statistics.checkout_percentage === 0 ? '-' : statistics.checkout_percentage.toFixed(2) + '%'
                 tr
                     td(class='olabel') First 9 PPD
                     td(class='olabel') Overall PPD
@@ -322,7 +322,7 @@ block content
                     td(class='glyph')
                         span(class="glyphicon glyphicon-screenshot" aria-hidden="true")
                 tr
-                    td(class='number')= player.games_won === 0 ? '-' : statistics.checkout_percentage.toFixed(2) + '%'
+                    td(class='number')= statistics.checkout_percentage === 0 ? '-' : statistics.checkout_percentage.toFixed(2) + '%'
                     +best_statistics(statistics.highest_checkout, 'number')
                 tr
                     td(class='olabel') Checkout %
