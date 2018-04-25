@@ -23,6 +23,18 @@ block content
                     th(class='head-to-head-header'): h2 vs
                     td(class='head-to-head-player2'): h2= player2.name
                 tr
+                    td(class='head-to-head-player1')
+                        if player1.profile_pic_url
+                            img(class='glyphicon glyphicon-user' height='130' width='98' src=player1.profile_pic_url)
+                        else
+                            span(class='glyphicon glyphicon-user')
+                    th(class='head-to-head-header')
+                    td(class='head-to-head-player2')
+                        if player2.profile_pic_url
+                            img(class='glyphicon glyphicon-user' height='130' width='98' src=player2.profile_pic_url)
+                        else
+                            span(class='glyphicon glyphicon-user')
+                tr
                     th(colspan='3' class='head-to-head-header'): h3 Overall
                 tr
                     td(class='head-to-head-player1')= player1.games_won + ' / ' + player1.games_played
@@ -83,9 +95,9 @@ block content
                     th(class='head-to-head-header') VS. Win %
                     td(class='head-to-head-player2')= total_games == 0 ? '-' : (player2Wins / total_games * 100).toFixed(2) + '%'
 
-                mixin x01_statistics(header, stats1, stats2)
+                mixin x01_statistics(x01, stats1, stats2)
                     tr
-                        th(colspan='3' class='head-to-head-header'): h3= header
+                        th(colspan='3' class='head-to-head-header'): h3= x01
                     tr
                         td(class='head-to-head-player1')= stats1.ppd.toFixed(2)
                         th(class='head-to-head-header') PPD
@@ -98,6 +110,15 @@ block content
                         td(class='head-to-head-player1')= stats1.checkout_percentage.toFixed(2) + '%'
                         th(class='head-to-head-header') Checkout %
                         td(class='head-to-head-player2')= stats2.checkout_percentage.toFixed(2) + '%'
+                    tr
+                        if x01 == 301
+                            +best_statistics(stats1.best_301, 'head-to-head-player1')
+                            th(class='head-to-head-header') Best Leg
+                            +best_statistics(stats2.best_301, 'head-to-head-player2')
+                        else if x01 == 501
+                            +best_statistics(stats1.best_501, 'head-to-head-player1')
+                            th(class='head-to-head-header') Best Leg
+                            +best_statistics(stats2.best_501, 'head-to-head-player2')
                     tr
                         +best_statistics(stats1.best_ppd, 'head-to-head-player1')
                         th(class='head-to-head-header') Best PPD
@@ -157,12 +178,12 @@ block content
                 - var player1stats301 = head2head.player_301_statistics[player1.id]
                 - var player2stats301 = head2head.player_301_statistics[player2.id]
                 if player1stats301 && player2stats301
-                    +x01_statistics('301', player1stats301, player2stats301)
+                    +x01_statistics(301, player1stats301, player2stats301)
 
                 - var player1stats501 = head2head.player_501_statistics[player1.id]
                 - var player2stats501 = head2head.player_501_statistics[player2.id]
                 if player1stats501 && player2stats501
-                    +x01_statistics('501', player1stats501, player2stats501)
+                    +x01_statistics(501, player1stats501, player2stats501)
                 tr
                     th(colspan='3' class='head-to-head-header'): h4 Visits
                 tr

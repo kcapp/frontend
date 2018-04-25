@@ -28,7 +28,7 @@ function getStatistics(from, to, req, res, next) {
             axios.get(req.app.locals.kcapp.api + '/statistics/x01/' + from + '/' + to)
                 .then(response => {
                     var statisticsX01 = response.data;
-                    statisticsX01 = sort(statisticsX01);
+                    //statisticsX01 = sort(statisticsX01);
                     statisticsX01.from = from
                     statisticsX01.to = to
                     axios.get(req.app.locals.kcapp.api + '/statistics/shootout/' + from + '/' + to)

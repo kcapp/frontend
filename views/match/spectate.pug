@@ -66,7 +66,6 @@ block scripts
             });
 
             socket.on('score_update', function(data) {
-                console.log(data);
                 var players = data.players;
                 for (key in players) {
                     var player = players[key];
@@ -74,13 +73,11 @@ block scripts
                     var playerTD = $('#player-score-' + player.player_id);
                     var playerLegsTD = $('#player-legs-' + player.player_id);
                     playerLabel.text(player.current_score);
-                    //$('#player-id-' + player.id + '-ppd').text(player.ppd.toFixed(2));
                     if (player.is_current_player) {
                         playerTD.removeClass('uv-inactive-player-score');
                         playerTD.addClass('uv-active-player-score');
                         playerLegsTD.removeClass('uv-inactive-player-legs');
                         playerLegsTD.addClass('uv-active-player-legs');
-                        $('#current-player').text(player.name);
                     } else {
                         playerTD.addClass('uv-inactive-player-score');
                         playerTD.removeClass('uv-active-player-score');
@@ -90,11 +87,15 @@ block scripts
                 }
                 // Set round number
                 $('#round-number').text('R' + (Math.floor(data.match.visits.length / data.match.players.length) + 1));
+                $('#current-player').text(playersMap[data.match.current_player_id].name);
 
                 // Reset UI elements
                 $('#first').text('');
+                $('#first').removeClass();
                 $('#second').text('');
+                $('#second').removeClass();
                 $('#third').text('');
+                $('#third').removeClass();
                 $('#total').text(0);
 
                 // Update the visits table
@@ -133,13 +134,16 @@ block scripts
                         "<td id='current-player' style='vertical-align: baseline;'>" + playersMap[match.current_player_id].name + "</td>" +
                         "<td class='col-sm-2 dart-score-container no-border'><label id='first' text='0'></label></td>" +
                         "<td class='col-sm-2 dart-score-container no-border'><label id='second' text='0'></label></td>" +
-                        "<td class='col-sm-2dart-score-container no-border'><label id='third' text='0'></label></td>" +
+                        "<td class='col-sm-2 dart-score-container no-border'><label id='third' text='0'></label></td>" +
                         "<td><label id='total' text='0'>0</label></td>" +
                     "</tr>";
                 $('#table-match-visits').prepend(html);
             }
 
             function getDartCSS(dart) {
+                if (dart.value === null) {
+                    return '';
+                }
                 switch (dart.multiplier) {
                     case 3: return 'dart-score-triple';
                     case 2: return 'dart-score-double';
