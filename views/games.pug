@@ -59,6 +59,7 @@ block content
                 tr
                     th(hidden=true)
                     th Start Time
+                    th Venue
                     th Mode
                     th type
                     th Players
@@ -66,9 +67,16 @@ block content
                     th Results
             tbody
                 each game in games
+                    - var isLive = moment.duration(moment().diff(game.last_throw_time)).asMinutes().toFixed() < 2
                     tr
                         th(hidden='true' scope='row')= game.id
-                        td(class='col-sm-2')= moment(game.created_at).format('YYYY-MM-DD HH:mm:ss')
+                        td(class='col-sm-2')
+                            div(style='display: inline-block; padding-right: 6px')= moment(game.created_at).format('YYYY-MM-DD HH:mm:ss')
+                            if isLive
+                                label(class='label label-info' style='line-height: inherit;') Live
+                        td(class='col-sm-1')
+                            if game.venue
+                                div= game.venue.name
                         td(class='col-sm-1')= game.game_type.name
                         td(class='col-sm-1')= game.game_mode.name
                         td(class='col-sm-1')
@@ -78,7 +86,7 @@ block content
                         if game.is_finished
                             td(class='col-sm-1')
                                 if game.winner_id === null
-                                    div: span(class='label label-info' style='line-height: inherit;') Draw
+                                    div: span(class='label label-default' style='line-height: inherit;') Draw
                                 else
                                     div: span(class='label label-success' style='line-height: inherit;')= players[game.winner_id].name
                         else

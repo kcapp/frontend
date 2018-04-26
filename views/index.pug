@@ -7,6 +7,11 @@ block append head
 block scripts
     script.
         $(function () {
+            if (localStorage.kcapp_venue) {
+                // Set venue from localstorage on page load
+                $('#venue-select').val(parseInt(localStorage.kcapp_venue))
+            }
+
             $('#sortable-player-list').sortable({
                 stop: function(event, ui) {
                     $( event.originalEvent.target ).one('click', function(e){ e.stopImmediatePropagation(); } );
@@ -49,11 +54,13 @@ block scripts
 
             $('#start-match-button').click(function(e) {
                 var stake = parseInt($('#game-stake-select').val());
+                var venue = parseInt($('#venue-select').val());
                 var body = {
                     starting_score: parseInt($('#match-type-select').val()),
                     game_type: parseInt($('#game-type-select').val()),
                     game_mode: parseInt($('#game-mode-select').val()),
                     game_stake: stake === 0 ? null : stake,
+                    venue: venue,
                     players: [],
                     player_handicaps: {}
                 }
@@ -66,6 +73,8 @@ block scripts
                 });
                 executePost(window.location.origin + '/games/new', JSON.stringify(body), 'application/json',
                     function(response){
+                        // Store venue in localstorage so it doesn't have to be selected each time
+                        localStorage.setItem('kcapp_venue', venue);
                         location.href = 'matches/' + response.current_match_id
                     }, function(error) {
                         console.log(error);
@@ -183,5 +192,12 @@ block content
                             option(value=0) -
                             each oweType in owe_types
                                 option(value=oweType.id)= oweType.item
+
+                    div(class='form-group')
+                        label(for='game-stake-select') Venue
+                        select(class='form-control' name='venue' id='venue-select')
+                            option(value=0) -
+                            each venue in venues
+                                option(value=venue.id)= venue.name
 
                     button(type='submit' form='new-match-form' class='btn btn-primary' id='start-match-button' ) Start

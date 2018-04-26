@@ -21,7 +21,17 @@ router.get('/', function (req, res, next) {
                             axios.get(req.app.locals.kcapp.api + '/game/types')
                                 .then(response => {
                                     var gameTypes = response.data;
-                                    res.render('index', { players: players, game_modes: gameModes, game_types: gameTypes, owe_types: oweTypes });
+                                    axios.get(req.app.locals.kcapp.api + '/venue')
+                                        .then(response => {
+                                            var venues = response.data;
+                                            res.render('index', {
+                                                players: players, game_modes: gameModes,
+                                                game_types: gameTypes, owe_types: oweTypes, venues: venues
+                                            });
+                                        }).catch(error => {
+                                            debug('Error when getting venues: ' + error);
+                                            next(error);
+                                        });
                                 }).catch(error => {
                                     debug('Error when getting owe types: ' + error);
                                     next(error);
