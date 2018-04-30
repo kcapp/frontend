@@ -1,4 +1,4 @@
-var debug = require('debug')('kcapp:matches');
+var debug = require('debug')('kcapp:legs');
 
 const express = require('express');
 const router = express.Router();
@@ -6,29 +6,29 @@ const _ = require('underscore');
 
 const axios = require('axios');
 
-/* Render the match view */
+/* Render the leg view */
 router.get('/:id', function (req, res, next) {
-    var pugView = 'match/entry_x01.pug';
+    var pugView = 'leg/entry_x01.pug';
     axios.get(req.app.locals.kcapp.api + '/player')
         .then(response => {
             var playersMap = response.data;
-            axios.get(req.app.locals.kcapp.api + '/match/' + req.params.id)
+            axios.get(req.app.locals.kcapp.api + '/leg/' + req.params.id)
                 .then(response => {
-                    var match = response.data;
-                    axios.get(req.app.locals.kcapp.api + '/game/' + match.game_id)
+                    var leg = response.data;
+                    axios.get(req.app.locals.kcapp.api + '/game/' + leg.game_id)
                         .then(response => {
                             var game = response.data;
                             if (game.game_type.id === 2) {
-                                pugView = 'match/entry_shootout.pug';
+                                pugView = 'leg/entry_shootout.pug';
                             }
-                            axios.get(req.app.locals.kcapp.api + '/match/' + req.params.id + '/players')
+                            axios.get(req.app.locals.kcapp.api + '/leg/' + req.params.id + '/players')
                                 .then(response => {
-                                    var matchPlayers = response.data;
+                                    var legPlayers = response.data;
                                     // Sort players based on order
-                                    matchPlayers = _.sortBy(matchPlayers, (player) => player.order)
-                                    res.render(pugView, { match: match, players: playersMap, game: game, match_players: matchPlayers });
+                                    legPlayers = _.sortBy(legPlayers, (player) => player.order)
+                                    res.render(pugView, { leg: leg, players: playersMap, game: game, leg_players: legPlayers });
                                 }).catch(error => {
-                                    debug('Error when getting match players: ' + error);
+                                    debug('Error when getting leg players: ' + error);
                                     next(error);
                                 });
                         }).catch(error => {
@@ -36,7 +36,7 @@ router.get('/:id', function (req, res, next) {
                             next(error);
                         });
                 }).catch(error => {
-                    debug('Error when getting match: ' + error);
+                    debug('Error when getting leg: ' + error);
                     next(error);
                 });
         }).catch(error => {
@@ -45,23 +45,23 @@ router.get('/:id', function (req, res, next) {
         });
 });
 
-/* Render the match spectate view */
+/* Render the leg spectate view */
 router.get('/:id/spectate', function (req, res, next) {
     axios.get(req.app.locals.kcapp.api + '/player')
         .then(response => {
             var playersMap = response.data;
-            axios.get(req.app.locals.kcapp.api + '/match/' + req.params.id)
+            axios.get(req.app.locals.kcapp.api + '/leg/' + req.params.id)
                 .then(response => {
-                    var match = response.data;
-                    axios.get(req.app.locals.kcapp.api + '/game/' + match.game_id)
+                    var leg = response.data;
+                    axios.get(req.app.locals.kcapp.api + '/game/' + leg.game_id)
                         .then(response => {
                             var game = response.data;
-                            axios.get(req.app.locals.kcapp.api + '/match/' + req.params.id + '/players')
+                            axios.get(req.app.locals.kcapp.api + '/leg/' + req.params.id + '/players')
                                 .then(response => {
-                                    var matchPlayers = response.data;
-                                    res.render('match/spectate', { match: match, players: playersMap, game: game, match_players: matchPlayers });
+                                    var legPlayers = response.data;
+                                    res.render('leg/spectate', { leg: leg, players: playersMap, game: game, leg_players: legPlayers });
                                 }).catch(error => {
-                                    debug('Error when getting match players: ' + error);
+                                    debug('Error when getting leg players: ' + error);
                                     next(error);
                                 });
                         }).catch(error => {
@@ -69,7 +69,7 @@ router.get('/:id/spectate', function (req, res, next) {
                             next(error);
                         });
                 }).catch(error => {
-                    debug('Error when getting match: ' + error);
+                    debug('Error when getting leg: ' + error);
                     next(error);
                 });
         }).catch(error => {
@@ -78,23 +78,23 @@ router.get('/:id/spectate', function (req, res, next) {
         });
 });
 
-/* Render the match umpire view */
+/* Render the leg umpire view */
 router.get('/:id/umpire', function (req, res, next) {
     axios.get(req.app.locals.kcapp.api + '/player')
         .then(response => {
             var playersMap = response.data;
-            axios.get(req.app.locals.kcapp.api + '/match/' + req.params.id)
+            axios.get(req.app.locals.kcapp.api + '/leg/' + req.params.id)
                 .then(response => {
-                    var match = response.data;
-                    axios.get(req.app.locals.kcapp.api + '/game/' + match.game_id)
+                    var leg = response.data;
+                    axios.get(req.app.locals.kcapp.api + '/game/' + leg.game_id)
                         .then(response => {
                             var game = response.data;
-                            axios.get(req.app.locals.kcapp.api + '/match/' + req.params.id + '/players')
+                            axios.get(req.app.locals.kcapp.api + '/leg/' + req.params.id + '/players')
                                 .then(response => {
-                                    var matchPlayers = response.data;
-                                    res.render('match/umpire', { match: match, players: playersMap, game: game, match_players: matchPlayers });
+                                    var legPlayers = response.data;
+                                    res.render('leg/umpire', { leg: leg, players: playersMap, game: game, leg_players: legPlayers });
                                 }).catch(error => {
-                                    debug('Error when getting match players: ' + error);
+                                    debug('Error when getting leg players: ' + error);
                                     next(error);
                                 });
                         }).catch(error => {
@@ -102,7 +102,7 @@ router.get('/:id/umpire', function (req, res, next) {
                             next(error);
                         });
                 }).catch(error => {
-                    debug('Error when getting match: ' + error);
+                    debug('Error when getting leg: ' + error);
                     next(error);
                 });
         }).catch(error => {
@@ -113,24 +113,24 @@ router.get('/:id/umpire', function (req, res, next) {
 
 
 /* Method for getting results for a given leg */
-router.get('/:id/leg', function (req, res, next) {
+router.get('/:id/result', function (req, res, next) {
     axios.get(req.app.locals.kcapp.api + '/player')
         .then(response => {
             var playersMap = response.data;
-            axios.get(req.app.locals.kcapp.api + '/match/' + req.params.id)
+            axios.get(req.app.locals.kcapp.api + '/leg/' + req.params.id)
                 .then(response => {
-                    var match = response.data;
-                    axios.get(req.app.locals.kcapp.api + '/game/' + match.game_id)
+                    var leg = response.data;
+                    axios.get(req.app.locals.kcapp.api + '/game/' + leg.game_id)
                         .then(response => {
                             var game = response.data;
-                            axios.get(req.app.locals.kcapp.api + '/match/' + match.id + '/players')
+                            axios.get(req.app.locals.kcapp.api + '/leg/' + leg.id + '/players')
                                 .then(response => {
-                                    var matchPlayers = response.data;
+                                    var legPlayers = response.data;
 
-                                    _.each(match.players, (playerId) => {
-                                        playersMap[playerId].remaining_score = match.starting_score;
+                                    _.each(leg.players, (playerId) => {
+                                        playersMap[playerId].remaining_score = leg.starting_score;
                                     });
-                                    _.each(match.visits, (visit, index) => {
+                                    _.each(leg.visits, (visit, index) => {
                                         var player = playersMap[visit.player_id]
                                         var visitScore = (visit.first_dart.value * visit.first_dart.multiplier) +
                                             (visit.second_dart.value * visit.second_dart.multiplier) +
@@ -145,12 +145,12 @@ router.get('/:id/leg', function (req, res, next) {
                                         }
 
                                         var scores = player.remaining_score;
-                                        for (var i = 1; i < match.players.length; i++) {
-                                            var nextVisit = match.visits[index + i];
+                                        for (var i = 1; i < leg.players.length; i++) {
+                                            var nextVisit = leg.visits[index + i];
                                             if (!nextVisit) {
                                                 // There is no next visit, so look at previous instead
                                                 // Need to look in reverese order to keep the order of scores the same
-                                                nextVisit = match.visits[index - (match.players.length - i)]
+                                                nextVisit = leg.visits[index - (leg.players.length - i)]
                                             }
                                             if (nextVisit) {
                                                 scores += ' : ' + playersMap[nextVisit.player_id].remaining_score;
@@ -159,19 +159,19 @@ router.get('/:id/leg', function (req, res, next) {
                                         visit.scores = scores;
                                     });
 
-                                    axios.get(req.app.locals.kcapp.api + '/match/' + req.params.id + '/statistics')
+                                    axios.get(req.app.locals.kcapp.api + '/leg/' + req.params.id + '/statistics')
                                         .then(response => {
                                             var stats = response.data;
-                                            res.render('match_result', {
-                                                match: match, players: playersMap, stats: stats,
-                                                game: game, match_players: matchPlayers
+                                            res.render('leg_result', {
+                                                leg: leg, players: playersMap, stats: stats,
+                                                game: game, leg_players: legPlayers
                                             });
                                         }).catch(error => {
                                             debug('Error when getting statistics: ' + error);
                                             next(error);
                                         });
                                 }).catch(error => {
-                                    debug('Error when getting match players: ' + error);
+                                    debug('Error when getting leg players: ' + error);
                                     next(error);
                                 });
                         }).catch(error => {
@@ -179,7 +179,7 @@ router.get('/:id/leg', function (req, res, next) {
                             next(error);
                         });
                 }).catch(error => {
-                    debug('Error when getting match: ' + error);
+                    debug('Error when getting leg: ' + error);
                     next(error);
                 });
         }).catch(error => {
@@ -200,7 +200,7 @@ router.delete('/:id/leg/:visitid', function (req, res, next) {
 });
 
 /* Modify the score */
-router.post('/:id/leg', function (req, res, next) {
+router.post('/:id/result', function (req, res, next) {
     axios.put(req.app.locals.kcapp.api + '/visit/' + req.body.id + '/modify', req.body)
         .then(() => {
             res.status(200).end();
@@ -210,10 +210,10 @@ router.post('/:id/leg', function (req, res, next) {
         });
 });
 
-/* Method to cancel a match in progress */
+/* Method to cancel a leg in progress */
 router.delete('/:id/cancel', function (req, res, next) {
-    var matchId = req.params.id;
-    axios.delete(req.app.locals.kcapp.api + '/match/' + matchId)
+    var legId = req.params.id;
+    axios.delete(req.app.locals.kcapp.api + '/leg/' + legId)
         .then(() => {
             res.status(204).end();
         }).catch(error => {
@@ -222,9 +222,9 @@ router.delete('/:id/cancel', function (req, res, next) {
         });
 });
 
-/* Method to finalize a match */
+/* Method to finalize a leg */
 router.post('/:id/finish', function (req, res, next) {
-    axios.put(req.app.locals.kcapp.api + '/match/' + req.params.id + '/finish', req.body)
+    axios.put(req.app.locals.kcapp.api + '/leg/' + req.params.id + '/finish', req.body)
         .then(() => {
             res.status(200).end();
         }).catch(error => {
@@ -235,7 +235,7 @@ router.post('/:id/finish', function (req, res, next) {
 
 /** Method to change player order */
 router.put('/:id/order', function (req, res, next) {
-    axios.put(req.app.locals.kcapp.api + '/match/' + req.params.id + '/order', req.body)
+    axios.put(req.app.locals.kcapp.api + '/leg/' + req.params.id + '/order', req.body)
         .then(() => {
             res.status(200).end();
         }).catch(error => {
@@ -247,15 +247,15 @@ router.put('/:id/order', function (req, res, next) {
 module.exports = function (app, socketHandler) {
     this.socketHandler = socketHandler;
 
-    // Create socket.io namespaces for all matches which are currently active
-    axios.get(app.locals.kcapp.api + '/match/active')
+    // Create socket.io namespaces for all legs which are currently active
+    axios.get(app.locals.kcapp.api + '/leg/active')
         .then(response => {
-            var matches = response.data;
-            for (var i = 0; i < matches.length; i++) {
-                socketHandler.setupNamespace(matches[i].id);
+            var legs = response.data;
+            for (var i = 0; i < legs.length; i++) {
+                socketHandler.setupNamespace(legs[i].id);
             }
         }).catch(error => {
-            debug('Unable to get active matches: %s', error);
+            debug('Unable to get active legs: %s', error);
         });
     return router;
 };

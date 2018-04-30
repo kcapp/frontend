@@ -8,7 +8,7 @@ block scripts
         $(function() {
             $('.btn-view-results').click(function() {
                 var id = $(this).closest('tr').find('th').text();
-                window.location.href = '/matches/' + id  + '/leg';
+                window.location.href = '/legs/' + id  + '/result';
             });
         });
 
@@ -38,13 +38,13 @@ block content
                     th Results
             tbody
             - var idx = 1
-            each match in game.matches
+            each leg in game.legs
                 tr
-                    th(hidden='true' scope='row')= match.id
+                    th(hidden='true' scope='row')= leg.id
                     td(class='col-sm-2')= '#' + idx++
                     each stat in stats
                         td
-                            if match.winner_player_id === stat.player_id
+                            if leg.winner_player_id === stat.player_id
                                 span(class='glyphicon glyphicon-ok' aria-hidden='true')
                             else
                                 span(class='glyphicon glyphicon-remove' aria-hidden='true')

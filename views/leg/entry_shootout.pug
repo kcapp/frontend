@@ -16,11 +16,11 @@ block script_check_visit_finished
             var isFinished = false;
 
             var lastDart = Object.keys(scores).length === 3;
-            var visits = match.visits.length;
+            var visits = leg.visits.length;
             if (lastDart) {
                 visits++;
             }
-            isFinished = visits > 0 && ((visits * 3) % (9 * match.players.length) === 0);
+            isFinished = visits > 0 && ((visits * 3) % (9 * leg.players.length) === 0);
 
             var currentPlayer = $('#current-player');
             var currentPlayerScore = parseInt(currentPlayer.text());
@@ -52,4 +52,4 @@ block script_check_visit_finished
         }
 
 block title
-    h2 Match (Nine Shootout)
+    h2 Leg (Nine Shootout)

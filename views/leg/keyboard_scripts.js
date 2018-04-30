@@ -113,6 +113,6 @@ $(function () {
     });
 
     $('#toggle-keyboard-button').click(function () {
-        location.href = '/matches/' + matchId;
+        location.href = '/legs/' + legId;
     });
 });

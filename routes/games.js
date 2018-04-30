@@ -51,19 +51,19 @@ router.get('/:id', function (req, res, next) {
             var game = response.data
             axios.put(req.app.locals.kcapp.api + '/game/' + req.params.id + '/continue')
                 .then(response => {
-                    var match = response.data;
+                    var leg = response.data;
                     // TODO Do we need to setup nsp here?
-                    this.socketHandler.setupNamespace(match.id);
+                    this.socketHandler.setupNamespace(leg.id);
 
-                    // Forward all spectating clients to next match
-                    this.socketHandler.emitMessage(game.current_match_id, 'match_finished', {
-                        old_match_id: game.current_match_id,
-                        new_match_id: match.id
+                    // Forward all spectating clients to next leg
+                    this.socketHandler.emitMessage(game.current_leg_id, 'leg_finished', {
+                        old_leg_id: game.current_leg_id,
+                        new_leg_id: leg.id
                     });
-                    res.redirect('/matches/' + match.id);
+                    res.redirect('/legs/' + leg.id);
                 }).catch(error => {
-                    debug('Unable to continue match: ' + error);
-                    res.redirect('/game/' + req.params.id + '/results');
+                    debug('Unable to continue leg: ' + error);
+                    res.redirect('/game/' + req.params.id + '/result');
                 });
         }).catch(error => {
             debug('Error when getting game: ' + error);
@@ -76,7 +76,7 @@ router.get('/:id/spectate', function (req, res, next) {
     axios.get(req.app.locals.kcapp.api + '/game/' + req.params.id)
         .then(response => {
             var game = response.data;
-            res.redirect('/matches/' + game.current_match_id + '/spectate');
+            res.redirect('/legs/' + game.current_leg_id + '/spectate');
         }).catch(error => {
             debug('Error when getting game: ' + error);
             next(error);
@@ -84,7 +84,7 @@ router.get('/:id/spectate', function (req, res, next) {
 });
 
 /* Render the results view */
-router.get('/:id/results', function (req, res, next) {
+router.get('/:id/result', function (req, res, next) {
     var id = req.params.id;
     axios.get(req.app.locals.kcapp.api + '/game/' + id)
         .then(response => {
@@ -117,7 +117,7 @@ router.get('/:id/results', function (req, res, next) {
 router.post('/new', function (req, res, next) {
     var players = req.body.players;
     if (players === undefined) {
-        debug('No players specified, unable to start match');
+        debug('No players specified, unable to start leg');
         return res.redirect('/');
     }
     var body = {
@@ -126,12 +126,12 @@ router.post('/new', function (req, res, next) {
         game_mode: { id: req.body.game_mode },
         players: players.map(Number),
         player_handicaps: req.body.player_handicaps,
-        matches: [{ starting_score: req.body.starting_score }]
+        legs: [{ starting_score: req.body.starting_score }]
     }
     axios.post(req.app.locals.kcapp.api + '/game', body)
         .then(response => {
             var game = response.data;
-            this.socketHandler.setupNamespace(game.current_match_id);
+            this.socketHandler.setupNamespace(game.current_leg_id);
             res.status(200).send(game).end();
         }).catch(error => {
             debug('Error when starting new game: ' + error);

@@ -158,13 +158,13 @@ block content
                     td(class='glyph')
                         span(class='glyphicon glyphicon-adjust' aria-hidden='true')
                 tr
-                    td(class='number')= player.games_played + ' / ' + player.matches_played
-                    td(class='number')= player.games_won + ' / '  + player.matches_won
-                    td(class='number')= (player.games_played == 0 ? '0.00' : (player.games_won * 100 / player.games_played).toFixed(2)) + ' / ' + (player.matches_played == 0 ? '0.00' : (player.matches_won * 100 / player.matches_played).toFixed(2))
+                    td(class='number')= player.games_played + ' / ' + player.legs_played
+                    td(class='number')= player.games_won + ' / '  + player.legs_won
+                    td(class='number')= (player.games_played == 0 ? '0.00' : (player.games_won * 100 / player.games_played).toFixed(2)) + ' / ' + (player.legs_played == 0 ? '0.00' : (player.legs_won * 100 / player.legs_played).toFixed(2))
                 tr
-                    td(class='olabel') Games / Matches Played
-                    td(class='olabel') Games / Matches Won
-                    td(class='olabel') Games / Matches Win %
+                    td(class='olabel') Games / Legs Played
+                    td(class='olabel') Games / Legs Won
+                    td(class='olabel') Games / Legs Win %
                 tr
                     td(class='glyph')
                         span(class='glyphicon glyphicon-th' aria-hidden='true')
@@ -250,9 +250,9 @@ block content
                 tr
                     //td(class='number')= statistics.best_ppd.value.toFixed(2) + ' / ' + statistics.best_first_nine_ppd.value.toFixed(2)
                     td(class='number')
-                        a(href='/matches/' + statistics.best_ppd.match_id + '/leg')= statistics.best_ppd.value.toFixed(2)
+                        a(href='/legs/' + statistics.best_ppd.leg_id + '/result')= statistics.best_ppd.value.toFixed(2)
                         label(style='font-weight: 300;')= ' / '
-                        a(href='/matches/' + statistics.best_first_nine_ppd.match_id + '/leg')= statistics.best_first_nine_ppd.value.toFixed(2)
+                        a(href='/legs/' + statistics.best_first_nine_ppd.leg_id + '/result')= statistics.best_first_nine_ppd.value.toFixed(2)
                     +best_statistics(statistics.best_301, 'number')
                     +best_statistics(statistics.best_501, 'number')
                     +best_statistics(statistics.best_701, 'number')
@@ -280,7 +280,7 @@ block content
                                 td= value
                                 td= (value * 100 / statistics.darts_thrown).toFixed(2) + '%'
                                 td= (value / statistics.total_visits).toFixed(2)
-                                td= (value / player.matches_played).toFixed(2)
+                                td= (value / player.legs_played).toFixed(2)
                                 td= (value / player.games_played).toFixed(2)
 
         div(role='tabpanel' id='heatmap' class='tab-pane')
@@ -311,7 +311,7 @@ block content
                             +dart_container(visit.third_dart.value, visit.third_dart.multiplier)
                             td= visit.count
                             td= (visit.count * 100 / statistics.total_visits).toFixed(2) + '%'
-                            td= (visit.count / player.matches_played).toFixed(2)
+                            td= (visit.count / player.legs_played).toFixed(2)
                             td= (visit.count / player.games_played).toFixed(2)
 
         div(role='tabpanel' id='checkouts' class='tab-pane')

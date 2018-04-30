@@ -45,7 +45,7 @@ router.get('/', function (req, res, next) {
                     next(error);
                 });
         }).catch(error => {
-            debug('Error when getting match players: ' + error);
+            debug('Error when getting leg players: ' + error);
             next(error);
         });
 });

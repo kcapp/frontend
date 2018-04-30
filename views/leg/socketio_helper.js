@@ -1,8 +1,8 @@
 var socket = null;
 
-function getSocketIO(matchId) {
+function getSocketIO(legId) {
     if (socket == null) {
-        socket = io(window.location.origin + '/matches/' + matchId);
+        socket = io(window.location.origin + '/legs/' + legId);
 
         // Add handling of general events
         socket.on('connect', function (data) {

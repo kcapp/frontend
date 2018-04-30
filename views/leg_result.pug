@@ -16,18 +16,18 @@ block append scripts
     script
         include chart/chart_helper.js
     script.
-        var match = !{JSON.stringify(match)}
+        var leg = !{JSON.stringify(leg)}
         var game = !{JSON.stringify(game)}
-        var matchPlayers = !{JSON.stringify(match_players)}
+        var legPlayers = !{JSON.stringify(leg_players)}
         var playersMap = !{JSON.stringify(players)}
-        var visits = match.visits;
+        var visits = leg.visits;
 
-        var chartMaxValue = game.game_type.id == 1 || game.game_type.id == 3 ? match.starting_score : 0;
+        var chartMaxValue = game.game_type.id == 1 || game.game_type.id == 3 ? leg.starting_score : 0;
         var labels = [];
         var values = { }
-        for (var i = 0; i < matchPlayers.length; i++) {
-            var player = matchPlayers[i];
-            var score = match.starting_score + player.handicap
+        for (var i = 0; i < legPlayers.length; i++) {
+            var player = legPlayers[i];
+            var score = leg.starting_score + player.handicap
             values[player.player_id] = [ score ];
             if (score > chartMaxValue) {
                 chartMaxValue = score;
@@ -38,7 +38,7 @@ block append scripts
 
         for (var i = 0; i < visits.length; i++) {
             var visit = visits[i];
-            if (i % matchPlayers.length === 0) {
+            if (i % legPlayers.length === 0) {
                 round++;
                 labels.push(round);
             }
@@ -65,8 +65,8 @@ block append scripts
 
         $(function () {
             var datasets = []
-            for (var i = 0; i < matchPlayers.length; i++) {
-                var player = playersMap[matchPlayers[i].player_id];
+            for (var i = 0; i < legPlayers.length; i++) {
+                var player = playersMap[legPlayers[i].player_id];
                 datasets.push({
                     label: player.name,
                     backgroundColor: player.color,
@@ -80,10 +80,10 @@ block append scripts
             var scoresChart = new Chart("canvas-scores", config);
         });
     script.
-        var match = !{JSON.stringify(match)}
+        var leg = !{JSON.stringify(leg)}
 
         $(function () {
-            $('#match-hits-table').DataTable({
+            $('#leg-hits-table').DataTable({
                 searching: false,
                 bInfo : false,
                 iDisplayLength: 50,
@@ -136,7 +136,7 @@ block append scripts
                     // Save the data
                     var data = JSON.stringify({
                         id: visitNumber,
-                        match_id: match.id,
+                        leg_id: leg.id,
                         first_dart: { value: parseInt(firstScoreChanged), multiplier: parseInt(firstMultiplierChanged) },
                         second_dart: { value: parseInt(secondScoreChanged), multiplier: parseInt(secondMultiplierChanged) },
                         third_dart: { value: parseInt(thirdScoreChanged), multiplier: parseInt(thirdMultiplierChanged) }
@@ -149,7 +149,7 @@ block append scripts
                     var routeRedirect = window.location.pathname;
                     executePost(route, data, 'application/json',
                         function (response) {
-                            location.href = '/matches/' + match.id;
+                            location.href = '/legs/' + leg.id;
                         },
                         function (error) {
                             alert("Error when updating score, please reload!");
@@ -181,7 +181,7 @@ block append scripts
                 showConfirm('Visit will be deleted.', function() {
                     executeDelete(window.location.pathname + '/' + visitNumber,
                         function (response) {
-                            location.href = '/matches/' + match.id;
+                            location.href = '/legs/' + leg.id;
                         },
                         function (error) {
                             alert('Error deleting score. Please reload');
@@ -199,8 +199,8 @@ block append scripts
                 for (var i = 0; i < players.length; i++) {
                     order[players[i].value] = i + 1;
                 }
-                executePut(window.origin + '/matches/' + match.id + '/order', JSON.stringify(order), 'application/json', function() {
-                    location.href = '/matches/' + match.id;
+                executePut(window.origin + '/legs/' + leg.id + '/order', JSON.stringify(order), 'application/json', function() {
+                    location.href = '/legs/' + leg.id;
                 },
                 function(error) {
                     alert('Error changing player order. Please reload');
@@ -216,7 +216,7 @@ block append scripts
                 location.href = '/games/' + $(this).data('game');
             });
             $('#back-to-game').click(function () {
-                location.href = '/games/' + $(this).data('game') + '/results';
+                location.href = '/games/' + $(this).data('game') + '/result';
             });
 
             $('.glyphicon-user').click(function(){
@@ -224,7 +224,7 @@ block append scripts
             });
         });
     script.
-        var scoresMap = !{JSON.stringify(match.hits)};
+        var scoresMap = !{JSON.stringify(leg.hits)};
         $(function () {
             var canvas = $('#dartboard-heatmap')[0];
             drawHeatmap(canvas, scoresMap, 0, 20, 20, 50);
@@ -262,21 +262,21 @@ block append scripts
 block content
     div(class='clearfix')
         div(class='pull-left')
-            h2 Leg Result (#{match.id})
+            h2 Leg Result (#{leg.id})
 
         div(class='pull-right' style='padding-top: 20px;')
             if game.is_finished
-                button(type='button' class='btn btn-primary pull-right mt-30' id='back-to-game' data-game=match.game_id) Back to Game
+                button(type='button' class='btn btn-primary pull-right mt-30' id='back-to-game' data-game=leg.game_id) Back to Game
             else
                 button(type='button' class='btn btn-primary pull-right mt-30' id='continue-game' data-game=game.id) Continue Game
 
     p.
-        Started: #{moment(match.created_at).format('YYYY-MM-DD HH:mm:ss')} <br>
-        Finished: #{match.end_time === null ? '' : moment(match.end_time).format('YYYY-MM-DD HH:mm:ss')} <br>
-        Duration: #{match.end_time === null ? '' : moment.duration(moment(match.end_time).diff(match.created_at)).asMinutes().toFixed() + ' minutes'} <br>
-        Rounds: #{Math.ceil(match.visits.length / match.players.length)}
+        Started: #{moment(leg.created_at).format('YYYY-MM-DD HH:mm:ss')} <br>
+        Finished: #{leg.end_time === null ? '' : moment(leg.end_time).format('YYYY-MM-DD HH:mm:ss')} <br>
+        Duration: #{leg.end_time === null ? '' : moment.duration(moment(leg.end_time).diff(leg.created_at)).asMinutes().toFixed() + ' minutes'} <br>
+        Rounds: #{Math.ceil(leg.visits.length / leg.players.length)}
 
-    - var isFinished = match.winner_player_id !== null
+    - var isFinished = leg.winner_player_id !== null
     if isFinished
         table(style='width: 100%; table-layout: fixed;')
             tbody
@@ -306,7 +306,7 @@ block content
                                     - var accuracy_19 = statistic.accuracy_19 === null ? '-' : statistic.accuracy_19.toFixed(2)
                                     div= statistic.accuracy_overall.toFixed(2) + ' / ' + accuracy_20 + ' / ' + accuracy_19
                                     div(class='info') Checkout % / Attempts
-                                    if statistic.player_id === match.winner_player_id
+                                    if statistic.player_id === leg.winner_player_id
                                         div= statistic.checkout_percentage.toFixed(2) + '% / ' + statistic.checkout_attempts
                                     else
                                         div= '- / ' + (statistic.checkout_attempts ? statistic.checkout_attempts : '-')
@@ -321,30 +321,30 @@ block content
                                 if game.game_type.id == 1
                                     div(class='info') Darts Thrown
                                     - var dartsThrown = 0
-                                    each visit in match.visits
+                                    each visit in leg.visits
                                         if statistic.player_id == visit.player_id
                                             - dartsThrown = visit.darts_thrown
                                     div= dartsThrown
                                 div(style='margin-top: 20px;'): hr
                                 if game.game_type.id == 1 || game.game_type.id == 3
-                                    if statistic.player_id === match.winner_player_id
+                                    if statistic.player_id === leg.winner_player_id
                                         div(class='label-winner') WINNER
                                     else
                                         div(class='label-loser')= player.remaining_score + ' left'
                                 else
-                                    if statistic.player_id === match.winner_player_id
+                                    if statistic.player_id === leg.winner_player_id
                                         div(class='label-winner') WINNER
                                     else
                                         div(class='label-loser') &nbsp;
 
-    h3 Match Results
+    h3 Leg Results
     p.
-        Starting score was #{match.starting_score}, and a total of #{match.darts_thrown ? match.darts_thrown : 0} darts were thrown by #{match.players.length} players
+        Starting score was #{leg.starting_score}, and a total of #{leg.darts_thrown ? leg.darts_thrown : 0} darts were thrown by #{leg.players.length} players
 
     if isFinished
         button(id='btn-collapse-visits' class='btn btn-primary btn-block' data-toggle='collapse' data-target='#visits-div')= isFinished ? 'Show Visits' : 'Hide Visits'
     div(id='visits-div' class=isFinished ? 'collapse' : 'collapse in')
-        table(class='table' id='table-match-visits')
+        table(class='table' id='table-leg-visits')
             thead
                 tr
                     th Player
@@ -358,7 +358,7 @@ block content
                     if !isFinished
                         th(class='text-center') Options
             tbody
-                each visit in match.visits
+                each visit in leg.visits
                     - var visit_score = (visit.first_dart.value * visit.first_dart.multiplier) + (visit.second_dart.value * visit.second_dart.multiplier) + (visit.third_dart.value * visit.third_dart.multiplier)
                     tr(id='visit-' + visit.id)
                         td= players[visit.player_id].name
@@ -382,7 +382,7 @@ block content
         h3 Player Order
         div
             div(id='player-order-list')
-                each id in match.players
+                each id in leg.players
                     div(class='float-left')
                         input(style='display: none;' type='checkbox' class='form-check-input' id='checkbox-player-' + players[id].id value=players[id].id)
                         label(style='margin-left: 10px; width: 160px;' class='player-name-label form-check-label btn btn-warning' for='checkbox-player-' + players[id].id)= players[id].name
@@ -393,7 +393,7 @@ block content
     br
     button(id='btn-collapse-heatmap' class='btn btn-primary btn-block' data-toggle='collapse' data-target='#heatmap-div') Show Heatmap
     div(id='heatmap-div' class='collapse')
-        h3 Match Heatmap
+        h3 Leg Heatmap
         select(id='heatmap-value-selector' name='dartValues')
             option(value=0 default=true) All
             option(value=1) Singles
@@ -407,17 +407,17 @@ block content
     div(id='hits-div' class='collapse')
         h3 Hits
         div(class='table-responsive')
-            table(id='match-hits-table' class='table')
+            table(id='leg-hits-table' class='table')
                 thead
                     tr
                         th Dart
                         th Count
                         th Hit %
                 tbody
-                    each score, key in match.hits
-                        each count, multiplier in match.hits[key]
+                    each score, key in leg.hits
+                        each count, multiplier in leg.hits[key]
                             if count !== 0
                                 tr
                                     +dart_container(key, multiplier)
                                     td= count
-                                    td= (count * 100 / match.darts_thrown).toFixed(2) + '%'
+                                    td= (count * 100 / leg.darts_thrown).toFixed(2) + '%'

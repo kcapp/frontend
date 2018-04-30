@@ -36,27 +36,27 @@ block scripts
 
             $('#game-type-select').on('change', function() {
                 $('#sortable-player-list .input-player-handicap').hide();
-                $('#match-type-select').prop('disabled', false);
-                $('#match-type-select').val('501');
+                $('#leg-type-select').prop('disabled', false);
+                $('#leg-type-select').val('501');
 
                 if (this.value == 2) {
-                    $('#match-type-select').prop('disabled', true);
-                    $('#match-type-select').val('0');
+                    $('#leg-type-select').prop('disabled', true);
+                    $('#leg-type-select').val('0');
                 }
                 else if (this.value == 3) {
                     $('#sortable-player-list .input-player-handicap').show();
                 }
             });
 
-            $('#create-match-button').click(function() {
+            $('#create-leg-button').click(function() {
                 $(this).blur();
             });
 
-            $('#start-match-button').click(function(e) {
+            $('#start-leg-button').click(function(e) {
                 var stake = parseInt($('#game-stake-select').val());
                 var venue = parseInt($('#venue-select').val());
                 var body = {
-                    starting_score: parseInt($('#match-type-select').val()),
+                    starting_score: parseInt($('#leg-type-select').val()),
                     game_type: parseInt($('#game-type-select').val()),
                     game_mode: parseInt($('#game-mode-select').val()),
                     game_stake: stake === 0 ? null : stake,
@@ -75,7 +75,7 @@ block scripts
                     function(response){
                         // Store venue in localstorage so it doesn't have to be selected each time
                         localStorage.setItem('kcapp_venue', venue);
-                        location.href = 'matches/' + response.current_match_id
+                        location.href = 'legs/' + response.current_leg_id
                     }, function(error) {
                         console.log(error);
                     }
@@ -97,7 +97,7 @@ block scripts
                 // Add players by entering player id and ENTER
                 case 'Enter':
                     if (playerId == '00') {
-                        $('#start-match-button').trigger('click');
+                        $('#start-leg-button').trigger('click');
                         return;
                     }
                     var playerChck = $('#checkbox-player-' + playerId);
@@ -117,9 +117,9 @@ block scripts
                 case '9': playerId += '9'; break;
                 case '0': playerId += '0'; break;
                 case '/':
-                    var next = $('#match-type-select option:selected').next();
+                    var next = $('#leg-type-select option:selected').next();
                     if (next.length === 0) {
-                        next = $('#match-type-select').children('option:first');
+                        next = $('#leg-type-select').children('option:first');
                     }
                     next.prop('selected', true);
                     break;
@@ -149,13 +149,13 @@ block scripts
         });
 
 block content
-    div(id='new-match-collapse')
+    div(id='new-leg-collapse')
         div(class='card card-block')
             if players.length == 0
                 p.
                     Players must be added before you can start a new game
             else
-                form(style='padding-top: 15px;' id='new-match-form')
+                form(style='padding-top: 15px;' id='new-leg-form')
                     legend Players
                     div(class='form-group form-check float-left' id='sortable-player-list')
                     legend(style='clear: both;') Select Players
@@ -167,8 +167,8 @@ block content
                                 input(style='margin-left: 10px; width: 50px;' type='textbox' name='player_handicap' class='form input-player-handicap' hidden='true' value=0)
 
                     div(class='form-group' style='clear: both')
-                        label(for='match-type-select') Starting Score
-                        select(class='form-control' name='starting_score' id='match-type-select')
+                        label(for='leg-type-select') Starting Score
+                        select(class='form-control' name='starting_score' id='leg-type-select')
                             option 301
                             option(selected='selected') 501
                             option 701
@@ -200,4 +200,4 @@ block content
                             each venue in venues
                                 option(value=venue.id)= venue.name
 
-                    button(type='submit' form='new-match-form' class='btn btn-primary' id='start-match-button' ) Start
+                    button(type='submit' form='new-leg-form' class='btn btn-primary' id='start-leg-button' ) Start
