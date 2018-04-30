@@ -146,7 +146,7 @@ block scripts
                         tdVisit.removeClass().addClass('uv-active-player-visits');
                         $('#submit-score-button').data('current-player-id', player.player_id);
                         label.addClass('current-player');
-                        if (player.modifiers.is_beer_game) {
+                        if (player.modifiers.is_beer_match) {
                             td.addClass('player-modifier-beer');
                         }
                     }
@@ -156,7 +156,7 @@ block scripts
                         tdVisit.removeClass().addClass('uv-inactive-player-visits');
                         label.removeClass('current-player');
                         label.removeAttr('data-current-player-id');
-                        if (player.modifiers.is_beer_game) {
+                        if (player.modifiers.is_beer_match) {
                             td.addClass('player-modifier-beer');
                         }
                         if (player.modifiers.is_vilius_visit) {
@@ -262,10 +262,10 @@ block scripts
             });
 
             $('#cancel-leg-button').click(function () {
-                showConfirm('Game will be cancelled.', function() {
+                showConfirm('Match will be cancelled.', function() {
                     executeDelete('/legs/' + legId + '/cancel',
                         function (response) {
-                            location.href = '/games';
+                            location.href = '/matches';
                         },
                         function (error) {
                             var alert = $('#cancel-leg-failed-alert');
@@ -297,7 +297,7 @@ block scripts
                 if (scoreAfterThrow == 0) {
                     if (dart.attr('data-multiplier') == 2) {
                         disableEnter = true;
-                        showConfirm('Game will be finished.', function() {
+                        showConfirm('Match will be finished.', function() {
                             isFinished = true;
                             socket.emit('possible_throw', {
                                     current_player_id: currentPlayerId,
@@ -309,7 +309,7 @@ block scripts
                                     darts_thrown: currentDart
                             });
 
-                            // End game, 'click' submit
+                            // End match, 'click' submit
                             $('#submit-score-button').data('finished', 1).trigger('click');
                         }, function(){
                             $('#undo-button').trigger('click');
@@ -367,7 +367,7 @@ block content
     block title
 
     - var round_number = Math.floor(leg.visits.length / leg.players.length) + 1;
-    +get_score_header(game.game_mode, round_number, leg_players, true)
+    +get_score_header(match.match_mode, round_number, leg_players, true)
 
     div(class='table-responsive')
         table(id='score-selector-table' class='table' style='display: none;')

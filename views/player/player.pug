@@ -158,13 +158,13 @@ block content
                     td(class='glyph')
                         span(class='glyphicon glyphicon-adjust' aria-hidden='true')
                 tr
-                    td(class='number')= player.games_played + ' / ' + player.legs_played
-                    td(class='number')= player.games_won + ' / '  + player.legs_won
-                    td(class='number')= (player.games_played == 0 ? '0.00' : (player.games_won * 100 / player.games_played).toFixed(2)) + ' / ' + (player.legs_played == 0 ? '0.00' : (player.legs_won * 100 / player.legs_played).toFixed(2))
+                    td(class='number')= player.matches_played + ' / ' + player.legs_played
+                    td(class='number')= player.matches_won + ' / '  + player.legs_won
+                    td(class='number')= (player.matches_played == 0 ? '0.00' : (player.matches_won * 100 / player.matches_played).toFixed(2)) + ' / ' + (player.legs_played == 0 ? '0.00' : (player.legs_won * 100 / player.legs_played).toFixed(2))
                 tr
-                    td(class='olabel') Games / Legs Played
-                    td(class='olabel') Games / Legs Won
-                    td(class='olabel') Games / Legs Win %
+                    td(class='olabel') Matches / Legs Played
+                    td(class='olabel') Matches / Legs Won
+                    td(class='olabel') Matches / Legs Win %
                 tr
                     td(class='glyph')
                         span(class='glyphicon glyphicon-th' aria-hidden='true')
@@ -271,7 +271,7 @@ block content
                         th Hit %
                         th Per Visit
                         th Per Leg
-                        th Per Game
+                        th Per Match
                 tbody
                     each score, key in statistics.hits
                         each value, multiplier in statistics.hits[key]
@@ -281,7 +281,7 @@ block content
                                 td= (value * 100 / statistics.darts_thrown).toFixed(2) + '%'
                                 td= (value / statistics.total_visits).toFixed(2)
                                 td= (value / player.legs_played).toFixed(2)
-                                td= (value / player.games_played).toFixed(2)
+                                td= (value / player.matches_played).toFixed(2)
 
         div(role='tabpanel' id='heatmap' class='tab-pane')
             select(id='heatmap-value-selector' name='dart-values')
@@ -302,7 +302,7 @@ block content
                         th Count
                         th Visit %
                         th Per Leg
-                        th Per Game
+                        th Per Match
                 tbody
                     each visit in statistics.visits
                         tr
@@ -312,7 +312,7 @@ block content
                             td= visit.count
                             td= (visit.count * 100 / statistics.total_visits).toFixed(2) + '%'
                             td= (visit.count / player.legs_played).toFixed(2)
-                            td= (visit.count / player.games_played).toFixed(2)
+                            td= (visit.count / player.matches_played).toFixed(2)
 
         div(role='tabpanel' id='checkouts' class='tab-pane')
             table(id='table-checkouts' style='width: 100%;')

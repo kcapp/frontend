@@ -15,10 +15,10 @@ router.get('/:id', function (req, res, next) {
             axios.get(req.app.locals.kcapp.api + '/leg/' + req.params.id)
                 .then(response => {
                     var leg = response.data;
-                    axios.get(req.app.locals.kcapp.api + '/game/' + leg.game_id)
+                    axios.get(req.app.locals.kcapp.api + '/match/' + leg.match_id)
                         .then(response => {
-                            var game = response.data;
-                            if (game.game_type.id === 2) {
+                            var match = response.data;
+                            if (match.match_type.id === 2) {
                                 pugView = 'leg/entry_shootout.pug';
                             }
                             axios.get(req.app.locals.kcapp.api + '/leg/' + req.params.id + '/players')
@@ -26,13 +26,13 @@ router.get('/:id', function (req, res, next) {
                                     var legPlayers = response.data;
                                     // Sort players based on order
                                     legPlayers = _.sortBy(legPlayers, (player) => player.order)
-                                    res.render(pugView, { leg: leg, players: playersMap, game: game, leg_players: legPlayers });
+                                    res.render(pugView, { leg: leg, players: playersMap, match: match, leg_players: legPlayers });
                                 }).catch(error => {
                                     debug('Error when getting leg players: ' + error);
                                     next(error);
                                 });
                         }).catch(error => {
-                            debug('Error when getting game: ' + error);
+                            debug('Error when getting match: ' + error);
                             next(error);
                         });
                 }).catch(error => {
@@ -53,19 +53,19 @@ router.get('/:id/spectate', function (req, res, next) {
             axios.get(req.app.locals.kcapp.api + '/leg/' + req.params.id)
                 .then(response => {
                     var leg = response.data;
-                    axios.get(req.app.locals.kcapp.api + '/game/' + leg.game_id)
+                    axios.get(req.app.locals.kcapp.api + '/match/' + leg.match_id)
                         .then(response => {
-                            var game = response.data;
+                            var match = response.data;
                             axios.get(req.app.locals.kcapp.api + '/leg/' + req.params.id + '/players')
                                 .then(response => {
                                     var legPlayers = response.data;
-                                    res.render('leg/spectate', { leg: leg, players: playersMap, game: game, leg_players: legPlayers });
+                                    res.render('leg/spectate', { leg: leg, players: playersMap, match: match, leg_players: legPlayers });
                                 }).catch(error => {
                                     debug('Error when getting leg players: ' + error);
                                     next(error);
                                 });
                         }).catch(error => {
-                            debug('Error when getting game: ' + error);
+                            debug('Error when getting match: ' + error);
                             next(error);
                         });
                 }).catch(error => {
@@ -86,19 +86,19 @@ router.get('/:id/umpire', function (req, res, next) {
             axios.get(req.app.locals.kcapp.api + '/leg/' + req.params.id)
                 .then(response => {
                     var leg = response.data;
-                    axios.get(req.app.locals.kcapp.api + '/game/' + leg.game_id)
+                    axios.get(req.app.locals.kcapp.api + '/match/' + leg.match_id)
                         .then(response => {
-                            var game = response.data;
+                            var match = response.data;
                             axios.get(req.app.locals.kcapp.api + '/leg/' + req.params.id + '/players')
                                 .then(response => {
                                     var legPlayers = response.data;
-                                    res.render('leg/umpire', { leg: leg, players: playersMap, game: game, leg_players: legPlayers });
+                                    res.render('leg/umpire', { leg: leg, players: playersMap, match: match, leg_players: legPlayers });
                                 }).catch(error => {
                                     debug('Error when getting leg players: ' + error);
                                     next(error);
                                 });
                         }).catch(error => {
-                            debug('Error when getting game: ' + error);
+                            debug('Error when getting match: ' + error);
                             next(error);
                         });
                 }).catch(error => {
@@ -120,9 +120,9 @@ router.get('/:id/result', function (req, res, next) {
             axios.get(req.app.locals.kcapp.api + '/leg/' + req.params.id)
                 .then(response => {
                     var leg = response.data;
-                    axios.get(req.app.locals.kcapp.api + '/game/' + leg.game_id)
+                    axios.get(req.app.locals.kcapp.api + '/match/' + leg.match_id)
                         .then(response => {
-                            var game = response.data;
+                            var match = response.data;
                             axios.get(req.app.locals.kcapp.api + '/leg/' + leg.id + '/players')
                                 .then(response => {
                                     var legPlayers = response.data;
@@ -136,7 +136,7 @@ router.get('/:id/result', function (req, res, next) {
                                             (visit.second_dart.value * visit.second_dart.multiplier) +
                                             (visit.third_dart.value * visit.third_dart.multiplier);
                                         if (!visit.is_bust) {
-                                            if (game.game_type.id == 2) {
+                                            if (match.match_type.id == 2) {
                                                 player.remaining_score += visitScore;
                                             }
                                             else {
@@ -164,7 +164,7 @@ router.get('/:id/result', function (req, res, next) {
                                             var stats = response.data;
                                             res.render('leg_result', {
                                                 leg: leg, players: playersMap, stats: stats,
-                                                game: game, leg_players: legPlayers
+                                                match: match, leg_players: legPlayers
                                             });
                                         }).catch(error => {
                                             debug('Error when getting statistics: ' + error);
@@ -175,7 +175,7 @@ router.get('/:id/result', function (req, res, next) {
                                     next(error);
                                 });
                         }).catch(error => {
-                            debug('Error when getting game: ' + error);
+                            debug('Error when getting match: ' + error);
                             next(error);
                         });
                 }).catch(error => {
@@ -228,7 +228,7 @@ router.post('/:id/finish', function (req, res, next) {
         .then(() => {
             res.status(200).end();
         }).catch(error => {
-            debug('Unable to finish game: ' + error);
+            debug('Unable to finish match: ' + error);
             next(error);
         });
 });

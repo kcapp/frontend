@@ -182,7 +182,7 @@ block content
     div(class='row')
 
     - var round_number = Math.floor(leg.visits.length / leg.players.length) + 1;
-    +get_score_header(game.game_mode, round_number, leg_players)
+    +get_score_header(match.match_mode, round_number, leg_players)
 
     h3 Visits
     div(class='table-responsive')

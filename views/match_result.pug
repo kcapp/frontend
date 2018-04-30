@@ -14,18 +14,18 @@ block scripts
 
 block content
     div(class='clearfix')
-        h2(class='pull-left') Game Result (#{game.id})
+        h2(class='pull-left') Match Result (#{match.id})
 
-    - var duration = moment.duration(moment(game.end_time).diff(game.created_at)).asMinutes().toFixed()
+    - var duration = moment.duration(moment(match.end_time).diff(match.created_at)).asMinutes().toFixed()
     p.
-        Type: #{game.game_mode.name} <br>
-        Started: #{moment(game.created_at).format('YYYY-MM-DD HH:mm:ss')} <br>
-        Finished: #{game.end_time === undefined ? '-' : moment(game.end_time).format('YYYY-MM-DD HH:mm:ss')} <br>
-        Stakes: #{game.owe_type_id === null ? "None" : game.owe_type.item} <br>
-        Duration: #{game.end_time === undefined ? '-' : duration + ' minutes'} <br>
+        Type: #{match.match_mode.name} <br>
+        Started: #{moment(match.created_at).format('YYYY-MM-DD HH:mm:ss')} <br>
+        Finished: #{match.end_time === undefined ? '-' : moment(match.end_time).format('YYYY-MM-DD HH:mm:ss')} <br>
+        Stakes: #{match.owe_type_id === null ? "None" : match.owe_type.item} <br>
+        Duration: #{match.end_time === undefined ? '-' : duration + ' minutes'} <br>
 
-    each playerId in game.players
-        if (game.winner_id === playerId)
+    each playerId in match.players
+        if (match.winner_id === playerId)
             p= 'Winner: ' + players[playerId].name
 
     div(class='table-responsive')
@@ -38,7 +38,7 @@ block content
                     th Results
             tbody
             - var idx = 1
-            each leg in game.legs
+            each leg in match.legs
                 tr
                     th(hidden='true' scope='row')= leg.id
                     td(class='col-sm-2')= '#' + idx++

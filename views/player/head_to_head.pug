@@ -7,7 +7,7 @@ block scripts
     script.
         $(function () {
             $('.table-player-form td').click(function () {
-                location.href = '/games/' + $(this).data('game-id') + '/result';
+                location.href = '/matches/' + $(this).data('match-id') + '/result';
             });
         });
 
@@ -37,13 +37,13 @@ block content
                 tr
                     th(colspan='3' class='head-to-head-header'): h3 Overall
                 tr
-                    td(class='head-to-head-player1')= player1.games_won + ' / ' + player1.games_played
-                    th(class='head-to-head-header') Games Won / Played
-                    td(class='head-to-head-player2')= player2.games_won + ' / ' + player2.games_played
+                    td(class='head-to-head-player1')= player1.matches_won + ' / ' + player1.matches_played
+                    th(class='head-to-head-header') Matches Won / Played
+                    td(class='head-to-head-player2')= player2.matches_won + ' / ' + player2.matches_played
                 tr
-                    td(class='head-to-head-player1')= ((player1.games_won * 100) / player1.games_played).toFixed(2) + '%'
-                    th(class='head-to-head-header') Games Win %
-                    td(class='head-to-head-player2')= ((player2.games_won * 100) / player2.games_played).toFixed(2) + '%'
+                    td(class='head-to-head-player1')= ((player1.matches_won * 100) / player1.matches_played).toFixed(2) + '%'
+                    th(class='head-to-head-header') Matches Win %
+                    td(class='head-to-head-player2')= ((player2.matches_won * 100) / player2.matches_played).toFixed(2) + '%'
                 tr
                     td(class='head-to-head-player1')= player1.legs_won + ' / ' + player1.legs_played
                     th(class='head-to-head-header') Legs Won / Played
@@ -55,45 +55,45 @@ block content
                 tr
                     th(colspan='3' class='head-to-head-header'): h3 Form
                 tr
-                    mixin player_form_table(games, playerID, align)
+                    mixin player_form_table(matches, playerID, align)
                         table(class='table-player-form' style='width: 100%; table-layout: fixed;' align=align)
                             tr
                                 //- Need to loop though in reverse order
                                 each idx in [4, 3, 2, 1, 0]
-                                    - var game = games[idx]
-                                    if game == null
+                                    - var match = matches[idx]
+                                    if match == null
                                         td
                                     else
-                                        if game.winner_id === null
-                                            td(style='background-color: #5bc0de; font-weight: bold;' data-game-id=game.id): label(style='display: block; cursor: pointer;') D
-                                        else if game.winner_id === playerID
-                                            td(style='background-color: #5cb85c; font-weight: bold;' data-game-id=game.id): label(style='display: block; cursor: pointer;') W
+                                        if match.winner_id === null
+                                            td(style='background-color: #5bc0de; font-weight: bold;' data-match-id=match.id): label(style='display: block; cursor: pointer;') D
+                                        else if match.winner_id === playerID
+                                            td(style='background-color: #5cb85c; font-weight: bold;' data-match-id=match.id): label(style='display: block; cursor: pointer;') W
                                         else
-                                            td(style='background-color: #e02a2a; font-weight: bold;' data-game-id=game.id): label(style='display: block; cursor: pointer;') L
+                                            td(style='background-color: #e02a2a; font-weight: bold;' data-match-id=match.id): label(style='display: block; cursor: pointer;') L
 
                     td(class='text-center')
-                        +player_form_table(head2head.last_games[player1.id], player1.id, 'right')
+                        +player_form_table(head2head.last_matches[player1.id], player1.id, 'right')
                     th(class='head-to-head-header') Last
                     td(class='text-center')
-                        +player_form_table(head2head.last_games[player2.id], player2.id, 'left')
+                        +player_form_table(head2head.last_matches[player2.id], player2.id, 'left')
                 tr
                     td(class='text-center')
-                        +player_form_table(head2head.head_to_head_games, player1.id, 'right')
+                        +player_form_table(head2head.head_to_head_matches, player1.id, 'right')
                     th(class='head-to-head-header') VS.
                     td(class='text-center')
-                        +player_form_table(head2head.head_to_head_games, player2.id, 'left')
+                        +player_form_table(head2head.head_to_head_matches, player2.id, 'left')
                 - var player1Wins = head2head.head_to_head_wins[player1.id] ? head2head.head_to_head_wins[player1.id] : 0
                 - var player2Wins = head2head.head_to_head_wins[player2.id] ? head2head.head_to_head_wins[player2.id] : 0
                 - var draws = head2head.head_to_head_wins[0] ? head2head.head_to_head_wins[0] : 0
-                - var total_games = player1Wins + player2Wins + draws
+                - var total_matches = player1Wins + player2Wins + draws
                 tr
-                    td(class='head-to-head-player1')= total_games + ' (' + player1Wins + ' / ' + draws + ' / ' + player2Wins + ')'
+                    td(class='head-to-head-player1')= total_matches + ' (' + player1Wins + ' / ' + draws + ' / ' + player2Wins + ')'
                     th(class='head-to-head-header') Total (W / D / L)
-                    td(class='head-to-head-player2')= total_games + ' (' + player2Wins + ' / ' + draws + ' / ' + player1Wins + ')'
+                    td(class='head-to-head-player2')= total_matches + ' (' + player2Wins + ' / ' + draws + ' / ' + player1Wins + ')'
                 tr
-                    td(class='head-to-head-player1')= total_games == 0 ? '-' : (player1Wins / total_games * 100).toFixed(2) + '%'
+                    td(class='head-to-head-player1')= total_matches == 0 ? '-' : (player1Wins / total_matches * 100).toFixed(2) + '%'
                     th(class='head-to-head-header') VS. Win %
-                    td(class='head-to-head-player2')= total_games == 0 ? '-' : (player2Wins / total_games * 100).toFixed(2) + '%'
+                    td(class='head-to-head-player2')= total_matches == 0 ? '-' : (player2Wins / total_matches * 100).toFixed(2) + '%'
 
                 mixin x01_statistics(x01, stats1, stats2)
                     tr
@@ -192,14 +192,14 @@ block content
                             thead
                                 tr
                                     th(colspan='3') Visit
-                                    th Per Game
+                                    th Per Match
                             tbody
                                 each round in [0, 1, 2]
                                     tr
                                         +dart_container(visits[round].first_dart.value, visits[round].first_dart.multiplier)
                                         +dart_container(visits[round].second_dart.value, visits[round].second_dart.multiplier)
                                         +dart_container(visits[round].third_dart.value, visits[round].third_dart.multiplier)
-                                        td(width='12%')= (visits[round].count / player.games_played).toFixed(2)
+                                        td(width='12%')= (visits[round].count / player.matches_played).toFixed(2)
                     td
                         +player_top_visits_table(head2head.player_visits[player1.id], player1, 'right')
                     th

@@ -23,7 +23,7 @@ app.locals.kcapp.api = 'http://localhost:8001';
 
 // Create all routes
 var socketHandler = require('./routes/lib/socketio_handler')(io, app);
-var games = require('./routes/games')(socketHandler);
+var matches = require('./routes/matches')(socketHandler);
 var index = require('./routes/index');
 var legs = require('./routes/legs')(app, socketHandler);
 var owes = require('./routes/owes');
@@ -47,7 +47,7 @@ app.use(lessMiddleware(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', index);
-app.use('/games', games);
+app.use('/matches', matches);
 app.use('/legs', legs);
 app.use('/owes', owes);
 app.use('/players', players);

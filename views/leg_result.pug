@@ -17,12 +17,12 @@ block append scripts
         include chart/chart_helper.js
     script.
         var leg = !{JSON.stringify(leg)}
-        var game = !{JSON.stringify(game)}
+        var match = !{JSON.stringify(match)}
         var legPlayers = !{JSON.stringify(leg_players)}
         var playersMap = !{JSON.stringify(players)}
         var visits = leg.visits;
 
-        var chartMaxValue = game.game_type.id == 1 || game.game_type.id == 3 ? leg.starting_score : 0;
+        var chartMaxValue = match.match_type.id == 1 || match.match_type.id == 3 ? leg.starting_score : 0;
         var labels = [];
         var values = { }
         for (var i = 0; i < legPlayers.length; i++) {
@@ -50,7 +50,7 @@ block append scripts
                 var visitScore = ((visit.first_dart.value * visit.first_dart.multiplier) +
                     (visit.second_dart.value * visit.second_dart.multiplier) +
                     (visit.third_dart.value * visit.third_dart.multiplier))
-                if (game.game_type.id == 2) {
+                if (match.match_type.id == 2) {
                     current = current + visitScore
                     values[visit.player_id].push(current);
                     if (current > chartMaxValue) {
@@ -89,7 +89,7 @@ block append scripts
                 iDisplayLength: 50,
                 order: [[ 1,  'desc' ]]
             });
-            $('#continue-game').focus();
+            $('#continue-match').focus();
 
             $('.edit-visit').click(function () {
                 var visitNumber = $(this).data('visit');
@@ -212,11 +212,11 @@ block append scripts
             $('#player-order-list').sortable();
             $('#player-order-list').disableSelection();
 
-            $('#continue-game').click(function () {
-                location.href = '/games/' + $(this).data('game');
+            $('#continue-match').click(function () {
+                location.href = '/matches/' + $(this).data('match');
             });
-            $('#back-to-game').click(function () {
-                location.href = '/games/' + $(this).data('game') + '/result';
+            $('#back-to-match').click(function () {
+                location.href = '/matches/' + $(this).data('match') + '/result';
             });
 
             $('.glyphicon-user').click(function(){
@@ -265,10 +265,10 @@ block content
             h2 Leg Result (#{leg.id})
 
         div(class='pull-right' style='padding-top: 20px;')
-            if game.is_finished
-                button(type='button' class='btn btn-primary pull-right mt-30' id='back-to-game' data-game=leg.game_id) Back to Game
+            if match.is_finished
+                button(type='button' class='btn btn-primary pull-right mt-30' id='back-to-match' data-match=leg.match_id) Back to Match
             else
-                button(type='button' class='btn btn-primary pull-right mt-30' id='continue-game' data-game=game.id) Continue Game
+                button(type='button' class='btn btn-primary pull-right mt-30' id='continue-match' data-match=match.id) Continue Match
 
     p.
         Started: #{moment(leg.created_at).format('YYYY-MM-DD HH:mm:ss')} <br>
@@ -292,7 +292,7 @@ block content
                                         span(class='glyphicon glyphicon-user' data-player=statistic.player_id)
                                 div(class='playername'): a(href='/players/' + statistic.player_id + '/statistics')= player.name
                                 div: hr
-                                if game.game_type.id == 2
+                                if match.match_type.id == 2
                                     div(class='info') PPD
                                     div= statistic.ppd.toFixed(2)
                                     div(class='info') Score
@@ -318,7 +318,7 @@ block content
                                 div= "180s: " + statistic.scores_180s
 
                                 //- Get darts thrown per player
-                                if game.game_type.id == 1
+                                if match.match_type.id == 1
                                     div(class='info') Darts Thrown
                                     - var dartsThrown = 0
                                     each visit in leg.visits
@@ -326,7 +326,7 @@ block content
                                             - dartsThrown = visit.darts_thrown
                                     div= dartsThrown
                                 div(style='margin-top: 20px;'): hr
-                                if game.game_type.id == 1 || game.game_type.id == 3
+                                if match.match_type.id == 1 || match.match_type.id == 3
                                     if statistic.player_id === leg.winner_player_id
                                         div(class='label-winner') WINNER
                                     else

@@ -18,20 +18,20 @@ block scripts
                 prevText: '<span aria-hidden="true">&laquo;</span>',
                 nextText: '<span aria-hidden="true">&raquo;</span>',
                 onPageClick: function (event, page) {
-                    location.href = '/games/page/' + page;
+                    location.href = '/matches/page/' + page;
                 }
             });
         });
     script.
         $(function() {
-            $('#table-games-list').on('mouseup', '#continue-game-button', function (e) {
-                openLink('/games/' + $(this).data('game'), e);
+            $('#table-matches-list').on('mouseup', '#continue-match-button', function (e) {
+                openLink('/matches/' + $(this).data('match'), e);
             });
-            $('#table-games-list').on('mouseup', '#spectate-game-button', function(e) {
-                openLink('/games/' + $(this).data('game') + '/spectate', e);
+            $('#table-matches-list').on('mouseup', '#spectate-match-button', function(e) {
+                openLink('/matches/' + $(this).data('match') + '/spectate', e);
             });
-            $('#table-games-list').on('mouseup', '#view-game-button', function (e) {
-                openLink('/games/' + $(this).data('game') + '/result', e);
+            $('#table-matches-list').on('mouseup', '#view-match-button', function (e) {
+                openLink('/matches/' + $(this).data('match') + '/result', e);
             });
         });
 
@@ -47,14 +47,14 @@ block scripts
 
 block content
     div
-        h2 Games
+        h2 Matches
         p.
-            Overview over all played games
+            Overview over all played matches
 
     div(class='col-md-14 text-right')
         ul(class="sync-pagination")
 
-    table(class='table' id='table-games-list')
+    table(class='table' id='table-matches-list')
             thead
                 tr
                     th(hidden=true)
@@ -66,37 +66,37 @@ block content
                     th Winner
                     th Results
             tbody
-                each game in games
-                    - var isLive = moment.duration(moment().diff(game.last_throw_time)).asMinutes().toFixed() < 2
+                each match in matches
+                    - var isLive = moment.duration(moment().diff(match.last_throw_time)).asMinutes().toFixed() < 2
                     tr
-                        th(hidden='true' scope='row')= game.id
+                        th(hidden='true' scope='row')= match.id
                         td(class='col-sm-2')
-                            div(style='display: inline-block; padding-right: 6px')= moment(game.created_at).format('YYYY-MM-DD HH:mm:ss')
+                            div(style='display: inline-block; padding-right: 6px')= moment(match.created_at).format('YYYY-MM-DD HH:mm:ss')
                             if isLive
                                 label(class='label label-info' style='line-height: inherit;') Live
                         td(class='col-sm-1')
-                            if game.venue
-                                div= game.venue.name
-                        td(class='col-sm-1')= game.game_type.name
-                        td(class='col-sm-1')= game.game_mode.name
+                            if match.venue
+                                div= match.venue.name
+                        td(class='col-sm-1')= match.match_type.name
+                        td(class='col-sm-1')= match.match_mode.name
                         td(class='col-sm-1')
-                            each id in game.players
+                            each id in match.players
                                 div(style='margin-bottom: 5px;')
                                     span(class='label label-primary' style='line-height: inherit;')= players[id].name
-                        if game.is_finished
+                        if match.is_finished
                             td(class='col-sm-1')
-                                if game.winner_id === null
+                                if match.winner_id === null
                                     div: span(class='label label-default' style='line-height: inherit;') Draw
                                 else
-                                    div: span(class='label label-success' style='line-height: inherit;')= players[game.winner_id].name
+                                    div: span(class='label label-success' style='line-height: inherit;')= players[match.winner_id].name
                         else
                             td(class='col-sm-2')
                         td(class='col-sm-2')
-                            if !game.is_finished
-                                button(type='button' id='continue-game-button' data-game=game.id class='btn btn-primary btn-block') Continue
-                                button(type='button' id='spectate-game-button' data-game=game.id class='btn btn-primary btn-block') Spectate
+                            if !match.is_finished
+                                button(type='button' id='continue-match-button' data-match=match.id class='btn btn-primary btn-block') Continue
+                                button(type='button' id='spectate-match-button' data-match=match.id class='btn btn-primary btn-block') Spectate
                             else
-                                button(type='button' id='view-game-button' data-game=game.id class='btn btn-primary btn-block') View
+                                button(type='button' id='view-match-button' data-match=match.id class='btn btn-primary btn-block') View
 
     div(class='col-md-14 text-right')
-        ul(id='pagination-games' class="sync-pagination pagination-md")
+        ul(id='pagination-matches' class="sync-pagination pagination-md")

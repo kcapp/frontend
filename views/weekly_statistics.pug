@@ -41,7 +41,7 @@ block content
                         thead
                             tr
                                 th(colspan='7')
-                                th(colspan='4' class='th-bordered') Per Game
+                                th(colspan='4' class='th-bordered') Per Match
                                 th(colspan='3' class='th-bordered') Accuracy
                             tr
                                 th(class='text-right') Rank
@@ -65,15 +65,15 @@ block content
                             tr
                                 td(class='text-right')= rank++
                                 td(style='width: 12%'): a(href='/players/' + player.id + '/statistics')= player.name
-                                td(class='text-center')= stats.games_played
-                                td(class='text-center')= stats.games_won === undefined ? 0 : stats.games_won
-                                td(class='text-right')= stats.games_won === undefined ? '0.00%' : (stats.games_won / stats.games_played * 100).toFixed(2) + '%'
+                                td(class='text-center')= stats.matches_played
+                                td(class='text-center')= stats.matches_won === undefined ? 0 : stats.matches_won
+                                td(class='text-right')= stats.matches_won === undefined ? '0.00%' : (stats.matches_won / stats.matches_played * 100).toFixed(2) + '%'
                                 td(class='text-center')= stats.ppd.toFixed(2) + ' / ' + stats.first_nine_ppd.toFixed(2)
                                 td(class='text-right')= stats.checkout_percentage === null ? '-' : stats.checkout_percentage.toFixed(2) + ' %'
-                                td(class='text-right')= (stats.scores_60s_plus / stats.games_played).toFixed(2)
-                                td(class='text-right')= (stats.scores_100s_plus / stats.games_played).toFixed(2)
-                                td(class='text-right')= (stats.scores_140s_plus / stats.games_played).toFixed(2)
-                                td(class='text-right')= (stats.scores_180s / stats.games_played).toFixed(2)
+                                td(class='text-right')= (stats.scores_60s_plus / stats.matches_played).toFixed(2)
+                                td(class='text-right')= (stats.scores_100s_plus / stats.matches_played).toFixed(2)
+                                td(class='text-right')= (stats.scores_140s_plus / stats.matches_played).toFixed(2)
+                                td(class='text-right')= (stats.scores_180s / stats.matches_played).toFixed(2)
                                 td(class='text-right')= stats.accuracy_overall === null ? '-' : stats.accuracy_overall.toFixed(2)
                                 td(class='text-right')= stats.accuracy_20 === null ? '-' : stats.accuracy_20.toFixed(2)
                                 td(class='text-right')= stats.accuracy_19 === null ? '-' : stats.accuracy_19.toFixed(2)
@@ -83,14 +83,14 @@ block content
             h3 Shootout
 
             if statistics_shootout.length === 0
-                p No games played ...
+                p No matches played ...
             else
                 div(class='table')
                     table(id='table-shootout-statistics' class='table')
                         thead
                             tr
                                 th(colspan='6')
-                                th(colspan='4' class='th-bordered') Per Game
+                                th(colspan='4' class='th-bordered') Per Match
                             tr
                                 th(class='text-right') Rank
                                 th Player
@@ -109,11 +109,11 @@ block content
                                 tr
                                     td(class='text-right')= rank++
                                     td(style='width: 12%'): a(href='/players/' + player.id + '/statistics')= player.name
-                                    td(class='text-center')= stats.games_played
-                                    td(class='text-center')= stats.games_won === undefined ? 0 : stats.games_won
-                                    td(class='text-right')= stats.games_won === undefined ? '0.00%' : (stats.games_won / stats.games_played * 100).toFixed(2) + '%'
+                                    td(class='text-center')= stats.matches_played
+                                    td(class='text-center')= stats.matches_won === undefined ? 0 : stats.matches_won
+                                    td(class='text-right')= stats.matches_won === undefined ? '0.00%' : (stats.matches_won / stats.matches_played * 100).toFixed(2) + '%'
                                     td(class='text-center')= stats.ppd.toFixed(2)
-                                    td(class='text-right')= (stats.scores_60s_plus / stats.games_played).toFixed(2)
-                                    td(class='text-right')= (stats.scores_100s_plus / stats.games_played).toFixed(2)
-                                    td(class='text-right')= (stats.scores_140s_plus / stats.games_played).toFixed(2)
-                                    td(class='text-right')= (stats.scores_180s / stats.games_played).toFixed(2)
+                                    td(class='text-right')= (stats.scores_60s_plus / stats.matches_played).toFixed(2)
+                                    td(class='text-right')= (stats.scores_100s_plus / stats.matches_played).toFixed(2)
+                                    td(class='text-right')= (stats.scores_140s_plus / stats.matches_played).toFixed(2)
+                                    td(class='text-right')= (stats.scores_180s / stats.matches_played).toFixed(2)

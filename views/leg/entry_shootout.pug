@@ -42,8 +42,8 @@ block script_check_visit_finished
 
             if (isFinished) {
                 disableEnter = true;
-                showConfirm('Game will be finished.', function() {
-                    // End game, 'click' submit
+                showConfirm('Match will be finished.', function() {
+                    // End match, 'click' submit
                     $('#submit-score-button').data('finished', 1).trigger('click');
                 }, function(){
                     $('#undo-button').trigger('click');

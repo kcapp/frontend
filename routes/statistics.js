@@ -53,10 +53,10 @@ function getStatistics(from, to, req, res, next) {
 function sort(statistics) {
     statistics = _.sortBy(statistics, (stats) => stats.player_id);
     statistics = _.sortBy(statistics, (stats) => {
-        if (stats.games_won === undefined) {
+        if (stats.matches_won === undefined) {
             return 0;
         }
-        return -(stats.games_won / stats.games_played)
+        return -(stats.matches_won / stats.matches_played)
     });
     return statistics;
 }
