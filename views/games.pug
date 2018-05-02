@@ -67,7 +67,7 @@ block content
                     th Results
             tbody
                 each game in games
-                    - var isLive = moment.duration(moment().diff(game.last_throw_time)).asMinutes().toFixed() < 2
+                    - var isLive = !game.is_finished && moment.duration(moment().diff(game.last_throw_time)).asMinutes().toFixed() < 2
                     tr
                         th(hidden='true' scope='row')= game.id
                         td(class='col-sm-2')
