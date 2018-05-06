@@ -1,0 +1,423 @@
+extends layout.pug
+
+include mixins/dart.pug
+
+block append head
+    link(rel='stylesheet' type='text/css' href='/stylesheets/datatables-1.10.16.min.css')
+    script(src='/javascripts/datatables-1.10.16.min.js')
+
+    script(src='/javascripts/Chart.bundle-2.7.1.min.js')
+    script(src='/javascripts/webgl-heatmap.js')
+    script(src='/javascripts/jquery-ui.1.12.1.min.js')
+    script(src='/javascripts/jquery.ui.touch-punch-0.2.3.min.js')
+    script(src='/javascripts/moment-2.20.1.min.js')
+
+block append scripts
+    script
+        include chart/chart_helper.js
+    script.
+        var leg = !{JSON.stringify(leg)}
+        var match = !{JSON.stringify(match)}
+        var legPlayers = !{JSON.stringify(leg_players)}
+        var playersMap = !{JSON.stringify(players)}
+        var visits = leg.visits;
+
+        var chartMaxValue = match.match_type.id == 1 || match.match_type.id == 3 ? leg.starting_score : 0;
+        var labels = [];
+        var values = { }
+        for (var i = 0; i < legPlayers.length; i++) {
+            var player = legPlayers[i];
+            var score = leg.starting_score + player.handicap
+            values[player.player_id] = [ score ];
+            if (score > chartMaxValue) {
+                chartMaxValue = score;
+            }
+        }
+        var round = 0;
+        labels.push(round);
+
+        for (var i = 0; i < visits.length; i++) {
+            var visit = visits[i];
+            if (i % legPlayers.length === 0) {
+                round++;
+                labels.push(round);
+            }
+            var current = values[visit.player_id][values[visit.player_id].length - 1];
+            if (visit.is_bust) {
+                values[visit.player_id].push(current);
+            }
+            else {
+                var visitScore = ((visit.first_dart.value * visit.first_dart.multiplier) +
+                    (visit.second_dart.value * visit.second_dart.multiplier) +
+                    (visit.third_dart.value * visit.third_dart.multiplier))
+                if (match.match_type.id == 2) {
+                    current = current + visitScore
+                    values[visit.player_id].push(current);
+                    if (current > chartMaxValue) {
+                        chartMaxValue = current;
+                    }
+                }
+                else {
+                    values[visit.player_id].push(current - visitScore);
+                }
+            }
+        }
+
+        $(function () {
+            var datasets = []
+            for (var i = 0; i < legPlayers.length; i++) {
+                var player = playersMap[legPlayers[i].player_id];
+                datasets.push({
+                    label: player.name,
+                    backgroundColor: player.color,
+                    borderColor: player.color,
+                    data: values[player.id],
+                    fill: false
+                });
+            }
+            var config = getChartConfig('Scores', 'line', 'Round', 'Scores', labels, datasets);
+            config.options.scales.yAxes[0].ticks = { max: chartMaxValue, stepSize: 20, beginAtZero: true };
+            var scoresChart = new Chart("canvas-scores", config);
+        });
+    script.
+        var leg = !{JSON.stringify(leg)}
+
+        $(function () {
+            $('#leg-hits-table').DataTable({
+                searching: false,
+                bInfo : false,
+                iDisplayLength: 50,
+                order: [[ 1,  'desc' ]]
+            });
+            $('#continue-match').focus();
+
+            $('.edit-visit').click(function () {
+                var visitNumber = $(this).data('visit');
+
+                var firstDartField = $('#first-dart-visit-' + visitNumber);
+                var secondDartField = $('#second-dart-visit-' + visitNumber);
+                var thirdDartField = $('#third-dart-visit-' + visitNumber);
+
+                var firstDartValue = firstDartField.data().score;
+                var firstDartMultiplier = firstDartField.data().multiplier;
+                var secondDartValue = secondDartField.data().score;
+                var secondDartMultiplier = secondDartField.data().multiplier;
+                var thirdDartValue = thirdDartField.data().score;
+                var thirdDartMultiplier = thirdDartField.data().multiplier;
+
+                var selector1 = $('#first-dart-visit-' + visitNumber + '-selector');
+                var selector2 = $('#second-dart-visit-' + visitNumber + '-selector');
+                var selector3 = $('#third-dart-visit-' + visitNumber + '-selector');
+
+                var firstDartLabel = $('#first-dart-visit-' + visitNumber + '-label');
+                var secondDartLabel = $('#second-dart-visit-' + visitNumber + '-label');
+                var thirdDartLabel = $('#third-dart-visit-' + visitNumber + '-label');
+
+                if ($(this).data('issave') == 1) {
+                    var newFirstDart = selector1.val().split('-');
+                    var newSecondDart = selector2.val().split('-');
+                    var newThirdDart = selector3.val().split('-');
+
+                    var firstScoreChanged = newFirstDart[1];
+                    var secondScoreChanged = newSecondDart[1];
+                    var thirdScoreChanged = newThirdDart[1];
+
+                    var firstMultiplierChanged = newFirstDart[0];
+                    var secondMultiplierChanged = newSecondDart[0];
+                    var thirdMultiplierChanged = newThirdDart[0];
+
+                    firstDartField.data('score', firstScoreChanged);
+                    firstDartField.data('multiplier', firstMultiplierChanged);
+                    secondDartField.data('score', secondScoreChanged);
+                    secondDartField.data('multiplier', secondMultiplierChanged);
+                    thirdDartField.data('score', thirdScoreChanged);
+                    thirdDartField.data('multiplier', thirdMultiplierChanged);
+
+                    // Save the data
+                    var data = JSON.stringify({
+                        id: visitNumber,
+                        leg_id: leg.id,
+                        first_dart: { value: parseInt(firstScoreChanged), multiplier: parseInt(firstMultiplierChanged) },
+                        second_dart: { value: parseInt(secondScoreChanged), multiplier: parseInt(secondMultiplierChanged) },
+                        third_dart: { value: parseInt(thirdScoreChanged), multiplier: parseInt(thirdMultiplierChanged) }
+                    });
+                    $(this).children('span').removeClass('glyphicon-floppy-disk').addClass('glyphicon-edit');
+                    $(this).data('issave', 0);
+
+                    /// Depending on the data-finished attribute of submit button, use different route and redirect
+                    var route = window.location.pathname;
+                    var routeRedirect = window.location.pathname;
+                    executePost(route, data, 'application/json',
+                        function (response) {
+                            location.href = '/legs/' + leg.id;
+                        },
+                        function (error) {
+                            alert("Error when updating score, please reload!");
+                            console.log("Unable to proceed: " + error.responseText);
+                            location.reload();
+                        }
+                    )
+                }
+                else {
+                    selector1.show();
+                    selector2.show();
+                    selector3.show();
+
+                    selector1.val(firstDartMultiplier + "-" + firstDartValue);
+                    selector2.val(secondDartMultiplier + "-" + secondDartValue);
+                    selector3.val(thirdDartMultiplier + "-" + thirdDartValue);
+
+                    firstDartLabel.hide();
+                    secondDartLabel.hide();
+                    thirdDartLabel.hide();
+
+                    $(this).children('span').removeClass('glyphicon-edit').addClass('glyphicon-floppy-disk');
+                    $(this).data('issave', 1);
+                }
+            });
+
+            $('.delete-visit').click(function () {
+                var visitNumber = $(this).data('visit');
+                showConfirm('Visit will be deleted.', function() {
+                    executeDelete(window.location.pathname + '/' + visitNumber,
+                        function (response) {
+                            location.href = '/legs/' + leg.id;
+                        },
+                        function (error) {
+                            alert('Error deleting score. Please reload');
+                            console.log("Unable to proceed: " + error.responseText);
+                            location.reload();
+                        }
+                    );
+                }, function(){ /* NOOP */ });
+            });
+
+            $('#change-order-button').click(function (e) {
+                var players = $('.form-check-input');
+                var order = {}
+                order = {};
+                for (var i = 0; i < players.length; i++) {
+                    order[players[i].value] = i + 1;
+                }
+                executePut(window.origin + '/legs/' + leg.id + '/order', JSON.stringify(order), 'application/json', function() {
+                    location.href = '/legs/' + leg.id;
+                },
+                function(error) {
+                    alert('Error changing player order. Please reload');
+                    console.log(error);
+                    location.reload();
+                })
+            });
+
+            $('#player-order-list').sortable();
+            $('#player-order-list').disableSelection();
+
+            $('#continue-match').click(function () {
+                location.href = '/matches/' + $(this).data('match');
+            });
+            $('#back-to-match').click(function () {
+                location.href = '/matches/' + $(this).data('match') + '/result';
+            });
+
+            $('.glyphicon-user').click(function(){
+                location.href = '/players/' + $(this).data('player') + '/statistics'
+            });
+        });
+    script.
+        var scoresMap = !{JSON.stringify(leg.hits)};
+        $(function () {
+            var canvas = $('#dartboard-heatmap')[0];
+            drawHeatmap(canvas, scoresMap, 0, 20, 20, 50);
+            $("#heatmap-value-selector").change(function () {
+                drawHeatmap(canvas, scoresMap, this.value, 20, 20, 50);
+            });
+
+            $('#btn-collapse-visits').click(function () {
+                if ($('#visits-div').hasClass('in')) {
+                    $('#btn-collapse-visits').text('Show Visits');
+                } else {
+                    $('#btn-collapse-visits').text('Hide Visits');
+                }
+            });
+            $('#btn-collapse-heatmap').click(function () {
+                if ($('#heatmap-div').hasClass('in')) {
+                    $('#btn-collapse-heatmap').text('Show Heatmap');
+                } else {
+                    $('#btn-collapse-heatmap').text('Hide Heatmap');
+                }
+            });
+            $('#btn-collapse-hits').click(function () {
+                if ($('#hits-div').hasClass('in')) {
+                    $('#btn-collapse-hits').text('Show Hits');
+                } else {
+                    $('#btn-collapse-hits').text('Hide Hits');
+                }
+            });
+
+            $('#heatmap-div').on('shown.bs.collapse', function() {
+                drawHeatmap(canvas, scoresMap, 0, 20, 20, 50);
+            });
+        });
+
+block content
+    div(class='clearfix')
+        div(class='pull-left')
+            h2 Leg Result (#{leg.id})
+
+        div(class='pull-right' style='padding-top: 20px;')
+            if match.is_finished
+                button(type='button' class='btn btn-primary pull-right mt-30' id='back-to-match' data-match=leg.match_id) Back to Match
+            else
+                button(type='button' class='btn btn-primary pull-right mt-30' id='continue-match' data-match=match.id) Continue Match
+
+    p.
+        Started: #{moment(leg.created_at).format('YYYY-MM-DD HH:mm:ss')} <br>
+        Finished: #{leg.end_time === null ? '' : moment(leg.end_time).format('YYYY-MM-DD HH:mm:ss')} <br>
+        Duration: #{leg.end_time === null ? '' : moment.duration(moment(leg.end_time).diff(leg.created_at)).asMinutes().toFixed() + ' minutes'} <br>
+        Rounds: #{Math.ceil(leg.visits.length / leg.players.length)}
+
+    - var isFinished = leg.winner_player_id !== null
+    if isFinished
+        table(style='width: 100%; table-layout: fixed;')
+            tbody
+                tr
+                    each statistic in stats
+                        - var player = players[statistic.player_id]
+                        td(class='text-center')
+                            div(class='player-card')
+                                div(class='glyph')
+                                    if player.profile_pic_url
+                                        img(class='glyphicon glyphicon-user' height='143' width='111' src=player.profile_pic_url data-player=statistic.player_id)
+                                    else
+                                        span(class='glyphicon glyphicon-user' data-player=statistic.player_id)
+                                div(class='playername'): a(href='/players/' + statistic.player_id + '/statistics')= player.name
+                                div: hr
+                                if match.match_type.id == 2
+                                    div(class='info') PPD
+                                    div= statistic.ppd.toFixed(2)
+                                    div(class='info') Score
+                                    div= player.remaining_score
+                                else
+                                    div(class='info') PPD / First 9
+                                    div= statistic.ppd.toFixed(2) + ' / ' + statistic.first_nine_ppd.toFixed(2)
+                                    div(class='info') Accuracy Overall / 20 / 19
+                                    div
+                                    - var accuracy_20 = statistic.accuracy_20 === null ? '-' : statistic.accuracy_20.toFixed(2)
+                                    - var accuracy_19 = statistic.accuracy_19 === null ? '-' : statistic.accuracy_19.toFixed(2)
+                                    div= statistic.accuracy_overall.toFixed(2) + ' / ' + accuracy_20 + ' / ' + accuracy_19
+                                    div(class='info') Checkout % / Attempts
+                                    if statistic.player_id === leg.winner_player_id
+                                        div= statistic.checkout_percentage.toFixed(2) + '% / ' + statistic.checkout_attempts
+                                    else
+                                        div= '- / ' + (statistic.checkout_attempts ? statistic.checkout_attempts : '-')
+
+                                div(class='info') Scores
+                                div= "60+: " + statistic.scores_60s_plus
+                                div= "100+: " + statistic.scores_100s_plus
+                                div= "140+: " + statistic.scores_140s_plus
+                                div= "180s: " + statistic.scores_180s
+
+                                //- Get darts thrown per player
+                                if match.match_type.id == 1
+                                    div(class='info') Darts Thrown
+                                    - var dartsThrown = 0
+                                    each visit in leg.visits
+                                        if statistic.player_id == visit.player_id
+                                            - dartsThrown = visit.darts_thrown
+                                    div= dartsThrown
+                                div(style='margin-top: 20px;'): hr
+                                if match.match_type.id == 1 || match.match_type.id == 3
+                                    if statistic.player_id === leg.winner_player_id
+                                        div(class='label-winner') WINNER
+                                    else
+                                        div(class='label-loser')= player.remaining_score + ' left'
+                                else
+                                    if statistic.player_id === leg.winner_player_id
+                                        div(class='label-winner') WINNER
+                                    else
+                                        div(class='label-loser') &nbsp;
+
+    h3 Leg Results
+    p.
+        Starting score was #{leg.starting_score}, and a total of #{leg.darts_thrown ? leg.darts_thrown : 0} darts were thrown by #{leg.players.length} players
+
+    if isFinished
+        button(id='btn-collapse-visits' class='btn btn-primary btn-block' data-toggle='collapse' data-target='#visits-div')= isFinished ? 'Show Visits' : 'Hide Visits'
+    div(id='visits-div' class=isFinished ? 'collapse' : 'collapse in')
+        table(class='table' id='table-leg-visits')
+            thead
+                tr
+                    th Player
+                    th First Dart
+                    th Second Dart
+                    th Third Dart
+                    th Total
+                    th Remaining
+                    th Thrown
+                    th PPD
+                    if !isFinished
+                        th(class='text-center') Options
+            tbody
+                each visit in leg.visits
+                    - var visit_score = (visit.first_dart.value * visit.first_dart.multiplier) + (visit.second_dart.value * visit.second_dart.multiplier) + (visit.third_dart.value * visit.third_dart.multiplier)
+                    tr(id='visit-' + visit.id)
+                        td= players[visit.player_id].name
+
+                        +dart_container(visit.first_dart.value, visit.first_dart.multiplier, 'first-dart-visit-' + visit.id, true)
+                        +dart_container(visit.second_dart.value, visit.second_dart.multiplier, 'second-dart-visit-' + visit.id, true)
+                        +dart_container(visit.third_dart.value, visit.third_dart.multiplier, 'third-dart-visit-' + visit.id, true)
+
+                        td(class='total-visit-score-' + visit.id): label= visit_score
+                        td: label= visit.scores
+                        td= visit.darts_thrown
+                        td(class='visit-ppd-' + visit.id)= (visit_score / 3).toFixed(2)
+                        if !isFinished
+                            td(class='text-center')
+                                button(type="button" class="btn btn-default edit-visit" data-visit=visit.id data-issave='0')
+                                    span(class="glyphicon glyphicon-edit" aria-hidden="true")
+                                button(type="button" class="btn btn-default delete-visit" data-visit=visit.id)
+                                    span(class="glyphicon glyphicon-trash" aria-hidden="true")
+    br
+    if !isFinished
+        h3 Player Order
+        div
+            div(id='player-order-list')
+                each id in leg.players
+                    div(class='float-left')
+                        input(style='display: none;' type='checkbox' class='form-check-input' id='checkbox-player-' + players[id].id value=players[id].id)
+                        label(style='margin-left: 10px; width: 160px;' class='player-name-label form-check-label btn btn-warning' for='checkbox-player-' + players[id].id)= players[id].name
+            button(type='submit' name='submit' style='margin-left: 10px' id='change-order-button' class='btn btn-primary') Change Order
+    div
+        h3 Scores
+        canvas(id='canvas-scores')
+    br
+    button(id='btn-collapse-heatmap' class='btn btn-primary btn-block' data-toggle='collapse' data-target='#heatmap-div') Show Heatmap
+    div(id='heatmap-div' class='collapse')
+        h3 Leg Heatmap
+        select(id='heatmap-value-selector' name='dartValues')
+            option(value=0 default=true) All
+            option(value=1) Singles
+            option(value=2) Doubles
+            option(value=3) Trebles
+        div(style='text-align: center;')
+            canvas(id='dartboard-heatmap')
+
+    br
+    button(id='btn-collapse-hits' class='btn btn-primary btn-block' data-toggle='collapse' data-target='#hits-div') Show Hits
+    div(id='hits-div' class='collapse')
+        h3 Hits
+        div(class='table-responsive')
+            table(id='leg-hits-table' class='table')
+                thead
+                    tr
+                        th Dart
+                        th Count
+                        th Hit %
+                tbody
+                    each score, key in leg.hits
+                        each count, multiplier in leg.hits[key]
+                            if count !== 0
+                                tr
+                                    +dart_container(key, multiplier)
+                                    td= count
+                                    td= (count * 100 / leg.darts_thrown).toFixed(2) + '%'

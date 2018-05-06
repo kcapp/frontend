@@ -17,11 +17,11 @@ block content
                 tr
                     td(class='col-sm-2') Won/Played
                     each stats in statistics
-                        td= players[stats.player_id].games_won + '/' + players[stats.player_id].games_played
+                        td= players[stats.player_id].matches_won + '/' + players[stats.player_id].matches_played
                 tr
                     td(class='col-sm-2') Win %
                     each stats in statistics
-                        td= ((players[stats.player_id].games_won * 100) / players[stats.player_id].games_played).toFixed(2) + '%'
+                        td= ((players[stats.player_id].matches_won * 100) / players[stats.player_id].matches_played).toFixed(2) + '%'
                 tr
                     td(class='col-sm-2') PPD
                     each stats in statistics

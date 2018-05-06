@@ -1,6 +1,6 @@
 mixin best_statistics(best, clazz)
     if best
         - var isFloat = parseInt(best.value) !== best.value
-        td(class=clazz): a(href='/matches/' + best.match_id + '/leg')= isFloat ? best.value.toFixed(2) : best.value
+        td(class=clazz): a(href='/legs/' + best.leg_id + '/result')= isFloat ? best.value.toFixed(2) : best.value
     else
         td(class=clazz) -

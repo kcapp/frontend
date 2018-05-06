@@ -23,7 +23,7 @@ block scripts
                 var sortablePlayerList = $('#sortable-player-list');
                 $(this).parent().appendTo(sortablePlayerList).removeClass('float-left');
 
-                if ($('#game-type-select').val() == 3) {
+                if ($('#match-type-select').val() == 3) {
                     $(this).closest('.form-check').find('.input-player-handicap').show();
                 }
             });
@@ -34,32 +34,32 @@ block scripts
                 $(this).closest('.form-check').find('.input-player-handicap').hide();
             });
 
-            $('#game-type-select').on('change', function() {
+            $('#match-type-select').on('change', function() {
                 $('#sortable-player-list .input-player-handicap').hide();
-                $('#match-type-select').prop('disabled', false);
-                $('#match-type-select').val('501');
+                $('#leg-type-select').prop('disabled', false);
+                $('#leg-type-select').val('501');
 
                 if (this.value == 2) {
-                    $('#match-type-select').prop('disabled', true);
-                    $('#match-type-select').val('0');
+                    $('#leg-type-select').prop('disabled', true);
+                    $('#leg-type-select').val('0');
                 }
                 else if (this.value == 3) {
                     $('#sortable-player-list .input-player-handicap').show();
                 }
             });
 
-            $('#create-match-button').click(function() {
+            $('#create-leg-button').click(function() {
                 $(this).blur();
             });
 
-            $('#start-match-button').click(function(e) {
-                var stake = parseInt($('#game-stake-select').val());
+            $('#start-leg-button').click(function(e) {
+                var stake = parseInt($('#match-stake-select').val());
                 var venue = parseInt($('#venue-select').val());
                 var body = {
-                    starting_score: parseInt($('#match-type-select').val()),
-                    game_type: parseInt($('#game-type-select').val()),
-                    game_mode: parseInt($('#game-mode-select').val()),
-                    game_stake: stake === 0 ? null : stake,
+                    starting_score: parseInt($('#leg-type-select').val()),
+                    match_type: parseInt($('#match-type-select').val()),
+                    match_mode: parseInt($('#match-mode-select').val()),
+                    match_stake: stake === 0 ? null : stake,
                     venue: venue,
                     players: [],
                     player_handicaps: {}
@@ -67,15 +67,15 @@ block scripts
                 $('#sortable-player-list .form-check-input').each(function() {
                     var playerId = parseInt($(this).val());
                     body.players.push(playerId);
-                    if (body.game_type === 3) {
+                    if (body.match_type === 3) {
                         body.player_handicaps[playerId] = parseInt($(this).closest('.form-check').find('.input-player-handicap').val());
                     }
                 });
-                executePost(window.location.origin + '/games/new', JSON.stringify(body), 'application/json',
+                executePost(window.location.origin + '/matches/new', JSON.stringify(body), 'application/json',
                     function(response){
                         // Store venue in localstorage so it doesn't have to be selected each time
                         localStorage.setItem('kcapp_venue', venue);
-                        location.href = 'matches/' + response.current_match_id
+                        location.href = 'legs/' + response.current_leg_id
                     }, function(error) {
                         console.log(error);
                     }
@@ -97,7 +97,7 @@ block scripts
                 // Add players by entering player id and ENTER
                 case 'Enter':
                     if (playerId == '00') {
-                        $('#start-match-button').trigger('click');
+                        $('#start-leg-button').trigger('click');
                         return;
                     }
                     var playerChck = $('#checkbox-player-' + playerId);
@@ -117,30 +117,30 @@ block scripts
                 case '9': playerId += '9'; break;
                 case '0': playerId += '0'; break;
                 case '/':
+                    var next = $('#leg-type-select option:selected').next();
+                    if (next.length === 0) {
+                        next = $('#leg-type-select').children('option:first');
+                    }
+                    next.prop('selected', true);
+                    break;
+                case '*':
                     var next = $('#match-type-select option:selected').next();
                     if (next.length === 0) {
                         next = $('#match-type-select').children('option:first');
                     }
                     next.prop('selected', true);
                     break;
-                case '*':
-                    var next = $('#game-type-select option:selected').next();
-                    if (next.length === 0) {
-                        next = $('#game-type-select').children('option:first');
-                    }
-                    next.prop('selected', true);
-                    break;
                 case '-':
-                    var next = $('#game-mode-select option:selected').next();
+                    var next = $('#match-mode-select option:selected').next();
                     if (next.length === 0) {
-                        next = $('#game-mode-select').children('option:first');
+                        next = $('#match-mode-select').children('option:first');
                     }
                     next.prop('selected', true);
                     break;
                 case '+':
-                    var next = $('#game-stake-select option:selected').next();
+                    var next = $('#match-stake-select option:selected').next();
                     if (next.length === 0) {
-                        next = $('#game-stake-select').children('option:first');
+                        next = $('#match-stake-select').children('option:first');
                     }
                     next.prop('selected', true);
                     break;
@@ -149,13 +149,13 @@ block scripts
         });
 
 block content
-    div(id='new-match-collapse')
+    div(id='new-leg-collapse')
         div(class='card card-block')
             if players.length == 0
                 p.
-                    Players must be added before you can start a new game
+                    Players must be added before you can start a new match
             else
-                form(style='padding-top: 15px;' id='new-match-form')
+                form(style='padding-top: 15px;' id='new-leg-form')
                     legend Players
                     div(class='form-group form-check float-left' id='sortable-player-list')
                     legend(style='clear: both;') Select Players
@@ -167,37 +167,37 @@ block content
                                 input(style='margin-left: 10px; width: 50px;' type='textbox' name='player_handicap' class='form input-player-handicap' hidden='true' value=0)
 
                     div(class='form-group' style='clear: both')
-                        label(for='match-type-select') Starting Score
-                        select(class='form-control' name='starting_score' id='match-type-select')
+                        label(for='leg-type-select') Starting Score
+                        select(class='form-control' name='starting_score' id='leg-type-select')
                             option 301
                             option(selected='selected') 501
                             option 701
                             option(hidden='true') 0
 
                     div(class='form-group')
-                        label(for='game-type-select') Game Type
-                        select(class='form-control' name='game_type' id='game-type-select')
-                            each gameType in game_types
-                                option(value=gameType.id)= gameType.name
+                        label(for='match-type-select') Match Type
+                        select(class='form-control' name='match_type' id='match-type-select')
+                            each matchType in match_types
+                                option(value=matchType.id)= matchType.name
 
                     div(class='form-group')
-                        label(for='game-mode-select') Game Mode
-                        select(class='form-control' name='game_mode' id='game-mode-select')
-                            each mode in game_modes
+                        label(for='match-mode-select') Match Mode
+                        select(class='form-control' name='match_mode' id='match-mode-select')
+                            each mode in match_modes
                                 option(value=mode.id)= mode.name
 
                     div(class='form-group')
-                        label(for='game-stake-select') Game Stake
-                        select(class='form-control' name='game_stake' id='game-stake-select')
+                        label(for='match-stake-select') Match Stake
+                        select(class='form-control' name='match_stake' id='match-stake-select')
                             option(value=0) -
                             each oweType in owe_types
                                 option(value=oweType.id)= oweType.item
 
                     div(class='form-group')
-                        label(for='game-stake-select') Venue
+                        label(for='match-stake-select') Venue
                         select(class='form-control' name='venue' id='venue-select')
                             option(value=0) -
                             each venue in venues
                                 option(value=venue.id)= venue.name
 
-                    button(type='submit' form='new-match-form' class='btn btn-primary' id='start-match-button' ) Start
+                    button(type='submit' form='new-leg-form' class='btn btn-primary' id='start-leg-button' ) Start

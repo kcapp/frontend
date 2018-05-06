@@ -12,21 +12,21 @@ router.get('/', function (req, res, next) {
         .then(response => {
             var players = response.data
             players = _.sortBy(players, (player) => player.name);
-            axios.get(req.app.locals.kcapp.api + '/game/modes')
+            axios.get(req.app.locals.kcapp.api + '/match/modes')
                 .then(response => {
-                    var gameModes = response.data;
+                    var matchModes = response.data;
                     axios.get(req.app.locals.kcapp.api + '/owetype')
                         .then(response => {
                             var oweTypes = response.data;
-                            axios.get(req.app.locals.kcapp.api + '/game/types')
+                            axios.get(req.app.locals.kcapp.api + '/match/types')
                                 .then(response => {
-                                    var gameTypes = response.data;
+                                    var matchTypes = response.data;
                                     axios.get(req.app.locals.kcapp.api + '/venue')
                                         .then(response => {
                                             var venues = response.data;
                                             res.render('index', {
-                                                players: players, game_modes: gameModes,
-                                                game_types: gameTypes, owe_types: oweTypes, venues: venues
+                                                players: players, match_modes: matchModes,
+                                                match_types: matchTypes, owe_types: oweTypes, venues: venues
                                             });
                                         }).catch(error => {
                                             debug('Error when getting venues: ' + error);
@@ -41,11 +41,11 @@ router.get('/', function (req, res, next) {
                             next(error);
                         });
                 }).catch(error => {
-                    debug('Error when getting game modes: ' + error);
+                    debug('Error when getting match modes: ' + error);
                     next(error);
                 });
         }).catch(error => {
-            debug('Error when getting match players: ' + error);
+            debug('Error when getting leg players: ' + error);
             next(error);
         });
 });

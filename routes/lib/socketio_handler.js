@@ -11,23 +11,23 @@ function getClientIP(client) {
 module.exports = (io, app) => {
     this.io = io;
     return {
-        emitMessage: (matchId, type, message) => {
-            var nsp = this.io.of('/matches/' + matchId);
+        emitMessage: (legId, type, message) => {
+            var nsp = this.io.of('/legs/' + legId);
             nsp.emit(type, message);
         },
-        removeNamespace: (matchId) => {
-            if (matchId === undefined) {
+        removeNamespace: (legId) => {
+            if (legId === undefined) {
                 return;
             }
-            var namespace = '/matches/' + matchId;
+            var namespace = '/legs/' + legId;
             delete this.io.nsps[namespace];
             debug("Removed socket.io namespace '%s'", namespace)
         },
-        setupNamespace: (matchId) => {
-            if (matchId === undefined) {
+        setupNamespace: (legId) => {
+            if (legId === undefined) {
                 return;
             }
-            var namespace = '/matches/' + matchId;
+            var namespace = '/legs/' + legId;
             var chatHistory = [];
             if (this.io.nsps[namespace] === undefined) {
                 var nsp = this.io.of(namespace);
@@ -78,21 +78,21 @@ module.exports = (io, app) => {
                         debug('Received throw from %s (%o)', ip, body);
                         axios.post(app.locals.kcapp.api + '/visit', body)
                             .then(() => {
-                                axios.get(app.locals.kcapp.api + '/match/' + body.match_id)
+                                axios.get(app.locals.kcapp.api + '/leg/' + body.leg_id)
                                     .then(response => {
-                                        var match = response.data;
-                                        axios.get(app.locals.kcapp.api + '/match/' + match.id + '/players')
+                                        var leg = response.data;
+                                        axios.get(app.locals.kcapp.api + '/leg/' + leg.id + '/players')
                                             .then(response => {
                                                 var players = response.data;
-                                                nsp.emit('score_update', { players: players, match: match });
+                                                nsp.emit('score_update', { players: players, leg: leg });
                                             }).catch(error => {
                                                 var message = error.message + ' (' + error.response.data.trim() + ')'
-                                                debug('Error when getting match players: ' + message);
+                                                debug('Error when getting leg players: ' + message);
                                                 nsp.emit('error', { message: error.message, code: error.code });
                                             });
                                     }).catch(error => {
                                         var message = error.message + ' (' + error.response.data.trim() + ')'
-                                        debug('Error when getting match: ' + message);
+                                        debug('Error when getting leg: ' + message);
                                         nsp.emit('error', { message: error.message, code: error.code });
                                     });
                             }).catch(error => {

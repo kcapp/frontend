@@ -1,8 +1,8 @@
-mixin get_score_header(game_mode, round_number, players, add_player_visit)
+mixin get_score_header(match_mode, round_number, players, add_player_visit)
     div(class='table-responsive no-border')
         table(class='uv-table-mode' style='table-layout: fixed')
             tbody: tr: td
-                    label= game_mode.short_name + '/'
+                    label= match_mode.short_name + '/'
                     label(id='round-number')= 'R' + round_number
 
     div(class='table-responsive no-border')

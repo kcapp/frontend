@@ -9,8 +9,8 @@ block scripts
         include socketio_helper.js
     script.
         var scores = {};
-        var match = !{JSON.stringify(match)}
-        var matchId = match.id
+        var leg = !{JSON.stringify(leg)}
+        var legId = leg.id
 
         var currentDart = 1;
 
@@ -106,7 +106,7 @@ block scripts
         $(function () {
             FastClick.attach(document.body);
 
-            var socket = getSocketIO(matchId);
+            var socket = getSocketIO(legId);
             socket.on('spectator_connected', function (data) {
                 alertify.success(data + ' connected');
             });
@@ -116,21 +116,21 @@ block scripts
             socket.on('connected', function (data) {
                 console.log(data);
             });
-            socket.on('match_finished', function (data) {
-                // Forward all clients to results page when match is finished
-                location.href = 'matches/' + matchId + '/leg';
+            socket.on('leg_finished', function (data) {
+                // Forward all clients to results page when leg is finished
+                location.href = 'legs/' + legId + '/result';
             });
             socket.on('score_update', function (data) {
                 $('#submit-score-button').prop('disabled', false);
 
-                // Set the global match object
-                match = data.match;
+                // Set the global leg object
+                leg = data.leg;
                 scores = {};
 
-                $('#round-number').text('R' + (Math.floor(match.visits.length / match.players.length) + 1));
+                $('#round-number').text('R' + (Math.floor(leg.visits.length / leg.players.length) + 1));
 
                 // Set updated score per player
-                var currentPlayerId = match.current_player_id;
+                var currentPlayerId = leg.current_player_id;
                 var players = data.players;
                 for (var i = 0; i < players.length; i++) {
                     var player = players[i];
@@ -146,7 +146,7 @@ block scripts
                         tdVisit.removeClass().addClass('uv-active-player-visits');
                         $('#submit-score-button').data('current-player-id', player.player_id);
                         label.addClass('current-player');
-                        if (player.modifiers.is_beer_game) {
+                        if (player.modifiers.is_beer_match) {
                             td.addClass('player-modifier-beer');
                         }
                     }
@@ -156,7 +156,7 @@ block scripts
                         tdVisit.removeClass().addClass('uv-inactive-player-visits');
                         label.removeClass('current-player');
                         label.removeAttr('data-current-player-id');
-                        if (player.modifiers.is_beer_game) {
+                        if (player.modifiers.is_beer_match) {
                             td.addClass('player-modifier-beer');
                         }
                         if (player.modifiers.is_vilius_visit) {
@@ -182,7 +182,7 @@ block scripts
 
                 var currentPlayerId = $(this).data('current-player-id');
                 var data = JSON.stringify({
-                    match_id: matchId,
+                    leg_id: legId,
                     player_id: currentPlayerId,
                     first_dart: { value: firstScore, multiplier: firstMultiplier },
                     second_dart: { value: secondScore, multiplier: secondMultiplier },
@@ -191,9 +191,9 @@ block scripts
 
                 var isFinished = $(this).data('finished');
                 if (isFinished) {
-                    executePost(window.location.origin + '/matches/' + matchId + '/finish', data, 'application/json',
+                    executePost(window.location.origin + '/legs/' + legId + '/finish', data, 'application/json',
                         function (response) {
-                            location.href = window.location.origin + '/matches/' + matchId + '/leg';
+                            location.href = window.location.origin + '/legs/' + legId + '/result';
                         },
                         function (error) {
                             consol1e.log("Unable to proceed: " + error.responseText);
@@ -258,19 +258,19 @@ block scripts
             });
 
             $('#edit-scores-button').click(function () {
-                location.href = '/matches/' + matchId + '/leg';
+                location.href = '/legs/' + legId + '/result';
             });
 
-            $('#cancel-match-button').click(function () {
-                showConfirm('Game will be cancelled.', function() {
-                    executeDelete('/matches/' + matchId + '/cancel',
+            $('#cancel-leg-button').click(function () {
+                showConfirm('Match will be cancelled.', function() {
+                    executeDelete('/legs/' + legId + '/cancel',
                         function (response) {
-                            location.href = '/games';
+                            location.href = '/matches';
                         },
                         function (error) {
-                            var alert = $('#cancel-match-failed-alert');
+                            var alert = $('#cancel-leg-failed-alert');
                             alert.show();
-                            alert.text('Unable to cancel match, see log for details (' + error.statusText + ')');
+                            alert.text('Unable to cancel leg, see log for details (' + error.statusText + ')');
                         }
                     );
                 }, function(){ /* NOOP */ });
@@ -297,7 +297,7 @@ block scripts
                 if (scoreAfterThrow == 0) {
                     if (dart.attr('data-multiplier') == 2) {
                         disableEnter = true;
-                        showConfirm('Game will be finished.', function() {
+                        showConfirm('Match will be finished.', function() {
                             isFinished = true;
                             socket.emit('possible_throw', {
                                     current_player_id: currentPlayerId,
@@ -309,7 +309,7 @@ block scripts
                                     darts_thrown: currentDart
                             });
 
-                            // End game, 'click' submit
+                            // End match, 'click' submit
                             $('#submit-score-button').data('finished', 1).trigger('click');
                         }, function(){
                             $('#undo-button').trigger('click');
@@ -362,12 +362,12 @@ block scripts
 
 
 block content
-    div(id='cancel-match-failed-alert' class='alert alert-danger' role='alert' hidden='true').
-        Unable to cancel match
+    div(id='cancel-leg-failed-alert' class='alert alert-danger' role='alert' hidden='true').
+        Unable to cancel leg
     block title
 
-    - var round_number = Math.floor(match.visits.length / match.players.length) + 1;
-    +get_score_header(game.game_mode, round_number, match_players, true)
+    - var round_number = Math.floor(leg.visits.length / leg.players.length) + 1;
+    +get_score_header(match.match_mode, round_number, leg_players, true)
 
     div(class='table-responsive')
         table(id='score-selector-table' class='table' style='display: none;')
@@ -375,7 +375,7 @@ block content
                 tr(class='row')
                     td(colspan='9' class='no-border')
                     td(colspan='2')
-                        button(id='submit-score-button' type='button' style='line-height:1.7' class='needsclick btn-score btn-info btn-lg btn-block' data-match-id=match.id data-current-player-id=match.current_player_id data-players-in-match=match.player2match data-busted='0' data-finished='0') Submit
+                        button(id='submit-score-button' type='button' style='line-height:1.7' class='needsclick btn-score btn-info btn-lg btn-block' data-leg-id=leg.id data-current-player-id=leg.current_player_id data-players-in-leg=leg.player2leg data-busted='0' data-finished='0') Submit
                     td(colspan='2')
                         button(id='undo-button' type='button' class='btn-score btn-info btn-lg btn-block')
                             span(class='glyphicon glyphicon-arrow-left' style='line-height:1.7' aria-hidden='true')
@@ -428,7 +428,7 @@ block content
                 li: a(id='toggle-buttons') Toggle buttons
                 li: a(id='edit-scores-button') Edit scores
                 li(role='separator' class='divider')
-                li: a(id='cancel-match-button') Cancel Match
+                li: a(id='cancel-leg-button') Cancel Leg
 
     div(class='btn-group')
         ul(class='dropdown-menu')

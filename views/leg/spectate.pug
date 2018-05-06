@@ -11,12 +11,12 @@ block scripts
         include socketio_helper.js
 
     script.
-        var match = !{JSON.stringify(match)}
-        var matchId = match.id;
+        var leg = !{JSON.stringify(leg)}
+        var legId = leg.id;
         var playersMap = !{JSON.stringify(players)}
 
         $(function () {
-            socket = getSocketIO(matchId);
+            socket = getSocketIO(legId);
 
             socket.on('connected', function(data) {
                 // Send message to client announcing that we are spectating
@@ -86,8 +86,8 @@ block scripts
                     }
                 }
                 // Set round number
-                $('#round-number').text('R' + (Math.floor(data.match.visits.length / data.match.players.length) + 1));
-                $('#current-player').text(playersMap[data.match.current_player_id].name);
+                $('#round-number').text('R' + (Math.floor(data.leg.visits.length / data.leg.players.length) + 1));
+                $('#current-player').text(playersMap[data.leg.current_player_id].name);
 
                 // Reset UI elements
                 $('#first').text('');
@@ -99,7 +99,7 @@ block scripts
                 $('#total').text(0);
 
                 // Update the visits table
-                var visit = data.match.visits[data.match.visits.length - 1];
+                var visit = data.leg.visits[data.leg.visits.length - 1];
                 var playerName = playersMap[visit.player_id].name;
                 var total = (visit.first_dart.multiplier * visit.first_dart.value ) +
                     (visit.second_dart.multiplier * visit.second_dart.value) +
@@ -116,28 +116,28 @@ block scripts
                         "<td class='col-sm-2 dart-score-container no-border'><label class='" + getDartCSS(visit.third_dart) + "'>" + getScoreString(visit.third_dart) + "</label></td>" +
                         "<td><label>" + total + "</label></td>" +
                     "</tr>";
-                $('#table-match-visits > tbody > tr:first').after(html);
+                $('#table-leg-visits > tbody > tr:first').after(html);
             });
 
-            socket.on('match_finished', function(data) {
-                location.href = '/matches/' + data.new_match_id + '/spectate';
+            socket.on('leg_finished', function(data) {
+                location.href = '/legs/' + data.new_leg_id + '/spectate';
             });
 
             // Reverse the rows in the table to show newest throws first
-            var tbody = $('#table-match-visits tbody');
+            var tbody = $('#table-leg-visits tbody');
             tbody.html($('tr', tbody).get().reverse());
 
             // Add a row to the top of the table which contains the current throw for a given player
-            if (!match.is_finished) {
+            if (!leg.is_finished) {
                 var html =
                     "<tr>" +
-                        "<td id='current-player' style='vertical-align: baseline;'>" + playersMap[match.current_player_id].name + "</td>" +
+                        "<td id='current-player' style='vertical-align: baseline;'>" + playersMap[leg.current_player_id].name + "</td>" +
                         "<td class='col-sm-2 dart-score-container no-border'><label id='first' text='0'></label></td>" +
                         "<td class='col-sm-2 dart-score-container no-border'><label id='second' text='0'></label></td>" +
                         "<td class='col-sm-2 dart-score-container no-border'><label id='third' text='0'></label></td>" +
                         "<td><label id='total' text='0'>0</label></td>" +
                     "</tr>";
-                $('#table-match-visits').prepend(html);
+                $('#table-leg-visits').prepend(html);
             }
 
             function getDartCSS(dart) {
@@ -181,12 +181,12 @@ block content
             span(class='glyphicon glyphicon-comment') Chat
     div(class='row')
 
-    - var round_number = Math.floor(match.visits.length / match.players.length) + 1;
-    +get_score_header(game.game_mode, round_number, match_players)
+    - var round_number = Math.floor(leg.visits.length / leg.players.length) + 1;
+    +get_score_header(match.match_mode, round_number, leg_players)
 
     h3 Visits
     div(class='table-responsive')
-        table(class='table table-scores' id='table-match-visits' style='table-layout: fixed;')
+        table(class='table table-scores table-striped' id='table-leg-visits' style='table-layout: fixed;')
             thead
                 tr
                     th Player
@@ -195,7 +195,7 @@ block content
                     th Third
                     th Total
             tbody
-                each visit in match.visits
+                each visit in leg.visits
                     tr
                         td= players[visit.player_id].name
                         +dart_container(visit.first_dart.value, visit.first_dart.multiplier)
