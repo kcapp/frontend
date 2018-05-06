@@ -67,7 +67,7 @@ block content
                     th Results
             tbody
                 each match in matches
-                    - var isLive = moment.duration(moment().diff(match.last_throw_time)).asMinutes().toFixed() < 2
+                    - var isLive = !match.is_finished && moment.duration(moment().diff(match.last_throw_time)).asMinutes().toFixed() < 2
                     tr
                         th(hidden='true' scope='row')= match.id
                         td(class='col-sm-2')

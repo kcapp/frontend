@@ -122,6 +122,7 @@ router.post('/new', function (req, res, next) {
     }
     var body = {
         owe_type_id: req.body.match_stake == 0 ? null : req.body.match_stake,
+        venue_id: req.body.venue,
         match_type: { id: req.body.match_type },
         match_mode: { id: req.body.match_mode },
         players: players.map(Number),
