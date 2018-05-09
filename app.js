@@ -29,6 +29,7 @@ var legs = require('./routes/legs')(app, socketHandler);
 var owes = require('./routes/owes');
 var players = require('./routes/players');
 var statistics = require('./routes/statistics');
+var tournaments = require('./routes/tournaments');
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -52,6 +53,7 @@ app.use('/legs', legs);
 app.use('/owes', owes);
 app.use('/players', players);
 app.use('/statistics', statistics);
+app.use('/tournaments', tournaments);
 
 // Not Found (404) Handler
 app.use(function (req, res, next) {

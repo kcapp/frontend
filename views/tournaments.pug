@@ -1,0 +1,35 @@
+extends layout.pug
+
+block scripts
+    script.
+        $(function() {
+            $('#table-tournament-list').on('mouseup', '#button-tournament-view', function (e) {
+                location.href = '/tournaments/' + $(this).data('tournament');
+            });
+        });
+
+block content
+    div
+        h2 Tournaments
+
+    table(class='table' id='table-tournament-list')
+            thead
+                tr
+                    th(hidden=true)
+                    th Name
+                    th Short Name
+                    th Start Time
+                    th End Time
+                    th Overview
+            tbody
+                each tournament in tournaments
+                    tr
+                        th(hidden='true')= tournament.id
+                        td= tournament.name
+                        td= tournament.short_name
+                        td
+                            div(style='display: inline-block; padding-right: 6px')= moment(tournament.start_Time).format('YYYY-MM-DD HH:mm:ss')
+                        td
+                            div(style='display: inline-block; padding-right: 6px')= moment(tournament.end_Time).format('YYYY-MM-DD HH:mm:ss')
+                        td
+                            button(type='button' id='button-tournament-view' data-tournament=tournament.id class='btn btn-primary btn-block') View

@@ -8,7 +8,7 @@ var _ = require('underscore');
 
 /* Get a list of all players */
 router.get('/', function (req, res, next) {
-    axios.get(req.app.locals.kcapp.api + '/player')
+    axios.get(req.app.locals.kcapp.api + '/player/active')
         .then(response => {
             var players = response.data;
             players = _.sortBy(players, (player) => player.name)

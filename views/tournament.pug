@@ -1,0 +1,123 @@
+extends layout.pug
+
+
+block append head
+    link(rel='stylesheet' type='text/css' href='/stylesheets/datatables-1.10.16.min.css')
+    script(src='/javascripts/datatables-1.10.16.min.js')
+
+block scripts
+    script.
+        $(function () {
+            $('.table-matches-list').DataTable({
+                searching: false, bInfo : false, bLengthChange: false,
+                pageLength: 5,
+                order: [[ 1,  'desc' ]]
+            });
+        });
+
+        $(function() {
+            $('.table-matches-list').on('mouseup', '#continue-match-button', function (e) {
+                location.href = '/matches/' + $(this).data('match')
+            });
+            $('.table-matches-list').on('mouseup', '#spectate-match-button', function(e) {
+                location.href = '/matches/' + $(this).data('match') + '/spectate'
+            });
+            $('.table-matches-list').on('mouseup', '#view-match-button', function (e) {
+                location.href = '/matches/' + $(this).data('match') + '/result'
+            });
+        });
+
+block content
+    div
+        h2= tournament.name
+
+    each stats, id in statistics
+        h3= stats[0].tournament_group.name
+        table(class='table table-striped' id='table-tournament-statistics')
+            thead
+                tr
+                    th Pos
+                    th Player
+                    th P
+                    th W
+                    th D
+                    th L
+                    th F
+                    th A
+                    th +/-
+                    th PTS
+                    th PPD / First 9
+                    th Checkout
+                    th 60s+
+                    th 100s+
+                    th 140s+
+                    th 180
+                    th Overall
+                    th 20s
+                    th 19s
+            tbody
+                - var rank = 1
+                each player in stats
+                    tr
+                        td= rank++
+                        td: a(href='/players/' + player.player_id + '/statistics')= players[player.player_id].name
+                        td= player.played
+                        td= player.matches_won
+                        td= player.matches_draw
+                        td= player.matches_lost
+                        td= player.legs_for
+                        td= player.legs_against
+                        td= player.legs_difference
+                        td= player.points
+                        td= player.ppd.toFixed(2) + ' / ' + player.first_nine_ppd.toFixed(2)
+                        td= player.checkout_percentage.toFixed(2) + '%'
+                        td= player.scores_60s_plus
+                        td= player.scores_100s_plus
+                        td= player.scores_140s_plus
+                        td= player.scores_180s
+                        td= player.accuracy_overall.toFixed(2)
+                        td= player.accuracy_20.toFixed(2)
+                        td= player.accuracy_19.toFixed(2)
+
+        h4 Matches
+        table(class='table' class='table-matches-list')
+                thead
+                    tr
+                        th(hidden=true)
+                        th Start Time
+                        th Venue
+                        th Type
+                        th Players
+                        th Winner
+                        th Results
+                tbody
+                    each match in matches[id]
+                        - var isLive = !match.is_finished && moment.duration(moment().diff(match.last_throw_time)).asMinutes().toFixed() < 2
+                        tr
+                            th(hidden='true' scope='row')= match.id
+                            td(class='col-sm-2')
+                                div(style='display: inline-block; padding-right: 6px')= moment(match.created_at).format('YYYY-MM-DD HH:mm:ss')
+                                if isLive
+                                    label(class='label label-info' style='line-height: inherit;') Live
+                            td(class='col-sm-1')
+                                if match.venue
+                                    div= match.venue.name
+                            td(class='col-sm-1')= match.match_type.name
+                            td(class='col-sm-1')
+                                each id in match.players
+                                    div(style='margin-bottom: 5px;')
+                                        span(class='label label-primary' style='line-height: inherit;')= players[id].name
+                            if match.is_finished
+                                td(class='col-sm-1')
+                                    if match.winner_id === null
+                                        div: span(class='label label-default' style='line-height: inherit;') Draw
+                                    else
+                                        div: span(class='label label-success' style='line-height: inherit;')= players[match.winner_id].name
+                            else
+                                td(class='col-sm-2')
+                            td(class='col-sm-2')
+                                if !match.is_finished
+                                    button(type='button' id='continue-match-button' data-match=match.id class='btn btn-primary btn-block') Continue
+                                    button(type='button' id='spectate-match-button' data-match=match.id class='btn btn-primary btn-block') Spectate
+                                else
+                                    utton(type='button' id='view-match-button' data-match=match.id class='btn btn-primary btn-block') View
