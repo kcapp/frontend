@@ -443,7 +443,33 @@ a:hover {
     }
 }
 
-#table-tournament-statistics,
+#table-tournament-statistics {
+    div {
+        display: inline-block;
+        padding-right: 5px;
+    }
+    tr:last-child {
+        border-bottom: 3px solid #dddddd;
+    }
+    td:nth-child(2) {
+        border-left: 3px solid #dddddd;
+    }
+    td:last-child {
+        border-right: 3px solid #dddddd;
+    }
+    .glyphWinner {
+        color: #d1bf21;
+    }
+    .glyphPromoted {
+        color: green;
+    }
+    .glyphRelegated {
+        color: #e52424;
+    }
+    margin-bottom: 5px;
+    .table-header;
+}
+
 #table-tournament-list,
 #table-matches-list,
 .table-matches-list {

@@ -59,7 +59,14 @@ block content
                 - var rank = 1
                 each player in stats
                     tr
-                        td= rank++
+                        td
+                            div= rank++
+                            if player.is_winner
+                                span(class='glyphicon glyphicon-star glyphWinner' aria-hidden='true')
+                            else if player.is_promoted
+                                span(class='glyphicon glyphicon-triangle-top glyphPromoted' aria-hidden='true')
+                            else if player.is_relegated
+                                span(class='glyphicon glyphicon-triangle-bottom glyphRelegated' aria-hidden='true')
                         td: a(href='/players/' + player.player_id + '/statistics')= players[player.player_id].name
                         td= player.played
                         td= player.matches_won

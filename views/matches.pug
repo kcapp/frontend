@@ -60,8 +60,8 @@ block content
                     th(hidden=true)
                     th Start Time
                     th Venue
-                    th Mode
                     th Type
+                    th Mode
                     th Players
                     th Winner
                     th Results
@@ -70,28 +70,30 @@ block content
                     - var isLive = !match.is_finished && moment.duration(moment().diff(match.last_throw_time)).asMinutes().toFixed() < 2
                     tr
                         th(hidden='true' scope='row')= match.id
-                        td(class='col-sm-2')
+                        td(style='width: 22%;')
                             div(style='display: inline-block; padding-right: 6px')= moment(match.created_at).format('YYYY-MM-DD HH:mm:ss')
+                            if match.tournament_id
+                                label(class='label label-warning' style='line-height: inherit;') Official
                             if isLive
                                 label(class='label label-info' style='line-height: inherit;') Live
-                        td(class='col-sm-1')
+                        td(style='width: 10%;')
                             if match.venue
                                 div= match.venue.name
-                        td(class='col-sm-1')= match.match_type.name
-                        td(class='col-sm-1')= match.match_mode.name
-                        td(class='col-sm-1')
+                        td(style='width: 8%')= match.match_type.name
+                        td(style='width: 10%')= match.match_mode.name
+                        td(style='width: 15%')
                             each id in match.players
                                 div(style='margin-bottom: 5px;')
                                     span(class='label label-primary' style='line-height: inherit;')= players[id].name
                         if match.is_finished
-                            td(class='col-sm-1')
+                            td(style='width: 15%;')
                                 if match.winner_id === null
                                     div: span(class='label label-default' style='line-height: inherit;') Draw
                                 else
                                     div: span(class='label label-success' style='line-height: inherit;')= players[match.winner_id].name
                         else
-                            td(class='col-sm-2')
-                        td(class='col-sm-2')
+                            td(style='width: 15%;')
+                        td(style='width: 20%;')
                             if !match.is_finished
                                 button(type='button' id='continue-match-button' data-match=match.id class='btn btn-primary btn-block') Continue
                                 button(type='button' id='spectate-match-button' data-match=match.id class='btn btn-primary btn-block') Spectate

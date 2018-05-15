@@ -14,7 +14,10 @@ block scripts
 
 block content
     div(class='clearfix')
-        h2(class='pull-left') Match Result (#{match.id})
+        h2(style='margin-bottom: 5px;' class='pull-left') Match Result (#{match.id})
+
+    if match.tournament_id
+        h3(style='margin-top: 5px;'): b= match.tournament.tournament_name + ' / ' + match.tournament.tournament_group_name
 
     - var duration = moment.duration(moment(match.end_time).diff(match.created_at)).asMinutes().toFixed()
     p.
@@ -22,19 +25,25 @@ block content
         Started: #{moment(match.created_at).format('YYYY-MM-DD HH:mm:ss')} <br>
         Finished: #{match.end_time === undefined ? '-' : moment(match.end_time).format('YYYY-MM-DD HH:mm:ss')} <br>
         Stakes: #{match.owe_type_id === null ? "None" : match.owe_type.item} <br>
-        Duration: #{match.end_time === undefined ? '-' : duration + ' minutes'} <br>
+        Duration: #{match.end_time === undefined || duration == 0 ? '-' : duration + ' minutes'} <br>
 
     each playerId in match.players
         if (match.winner_id === playerId)
-            p= 'Winner: ' + players[playerId].name
+            h4= 'Winner: ' + players[playerId].name
+
+    - var hasStatistics = stats.length
 
     div(class='table-responsive')
         table(id='player-comparison-table' class='table table-striped table-bordered')
             thead
                 tr
                     th Legs
-                    each stat in stats
-                        th= stat.player_name
+                    if hasStatistics
+                        each stat in stats
+                            th= stat.player_name
+                    else
+                        each id in match.players
+                            th= players[id].name
                     th Results
             tbody
             - var idx = 1
@@ -42,52 +51,64 @@ block content
                 tr
                     th(hidden='true' scope='row')= leg.id
                     td(class='col-sm-2')= '#' + idx++
+                    if hasStatistics
+                        each stat in stats
+                            td
+                                if leg.winner_player_id === stat.player_id
+                                    span(class='glyphicon glyphicon-ok' aria-hidden='true')
+                                else
+                                    span(class='glyphicon glyphicon-remove' aria-hidden='true')
+                    else
+                        each id in match.players
+                            td
+                                if leg.winner_player_id === id
+                                    span(class='glyphicon glyphicon-ok' aria-hidden='true')
+                                else
+                                    span(class='glyphicon glyphicon-remove' aria-hidden='true')
+                    if leg.has_scores
+                        td: button(type='button' class='btn btn-primary btn-block btn-view-results') View
+                    else
+                        td N/A
+            if hasStatistics
+                tr
+                    th Statistics
                     each stat in stats
                         td
-                            if leg.winner_player_id === stat.player_id
-                                span(class='glyphicon glyphicon-ok' aria-hidden='true')
-                            else
-                                span(class='glyphicon glyphicon-remove' aria-hidden='true')
-                    td: button(type='button' class='btn btn-primary btn-block btn-view-results') View
-            tr
-                th Statistics
-                each stat in stats
-                    td
-            tr
-                td(class='col-sm-2') PPD
-                each stat in stats
-                    td= stat.ppd.toFixed(2)
-            tr
-                td(class='col-sm-2') First 9 PPD
-                each stat in stats
-                    td= stat.first_nine_ppd.toFixed(2)
-            tr
-                td(class='col-sm-2') Checkout%
-                each stat in stats
-                    td= stat.checkout_percentage === null ? '-' : stat.checkout_percentage.toFixed(2) + '%'
-            tr
-                td(class='col-sm-2') Accuracy (All/20/19)
-                each stat in stats
-                    - var accuracy_20 = stat.accuracy_20 === null ? '-' : stat.accuracy_20.toFixed(2)
-                    - var accuracy_19 = stat.accuracy_19 === null ? '-' : stat.accuracy_19.toFixed(2)
-                    td= stat.accuracy_overall.toFixed(2) + ' / ' + accuracy_20 + ' / ' + accuracy_19
-            tr
-                td(class='separator_row')
+                tr
+                    td(class='col-sm-2') PPD
                     each stat in stats
-                        th(class='separator_row') High Scores
-            tr
-                td(class='col-sm-2') 60+
-                each stat in stats
-                    td= stat.scores_60s_plus
-            tr
-                td(class='col-sm-2') 100+
-                each stat in stats
-                    td= stat.scores_100s_plus
-            tr
-                td(class='col-sm-2') 140+
-                each stat in stats
-                    td= stat.scores_140s_plus
-            tr
-                td(class='col-sm-2') 180
-                each stat in stats
-                    td= stat.scores_180s
+                        td= stat.ppd.toFixed(2)
+                tr
+                    td(class='col-sm-2') First 9 PPD
+                    each stat in stats
+                        td= stat.first_nine_ppd.toFixed(2)
+                tr
+                    td(class='col-sm-2') Checkout%
+                    each stat in stats
+                        td= stat.checkout_percentage === null ? '-' : stat.checkout_percentage.toFixed(2) + '%'
+                tr
+                    td(class='col-sm-2') Accuracy (All/20/19)
+                    each stat in stats
+                        - var accuracy_20 = stat.accuracy_20 === null ? '-' : stat.accuracy_20.toFixed(2)
+                        - var accuracy_19 = stat.accuracy_19 === null ? '-' : stat.accuracy_19.toFixed(2)
+                        td= stat.accuracy_overall.toFixed(2) + ' / ' + accuracy_20 + ' / ' + accuracy_19
+                tr
+                    td(class='separator_row')
+                        each stat in stats
+                            th(class='separator_row') High Scores
+                tr
+                    td(class='col-sm-2') 60+
+                    each stat in stats
+                        td= stat.scores_60s_plus
+                tr
+                    td(class='col-sm-2') 100+
+                    each stat in stats
+                        td= stat.scores_100s_plus
+                tr
+                    td(class='col-sm-2') 140+
+                    each stat in stats
+                        td= stat.scores_140s_plus
+                tr
+                    td(class='col-sm-2') 180
+                    each stat in stats
+                        td= stat.scores_180s
