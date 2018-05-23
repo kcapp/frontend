@@ -1,0 +1,40 @@
+//- https://codepen.io/semibran/pen/VjmPJd
+mixin bracket(matches, indices, addConnector = true)
+    div(class='winners')
+        div(class='matchups')
+            each idx in indices
+                - var match = matches[idx]
+                - var isHomeWinner = match.home_score > match.away_score
+                div(class='matchup')
+                    div(class='participants')
+                        div(class='participant' + (isHomeWinner ? ' winner' : ''))
+                            span= match.home
+                            span(class='score')= match.home_score
+                        div(class='participant' + (!isHomeWinner ? ' winner' : ''))
+                            span= match.away
+                            span(class='score')= match.away_score
+        if addConnector
+            div(class='connector')
+                div(class='merger')
+                div(class='line')
+
+div(class='bracket')
+    - var eightfinals = bracket['eightfinals']
+    section(class='round eightfinals')
+        +bracket(eightfinals, [0, 1])
+        +bracket(eightfinals, [2, 3])
+        +bracket(eightfinals, [4, 5])
+        +bracket(eightfinals, [6, 7])
+
+    - var quarterfinals = bracket['quarterfinals']
+    section(class='round quarterfinals')
+        +bracket(quarterfinals, [0, 1])
+        +bracket(quarterfinals, [2, 3])
+
+    - var semifinals = bracket['semifinals']
+    section(class='round semifinals')
+        +bracket(semifinals, [0, 1])
+
+    - var finals = bracket['finals']
+    section(class='round finals')
+        +bracket(finals, [0], false)

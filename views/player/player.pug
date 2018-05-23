@@ -160,7 +160,7 @@ block content
                 tr
                     td(class='number')= player.matches_played + ' / ' + player.legs_played
                     td(class='number')= player.matches_won + ' / '  + player.legs_won
-                    td(class='number')= (player.matches_played == 0 ? '0.00' : (player.matches_won * 100 / player.matches_played).toFixed(2)) + ' / ' + (player.legs_played == 0 ? '0.00' : (player.legs_won * 100 / player.legs_played).toFixed(2))
+                    td(class='number')= (player.matches_played == 0 ? '0.00' : (player.matches_won * 100 / player.matches_played).toFixed(2)) + '% / ' + (player.legs_played == 0 ? '0.00' : (player.legs_won * 100 / player.legs_played).toFixed(2)) + '%'
                 tr
                     td(class='olabel') Matches / Legs Played
                     td(class='olabel') Matches / Legs Won

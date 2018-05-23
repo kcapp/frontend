@@ -116,10 +116,6 @@ block scripts
             socket.on('connected', function (data) {
                 console.log(data);
             });
-            socket.on('leg_finished', function (data) {
-                // Forward all clients to results page when leg is finished
-                location.href = 'legs/' + legId + '/result';
-            });
             socket.on('score_update', function (data) {
                 $('#submit-score-button').prop('disabled', false);
 

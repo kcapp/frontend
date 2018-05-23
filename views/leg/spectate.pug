@@ -62,6 +62,9 @@ block scripts
                     showAlert(text, function() {
                         alertify.success('Leg finished');
                     });
+
+                    var legsWon = $('.uv-active-player-legs').find('label');
+                    legsWon.text(parseInt(legsWon.text()) + 1)
                 }
             });
 
