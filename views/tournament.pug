@@ -146,7 +146,7 @@ block content
                             th Position
                             th Player
                     tbody
-                        each standing in tournament.tournament_standings
+                        each standing in tournament.standings
                             tr
                                 td= standing.rank
                                 td: a(href='/players/' + standing.player_id + '/statistics')= standing.player_name
