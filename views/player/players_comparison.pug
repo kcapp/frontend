@@ -33,11 +33,11 @@ block content
                 tr
                     td(class='col-sm-2') Best PPD
                     each stats in statistics
-                        +best_statistics(stats.best_ppd)
+                        +best_statistics_td(stats.best_ppd)
                 tr
                     td(class='col-sm-2') Best First 9 PPD
                     each stats in statistics
-                        +best_statistics(stats.best_first_nine_ppd)
+                        +best_statistics_td(stats.best_first_nine_ppd)
                 tr
                     td(class='col-sm-2') Checkout%
                     each stats in statistics
@@ -45,15 +45,15 @@ block content
                 tr
                     td(class='col-sm-2') Highest Checkout
                     each stats in statistics
-                        +best_statistics(stats.highest_checkout)
+                        +best_statistics_td(stats.highest_checkout)
                 tr
                     td(class='col-sm-2') Best 301
                     each stats in statistics
-                        +best_statistics(stats.best_301)
+                        +best_statistics_td(stats.best_301)
                 tr
                     td(class='col-sm-2') Best 501
                     each stats in statistics
-                        +best_statistics(stats.best_501)
+                        +best_statistics_td(stats.best_501)
                 tr
                     th(class='separator-row') High Scores
                     each stats in statistics

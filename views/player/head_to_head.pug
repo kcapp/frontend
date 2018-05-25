@@ -112,25 +112,25 @@ block content
                         td(class='head-to-head-player2')= stats2.checkout_percentage.toFixed(2) + '%'
                     tr
                         if x01 == 301
-                            +best_statistics(stats1.best_301, 'head-to-head-player1')
+                            +best_statistics_td(stats1.best_301, 'head-to-head-player1')
                             th(class='head-to-head-header') Best Leg
-                            +best_statistics(stats2.best_301, 'head-to-head-player2')
+                            +best_statistics_td(stats2.best_301, 'head-to-head-player2')
                         else if x01 == 501
-                            +best_statistics(stats1.best_501, 'head-to-head-player1')
+                            +best_statistics_td(stats1.best_501, 'head-to-head-player1')
                             th(class='head-to-head-header') Best Leg
-                            +best_statistics(stats2.best_501, 'head-to-head-player2')
+                            +best_statistics_td(stats2.best_501, 'head-to-head-player2')
                     tr
-                        +best_statistics(stats1.best_ppd, 'head-to-head-player1')
+                        +best_statistics_td(stats1.best_ppd, 'head-to-head-player1')
                         th(class='head-to-head-header') Best PPD
-                        +best_statistics(stats2.best_ppd, 'head-to-head-player2')
+                        +best_statistics_td(stats2.best_ppd, 'head-to-head-player2')
                     tr
-                        +best_statistics(stats1.best_first_nine_ppd, 'head-to-head-player1')
+                        +best_statistics_td(stats1.best_first_nine_ppd, 'head-to-head-player1')
                         th(class='head-to-head-header') Best First 9 PPD
-                        +best_statistics(stats2.best_first_nine_ppd, 'head-to-head-player2')
+                        +best_statistics_td(stats2.best_first_nine_ppd, 'head-to-head-player2')
                     tr
-                        +best_statistics(stats1.highest_checkout, 'head-to-head-player1')
+                        +best_statistics_td(stats1.highest_checkout, 'head-to-head-player1')
                         th(class='head-to-head-header') Highest Checkout
-                        +best_statistics(stats2.highest_checkout, 'head-to-head-player2')
+                        +best_statistics_td(stats2.highest_checkout, 'head-to-head-player2')
                     tr
                         th(colspan='3' class='head-to-head-header'): h4 Accuracy
                     tr

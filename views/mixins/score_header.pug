@@ -1,4 +1,4 @@
-mixin get_score_header(match_mode, round_number, players, add_player_visit)
+mixin get_score_header(match_mode, round_number, players, is_official, add_player_visit = false)
     div(class='table-responsive no-border')
         table(class='uv-table-mode' style='table-layout: fixed')
             tbody: tr: td
@@ -10,7 +10,7 @@ mixin get_score_header(match_mode, round_number, players, add_player_visit)
             tbody
                 tr
                     each player in players
-                        +get_player_cell(player)
+                        +get_player_cell(player, is_official)
                 tr
                     each player in players
                         +get_player_legs(player)
@@ -20,9 +20,15 @@ mixin get_score_header(match_mode, round_number, players, add_player_visit)
                             +get_current_player_visit(player)
     hr
 
-mixin get_player_cell(player)
+mixin get_player_cell(player, is_official)
     - var playerId = player.player_id;
-    td(id='player-score-' + playerId class=player.is_current_player ? 'uv-active-player-score' : 'uv-inactive-player-score')
+    - var clazz = player.is_current_player ? 'uv-active-player-score' : 'uv-inactive-player-score'
+    if !is_official
+        if !player.is_current_player && player.modifiers.is_vilius_visit
+            - clazz += ' player-modifier-vilius'
+        else if player.modifiers.is_beer_match
+            - clazz += ' player-modifier-beer'
+    td(id='player-score-' + playerId class=clazz)
         label(id='player-name-' + playerId class='label-player-name')= players[playerId].name
         label(id='player-id-' + playerId class='label label-block label-player-score' + (player.is_current_player ? ' current-player' : ''))= player.current_score
 

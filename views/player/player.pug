@@ -2,6 +2,7 @@ extends ../layout.pug
 
 include ../mixins/dart.pug
 include ../mixins/statistics.pug
+include ../mixins/player.pug
 
 block append head
     link(rel='stylesheet' type='text/css' href='/stylesheets/datatables-1.10.16.min.css')
@@ -72,12 +73,14 @@ block scripts
         var labels = [];
         var valuesMap = {
             ppd: [], first9ppd: [],
+            checkout_percentage: [],
             scores60s: [], scores100s: [], scores140s: [], scores180s: [] };
         for (var date in progression) {
             if (progression.hasOwnProperty(date)) {
                 var p = progression[date];
                 labels.push(date);
                 valuesMap.ppd.push(p.ppd.toFixed(2));
+                valuesMap.checkout_percentage.push(p.checkout_percentage.toFixed(2));
                 valuesMap.first9ppd.push(p.first_nine_ppd.toFixed(2));
                 valuesMap.scores60s.push(p.scores_60s_plus);
                 valuesMap.scores100s.push(p.scores_100s_plus);
@@ -102,6 +105,15 @@ block scripts
                 fill: false
             }]
             var ppdChart = new Chart("canvas-ppd", getChartConfig('PPD Per Week', 'line', 'Date', 'PPD', labels, datasetsPPD));
+
+            var datasetCheckout = [{
+                label: "%",
+                backgroundColor: 'rgb(18, 153, 43)',
+                borderColor: 'rgb(18, 153, 43)',
+                data: valuesMap.checkout_percentage,
+                fill: false
+            }]
+            var checkoutPercentageChart = new Chart("canvas-checkout", getChartConfig('Checkout % Per Week', 'line', 'Date', 'Percentage', labels, datasetCheckout));
 
             var datasetsScores = [{
                 label: "60+",
@@ -175,7 +187,7 @@ block content
                 tr
                     td(class='number')= statistics.first_nine_ppd.toFixed(2)
                     td(class='number')= statistics.ppd.toFixed(2)
-                    td(class='number')= statistics.checkout_percentage === 0 ? '-' : statistics.checkout_percentage.toFixed(2) + '%'
+                    td(class='number')= statistics.checkout_percentage === null ? '-' : statistics.checkout_percentage.toFixed(2) + '%'
                 tr
                     td(class='olabel') First 9 PPD
                     td(class='olabel') Overall PPD
@@ -208,17 +220,13 @@ block content
                     td(class='number')= player.name
                     td(class='number')= player.nickname ? player.nickname : '-'
                     td(class='number'): label(style='background-color: ' + player.color + '; color: ' + player.color + ';')= player.color
-                    td(class='number')
-                        if player.profile_pic_url
-                            img(class='glyphicon glyphicon-user' height='130' width='98' src=player.profile_pic_url)
-                        else
-                            span(class='glyphicon glyphicon-user')
+                    td
+                        +get_player_profile_pic(player)
                 tr
                     td(class='olabel') Name
                     td(class='olabel') Nickname
                     td(class='olabel') Color
                     td(class='olabel') Player
-
 
         div(role='tabpanel' id='highscores' class='tab-pane')
             table(id='table-highscores' style='width: 100%;')
@@ -248,14 +256,13 @@ block content
                     td(class='glyph txt-italic') 501
                     td(class='glyph txt-italic') 701
                 tr
-                    //td(class='number')= statistics.best_ppd.value.toFixed(2) + ' / ' + statistics.best_first_nine_ppd.value.toFixed(2)
                     td(class='number')
-                        a(href='/legs/' + statistics.best_ppd.leg_id + '/result')= statistics.best_ppd.value.toFixed(2)
+                        +best_statistics(statistics.best_ppd, 'number')
                         label(style='font-weight: 300;')= ' / '
-                        a(href='/legs/' + statistics.best_first_nine_ppd.leg_id + '/result')= statistics.best_first_nine_ppd.value.toFixed(2)
-                    +best_statistics(statistics.best_301, 'number')
-                    +best_statistics(statistics.best_501, 'number')
-                    +best_statistics(statistics.best_701, 'number')
+                        +best_statistics(statistics.best_first_nine_ppd, 'number')
+                    +best_statistics_td(statistics.best_301, 'number')
+                    +best_statistics_td(statistics.best_501, 'number')
+                    +best_statistics_td(statistics.best_701, 'number')
                 tr
                     td(class='olabel') Best PPD / First 9
                     td(class='olabel') Best 301
@@ -263,25 +270,28 @@ block content
                     td(class='olabel') Best 701
 
         div(role='tabpanel' id='hits' class='tab-pane')
-            table(id='table-player-hits')
-                thead
-                    tr
-                        th Dart
-                        th Count
-                        th Hit %
-                        th Per Visit
-                        th Per Leg
-                        th Per Match
-                tbody
-                    each score, key in statistics.hits
-                        each value, multiplier in statistics.hits[key]
-                            tr
-                                +dart_container(key, multiplier)
-                                td= value
-                                td= (value * 100 / statistics.darts_thrown).toFixed(2) + '%'
-                                td= (value / statistics.total_visits).toFixed(2)
-                                td= (value / player.legs_played).toFixed(2)
-                                td= (value / player.matches_played).toFixed(2)
+            if statistics.hits
+                table(id='table-player-hits')
+                    thead
+                        tr
+                            th Dart
+                            th Count
+                            th Hit %
+                            th Per Visit
+                            th Per Leg
+                            th Per Match
+                    tbody
+                            each score, key in statistics.hits
+                                each value, multiplier in statistics.hits[key]
+                                    tr
+                                        +dart_container(key, multiplier)
+                                        td= value
+                                        td= (value * 100 / statistics.darts_thrown).toFixed(2) + '%'
+                                        td= (value / statistics.total_visits).toFixed(2)
+                                        td= (value / player.legs_played).toFixed(2)
+                                        td= (value / player.matches_played).toFixed(2)
+            else
+                div No data available
 
         div(role='tabpanel' id='heatmap' class='tab-pane')
             select(id='heatmap-value-selector' name='dart-values')
@@ -293,26 +303,29 @@ block content
                 canvas(id='dartboard-heatmap')
 
         div(role='tabpanel' id='visits' class='tab-pane')
-            table(id='table-player-visits')
-                thead
-                    tr
-                        th Vist
-                        th
-                        th
-                        th Count
-                        th Visit %
-                        th Per Leg
-                        th Per Match
-                tbody
-                    each visit in statistics.visits
+            if statistics.visits
+                table(id='table-player-visits')
+                    thead
                         tr
-                            +dart_container(visit.first_dart.value, visit.first_dart.multiplier)
-                            +dart_container(visit.second_dart.value, visit.second_dart.multiplier)
-                            +dart_container(visit.third_dart.value, visit.third_dart.multiplier)
-                            td= visit.count
-                            td= (visit.count * 100 / statistics.total_visits).toFixed(2) + '%'
-                            td= (visit.count / player.legs_played).toFixed(2)
-                            td= (visit.count / player.matches_played).toFixed(2)
+                            th Vist
+                            th
+                            th
+                            th Count
+                            th Visit %
+                            th Per Leg
+                            th Per Match
+                    tbody
+                        each visit in statistics.visits
+                            tr
+                                +dart_container(visit.first_dart.value, visit.first_dart.multiplier)
+                                +dart_container(visit.second_dart.value, visit.second_dart.multiplier)
+                                +dart_container(visit.third_dart.value, visit.third_dart.multiplier)
+                                td= visit.count
+                                td= (visit.count * 100 / statistics.total_visits).toFixed(2) + '%'
+                                td= (visit.count / player.legs_played).toFixed(2)
+                                td= (visit.count / player.matches_played).toFixed(2)
+            else
+                div No data available
 
         div(role='tabpanel' id='checkouts' class='tab-pane')
             table(id='table-checkouts' style='width: 100%;')
@@ -322,8 +335,8 @@ block content
                     td(class='glyph')
                         span(class="glyphicon glyphicon-screenshot" aria-hidden="true")
                 tr
-                    td(class='number')= statistics.checkout_percentage === 0 ? '-' : statistics.checkout_percentage.toFixed(2) + '%'
-                    +best_statistics(statistics.highest_checkout, 'number')
+                    td(class='number')= statistics.checkout_percentage === null ? '-' : statistics.checkout_percentage.toFixed(2) + '%'
+                    +best_statistics_td(statistics.highest_checkout, 'number')
                 tr
                     td(class='olabel') Checkout %
                     td(class='olabel') Highest Checkout
@@ -366,5 +379,9 @@ block content
                     h3 PPD
                     canvas(id='canvas-ppd')
                 div
+                    h3 Checkout %
+                    canvas(id='canvas-checkout')
+                div
+                    h3 Scores
                     canvas(id='canvas-scores')
 

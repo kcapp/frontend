@@ -120,9 +120,9 @@ block content
                         td= player.legs_won
                         td= player.legs_played == 0 ? '0.00%' : (player.legs_won * 100 / player.legs_played).toFixed(2) + '%'
                         td
-                            button(class='btn btn-primary view-player-btn btn-block' data-player-id=player.id disabled=player.matches_played === 0) View
+                            button(class='btn btn-primary view-player-btn btn-block' data-player-id=player.id) View
                         td
-                            input(type='checkbox' data-player=player value=player.id disabled=player.matches_played === 0)
+                            input(type='checkbox' data-player=player value=player.id)
 
         button(type='button' class='btn btn-block btn-primary' id='compare-players-button') Compare Players
         button(type='button' class='btn btn-block btn-primary' id='button-add-player' data-toggle='modal' data-target='#add-player-modal') Add Player

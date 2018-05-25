@@ -9,13 +9,15 @@ include ../mixins/score_header.pug
 block scripts
     script
         include socketio_helper.js
-
     script.
         var leg = !{JSON.stringify(leg)}
         var legId = leg.id;
         var playersMap = !{JSON.stringify(players)}
 
         $(function () {
+            if (leg.is_finished) {
+                return;
+            }
             socket = getSocketIO(legId);
 
             socket.on('connected', function(data) {
@@ -185,9 +187,12 @@ block content
     div(class='row')
 
     - var round_number = Math.floor(leg.visits.length / leg.players.length) + 1;
-    +get_score_header(match.match_mode, round_number, leg_players)
+    +get_score_header(match.match_mode, round_number, leg_players, match.tournament_id != null)
 
-    h3 Visits
+    if !leg.is_finished && leg.board_stream_url
+        img(src=leg.board_stream_url class='center-image' alt='Board live stream')
+
+    h3(style='margin-top: 0px;') Visits
     div(class='table-responsive')
         table(class='table table-scores table-striped' id='table-leg-visits' style='table-layout: fixed;')
             thead

@@ -6,6 +6,9 @@ block append head
 
 script.
     $(function() {
+        if (leg.is_finished) {
+            return;
+        }
         var socket = getSocketIO(legId);
         socket.on('chat_message', function(data) {
             var textArea = $('#chat-history');

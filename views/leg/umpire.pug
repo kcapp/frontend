@@ -48,21 +48,18 @@ block scripts
                     dart.addClass('dart-score-single');
                 }
 
-                // Update player score
-                var playerScore = $('#player-id-' + data.current_player_id);
-                playerScore.text(parseInt(playerScore.text()) - data.score);
-                $('#total').text(data.score + parseInt($('#total').text()));
-
                 if (data.is_finished) {
                     var text = playersMap[data.current_player_id].name + ' won the leg';
                     showAlert(text, function() {
                         alertify.success('Leg finished');
                     });
+
+                    var legsWon = $('.uv-active-player-legs').find('label');
+                    legsWon.text(parseInt(legsWon.text()) + 1)
                 }
             });
 
             socket.on('score_update', function(data) {
-                console.log(data);
                 var players = data.players;
                 for (key in players) {
                     var player = players[key];
@@ -70,13 +67,11 @@ block scripts
                     var playerTD = $('#player-score-' + player.player_id);
                     var playerLegsTD = $('#player-legs-' + player.player_id);
                     playerLabel.text(player.current_score);
-                    //$('#player-id-' + player.id + '-ppd').text(player.ppd.toFixed(2));
                     if (player.is_current_player) {
                         playerTD.removeClass('uv-inactive-player-score');
                         playerTD.addClass('uv-active-player-score');
                         playerLegsTD.removeClass('uv-inactive-player-legs');
                         playerLegsTD.addClass('uv-active-player-legs');
-                        $('#current-player').text(player.name);
                     } else {
                         playerTD.addClass('uv-inactive-player-score');
                         playerTD.removeClass('uv-active-player-score');
@@ -86,11 +81,15 @@ block scripts
                 }
                 // Set round number
                 $('#round-number').text('R' + (Math.floor(data.leg.visits.length / data.leg.players.length) + 1));
+                $('#current-player').text(playersMap[data.leg.current_player_id].name);
 
                 // Reset UI elements
                 $('#first').text('');
+                $('#first').removeClass();
                 $('#second').text('');
+                $('#second').removeClass();
                 $('#third').text('');
+                $('#third').removeClass();
                 $('#total').text(0);
 
                 // Update the visits table
@@ -102,12 +101,13 @@ block scripts
                 if (visit.is_bust) {
                     total = 'BUST';
                 }
+                // Append the score to the beginning of the table
                 var html =
                     "<tr>" +
                         "<td>" + playerName + "</td>" +
-                        "<td class='dart-score-container no-border'><label class='" + getDartCSS(visit.first_dart) + "'>" + getScoreString(visit.first_dart) + "</label></td>" +
-                        "<td class='dart-score-container no-border'><label class='" + getDartCSS(visit.second_dart) + "'>" + getScoreString(visit.second_dart) + "</label></td>" +
-                        "<td class='dart-score-container no-border'><label class='" + getDartCSS(visit.third_dart) + "'>" + getScoreString(visit.third_dart) + "</label></td>" +
+                        "<td class='col-sm-2 dart-score-container no-border'><label class='" + getDartCSS(visit.first_dart) + "'>" + getScoreString(visit.first_dart) + "</label></td>" +
+                        "<td class='col-sm-2 dart-score-container no-border'><label class='" + getDartCSS(visit.second_dart) + "'>" + getScoreString(visit.second_dart) + "</label></td>" +
+                        "<td class='col-sm-2 dart-score-container no-border'><label class='" + getDartCSS(visit.third_dart) + "'>" + getScoreString(visit.third_dart) + "</label></td>" +
                         "<td><label>" + total + "</label></td>" +
                     "</tr>";
                 $('#table-leg-visits > tbody > tr:first').after(html);
@@ -166,7 +166,7 @@ block content
     h2 Scorer
 
     - var round_number = Math.floor(leg.visits.length / leg.players.length) + 1;
-    +get_score_header(match.match_mode, round_number, leg_players)
+    +get_score_header(match.match_mode, round_number, leg_players, match.tournament_id != null)
 
     h3 Visits
     div(class='table-responsive')

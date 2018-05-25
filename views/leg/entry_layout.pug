@@ -142,9 +142,6 @@ block scripts
                         tdVisit.removeClass().addClass('uv-active-player-visits');
                         $('#submit-score-button').data('current-player-id', player.player_id);
                         label.addClass('current-player');
-                        if (player.modifiers.is_beer_match) {
-                            td.addClass('player-modifier-beer');
-                        }
                     }
                     else {
                         td.removeClass().addClass('uv-inactive-player-score');
@@ -152,12 +149,13 @@ block scripts
                         tdVisit.removeClass().addClass('uv-inactive-player-visits');
                         label.removeClass('current-player');
                         label.removeAttr('data-current-player-id');
-                        if (player.modifiers.is_beer_match) {
-                            td.addClass('player-modifier-beer');
-                        }
+
                         if (player.modifiers.is_vilius_visit) {
                             td.addClass('player-modifier-vilius');
                         }
+                    }
+                    if (player.modifiers.is_beer_match) {
+                        td.addClass('player-modifier-beer');
                     }
                 }
                 $('.uv-active-player-visits .dart-score-total').html(0);
@@ -258,7 +256,7 @@ block scripts
             });
 
             $('#cancel-leg-button').click(function () {
-                showConfirm('Match will be cancelled.', function() {
+                showConfirm('Leg will be cancelled.', function() {
                     executeDelete('/legs/' + legId + '/cancel',
                         function (response) {
                             location.href = '/matches';
@@ -363,7 +361,7 @@ block content
     block title
 
     - var round_number = Math.floor(leg.visits.length / leg.players.length) + 1;
-    +get_score_header(match.match_mode, round_number, leg_players, true)
+    +get_score_header(match.match_mode, round_number, leg_players, match.tournament_id != null, true)
 
     div(class='table-responsive')
         table(id='score-selector-table' class='table' style='display: none;')

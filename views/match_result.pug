@@ -1,5 +1,7 @@
 extends layout.pug
 
+include mixins/player.pug
+
 block append head
     script(src='/javascripts/moment-2.20.1.min.js')
 
@@ -27,12 +29,7 @@ block content
         Stakes: #{match.owe_type_id === null ? "None" : match.owe_type.item} <br>
         Duration: #{match.end_time === undefined || duration == 0 ? '-' : duration + ' minutes'} <br>
 
-    each playerId in match.players
-        if (match.winner_id === playerId)
-            h4= 'Winner: ' + players[playerId].name
-
     - var hasStatistics = stats.length
-
     div(class='table-responsive')
         table(id='player-comparison-table' class='table table-striped table-bordered')
             thead
@@ -46,69 +43,33 @@ block content
                             th= players[id].name
                     th Results
             tbody
-            - var idx = 1
-            each leg in match.legs
+             - var idx = 1
+                each leg in match.legs
+                    tr
+                        th(hidden='true' scope='row')= leg.id
+                        td(class='col-sm-2')= '#' + idx++
+                        if hasStatistics
+                            each stat in stats
+                                td
+                                    if leg.winner_player_id === stat.player_id
+                                        span(class='glyphicon glyphicon-ok' aria-hidden='true')
+                                    else
+                                        span(class='glyphicon glyphicon-remove' aria-hidden='true')
+                        else
+                            each id in match.players
+                                td
+                                    if leg.winner_player_id === id
+                                        span(class='glyphicon glyphicon-ok' aria-hidden='true')
+                                    else
+                                        span(class='glyphicon glyphicon-remove' aria-hidden='true')
+                        if leg.has_scores
+                            td: button(type='button' class='btn btn-primary btn-block btn-view-results') View
+                        else
+                            td N/A
                 tr
-                    th(hidden='true' scope='row')= leg.id
-                    td(class='col-sm-2')= '#' + idx++
-                    if hasStatistics
-                        each stat in stats
-                            td
-                                if leg.winner_player_id === stat.player_id
-                                    span(class='glyphicon glyphicon-ok' aria-hidden='true')
-                                else
-                                    span(class='glyphicon glyphicon-remove' aria-hidden='true')
-                    else
-                        each id in match.players
-                            td
-                                if leg.winner_player_id === id
-                                    span(class='glyphicon glyphicon-ok' aria-hidden='true')
-                                else
-                                    span(class='glyphicon glyphicon-remove' aria-hidden='true')
-                    if leg.has_scores
-                        td: button(type='button' class='btn btn-primary btn-block btn-view-results') View
-                    else
-                        td N/A
-            if hasStatistics
-                tr
-                    th Statistics
-                    each stat in stats
-                        td
-                tr
-                    td(class='col-sm-2') PPD
-                    each stat in stats
-                        td= stat.ppd.toFixed(2)
-                tr
-                    td(class='col-sm-2') First 9 PPD
-                    each stat in stats
-                        td= stat.first_nine_ppd.toFixed(2)
-                tr
-                    td(class='col-sm-2') Checkout%
-                    each stat in stats
-                        td= stat.checkout_percentage === null ? '-' : stat.checkout_percentage.toFixed(2) + '%'
-                tr
-                    td(class='col-sm-2') Accuracy (All/20/19)
-                    each stat in stats
-                        - var accuracy_20 = stat.accuracy_20 === null ? '-' : stat.accuracy_20.toFixed(2)
-                        - var accuracy_19 = stat.accuracy_19 === null ? '-' : stat.accuracy_19.toFixed(2)
-                        td= stat.accuracy_overall.toFixed(2) + ' / ' + accuracy_20 + ' / ' + accuracy_19
-                tr
-                    td(class='separator_row')
-                        each stat in stats
-                            th(class='separator_row') High Scores
-                tr
-                    td(class='col-sm-2') 60+
-                    each stat in stats
-                        td= stat.scores_60s_plus
-                tr
-                    td(class='col-sm-2') 100+
-                    each stat in stats
-                        td= stat.scores_100s_plus
-                tr
-                    td(class='col-sm-2') 140+
-                    each stat in stats
-                        td= stat.scores_140s_plus
-                tr
-                    td(class='col-sm-2') 180
-                    each stat in stats
-                        td= stat.scores_180s
+                    td
+                    each statistic in stats
+                        - var player = players[statistic.player_id]
+                        td(class='text-center')
+                            +player_statistics_card('player-card-match', player, statistic, statistic.player_id === match.winner_id)
+                    td

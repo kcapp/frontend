@@ -1,0 +1,53 @@
+
+mixin get_player_profile_pic(player, width = 98, height = 130)
+    if player.profile_pic_url
+        img(class='glyphicon glyphicon-user' height=height width=width src=player.profile_pic_url)
+    else
+        span(class='glyphicon glyphicon-user')
+
+mixin player_statistics_card(clazz, player, statistics, isWinner = false, dartsThrown)
+    div(class=clazz)
+        div(class='glyph')
+            +get_player_profile_pic(player, 111, 143)
+        div(class='playername'): a(href='/players/' + player.id + '/statistics')= player.name
+        div: hr
+        if match.match_type.id == 2
+            div(class='info') PPD
+            div= statistics.ppd.toFixed(2)
+            div(class='info') Score
+            div= player.remaining_score
+        else
+            div(class='info') PPD / First 9
+            div= statistics.ppd.toFixed(2) + ' / ' + statistics.first_nine_ppd.toFixed(2)
+            div(class='info') Accuracy Overall / 20 / 19
+            div
+            - var accuracy_20 = statistics.accuracy_20 === null ? '-' : statistics.accuracy_20.toFixed(2)
+            - var accuracy_19 = statistics.accuracy_19 === null ? '-' : statistics.accuracy_19.toFixed(2)
+            div= statistics.accuracy_overall.toFixed(2) + ' / ' + accuracy_20 + ' / ' + accuracy_19
+            div(class='info') Checkout % / Attempts
+            if statistics.checkout_percentage !== null && statistics.checkout_percentage !== 0
+                div= statistics.checkout_percentage.toFixed(2) + '% / ' + statistics.checkout_attempts
+            else
+                div= '- / ' + (statistics.checkout_attempts ? statistics.checkout_attempts : 0)
+
+        div(class='info') Scores
+        div= "60+: " + statistics.scores_60s_plus
+        div= "100+: " + statistics.scores_100s_plus
+        div= "140+: " + statistics.scores_140s_plus
+        div= "180s: " + statistics.scores_180s
+
+        //- Get darts thrown per player
+        if dartsThrown
+            if match.match_type.id == 1
+                div(class='info') Darts Thrown
+                div= dartsThrown
+
+        div(style='margin-top: 20px;'): hr
+        if isWinner
+            div(class='label-winner') WINNER
+        else
+            if match.match_type.id == 1 || match.match_type.id == 3
+                if player.remaining_score
+                    div(class='label-loser')= player.remaining_score + ' left'
+            else
+                div(class='label-loser') &nbsp;
