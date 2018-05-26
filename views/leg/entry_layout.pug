@@ -241,6 +241,7 @@ block scripts
                         multiplier: 1,
                         is_bust: false,
                         is_finished: false,
+                        is_undo: true,
                         darts_thrown: currentDart
                 });
 
@@ -291,23 +292,28 @@ block scripts
                 if (scoreAfterThrow == 0) {
                     if (dart.attr('data-multiplier') == 2) {
                         disableEnter = true;
-                        showConfirm('Match will be finished.', function() {
-                            isFinished = true;
+                        currentDart++;
+                        updatePlayerScore(scoreNumeric);
+                        socket.emit('possible_throw', {
+                                current_player_id: currentPlayerId,
+                                score: scoreNumeric,
+                                dart_text: dart.text(),
+                                multiplier: dart.attr('data-multiplier'),
+                                is_bust: isBust,
+                                is_finished: isFinished,
+                                darts_thrown: currentDart - 1
+                        });
+                        showConfirm('Leg will be finished.', function() {
                             socket.emit('possible_throw', {
                                     current_player_id: currentPlayerId,
-                                    score: scoreNumeric,
-                                    dart_text: dart.text(),
-                                    multiplier: dart.attr('data-multiplier'),
-                                    is_bust: isBust,
-                                    is_finished: isFinished,
-                                    darts_thrown: currentDart
+                                    is_finished: true
                             });
-
-                            // End match, 'click' submit
+                            // End leg, 'click' submit
                             $('#submit-score-button').data('finished', 1).trigger('click');
                         }, function(){
                             $('#undo-button').trigger('click');
                         });
+                        // Return so we don't trigger any code checking for bust
                         return;
                     }
                     else {
@@ -320,17 +326,17 @@ block scripts
 
                 if (isBust) {
                     disableEnter = true;
+                    socket.emit('possible_throw', {
+                            current_player_id: currentPlayerId,
+                            score: scoreNumeric,
+                            dart_text: dart.text(),
+                            multiplier: dart.attr('data-multiplier'),
+                            is_bust: isBust,
+                            is_finished: isFinished,
+                            darts_thrown: currentDart
+                    });
                     showConfirm('Player busted', function() {
                         // Emit a dart throw for spectators
-                        socket.emit('possible_throw', {
-                                current_player_id: currentPlayerId,
-                                score: scoreNumeric,
-                                dart_text: dart.text(),
-                                multiplier: dart.attr('data-multiplier'),
-                                is_bust: isBust,
-                                is_finished: isFinished,
-                                darts_thrown: currentDart - 1
-                        });
                         alertify.success('Player busted');
                         $('#submit-score-button').data('busted', 1).trigger('click');
                     }, function(){

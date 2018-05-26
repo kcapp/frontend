@@ -27,6 +27,15 @@ block scripts
 
             socket.on('possible_throw', function(data) {
                 console.log(data);
+                if (data.is_finished) {
+                    showAlert(playersMap[data.current_player_id].name + ' won the leg', function() {
+                        alertify.success('Leg finished');
+                    });
+                    var legsWon = $('.uv-active-player-legs').find('label');
+                    legsWon.text(parseInt(legsWon.text()) + 1)
+                    return;
+                }
+
                 var dart;
                 if (data.darts_thrown === 1) {
                     dart = $('#first');
@@ -44,30 +53,22 @@ block scripts
                 dart.text(data.dart_text);
 
                 dart.removeClass('dart-score-single dart-score-double dart-score-triple');
-                if (data.multiplier == 3) {
-                    dart.addClass('dart-score-triple');
-                }
-                else if (data.multiplier == 2) {
-                    dart.addClass('dart-score-double');
-                }
-                else {
-                    dart.addClass('dart-score-single');
+                if (!data.is_undo) {
+                    if (data.multiplier == 3) {
+                        dart.addClass('dart-score-triple');
+                    }
+                    else if (data.multiplier == 2) {
+                        dart.addClass('dart-score-double');
+                    }
+                    else {
+                        dart.addClass('dart-score-single');
+                    }
                 }
 
                 // Update player score
                 var playerScore = $('#player-id-' + data.current_player_id);
                 playerScore.text(parseInt(playerScore.text()) - data.score);
                 $('#total').text(data.score + parseInt($('#total').text()));
-
-                if (data.is_finished) {
-                    var text = playersMap[data.current_player_id].name + ' won the leg';
-                    showAlert(text, function() {
-                        alertify.success('Leg finished');
-                    });
-
-                    var legsWon = $('.uv-active-player-legs').find('label');
-                    legsWon.text(parseInt(legsWon.text()) + 1)
-                }
             });
 
             socket.on('score_update', function(data) {
