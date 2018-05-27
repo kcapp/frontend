@@ -3,7 +3,7 @@ mixin get_player_profile_pic(player, width = 98, height = 130)
     if player.profile_pic_url
         img(class='glyphicon glyphicon-user' height=height width=width src=player.profile_pic_url)
     else
-        span(class='glyphicon glyphicon-user')
+        span(class='glyphicon glyphicon-user glyphicon-user-profile')
 
 mixin player_statistics_card(clazz, player, statistics, isWinner = false, dartsThrown)
     div(class=clazz)

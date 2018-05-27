@@ -76,7 +76,30 @@ router.get('/:id/spectate', function (req, res, next) {
     axios.get(req.app.locals.kcapp.api + '/match/' + req.params.id)
         .then(response => {
             var match = response.data;
-            res.redirect('/legs/' + match.current_leg_id + '/spectate');
+            axios.get(req.app.locals.kcapp.api + '/player')
+                .then(response => {
+                    var playersMap = response.data;
+                    axios.get(req.app.locals.kcapp.api + '/leg/' + match.current_leg_id)
+                        .then(response => {
+                            var leg = response.data;
+                            axios.get(req.app.locals.kcapp.api + '/leg/' + match.current_leg_id + '/players')
+                                .then(response => {
+                                    var legPlayers = response.data;
+                                    res.render('leg/spectate', {
+                                        leg: leg, players: playersMap, match: match, leg_players: legPlayers
+                                    });
+                                }).catch(error => {
+                                    debug('Error when getting leg players: ' + error);
+                                    next(error);
+                                });
+                        }).catch(error => {
+                            debug('Error when getting leg: ' + error);
+                            next(error);
+                        });
+                }).catch(error => {
+                    debug('Error when getting players: ' + error);
+                    next(error);
+                });
         }).catch(error => {
             debug('Error when getting match: ' + error);
             next(error);

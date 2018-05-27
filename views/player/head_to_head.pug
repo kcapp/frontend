@@ -2,6 +2,7 @@ extends ../layout.pug
 
 include ../mixins/dart.pug
 include ../mixins/statistics.pug
+include ../mixins/player.pug
 
 block scripts
     script.
@@ -24,16 +25,10 @@ block content
                     td(class='head-to-head-player2'): h2= player2.name
                 tr
                     td(class='head-to-head-player1')
-                        if player1.profile_pic_url
-                            img(class='glyphicon glyphicon-user' height='130' width='98' src=player1.profile_pic_url)
-                        else
-                            span(class='glyphicon glyphicon-user')
+                        +get_player_profile_pic(player1, 98, 130)
                     th(class='head-to-head-header')
                     td(class='head-to-head-player2')
-                        if player2.profile_pic_url
-                            img(class='glyphicon glyphicon-user' height='130' width='98' src=player2.profile_pic_url)
-                        else
-                            span(class='glyphicon glyphicon-user')
+                        +get_player_profile_pic(player2, 98, 130)
                 tr
                     th(colspan='3' class='head-to-head-header'): h3 Overall
                 tr
