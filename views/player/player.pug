@@ -80,7 +80,7 @@ block scripts
                 var p = progression[date];
                 labels.push(date);
                 valuesMap.ppd.push(p.ppd.toFixed(2));
-                valuesMap.checkout_percentage.push(p.checkout_percentage.toFixed(2));
+                valuesMap.checkout_percentage.push(p.checkout_percentage == null ? 0 : p.checkout_percentage.toFixed(2));
                 valuesMap.first9ppd.push(p.first_nine_ppd.toFixed(2));
                 valuesMap.scores60s.push(p.scores_60s_plus);
                 valuesMap.scores100s.push(p.scores_100s_plus);
