@@ -3,6 +3,7 @@ var debug = require('debug')('kcapp:legs');
 const express = require('express');
 const router = express.Router();
 const _ = require('underscore');
+const request = require('request');
 
 const axios = require('axios');
 
@@ -240,6 +241,35 @@ router.put('/:id/order', function (req, res, next) {
             res.status(200).end();
         }).catch(error => {
             debug('Unable to change order: %s', error);
+            next(error);
+        });
+});
+
+/** Method for piping live stream */
+router.get('/:id/stream', function (req, res, next) {
+    axios.get(req.app.locals.kcapp.api + '/leg/' + req.params.id)
+        .then(response => {
+            var leg = response.data;
+
+            var req_pipe = request({ url: leg.board_stream_url });
+            req_pipe.pipe(res);
+
+            req_pipe.on('error', function (e) {
+                debug(e)
+            });
+            // Client quit normally
+            req.on('end', function () {
+                debug('Live stream ended');
+                req_pipe.abort();
+
+            });
+            // Client quit unexpectedly
+            req.on('close', function () {
+                debug('Live stream closed');
+                req_pipe.abort()
+            });
+        }).catch(error => {
+            debug('Error when getting leg: ' + error);
             next(error);
         });
 });
