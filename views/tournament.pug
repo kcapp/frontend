@@ -1,5 +1,6 @@
 extends layout.pug
 
+include mixins/statistics.pug
 
 block append head
     link(rel='stylesheet' type='text/css' href='/stylesheets/datatables-1.10.16.min.css')
@@ -32,15 +33,16 @@ block content
 
     ul(class='nav nav-pills')
         li(role='presentation' class='active'): a(href='#season' data-toggle='tab') Season
+        li(role='presentation'): a(href='#statistics' data-toggle='tab') Statistics
         li(role='presentation'): a(href='#playoffs' data-toggle='tab') Playoffs
         if  tournament.standings
             li(role='presentation'): a(href='#standings' data-toggle='tab') Final Standings
 
     div(class='tab-content' style='padding-top: 20px;')
         div(role='tabpanel' id='season' class='tab-pane active')
-            each stats, id in statistics
-                h3= stats[0].tournament_group.name
-                table(class='table table-striped' id='table-tournament-statistics')
+            each group, id in overview
+                h3= group[0].tournament_group.name
+                table(class='table table-striped' id='table-tournament-overview')
                     thead
                         tr
                             th Pos
@@ -54,7 +56,8 @@ block content
                             th +/-
                             th PTS
                             th PPD / First 9
-                            th Checkout
+                            th Checkout %
+                            th Checkout Attempts
                             th 60s+
                             th 100s+
                             th 140s+
@@ -64,7 +67,7 @@ block content
                             th 19s
                     tbody
                         - var rank = 1
-                        each player in stats
+                        each player in group
                             tr
                                 td
                                     div= rank++
@@ -85,6 +88,7 @@ block content
                                 td= player.points
                                 td= player.ppd.toFixed(2) + ' / ' + player.first_nine_ppd.toFixed(2)
                                 td= player.checkout_percentage.toFixed(2) + '%'
+                                td= (player.legs_for == 0 ? '-' : player.legs_for) + ' / ' + player.checkout_attempts
                                 td= player.scores_60s_plus
                                 td= player.scores_100s_plus
                                 td= player.scores_140s_plus
@@ -92,7 +96,6 @@ block content
                                 td= player.accuracy_overall.toFixed(2)
                                 td= player.accuracy_20.toFixed(2)
                                 td= player.accuracy_19.toFixed(2)
-
                 h4 Matches
                 table(class='table' class='table-matches-list')
                         thead
@@ -136,9 +139,25 @@ block content
                                         else
                                             utton(type='button' id='view-match-button' data-match=match.id class='btn btn-primary btn-block') View
 
+        div(role='tabpanel' id='statistics' class='tab-pane')
+            h3 Highest Checkout Per Player
+            table(class='table table-striped' id='table-tournament-statistics-checkouts')
+                thead
+                    tr
+                        th Rank
+                        th Player
+                        th Checkout
+                tbody
+                    - var rank = 1
+                    each checkout in statistics.checkout_highest
+                        tr
+                            td= rank++
+                            td: a(href='/players/' + checkout.player_id + '/statistics')= players[checkout.player_id].name
+                            +best_statistics_td(checkout)
+
         div(role='tabpanel' id='playoffs' class='tab-pane')
             include bracket.pug
-        if  tournament.standings
+        if tournament.standings
             div(role='tabpanel' id='standings' class='tab-pane')
                 table(class='table table-striped' id='table-tournament-standings')
                     thead
