@@ -35,6 +35,7 @@ var tournaments = require('./routes/tournaments');
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
 app.locals.moment = require('moment');
+app.locals._ = require('underscore');
 
 // Write access log to a daily rotated file in /log
 var logDirectory = path.join(__dirname, 'log')

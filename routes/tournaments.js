@@ -36,7 +36,17 @@ router.get('/:id', function (req, res, next) {
                                     axios.get(req.app.locals.kcapp.api + '/tournament/' + id + '/statistics')
                                         .then(response => {
                                             var statistics = response.data;
-                                            statistics.checkout_highest = _.sortBy(statistics.checkout_highest, (stats) => -stats.value);
+                                            if (!_.isEmpty(statistics)) {
+                                                statistics.checkout_highest = _.sortBy(statistics.checkout_highest, (stats) => -stats.value);
+                                                statistics.best_ppd = _.sortBy(statistics.best_ppd, (stats) => -stats.value);
+                                                statistics.best_first_nine_ppd = _.sortBy(statistics.best_first_nine_ppd, (stats) => -stats.value);
+                                                if (statistics.best_301_darts_thrown) {
+                                                    statistics.best_301_darts_thrown = _.sortBy(statistics.best_301_darts_thrown, (stats) => stats.value);
+                                                }
+                                                if (statistics.best_501_darts_thrown) {
+                                                    statistics.best_501_darts_thrown = _.sortBy(statistics.best_501_darts_thrown, (stats) => stats.value);
+                                                }
+                                            }
 
                                             var bracket = {
                                                 "eightfinals": [

@@ -31,9 +31,11 @@ block scripts
 block content
     h2(style='padding: 10px 0px 20px 0px;')= tournament.name
 
+    - var hasStatistics = !_.isEmpty(statistics)
     ul(class='nav nav-pills')
         li(role='presentation' class='active'): a(href='#season' data-toggle='tab') Season
-        li(role='presentation'): a(href='#statistics' data-toggle='tab') Statistics
+        if hasStatistics
+            li(role='presentation'): a(href='#statistics' data-toggle='tab') Statistics
         li(role='presentation'): a(href='#playoffs' data-toggle='tab') Playoffs
         if  tournament.standings
             li(role='presentation'): a(href='#standings' data-toggle='tab') Final Standings
@@ -55,16 +57,16 @@ block content
                             th A
                             th +/-
                             th PTS
-                            th PPD / First 9
-                            th Checkout %
-                            th Checkout Attempts
-                            th 60s+
-                            th 100s+
-                            th 140s+
-                            th 180
-                            th Overall
-                            th 20s
-                            th 19s
+                            if hasStatistics
+                                th PPD / First 9
+                                th Checkout %
+                                th 60s+
+                                th 100s+
+                                th 140s+
+                                th 180
+                                th Overall
+                                th 20s
+                                th 19s
                     tbody
                         - var rank = 1
                         each player in group
@@ -86,16 +88,16 @@ block content
                                 td= player.legs_against
                                 td= player.legs_difference
                                 td= player.points
-                                td= player.ppd.toFixed(2) + ' / ' + player.first_nine_ppd.toFixed(2)
-                                td= player.checkout_percentage.toFixed(2) + '%'
-                                td= (player.legs_for == 0 ? '-' : player.legs_for) + ' / ' + player.checkout_attempts
-                                td= player.scores_60s_plus
-                                td= player.scores_100s_plus
-                                td= player.scores_140s_plus
-                                td= player.scores_180s
-                                td= player.accuracy_overall.toFixed(2)
-                                td= player.accuracy_20.toFixed(2)
-                                td= player.accuracy_19.toFixed(2)
+                                if hasStatistics
+                                    td= player.ppd.toFixed(2) + ' / ' + player.first_nine_ppd.toFixed(2)
+                                    td= player.checkout_percentage.toFixed(2) + '%'
+                                    td= player.scores_60s_plus
+                                    td= player.scores_100s_plus
+                                    td= player.scores_140s_plus
+                                    td= player.scores_180s
+                                    td= player.accuracy_overall.toFixed(2)
+                                    td= player.accuracy_20.toFixed(2)
+                                    td= player.accuracy_19.toFixed(2)
                 h4 Matches
                 table(class='table' class='table-matches-list')
                         thead
@@ -139,21 +141,44 @@ block content
                                         else
                                             utton(type='button' id='view-match-button' data-match=match.id class='btn btn-primary btn-block') View
 
-        div(role='tabpanel' id='statistics' class='tab-pane')
-            h3 Highest Checkout Per Player
-            table(class='table table-striped' id='table-tournament-statistics-checkouts')
-                thead
-                    tr
-                        th Rank
-                        th Player
-                        th Checkout
-                tbody
-                    - var rank = 1
-                    each checkout in statistics.checkout_highest
+        if hasStatistics
+            div(role='tabpanel' id='statistics' class='tab-pane')
+                mixin top_statistics(rank, idx, statistics)
+                    if statistics[idx]
+                        td= rank
+                        td: a(href='/players/' + statistics[idx].player_id + '/statistics')= players[statistics[idx].player_id].name
+                        +best_statistics_td(statistics[idx])
+                    else
+                        td= rank
+                        td -
+                        td -
+
+                h3 Top 5
+                table(class='table table-striped' id='table-tournament-statistics')
+                    thead
                         tr
-                            td= rank++
-                            td: a(href='/players/' + checkout.player_id + '/statistics')= players[checkout.player_id].name
-                            +best_statistics_td(checkout)
+                            th Rank
+                            th Player
+                            th Checkout
+                            th Rank
+                            th Player
+                            th PPD
+                            th Rank
+                            th Player
+                            th Fist 9 PPD
+                            th Rank
+                            th Player
+                            th Darts Thown
+                    tbody
+                        - var rank = 1
+                        each idx in [0, 1, 2, 3, 4]
+                            - var dartsThrown = statistics.best_501_darts_thrown ? statistics.best_501_darts_thrown : statistics.best_301_darts_thrown ? statistics.best_301_darts_thrown : null
+                            tr
+                                +top_statistics(rank, idx, statistics.checkout_highest)
+                                +top_statistics(rank, idx, statistics.best_ppd)
+                                +top_statistics(rank, idx, statistics.best_first_nine_ppd)
+                                +top_statistics(rank, idx, dartsThrown)
+                                - rank++
 
         div(role='tabpanel' id='playoffs' class='tab-pane')
             include bracket.pug
