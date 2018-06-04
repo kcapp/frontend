@@ -223,6 +223,20 @@ block append scripts
             $('.glyphicon-user').click(function(){
                 location.href = '/players/' + $(this).data('player') + '/statistics'
             });
+
+            $('#button-undo-finish').click(function () {
+                showConfirm('Leg will no longer be finalized', function() {
+                    executePut('/legs/' + leg.id + '/undo', null, 'application/json',
+                        function (response) {
+                            location.href = '/legs/' + leg.id;
+                        },
+                        function (error) {
+                            alert.show();
+                            alert.text('Unable to undo leg fomosj, see log for details (' + error.statusText + ')');
+                        }
+                    );
+                }, function(){ /* NOOP */ });
+            });
         });
     script.
         var scoresMap = !{JSON.stringify(leg.hits)};
@@ -283,6 +297,16 @@ block content
         Rounds: #{Math.ceil(leg.visits.length / leg.players.length)}
 
     - var isFinished = leg.winner_player_id !== null
+    if isFinished
+        div(class='btn-group')
+            button(type='button' class='btn btn-primary') Options
+            button(type='button' class='btn btn-primary btn-blcok dropdown-toggle' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false')
+                span(class='caret')
+                span(class='sr-only')
+            ul(class='dropdown-menu')
+                block advanced_options
+                    li: a(id='button-undo-finish') Undo Leg Finish
+
     if isFinished
         table(style='width: 100%; table-layout: fixed;')
             tbody
@@ -404,3 +428,4 @@ block content
                                     +dart_container(key, multiplier)
                                     td= count
                                     td= (count * 100 / leg.darts_thrown).toFixed(2) + '%'
+    br

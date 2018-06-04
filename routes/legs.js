@@ -245,6 +245,17 @@ router.put('/:id/order', function (req, res, next) {
         });
 });
 
+/** Method to change player order */
+router.put('/:id/undo', function (req, res, next) {
+    axios.put(req.app.locals.kcapp.api + '/leg/' + req.params.id + '/undo')
+        .then(() => {
+            res.status(200).end();
+        }).catch(error => {
+            debug('Unable to undo finish: %s', error);
+            next(error);
+        });
+});
+
 /** Method for piping live stream */
 router.get('/:id/stream', function (req, res, next) {
     axios.get(req.app.locals.kcapp.api + '/leg/' + req.params.id)

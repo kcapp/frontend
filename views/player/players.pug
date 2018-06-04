@@ -112,7 +112,7 @@ block content
                 each player in players
                     tr
                         th(hidden='true' scope='row')= player.id
-                        td(class='text-left'): a(href='/players/' + player.id + '/statistics')= player.name + (player.nickname !== null ? (" the '" + player.nickname + "'") : '')
+                        td(class='text-left'): a(href='/players/' + player.id + '/statistics')= player.name + (player.nickname !== null ? ("'" + player.nickname + "'") : '')
                         td= player.matches_played
                         td= player.matches_won
                         td= player.matches_played == 0 ? '0.00%' : (player.matches_won * 100 / player.matches_played).toFixed(2) + '%'
