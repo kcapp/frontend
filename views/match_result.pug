@@ -21,7 +21,7 @@ block content
     if match.tournament_id
         h3(style='margin-top: 5px;'): b= match.tournament.tournament_name + ' / ' + match.tournament.tournament_group_name
 
-    - var duration = moment.duration(moment(match.end_time).diff(match.created_at)).asMinutes().toFixed()
+    - var duration = moment.duration(moment(match.last_throw_time).diff(match.first_throw_time)).asMinutes().toFixed()
     p.
         Type: #{match.match_mode.name} <br>
         Started: #{moment(match.created_at).format('YYYY-MM-DD HH:mm:ss')} <br>
