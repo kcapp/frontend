@@ -190,7 +190,7 @@ router.get('/:id/result', function (req, res, next) {
 });
 
 /* Delete the given visit */
-router.delete('/:id/leg/:visitid', function (req, res, next) {
+router.delete('/:id/visit/:visitid', function (req, res, next) {
     axios.delete(req.app.locals.kcapp.api + '/visit/' + req.params.visitid)
         .then(() => {
             res.status(200).send().end();
@@ -249,6 +249,7 @@ router.put('/:id/order', function (req, res, next) {
 router.put('/:id/undo', function (req, res, next) {
     axios.put(req.app.locals.kcapp.api + '/leg/' + req.params.id + '/undo')
         .then(() => {
+            socketHandler.setupNamespace(req.params.id);
             res.status(200).end();
         }).catch(error => {
             debug('Unable to undo finish: %s', error);

@@ -106,6 +106,9 @@ block scripts
         $(function () {
             FastClick.attach(document.body);
 
+            if (leg.is_finished) {
+                return;
+            }
             var socket = getSocketIO(legId);
             socket.on('spectator_connected', function (data) {
                 alertify.success(data + ' connected');
@@ -161,7 +164,8 @@ block scripts
                 $('.uv-active-player-visits .dart-score-total').html(0);
                 resetUIelements();
             });
-
+        });
+        $(function () {
             $(document).scrollTop(170);
 
             $('#submit-score-button').click(function (event) {

@@ -180,7 +180,7 @@ block append scripts
             $('.delete-visit').click(function () {
                 var visitNumber = $(this).data('visit');
                 showConfirm('Visit will be deleted.', function() {
-                    executeDelete(window.location.pathname + '/' + visitNumber,
+                    executeDelete('/legs/' + leg.id + '/visit/' + visitNumber,
                         function (response) {
                             location.href = '/legs/' + leg.id;
                         },
