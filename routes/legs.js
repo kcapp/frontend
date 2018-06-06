@@ -128,8 +128,9 @@ router.get('/:id/result', function (req, res, next) {
                                 .then(response => {
                                     var legPlayers = response.data;
 
-                                    _.each(leg.players, (playerId) => {
-                                        playersMap[playerId].remaining_score = leg.starting_score;
+                                    _.each(legPlayers, (player) => {
+                                        playersMap[player.player_id].starting_score = leg.starting_score + player.handicap;
+                                        playersMap[player.player_id].remaining_score = leg.starting_score + player.handicap;
                                     });
                                     _.each(leg.visits, (visit, index) => {
                                         var player = playersMap[visit.player_id]

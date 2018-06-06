@@ -5,7 +5,7 @@ mixin get_player_profile_pic(player, width = 98, height = 130)
     else
         span(class='glyphicon glyphicon-user glyphicon-user-profile')
 
-mixin player_statistics_card(clazz, player, statistics, isWinner = false, dartsThrown)
+mixin player_statistics_card(clazz, player, statistics, isWinner = false, dartsThrown, startingScore)
     div(class=clazz)
         div(class='glyph')
             +get_player_profile_pic(player, 111, 143)
@@ -42,12 +42,29 @@ mixin player_statistics_card(clazz, player, statistics, isWinner = false, dartsT
                 div(class='info') Darts Thrown
                 div= dartsThrown
 
+        if startingScore
+            div(class='info') Starting Score
+            div= startingScore
+
+        if match.match_type.id == 2
+            div(class='info') Scored
+            div= player.remaining_score
+
         div(style='margin-top: 20px;'): hr
-        if isWinner
-            div(class='label-winner') WINNER
-        else
-            if match.match_type.id == 1 || match.match_type.id == 3
-                if player.remaining_score
-                    div(class='label-loser')= player.remaining_score + ' left'
+        if match.match_type.id == 2
+            if isWinner
+                div(class='label-winner') WINNER
             else
                 div(class='label-loser') &nbsp;
+        else if match.match_type.id == 3
+            if isWinner
+                div(class='label-winner') WINNER
+            else
+                if player.remaining_score
+                    div(class='label-loser')= player.remaining_score + ' left'
+        else
+            if isWinner
+                div(class='label-winner') WINNER
+            else
+                if player.remaining_score
+                    div(class='label-loser')= player.remaining_score + ' left'

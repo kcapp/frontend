@@ -315,11 +315,8 @@ block content
                         - var player = players[statistic.player_id]
                         td(class='text-center')
                             - var dartsThrown = 0
-                            each visit in leg.visits
-                                if player.id == visit.player_id
-                                    - dartsThrown = visit.darts_thrown
                             - var isWinner = statistic.player_id === leg.winner_player_id
-                            +player_statistics_card('player-card', player, statistic, isWinner, dartsThrown)
+                            +player_statistics_card('player-card', player, statistic, isWinner, statistic.darts_thrown, player.starting_score)
     h3 Leg Results
     p.
         Starting score was #{leg.starting_score}, and a total of #{leg.darts_thrown ? leg.darts_thrown : 0} darts were thrown by #{leg.players.length} players
@@ -372,7 +369,7 @@ block content
                         tr
                             th Dart
                             th Count
-                            th Hit %
+                            th Attempt %
                             th Actual
                     tbody
                         each count, value in checkouts.checkout_attempts
