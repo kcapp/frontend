@@ -224,6 +224,17 @@ block append scripts
                 location.href = '/players/' + $(this).data('player') + '/statistics'
             });
 
+            $('#button-rematch').click(function () {
+                executePost('/matches/' + leg.match_id + '/rematch', null, 'application/json',
+                    function (response) {
+                        location.href = '/legs/' + response.current_leg_id
+                    },
+                    function (error) {
+                        alert('Unable to undo leg, see log for details (' + error.statusText + ')');
+                    }
+                );
+            });
+
             $('#button-undo-finish').click(function () {
                 showConfirm('Leg will no longer be finalized', function() {
                     executePut('/legs/' + leg.id + '/undo', null, 'application/json',
@@ -231,8 +242,7 @@ block append scripts
                             location.href = '/legs/' + leg.id;
                         },
                         function (error) {
-                            alert.show();
-                            alert.text('Unable to undo leg fomosj, see log for details (' + error.statusText + ')');
+                            alert('Unable to undo leg, see log for details (' + error.statusText + ')');
                         }
                     );
                 }, function(){ /* NOOP */ });
@@ -305,6 +315,8 @@ block content
                 span(class='sr-only')
             ul(class='dropdown-menu')
                 block advanced_options
+                    li: a(id='button-rematch') Rematch
+                    li(role='separator' class='divider')
                     li: a(id='button-undo-finish') Undo Leg Finish
 
     if isFinished

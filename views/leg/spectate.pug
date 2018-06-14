@@ -14,7 +14,7 @@ block scripts
         var leg = !{JSON.stringify(leg)}
         var playersMap = !{JSON.stringify(players)}
         $(function () {
-            socket = getSocketIO(leg.id);
+            socket = getLegsNamespace(leg);
             configureSocketEvents(socket, leg, playersMap, true);
         });
 

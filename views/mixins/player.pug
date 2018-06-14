@@ -42,7 +42,7 @@ mixin player_statistics_card(clazz, player, statistics, isWinner = false, dartsT
                 div(class='info') Darts Thrown
                 div= dartsThrown
 
-        if startingScore
+        if match.match_type.id == 3 && startingScore
             div(class='info') Starting Score
             div= startingScore
 

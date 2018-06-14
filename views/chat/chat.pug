@@ -9,7 +9,7 @@ script.
         if (leg.is_finished) {
             return;
         }
-        var socket = getSocketIO(leg.Id);
+        var socket = getLegsNamespace(leg);
         socket.on('chat_message', function(data) {
             var textArea = $('#chat-history');
             textArea.append(data);

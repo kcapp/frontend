@@ -1,0 +1,66 @@
+extends layout.pug
+
+block append head
+    script(src='/javascripts/socket.io-2.0.3.min.js')
+
+include mixins/dart.pug
+include mixins/score_header.pug
+
+block scripts
+    script
+        include leg/socketio_helper.js
+        include leg/spectator_scripts.js
+    script.
+        var leg = !{JSON.stringify(leg)}
+        var playersMap = !{JSON.stringify(players)}
+        var venue = !{JSON.stringify(venue)}
+        $(function () {
+            socket = getLegsNamespace(leg);
+            configureSocketEvents(socket, leg, playersMap, true);
+
+            venueSocket = getVenueNamespace(venue.id)
+            configureSocketEventsVenue(venueSocket, leg);
+        });
+
+block content
+    h2 Spectate Matches at #{venue.name}
+
+    if !live_match
+        h4 No Live match
+    else
+        div(class='text-right')
+            button(type='button' class='btn btn-primary' id='btn-open-chat')
+                span(class='glyphicon glyphicon-comment') Chat
+        div(class='row')
+
+        - var round_number = Math.floor(leg.visits.length / leg.players.length) + 1;
+        +get_score_header(match.match_mode, round_number, leg_players, match.tournament_id != null)
+
+        if !leg.is_finished && leg.board_stream_url
+            img(src=leg.board_stream_url class='center-image' alt='Board live stream')
+
+        h3(style='margin-top: 0px;') Visits
+        div(class='table-responsive')
+            table(class='table table-scores table-striped' id='table-leg-visits' style='table-layout: fixed;')
+                thead
+                    tr
+                        th Player
+                        th First
+                        th Second
+                        th Third
+                        th Total
+                tbody
+                    each visit in leg.visits
+                        tr
+                            td= players[visit.player_id].name
+                            +dart_container(visit.first_dart.value, visit.first_dart.multiplier)
+                            +dart_container(visit.second_dart.value, visit.second_dart.multiplier)
+                            +dart_container(visit.third_dart.value, visit.third_dart.multiplier)
+                            td
+                                if visit.is_bust
+                                    label BUST
+                                else
+                                    label= (visit.first_dart.multiplier * visit.first_dart.value ) + (visit.second_dart.multiplier * visit.second_dart.value) + (visit.third_dart.multiplier * visit.third_dart.value)
+
+        //- Spectator chat
+        include chat/chat.pug

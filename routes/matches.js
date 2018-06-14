@@ -53,10 +53,10 @@ router.get('/:id', function (req, res, next) {
                 .then(response => {
                     var leg = response.data;
                     // TODO Do we need to setup nsp here?
-                    this.socketHandler.setupNamespace(leg.id);
+                    this.socketHandler.setupLegsNamespace(leg.id);
 
                     // Forward all spectating clients to next leg
-                    this.socketHandler.emitMessage(match.current_leg_id, 'leg_finished', {
+                    this.socketHandler.emitMessage('/legs/' + match.current_leg_id, 'leg_finished', {
                         old_leg_id: match.current_leg_id,
                         new_leg_id: leg.id
                     });
@@ -155,7 +155,27 @@ router.post('/new', function (req, res, next) {
     axios.post(req.app.locals.kcapp.api + '/match', body)
         .then(response => {
             var match = response.data;
-            this.socketHandler.setupNamespace(match.current_leg_id);
+            this.socketHandler.setupLegsNamespace(match.current_leg_id);
+
+            // Forward all spectating clients to next leg
+            if (match.venue) {
+                this.socketHandler.emitMessage('/venue/' + match.venue.id, 'venue_new_match', {
+                    match_id: match.id, leg_id: match.current_leg_id
+                });
+            }
+            res.status(200).send(match).end();
+        }).catch(error => {
+            debug('Error when starting new match: ' + error);
+            next(error);
+        });
+});
+
+/* Method for starting a new match */
+router.post('/:id/rematch', function (req, res, next) {
+    axios.post(req.app.locals.kcapp.api + '/match/' + req.params.id + '/rematch', null)
+        .then(response => {
+            var match = response.data;
+            this.socketHandler.setupLegsNamespace(match.current_leg_id);
             res.status(200).send(match).end();
         }).catch(error => {
             debug('Error when starting new match: ' + error);

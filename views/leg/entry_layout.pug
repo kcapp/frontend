@@ -109,7 +109,7 @@ block scripts
             if (leg.is_finished) {
                 return;
             }
-            var socket = getSocketIO(legId);
+            var socket = getLegsNamespace(leg);
             socket.on('spectator_connected', function (data) {
                 alertify.success(data + ' connected');
             });
@@ -166,7 +166,7 @@ block scripts
             });
         });
         $(function () {
-            $(document).scrollTop(170);
+            var socket = getLegsNamespace(leg);
 
             $('#submit-score-button').click(function (event) {
                 $(this).attr('disabled', true);

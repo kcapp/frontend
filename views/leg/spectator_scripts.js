@@ -1,6 +1,33 @@
+var leg = null;
+
+function configureSocketEventsVenue(socket) {
+    socket.on('venue_new_match', function (data) {
+        if (leg.is_finished) {
+            location.reload();
+        }
+    });
+}
+
 function configureSocketEvents(socket, leg, playersMap, liveScoreUpdate) {
+    leg = leg;
+    // Reverse the rows in the table to show newest throws first
+    var tbody = $('#table-leg-visits tbody');
+    tbody.html($('tr', tbody).get().reverse());
+
     if (leg.is_finished) {
+        // Don't setup any sockets if leg is finished
         return;
+    } else {
+        // Add a row to the top of the table which contains the current throw for a given player
+        var html =
+            "<tr>" +
+            "<td id='current-player' style='vertical-align: baseline;'>" + playersMap[leg.current_player_id].name + "</td>" +
+            "<td class='col-sm-2 dart-score-container no-border'><label id='first' text='0'></label></td>" +
+            "<td class='col-sm-2 dart-score-container no-border'><label id='second' text='0'></label></td>" +
+            "<td class='col-sm-2 dart-score-container no-border'><label id='third' text='0'></label></td>" +
+            "<td><label id='total' text='0'>0</label></td>" +
+            "</tr>";
+        $('#table-leg-visits').prepend(html);
     }
 
     socket.on('connected', function (data) {
@@ -10,6 +37,7 @@ function configureSocketEvents(socket, leg, playersMap, liveScoreUpdate) {
 
     socket.on('possible_throw', function (data) {
         console.log(data);
+        leg.is_finished = data.is_finished;
         if (data.is_finished) {
             showAlert(playersMap[data.current_player_id].name + ' won the leg', function () {
                 alertify.success('Leg finished');
@@ -75,7 +103,7 @@ function configureSocketEvents(socket, leg, playersMap, liveScoreUpdate) {
                 playerLegsTD.removeClass('uv-active-player-legs');
             }
         }
-        // Set round number
+        // Set round number and current player
         $('#round-number').text('R' + (Math.floor(data.leg.visits.length / data.leg.players.length) + 1));
         $('#current-player').text(playersMap[data.leg.current_player_id].name);
 
@@ -110,25 +138,16 @@ function configureSocketEvents(socket, leg, playersMap, liveScoreUpdate) {
     });
 
     socket.on('leg_finished', function (data) {
-        location.href = '/legs/' + data.new_leg_id + '/spectate';
+        if (location.href.includes('/venues/')) {
+            return;
+        }
+        if (location.href.includes('/matches/')) {
+            location.reload();
+        }
+        else {
+            location.href = '/legs/' + data.new_leg_id + '/spectate';
+        }
     });
-
-    // Reverse the rows in the table to show newest throws first
-    var tbody = $('#table-leg-visits tbody');
-    tbody.html($('tr', tbody).get().reverse());
-
-    // Add a row to the top of the table which contains the current throw for a given player
-    if (!leg.is_finished) {
-        var html =
-            "<tr>" +
-            "<td id='current-player' style='vertical-align: baseline;'>" + playersMap[leg.current_player_id].name + "</td>" +
-            "<td class='col-sm-2 dart-score-container no-border'><label id='first' text='0'></label></td>" +
-            "<td class='col-sm-2 dart-score-container no-border'><label id='second' text='0'></label></td>" +
-            "<td class='col-sm-2 dart-score-container no-border'><label id='third' text='0'></label></td>" +
-            "<td><label id='total' text='0'>0</label></td>" +
-            "</tr>";
-        $('#table-leg-visits').prepend(html);
-    }
 
     function getDartCSS(dart) {
         if (dart.value === null) {

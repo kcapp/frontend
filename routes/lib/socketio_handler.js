@@ -11,8 +11,8 @@ function getClientIP(client) {
 module.exports = (io, app) => {
     this.io = io;
     return {
-        emitMessage: (legId, type, message) => {
-            var nsp = this.io.of('/legs/' + legId);
+        emitMessage: (namespace, type, message) => {
+            var nsp = this.io.of(namespace);
             nsp.emit(type, message);
         },
         removeNamespace: (legId) => {
@@ -23,7 +23,18 @@ module.exports = (io, app) => {
             delete this.io.nsps[namespace];
             debug("Removed socket.io namespace '%s'", namespace)
         },
-        setupNamespace: (legId) => {
+        setupVenueNamespace: (venueId) => {
+            var namespace = '/venue/' + venueId;
+            if (this.io.nsps[namespace] === undefined) {
+                var nsp = this.io.of(namespace);
+                nsp.on('connection', function (client) {
+                    var ip = getClientIP(client);
+                    debug("Client %s connected to '%s'", ip, namespace);
+                });
+                debug("Created socket.io namespace '%s'", namespace);
+            }
+        },
+        setupLegsNamespace: (legId) => {
             if (legId === undefined) {
                 return;
             }
@@ -35,7 +46,7 @@ module.exports = (io, app) => {
                     var ip = getClientIP(client);
                     var host = 'Unknown';
 
-                    debug('Client connected: ' + ip);
+                    debug("Client %s connected to '%s'", ip, namespace);
                     lookup.reverse(ip, function (err, hostname) {
                         if (err) {
                             return;

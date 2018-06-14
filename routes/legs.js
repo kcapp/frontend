@@ -250,7 +250,7 @@ router.put('/:id/order', function (req, res, next) {
 router.put('/:id/undo', function (req, res, next) {
     axios.put(req.app.locals.kcapp.api + '/leg/' + req.params.id + '/undo')
         .then(() => {
-            socketHandler.setupNamespace(req.params.id);
+            this.socketHandler.setupLegsNamespace(req.params.id);
             res.status(200).end();
         }).catch(error => {
             debug('Unable to undo finish: %s', error);
@@ -295,7 +295,7 @@ module.exports = function (app, socketHandler) {
         .then(response => {
             var legs = response.data;
             for (var i = 0; i < legs.length; i++) {
-                socketHandler.setupNamespace(legs[i].id);
+                this.socketHandler.setupLegsNamespace(legs[i].id);
             }
         }).catch(error => {
             debug('Unable to get active legs: %s', error);
