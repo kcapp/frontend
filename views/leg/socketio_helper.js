@@ -23,7 +23,7 @@ function getVenueNamespace(venueId) {
 
         // Add handling of general events
         socketVenue.on('connect', function (data) {
-            socket.emit('join', 'Client Connecting');
+            socketVenue.emit('join', 'Client Connecting');
         });
 
         socketVenue.on('error', function (data) {

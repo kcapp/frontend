@@ -11,15 +11,15 @@ block scripts
         include leg/socketio_helper.js
         include leg/spectator_scripts.js
     script.
-        var leg = !{JSON.stringify(leg)}
-        var playersMap = !{JSON.stringify(players)}
-        var venue = !{JSON.stringify(venue)}
+        var leg = !{JSON.stringify(leg)};
+        var playersMap = !{JSON.stringify(players)};
+        var venue = !{JSON.stringify(venue)};
         $(function () {
-            socket = getLegsNamespace(leg);
-            configureSocketEvents(socket, leg, playersMap, true);
-
             venueSocket = getVenueNamespace(venue.id)
             configureSocketEventsVenue(venueSocket, leg);
+
+            socket = getLegsNamespace(leg);
+            configureSocketEvents(socket, leg, playersMap, true, venueSocket);
         });
 
 block content

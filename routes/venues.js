@@ -13,6 +13,7 @@ router.get('/:id/spectate', function (req, res, next) {
             axios.get(req.app.locals.kcapp.api + '/venue/' + req.params.id + '/spectate')
                 .then(response => {
                     var match = response.data;
+
                     if (match.length > 0) {
                         match = match[0];
                         axios.get(req.app.locals.kcapp.api + '/player')
@@ -42,7 +43,10 @@ router.get('/:id/spectate', function (req, res, next) {
                             });
                     }
                     else {
-                        res.render('venue_spectate', { live_match: false, venue: venue });
+                        res.render('venue_spectate', {
+                            live_match: false, leg: { is_finished: true }, players: {}, match: {},
+                            leg_players: [], venue: venue
+                        });
                     }
                 }).catch(error => {
                     debug('Error when spectating venue: ' + error);

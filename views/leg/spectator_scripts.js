@@ -2,13 +2,13 @@ var leg = null;
 
 function configureSocketEventsVenue(socket) {
     socket.on('venue_new_match', function (data) {
-        if (leg.is_finished) {
+        if (!leg || leg.is_finished) {
             location.reload();
         }
     });
 }
 
-function configureSocketEvents(socket, leg, playersMap, liveScoreUpdate) {
+function configureSocketEvents(socket, leg, playersMap, liveScoreUpdate, venueSocket) {
     leg = leg;
     // Reverse the rows in the table to show newest throws first
     var tbody = $('#table-leg-visits tbody');
@@ -139,6 +139,9 @@ function configureSocketEvents(socket, leg, playersMap, liveScoreUpdate) {
 
     socket.on('leg_finished', function (data) {
         if (location.href.includes('/venues/')) {
+            if (venueSocket) {
+                venueSocket.emit('get_next_match', venue.id);
+            }
             return;
         }
         if (location.href.includes('/matches/')) {

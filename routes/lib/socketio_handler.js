@@ -30,6 +30,10 @@ module.exports = (io, app) => {
                 nsp.on('connection', function (client) {
                     var ip = getClientIP(client);
                     debug("Client %s connected to '%s'", ip, namespace);
+
+                    client.on('get_next_match', function () {
+                        nsp.emit('venue_new_match', '');
+                    });
                 });
                 debug("Created socket.io namespace '%s'", namespace);
             }
