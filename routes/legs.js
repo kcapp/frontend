@@ -227,10 +227,21 @@ router.delete('/:id/cancel', function (req, res, next) {
 /* Method to finalize a leg */
 router.post('/:id/finish', function (req, res, next) {
     axios.put(req.app.locals.kcapp.api + '/leg/' + req.params.id + '/finish', req.body)
-        .then(() => {
-            res.status(200).end();
+        .then(response => {
+            var leg = response.data;
+            axios.get(req.app.locals.kcapp.api + '/match/' + leg.match_id)
+                .then(response => {
+                    var match = response.data;
+                    if (match.is_finished && match.venue) {
+                        this.socketHandler.emitMessage('/venue/' + match.venue.id, 'venue_match_finished', { match_id: match.id });
+                    }
+                    res.status(200).end();
+                }).catch(error => {
+                    debug('Error when getting match match: ' + error);
+                    next(error);
+                });
         }).catch(error => {
-            debug('Unable to finish match: ' + error);
+            debug('Unable to finish leg: ' + error);
             next(error);
         });
 });
