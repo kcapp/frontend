@@ -106,6 +106,13 @@ block scripts
         $(function () {
             FastClick.attach(document.body);
 
+            var isDualMonitor = window.innerWidth > 1920;
+
+            if (isDualMonitor) {
+                // Move header when dual monitors
+                $('#td-round-header').attr('style', 'text-align: right; padding-right: 19em;');
+            }
+
             if (leg.is_finished) {
                 return;
             }
@@ -165,10 +172,22 @@ block scripts
                         td.addClass('player-modifier-beer');
                     }
                 }
+
+                // Move header when dual monitors
+                console.log('isDualMonitor: ' + isDualMonitor + ', size: ' + window.innerWidth + 'x' + window.innerHeight);
+                if (isDualMonitor) {
+                    if (players[0].player_id === currentPlayerId) {
+                        $('#td-round-header').attr('style', 'text-align: left; padding-left: 19em;');
+                    } else {
+                        $('#td-round-header').attr('style', 'text-align: right; padding-right: 19em;');
+                    }
+                }
+
                 $('.uv-active-player-visits .dart-score-total').html(0);
                 resetUIelements();
             });
         });
+
         $(function () {
             var socket = getLegsNamespace(leg);
 

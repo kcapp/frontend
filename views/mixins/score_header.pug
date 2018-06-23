@@ -1,7 +1,7 @@
 mixin get_score_header(match_mode, round_number, players, is_official, add_player_visit = false)
     div(class='table-responsive no-border')
-        table(class='uv-table-mode' style='table-layout: fixed')
-            tbody: tr: td
+        table(class='uv-table-mode' style='table-layout: fixed;')
+            tbody: tr: td(id='td-round-header')
                     label= match_mode.short_name + '/'
                     label(id='round-number')= 'R' + round_number
 
