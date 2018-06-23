@@ -1,0 +1,199 @@
+extends layout
+
+block append head
+    script(src='/javascripts/jquery-ui.1.12.1.min.js')
+    script(src='/javascripts/jquery.ui.touch-punch-0.2.3.min.js')
+
+block scripts
+    script.
+        $(function () {
+            if (localStorage.kcapp_venue) {
+                // Set venue from localstorage on page load
+                $('#venue-select').val(parseInt(localStorage.kcapp_venue))
+            }
+
+            $('#sortable-player-list').sortable({
+                stop: function(event, ui) {
+                    $( event.originalEvent.target ).one('click', function(e){ e.stopImmediatePropagation(); } );
+                }
+            });
+            $('#sortable-player-list').disableSelection();
+
+            $('#all-players-list').on('click', '.player-name-label', function() {
+                var sortablePlayerList = $('#sortable-player-list');
+                $(this).parent().appendTo(sortablePlayerList).removeClass('float-left');
+
+                if ($('#match-type-select').val() == 3) {
+                    $(this).closest('.form-check').find('.input-player-handicap').show();
+                }
+            });
+
+            $('#sortable-player-list').on('click', '.player-name-label', function() {
+                var allPlayersList = $('#all-players-list');
+                $(this).parent().appendTo(allPlayersList).addClass('float-left');
+                $(this).closest('.form-check').find('.input-player-handicap').hide();
+            });
+
+            $('#match-type-select').on('change', function() {
+                $('#sortable-player-list .input-player-handicap').hide();
+                $('#leg-type-select').prop('disabled', false);
+                $('#leg-type-select').val('501');
+
+                if (this.value == 2) {
+                    $('#leg-type-select').prop('disabled', true);
+                    $('#leg-type-select').val('0');
+                }
+                else if (this.value == 3) {
+                    $('#sortable-player-list .input-player-handicap').show();
+                }
+            });
+
+            $('#create-leg-button').click(function() { $(this).blur(); });
+
+            $('#start-leg-button').click(function(e) {
+                var stake = parseInt($('#match-stake-select').val());
+                var venue = parseInt($('#venue-select').val());
+                var body = {
+                    starting_score: parseInt($('#leg-type-select').val()),
+                    match_type: parseInt($('#match-type-select').val()),
+                    match_mode: parseInt($('#match-mode-select').val()),
+                    match_stake: stake === 0 ? null : stake,
+                    venue: venue,
+                    players: [],
+                    player_handicaps: {}
+                }
+                $('#sortable-player-list .form-check-input').each(function() {
+                    var playerId = parseInt($(this).val());
+                    body.players.push(playerId);
+                    if (body.match_type === 3) {
+                        body.player_handicaps[playerId] = parseInt($(this).closest('.form-check').find('.input-player-handicap').val());
+                    }
+                });
+                executePost(window.location.origin + '/matches/new', JSON.stringify(body), 'application/json',
+                    function(response){
+                        // Store venue in localstorage so it doesn't have to be selected each time
+                        localStorage.setItem('kcapp_venue', venue);
+                        location.href = 'legs/' + response.current_leg_id
+                    }, function(error) {
+                        console.log(error);
+                    }
+                );
+                e.preventDefault();
+            });
+        });
+    script.
+        var playerId = '';
+        $(document).keydown(function (e) {
+            if (e.key === 'Backspace' || e.key === ',') {
+                // Remove last player if Backspace or DEL is pressed
+                $('#sortable-player-list').find('.player-name-label').last().trigger('click');
+                e.preventDefault();
+            }
+        });
+        $(document).keypress(function (e) {
+            switch (e.key) {
+                // Add players by entering player id and ENTER
+                case 'Enter':
+                    if (playerId == '00') {
+                        $('#start-leg-button').trigger('click');
+                        return;
+                    }
+                    var playerChck = $('#checkbox-player-' + playerId);
+                    if (playerChck.length) {
+                        playerChck.parent().children('.player-name-label').trigger('click');
+                    }
+                    playerId = '';
+                    break;
+                case '1': playerId += '1'; break;
+                case '2': playerId += '2'; break;
+                case '3': playerId += '3'; break;
+                case '4': playerId += '4'; break;
+                case '5': playerId += '5'; break;
+                case '6': playerId += '6'; break;
+                case '7': playerId += '7'; break;
+                case '8': playerId += '8'; break;
+                case '9': playerId += '9'; break;
+                case '0': playerId += '0'; break;
+                case '/':
+                    cycleSelector('#leg-type-select');
+                    break;
+                case '*':
+                    cycleSelector('#match-type-select');
+                    $('#match-type-select').trigger('change');
+                    break;
+                case '-':
+                    cycleSelector('#match-mode-select');
+                    break;
+                case '+':
+                    cycleSelector('#match-stake-select');
+                    break;
+                default: /* NOOP */; break;
+            }
+        });
+        function cycleSelector(selectorId) {
+            var next = $(selectorId + ' option:selected').next();
+            if (next.length === 0) {
+                next = $(selectorId).children('option:first');
+            }
+            next.prop('selected', true);
+            if (next.prop('hidden')) {
+                // Skip hidden values
+                cycleSelector(selectorId);
+            }
+        }
+
+block content
+    div(id='new-leg-collapse')
+        div(class='card card-block')
+            if players.length == 0
+                p.
+                    Players must be added before you can start a new match
+            else
+                form(style='padding-top: 15px; width: 50%; float: left;')
+                    legend Players
+                    div(class='form-group form-check float-left' id='sortable-player-list')
+                    legend(style='clear: both;') Select Players
+                    div(class='form-group form-check' id='all-players-list')
+                        each player in players
+                            div(class='form-check float-left' style='padding-bottom: 10px;')
+                                input(style='display: none;' type='checkbox' name='players' class='form-check-input' id='checkbox-player-' + player.id value=player.id)
+                                label(style='margin-left: 10px; width: 150px;' class='player-name-label form-check-label btn btn-primary' for='checkbox-player-' + player.id)= player.name
+                                input(style='margin-left: 10px; width: 50px;' type='textbox' name='player_handicap' class='form input-player-handicap' hidden='true' value=0)
+
+                form(style='padding-top: 5.8em; width: 50%; float: right;')
+                    legend(style='clear: both;') Game Settings
+                    div(class='form-group' style='clear: both')
+                        label(for='leg-type-select') Starting Score
+                        select(class='form-control' name='starting_score' id='leg-type-select')
+                            option 301
+                            option(selected='selected') 501
+                            option 701
+                            option(hidden='true') 0
+
+                    div(class='form-group')
+                        label(for='match-type-select') Match Type
+                        select(class='form-control' name='match_type' id='match-type-select')
+                            each matchType in match_types
+                                option(value=matchType.id)= matchType.name
+
+                    div(class='form-group')
+                        label(for='match-mode-select') Match Mode
+                        select(class='form-control' name='match_mode' id='match-mode-select')
+                            each mode in match_modes
+                                option(value=mode.id)= mode.name
+
+                    div(class='form-group')
+                        label(for='match-stake-select') Match Stake
+                        select(class='form-control' name='match_stake' id='match-stake-select')
+                            option(value=0) -
+                            each oweType in owe_types
+                                option(value=oweType.id)= oweType.item
+
+                    div(class='form-group')
+                        label(for='match-stake-select') Venue
+                        select(class='form-control' name='venue' id='venue-select')
+                            option(value=0) -
+                            each venue in venues
+                                option(value=venue.id)= venue.name
+
+                    button(type='submit' class='btn btn-primary' id='start-leg-button' ) Start
