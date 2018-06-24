@@ -1,6 +1,7 @@
 extends ../layout.pug
 
 include ../mixins/score_header.pug
+include ../mixins/player_order.pug
 
 block scripts
     script(src='/javascripts/fastclick-1.0.6.min.js')
@@ -278,6 +279,10 @@ block scripts
                 $(this).blur();
             });
 
+            $('#btn-change-player-order').click(function() {
+                $('#modal-player-selector').modal({ show: true, keyboard: false, backdrop: 'static' });
+            });
+
             $('#edit-scores-button').click(function () {
                 location.href = '/legs/' + legId + '/result';
             });
@@ -449,9 +454,10 @@ block content
             span(class='sr-only')
         ul(class='dropdown-menu')
             block advanced_options
-                li: a(id='btn-open-chat') Open Chat
-                li: a(id='toggle-buttons') Toggle buttons
                 li: a(id='edit-scores-button') Edit scores
+                li: a(id='btn-change-player-order') Change Order
+                li: a(id='toggle-buttons') Toggle buttons
+                li: a(id='btn-open-chat') Open Chat
                 li(role='separator' class='divider')
                 li: a(id='cancel-leg-button') Cancel Leg
 
@@ -461,3 +467,5 @@ block content
 
     //- Spectator chat
     include ../chat/chat.pug
+
+    +player_order(leg_players)

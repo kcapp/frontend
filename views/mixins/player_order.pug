@@ -1,0 +1,62 @@
+mixin player_order(legPlayers)
+    block append scripts
+        script.
+            $(function () {
+                $('#table-players-select-order td').hover(
+                    function() { $(this).removeClass('uv-inactive-player-score').addClass('uv-active-player-score'); },
+                    function() { $(this).removeClass('uv-active-player-score').addClass('uv-inactive-player-score'); }
+                );
+                $('#table-players-select-order').on('click', 'td', function() {
+                    $('#table-players-selected-order tr:first').append($(this).remove());
+                });
+                $('#table-players-selected-order').on('click', 'td', function() {
+                    $('#table-players-select-order tr:first').append($(this).remove());
+                });
+
+                $('#btn-set-player-order').click(function() {
+                    if ($('#table-players-select-order tr:first').children().length !== 0) {
+                        alert("All players must be selected before starting");
+                        return;
+                    }
+                    var tds = $('#table-players-selected-order td');
+                    var order = {};
+                    var idx = 1;
+
+                    $('#table-players-selected-order').find('tr').find('td').each(function(){
+                        order[$(this).data('player-id')] = idx++;
+                    });
+                    executePut(window.origin + '/legs/' + leg.id + '/order', JSON.stringify(order), 'application/json', function() {
+                        location.href = '/legs/' + leg.id;
+                    },
+                    function(error) {
+                        alert('Error changing player order. Please reload');
+                        console.log(error);
+                        location.reload();
+                    });
+                    $('#modal-player-selector').modal('hide');
+                });
+            });
+
+    div(class='modal fade' id='modal-player-selector' tabindex='-1' role='dialog' aria-labelledby='modal-player-selector-title' aria-hidden='true')
+        div(class='modal-dialog modal-dialog-centered' role='document')
+            div(class='modal-content')
+                div(class='modal-header')
+                    h4(class='modal-title' id='modal-player-selector-title') Set Player Order
+                div(class='modal-body')
+                    h5 Players
+                    div(class='table-responsive no-border')
+                        table(id='table-players-select-order' class='uv-table-players' style='table-layout: fixed')
+                            tbody
+                                tr
+                                    each player in legPlayers
+                                        - var playerId = player.player_id
+                                        td(id='player-score-' + playerId class='uv-inactive-player-score' data-player-id=playerId)
+                                            label(id='player-name-' + playerId class='label-player-name')= players[playerId].name
+                    h5 Order
+                    div(class='table-responsive no-border')
+                        table(id='table-players-selected-order' class='uv-table-players' style='table-layout: fixed')
+                            tbody
+                                tr
+
+                div(class='modal-footer')
+                    button(id='btn-set-player-order' type='button' class='btn btn-primary') Start Match

@@ -195,8 +195,7 @@ block append scripts
 
             $('#change-order-button').click(function (e) {
                 var players = $('.form-check-input');
-                var order = {}
-                order = {};
+                var order = {};
                 for (var i = 0; i < players.length; i++) {
                     order[players[i].value] = i + 1;
                 }
@@ -207,7 +206,7 @@ block append scripts
                     alert('Error changing player order. Please reload');
                     console.log(error);
                     location.reload();
-                })
+                });
             });
 
             $('#player-order-list').sortable();

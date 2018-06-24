@@ -6,7 +6,7 @@ mixin get_score_header(match_mode, round_number, players, is_official, add_playe
                     label(id='round-number')= 'R' + round_number
 
     div(class='table-responsive no-border')
-        table(class='uv-table-players' id='player-spectate-table' style='table-layout: fixed')
+        table(class='uv-table-players' id='table-players-score-header' style='table-layout: fixed')
             tbody
                 tr
                     each player in players
