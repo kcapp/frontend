@@ -71,7 +71,6 @@ block scripts
         }
 
         function resetUIelements() {
-            // Reset UI elements
             currentDart = 1;
             $('.uv-active-player-visits .first').text('')
                 .removeClass('dart-score-single dart-score-double dart-score-triple');
@@ -445,8 +444,7 @@ block content
                         +button_row([ 4, 3, 2, 1 ])
 
     div(class='btn-group')
-        button(type='button' class='btn btn-primary') Options
-        button(type='button' class='btn btn-primary btn-blcok dropdown-toggle' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false')
+        button(type='button' class='btn btn-primary dropdown-toggle' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false') Options&nbsp;&nbsp;
             span(class='caret')
             span(class='sr-only')
         ul(class='dropdown-menu')
