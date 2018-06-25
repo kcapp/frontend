@@ -15,33 +15,22 @@ router.get('/', function (req, res) {
 router.get('/page/:page', function (req, res, next) {
     var limit = 25;
     var start = (req.params.page - 1) * limit;
-    axios.get(req.app.locals.kcapp.api + '/match')
-        .then(response => {
-            var total = Math.ceil(response.data.length / limit);
-            axios.get(req.app.locals.kcapp.api + '/player')
-                .then(response => {
-                    var players = response.data;
-                    axios.get(req.app.locals.kcapp.api + '/match/' + start + '/' + limit)
-                        .then(response => {
-                            var matches = response.data;
-                            res.render('matches', {
-                                matches: matches, players: players,
-                                total_pages: total, page_num: req.params.page
-                            });
-                        })
-                        .catch(error => {
-                            debug('Error when getting matches: ' + error);
-                            next(error);
-                        });
-                })
-                .catch(error => {
-                    debug('Error when getting players: ' + error);
-                    next(error);
-                });
-        }).catch(error => {
-            debug('Error when getting matches: ' + error);
-            next(error);
+
+    axios.all([
+        axios.get(req.app.locals.kcapp.api + '/player'),
+        axios.get(req.app.locals.kcapp.api + '/match'),
+        axios.get(req.app.locals.kcapp.api + '/match/' + start + '/' + limit)
+    ]).then(axios.spread((players, matches, matchPage) => {
+        res.render('matches', {
+            matches: matchPage.data,
+            players: players.data,
+            total_pages: Math.ceil(matches.data.length / limit),
+            page_num: req.params.page
         });
+    })).catch(error => {
+        debug('Error when getting data for matches ' + error);
+        next(error);
+    });
 });
 
 /** Continue the given match */
@@ -73,67 +62,54 @@ router.get('/:id', function (req, res, next) {
 
 /* Spectate the given match */
 router.get('/:id/spectate', function (req, res, next) {
-    axios.get(req.app.locals.kcapp.api + '/match/' + req.params.id)
-        .then(response => {
-            var match = response.data;
-            axios.get(req.app.locals.kcapp.api + '/player')
-                .then(response => {
-                    var playersMap = response.data;
-                    axios.get(req.app.locals.kcapp.api + '/leg/' + match.current_leg_id)
-                        .then(response => {
-                            var leg = response.data;
-                            axios.get(req.app.locals.kcapp.api + '/leg/' + match.current_leg_id + '/players')
-                                .then(response => {
-                                    var legPlayers = response.data;
-                                    res.render('leg/spectate', {
-                                        leg: leg, players: playersMap, match: match, leg_players: legPlayers
-                                    });
-                                }).catch(error => {
-                                    debug('Error when getting leg players: ' + error);
-                                    next(error);
-                                });
-                        }).catch(error => {
-                            debug('Error when getting leg: ' + error);
-                            next(error);
-                        });
-                }).catch(error => {
-                    debug('Error when getting players: ' + error);
-                    next(error);
-                });
-        }).catch(error => {
-            debug('Error when getting match: ' + error);
+    axios.all([
+        axios.get(req.app.locals.kcapp.api + '/player'),
+        axios.get(req.app.locals.kcapp.api + '/match/' + req.params.id)
+    ]).then(axios.spread((players, response) => {
+        var match = response.data;
+        axios.all([
+            axios.get(req.app.locals.kcapp.api + '/leg/' + match.current_leg_id),
+            axios.get(req.app.locals.kcapp.api + '/leg/' + match.current_leg_id + '/players')
+        ]).then(axios.spread((leg, legPlayers) => {
+            res.render('leg/spectate', {
+                leg: leg.data,
+                leg_players: legPlayers.data,
+                players: players.data,
+                match: match
+            });
+        })).catch(error => {
+            debug('Error when getting data for matches ' + error);
             next(error);
         });
+    })).catch(error => {
+        debug('Error when getting data for match ' + error);
+        next(error);
+    });
 });
 
 /* Render the results view */
 router.get('/:id/result', function (req, res, next) {
     var id = req.params.id;
-    axios.get(req.app.locals.kcapp.api + '/match/' + id)
-        .then(response => {
-            var match = response.data;
-            axios.get(req.app.locals.kcapp.api + '/player')
-                .then(response => {
-                    var players = response.data;
-                    axios.get(req.app.locals.kcapp.api + '/match/' + id + '/statistics')
-                        .then(response => {
-                            var stats = response.data;
-                            _.each(stats, stat => {
-                                stat.player_name = players[stat.player_id].name;
-                            });
-                            res.render('match_result', { match: match, players: players, stats: stats });
-                        }).catch(error => {
-                            debug('Error when getting statistics: ' + error);
-                            next(error)
-                        });
-                }).catch(error => {
-                    debug('Error when getting players: ' + error);
-                    next(error);
-                });
-        }).catch(error => {
-            debug('Error when getting match: ' + error);
-            next(error);
+
+    axios.all([
+        axios.get(req.app.locals.kcapp.api + '/player'),
+        axios.get(req.app.locals.kcapp.api + '/match/' + id),
+        axios.get(req.app.locals.kcapp.api + '/match/' + id + '/statistics')
+    ]).then(axios.spread((playerResponse, match, statisticsResponse) => {
+        var players = playerResponse.data;
+        var statistics = statisticsResponse.data;
+        _.each(statistics, stats => {
+            stats.player_name = players[stats.player_id].name;
         });
+        res.render('match_result', {
+            match: match.data,
+            players: players,
+            stats: statistics
+        });
+    })).catch(error => {
+        debug('Error when getting data for match result ' + error);
+        next(error);
+    });
 });
 
 /* Method for starting a new match */

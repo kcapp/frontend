@@ -22,32 +22,29 @@ router.get('/weekly', function (req, res, next) {
 });
 
 function getStatistics(from, to, req, res, next) {
-    axios.get(req.app.locals.kcapp.api + '/player')
-        .then(response => {
-            var playersMap = response.data;
-            axios.get(req.app.locals.kcapp.api + '/statistics/x01/' + from + '/' + to)
-                .then(response => {
-                    var statisticsX01 = response.data;
-                    //statisticsX01 = sort(statisticsX01);
-                    statisticsX01.from = from
-                    statisticsX01.to = to
-                    axios.get(req.app.locals.kcapp.api + '/statistics/shootout/' + from + '/' + to)
-                        .then(response => {
-                            var statisticsShootout = response.data;
-                            statisticsShootout = sort(statisticsShootout);
-                            res.render('weekly_statistics', { players: playersMap, statistics_x01: statisticsX01, statistics_shootout: statisticsShootout });
-                        }).catch(error => {
-                            debug('Error when getting shootout statistics: ' + error);
-                            next(error);
-                        });
-                }).catch(error => {
-                    debug('Error when getting x01 statistics: ' + error);
-                    next(error);
-                });
-        }).catch(error => {
-            debug('Error when getting players: ' + error);
-            next(error);
+    axios.all([
+        axios.get(req.app.locals.kcapp.api + '/player'),
+        axios.get(req.app.locals.kcapp.api + '/statistics/x01/' + from + '/' + to),
+        axios.get(req.app.locals.kcapp.api + '/statistics/shootout/' + from + '/' + to)
+    ]).then(axios.spread((players, x01, shootout) => {
+        x01 = x01.data;
+        x01.from = from
+        x01.to = to
+
+        shootout = shootout.data;
+        shootout.from = from;
+        shootout.to = to;
+        shootout = sort(shootout);
+
+        res.render('weekly_statistics', {
+            players: players.data,
+            statistics_x01: x01,
+            statistics_shootout: shootout
         });
+    })).catch(error => {
+        debug('Error when getting data for statistics ' + error);
+        next(error);
+    });
 }
 
 function sort(statistics) {

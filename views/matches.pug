@@ -87,7 +87,9 @@ block content
                                     span(class='label label-primary' style='line-height: inherit;')= players[id].name
                         if match.is_finished
                             td(style='width: 15%;')
-                                if match.winner_id === null
+                                if match.is_abandoned
+                                    div: span(class='label label-default' style='line-height: inherit;') Abandoned
+                                else if match.winner_id === null
                                     div: span(class='label label-default' style='line-height: inherit;') Draw
                                 else
                                     div: span(class='label label-success' style='line-height: inherit;')= players[match.winner_id].name

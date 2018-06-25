@@ -93,23 +93,16 @@ module.exports = (io, app) => {
                         debug('Received throw from %s (%o)', ip, body);
                         axios.post(app.locals.kcapp.api + '/visit', body)
                             .then(() => {
-                                axios.get(app.locals.kcapp.api + '/leg/' + body.leg_id)
-                                    .then(response => {
-                                        var leg = response.data;
-                                        axios.get(app.locals.kcapp.api + '/leg/' + leg.id + '/players')
-                                            .then(response => {
-                                                var players = response.data;
-                                                nsp.emit('score_update', { players: players, leg: leg });
-                                            }).catch(error => {
-                                                var message = error.message + ' (' + error.response.data.trim() + ')'
-                                                debug('Error when getting leg players: ' + message);
-                                                nsp.emit('error', { message: error.message, code: error.code });
-                                            });
-                                    }).catch(error => {
-                                        var message = error.message + ' (' + error.response.data.trim() + ')'
-                                        debug('Error when getting leg: ' + message);
-                                        nsp.emit('error', { message: error.message, code: error.code });
-                                    });
+                                axios.all([
+                                    axios.get(app.locals.kcapp.api + '/leg/' + body.leg_id),
+                                    axios.get(app.locals.kcapp.api + '/leg/' + body.leg_id + '/players')
+                                ]).then(axios.spread((leg, players) => {
+                                    nsp.emit('score_update', { leg: leg.data, players: players.data });
+                                })).catch(error => {
+                                    var message = error.message + ' (' + error.response.data.trim() + ')'
+                                    debug('Error when getting leg: ' + message);
+                                    nsp.emit('error', { message: error.message, code: error.code });
+                                });
                             }).catch(error => {
                                 var message = error.message + ' (' + error.response.data.trim() + ')'
                                 debug('Error when adding visit: ' + message);

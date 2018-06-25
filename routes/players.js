@@ -44,38 +44,25 @@ router.put('/:id', function (req, res, next) {
 /* Get specific statistics for a given player */
 router.get('/:id/statistics', function (req, res, next) {
     var playerId = req.params.id;
-    axios.get(req.app.locals.kcapp.api + '/player/' + playerId)
-        .then(response => {
-            var player = response.data;
-            axios.get(req.app.locals.kcapp.api + '/player/' + playerId + '/statistics')
-                .then(response => {
-                    var statistics = response.data;
-                    axios.get(req.app.locals.kcapp.api + '/player/' + playerId + '/progression')
-                        .then(response => {
-                            var progression = response.data;
-                            axios.get(req.app.locals.kcapp.api + '/player/' + playerId + '/checkouts')
-                                .then(response => {
-                                    var checkouts = response.data;
-                                    res.render('player/player', {
-                                        player: player, statistics: statistics,
-                                        progression: progression, checkouts: checkouts
-                                    });
-                                }).catch(error => {
-                                    debug('Error when getting player checkouts: ' + error);
-                                    next(error);
-                                });
-                        }).catch(error => {
-                            debug('Error when getting player progression: ' + error);
-                            next(error);
-                        });
-                }).catch(error => {
-                    debug('Error when getting player statistics: ' + error);
-                    next(error);
-                });
-        }).catch(error => {
-            debug('Error when getting player: ' + error);
-            next(error);
+    axios.all([
+        axios.get(req.app.locals.kcapp.api + '/player/' + playerId),
+        axios.get(req.app.locals.kcapp.api + '/player/' + playerId + '/statistics'),
+        axios.get(req.app.locals.kcapp.api + '/player/' + playerId + '/progression'),
+        axios.get(req.app.locals.kcapp.api + '/player/' + playerId + '/checkouts'),
+        axios.get(req.app.locals.kcapp.api + '/player/' + playerId + '/tournament')
+    ]).then(axios.spread((player, statistics, progression, checkouts, tournament) => {
+        res.render('player/player', {
+            player: player.data,
+            statistics: statistics.data,
+            progression: progression.data,
+            checkouts: checkouts.data,
+            tournament_standings: tournament.data
+
         });
+    })).catch(error => {
+        debug('Error when getting data for player ' + error);
+        next(error);
+    });
 });
 
 /* Get comparable statistics for the given players */
@@ -86,21 +73,19 @@ router.get('/compare', function (req, res, next) {
     }
     debug('Comparing players %s', playerIds);
 
-    axios.get(req.app.locals.kcapp.api + '/player')
-        .then(response => {
-            var players = response.data;
-            axios.get(req.app.locals.kcapp.api + '/player/compare?id=' + playerIds.join("&id="))
-                .then(response => {
-                    var statistics = _.sortBy(response.data, function (stat) { return players[stat.player_id].name; });
-                    res.render('player/players_comparison', { players: players, statistics: statistics });
-                }).catch(error => {
-                    debug('Error when comparing players: ' + error);
-                    next(error);
-                });
-        }).catch(error => {
-            debug('Error when getting players: ' + error);
-            next(error);
+    axios.all([
+        axios.get(req.app.locals.kcapp.api + '/player'),
+        axios.get(req.app.locals.kcapp.api + '/player/compare?id=' + playerIds.join("&id="))
+    ]).then(axios.spread((players, statistics) => {
+        statistics = _.sortBy(statistics.data, function (stat) { return players[stat.player_id].name; });
+        res.render('player/players_comparison', {
+            players: players.data,
+            statistics: statistics
         });
+    })).catch(error => {
+        debug('Error when getting data for player ' + error);
+        next(error);
+    });
 });
 
 /* Get head to head statistics between two players */
@@ -108,27 +93,24 @@ router.get('/:player1/vs/:player2', function (req, res, next) {
     var player1 = req.params.player1;
     var player2 = req.params.player2;
 
-    axios.get(req.app.locals.kcapp.api + '/player')
-        .then(response => {
-            var players = response.data;
-            axios.get(req.app.locals.kcapp.api + '/player/' + player1 + '/vs/' + player2)
-                .then(response => {
-                    var head2head = response.data;
-                    head2head.player_visits[player1] = _.sortBy(head2head.player_visits[player1], function (visit) { return -visit.count; })
-                    head2head.player_visits[player2] = _.sortBy(head2head.player_visits[player2], function (visit) { return -visit.count; })
+    axios.all([
+        axios.get(req.app.locals.kcapp.api + '/player'),
+        axios.get(req.app.locals.kcapp.api + '/player/' + player1 + '/vs/' + player2)
+    ]).then(axios.spread((response1, response2) => {
+        var players = response1.data;
 
-                    head2head.player_checkouts[player1] = _.sortBy(head2head.player_checkouts[player1], function (checkout) { return -checkout.count; })
-                    head2head.player_checkouts[player2] = _.sortBy(head2head.player_checkouts[player2], function (checkout) { return -checkout.count; })
+        var head2head = response2.data;
+        head2head.player_visits[player1] = _.sortBy(head2head.player_visits[player1], function (visit) { return -visit.count; })
+        head2head.player_visits[player2] = _.sortBy(head2head.player_visits[player2], function (visit) { return -visit.count; })
 
-                    res.render('player/head_to_head', { player1: players[player1], player2: players[player2], head2head: head2head });
-                }).catch(error => {
-                    debug('Error when getting head to head statistics: ' + error);
-                    next(error);
-                });
-        }).catch(error => {
-            debug('Error when getting players: ' + error);
-            next(error);
-        });
+        head2head.player_checkouts[player1] = _.sortBy(head2head.player_checkouts[player1], function (checkout) { return -checkout.count; })
+        head2head.player_checkouts[player2] = _.sortBy(head2head.player_checkouts[player2], function (checkout) { return -checkout.count; })
+
+        res.render('player/head_to_head', { player1: players[player1], player2: players[player2], head2head: head2head });
+    })).catch(error => {
+        debug('Error when getting data for head to head ' + error);
+        next(error);
+    });
 });
 
 module.exports = router

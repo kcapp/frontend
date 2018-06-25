@@ -48,9 +48,7 @@ block scripts
                 }
             });
 
-            $('#create-leg-button').click(function() {
-                $(this).blur();
-            });
+            $('#create-leg-button').click(function() { $(this).blur(); });
 
             $('#start-leg-button').click(function(e) {
                 var stake = parseInt($('#match-stake-select').val());
@@ -117,36 +115,32 @@ block scripts
                 case '9': playerId += '9'; break;
                 case '0': playerId += '0'; break;
                 case '/':
-                    var next = $('#leg-type-select option:selected').next();
-                    if (next.length === 0) {
-                        next = $('#leg-type-select').children('option:first');
-                    }
-                    next.prop('selected', true);
+                    cycleSelector('#leg-type-select');
                     break;
                 case '*':
-                    var next = $('#match-type-select option:selected').next();
-                    if (next.length === 0) {
-                        next = $('#match-type-select').children('option:first');
-                    }
-                    next.prop('selected', true);
+                    cycleSelector('#match-type-select');
+                    $('#match-type-select').trigger('change');
                     break;
                 case '-':
-                    var next = $('#match-mode-select option:selected').next();
-                    if (next.length === 0) {
-                        next = $('#match-mode-select').children('option:first');
-                    }
-                    next.prop('selected', true);
+                    cycleSelector('#match-mode-select');
                     break;
                 case '+':
-                    var next = $('#match-stake-select option:selected').next();
-                    if (next.length === 0) {
-                        next = $('#match-stake-select').children('option:first');
-                    }
-                    next.prop('selected', true);
+                    cycleSelector('#match-stake-select');
                     break;
                 default: /* NOOP */; break;
             }
         });
+        function cycleSelector(selectorId) {
+            var next = $(selectorId + ' option:selected').next();
+            if (next.length === 0) {
+                next = $(selectorId).children('option:first');
+            }
+            next.prop('selected', true);
+            if (next.prop('hidden')) {
+                // Skip hidden values
+                cycleSelector(selectorId);
+            }
+        }
 
 block content
     div(id='new-leg-collapse')
@@ -155,49 +149,52 @@ block content
                 p.
                     Players must be added before you can start a new match
             else
-                form(style='padding-top: 15px;' id='new-leg-form')
-                    legend Players
-                    div(class='form-group form-check float-left' id='sortable-player-list')
-                    legend(style='clear: both;') Select Players
-                    div(class='form-group form-check' id='all-players-list')
-                        each player in players
-                            div(class='form-check float-left' style='padding-bottom: 10px;')
-                                input(style='display: none;' type='checkbox' name='players' class='form-check-input' id='checkbox-player-' + player.id value=player.id)
-                                label(style='margin-left: 10px; width: 150px;' class='player-name-label form-check-label btn btn-primary' for='checkbox-player-' + player.id)= player.name
-                                input(style='margin-left: 10px; width: 50px;' type='textbox' name='player_handicap' class='form input-player-handicap' hidden='true' value=0)
+                form(style='padding-top: 15px;')
+                    div(style='width: 50%; float: left;')
+                        legend Players
+                        div(class='form-group form-check float-left' id='sortable-player-list')
+                        legend(style='clear: both;') Select Players
+                        div(class='form-group form-check' id='all-players-list')
+                            each player in players
+                                div(class='form-check float-left' style='padding-bottom: 10px;')
+                                    input(style='display: none;' type='checkbox' name='players' class='form-check-input' id='checkbox-player-' + player.id value=player.id)
+                                    label(style='margin-left: 10px; width: 150px;' class='player-name-label form-check-label btn btn-primary' for='checkbox-player-' + player.id)= player.name
+                                    input(style='margin-left: 10px; width: 50px;' type='textbox' name='player_handicap' class='form input-player-handicap' hidden='true' value=0)
 
-                    div(class='form-group' style='clear: both')
-                        label(for='leg-type-select') Starting Score
-                        select(class='form-control' name='starting_score' id='leg-type-select')
-                            option 301
-                            option(selected='selected') 501
-                            option 701
-                            option(hidden='true') 0
+                    div(style='padding-left: 5em; width: 50%; float: right;')
+                        legend(style='clear: both;') Game Settings
+                        div(class='form-group' style='clear: both')
+                            label(for='leg-type-select') Starting Score
+                            select(class='form-control' name='starting_score' id='leg-type-select')
+                                option 301
+                                option(selected='selected') 501
+                                option 701
+                                option(hidden='true') 0
 
-                    div(class='form-group')
-                        label(for='match-type-select') Match Type
-                        select(class='form-control' name='match_type' id='match-type-select')
-                            each matchType in match_types
-                                option(value=matchType.id)= matchType.name
+                        div(class='form-group')
+                            label(for='match-type-select') Match Type
+                            select(class='form-control' name='match_type' id='match-type-select')
+                                each matchType in match_types
+                                    option(value=matchType.id)= matchType.name
 
-                    div(class='form-group')
-                        label(for='match-mode-select') Match Mode
-                        select(class='form-control' name='match_mode' id='match-mode-select')
-                            each mode in match_modes
-                                option(value=mode.id)= mode.name
+                        div(class='form-group')
+                            label(for='match-mode-select') Match Mode
+                            select(class='form-control' name='match_mode' id='match-mode-select')
+                                each mode in match_modes
+                                    option(value=mode.id)= mode.name
 
-                    div(class='form-group')
-                        label(for='match-stake-select') Match Stake
-                        select(class='form-control' name='match_stake' id='match-stake-select')
-                            option(value=0) -
-                            each oweType in owe_types
-                                option(value=oweType.id)= oweType.item
+                        div(class='form-group')
+                            label(for='match-stake-select') Match Stake
+                            select(class='form-control' name='match_stake' id='match-stake-select')
+                                option(value=0) -
+                                each oweType in owe_types
+                                    option(value=oweType.id)= oweType.item
 
-                    div(class='form-group')
-                        label(for='match-stake-select') Venue
-                        select(class='form-control' name='venue' id='venue-select')
-                            option(value=0) -
-                            each venue in venues
-                                option(value=venue.id)= venue.name
+                        div(class='form-group')
+                            label(for='match-stake-select') Venue
+                            select(class='form-control' name='venue' id='venue-select')
+                                option(value=0) -
+                                each venue in venues
+                                    option(value=venue.id)= venue.name
 
-                    button(type='submit' form='new-leg-form' class='btn btn-primary' id='start-leg-button' ) Start
+                        button(type='submit' class='btn btn-primary' id='start-leg-button' ) Start

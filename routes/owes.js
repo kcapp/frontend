@@ -7,21 +7,18 @@ var axios = require('axios');
 
 /* Method to get overview over who owes who what */
 router.get('/', function (req, res, next) {
-    axios.get(req.app.locals.kcapp.api + '/player')
-        .then(function (response) {
-            var playersMap = response.data;
-            axios.get(req.app.locals.kcapp.api + '/owe')
-                .then(response => {
-                    var owes = response.data;
-                    res.render('owes', { owes: owes, players: playersMap });
-                }).catch(error => {
-                    debug('Error when getting owes: ' + error);
-                    next(error);
-                });
-        }).catch(error => {
-            debug('Error when getting players: ' + error);
-            next(error);
+    axios.all([
+        axios.get(req.app.locals.kcapp.api + '/player'),
+        axios.get(req.app.locals.kcapp.api + '/owe')
+    ]).then(axios.spread((players, owes) => {
+        res.render('owes', {
+            owes: owes.data,
+            players: players.data
         });
+    })).catch(error => {
+        debug('Error when getting data for owes ' + error);
+        next(error);
+    });
 });
 
 /* Method to register a payback between two players */

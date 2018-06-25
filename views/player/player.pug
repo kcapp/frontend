@@ -158,6 +158,7 @@ block content
         li(role='presentation'): a(href='#visits' data-toggle='tab') Visits
         li(role='presentation'): a(href='#checkouts' data-toggle='tab') Checkouts
         li(role='presentation'): a(href='#progression' data-toggle='tab') Progression
+        li(role='presentation'): a(href='#tournament' data-toggle='tab') Tournaments
 
     div(class='tab-content' style='padding-top: 20px;')
         div(role='tabpanel' id='overview' class='tab-pane active')
@@ -373,6 +374,27 @@ block content
                             else
                                 td -
 
+        div(role='tabpanel' id='tournament' class='tab-pane')
+            table(id='table-tournament-standings'  style='width: 100%;')
+                thead
+                    tr
+                        th Tournament
+                        th Division
+                        th Group
+                        th Final Standing
+                tbody
+                    each standing in tournament_standings
+                        tr
+                            - var division = standing.tournament_group.division
+                            - var divisionPostfix = division === 1 ? 'st' : division === 2 ? 'nd' : division === 3 ? 'rd' : 'th';
+                            td: a(href='/tournaments/' + standing.tournament.id)= standing.tournament.name
+                            td= division + divisionPostfix
+                            td= standing.tournament_group.name
+                            td= standing.final_standing + ' / ' + standing.total_players
+                                if standing.final_standing === 1
+                                    span(style='padding-left: 0.2em' class='glyphicon glyphicon-star glyphWinner' aria-hidden='true')
+
+
         div(role='tabpanel' id='progression' class='tab-pane')
             div(style='width: 100%')
                 div
@@ -384,4 +406,5 @@ block content
                 div
                     h3 Scores
                     canvas(id='canvas-scores')
+
 
