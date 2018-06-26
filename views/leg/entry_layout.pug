@@ -138,6 +138,8 @@ block scripts
                 // Set updated score per player
                 var currentPlayerId = leg.current_player_id;
                 var players = data.players;
+                var totalFishNChips = 0;
+                var isLastVisitFishNChips = false;
                 for (var i = 0; i < players.length; i++) {
                     var player = players[i];
                     var td = $('#player-score-' + player.player_id);
@@ -152,6 +154,8 @@ block scripts
                         tdVisit.removeClass().addClass('uv-active-player-visits');
                         $('#submit-score-button').data('current-player-id', player.player_id);
                         label.addClass('current-player');
+
+                        isLastVisitFishNChips = players[i === 0 ?  players.length - 1 : i - 1].modifiers.is_fish_and_chips;
                     }
                     else {
                         td.removeClass().addClass('uv-inactive-player-score');
@@ -171,6 +175,14 @@ block scripts
                     if (player.modifiers.is_beer_match) {
                         td.addClass('player-modifier-beer');
                     }
+
+                    totalFishNChips += player.visit_statistics.fish_and_chips_counter;
+                }
+                if (isLastVisitFishNChips) {
+                    var msg = alertify.notify('<h4>Fish & Chips:</h4><h3>' + (totalFishNChips - 1) + '</h3>', 'fish-n-chips', 5, function(){  });
+                    var interval = setInterval(function(){
+                        msg.setContent('<h4>Fish & Chips:</h4><h3>' + totalFishNChips + '</h3>');
+                    }, 1000);
                 }
 
                 // Move header when dual monitors
