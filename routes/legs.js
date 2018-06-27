@@ -9,6 +9,15 @@ const axios = require('axios');
 
 /* Render the leg view */
 router.get('/:id', function (req, res, next) {
+    getLegView(req, res, next, false)
+});
+
+/* Render the vertical leg view */
+router.get('/:id/vertical', function (req, res, next) {
+    getLegView(req, res, next, true);
+});
+
+function getLegView(req, res, next, vertical) {
     axios.all([
         axios.get(req.app.locals.kcapp.api + '/player'),
         axios.get(req.app.locals.kcapp.api + '/leg/' + req.params.id),
@@ -19,7 +28,7 @@ router.get('/:id', function (req, res, next) {
             .then(response => {
                 var match = response.data;
 
-                var pugView = 'leg/entry_x01.pug';
+                var pugView = vertical ? 'leg/entry_x01_vertical.pug' : 'leg/entry_x01.pug';
                 if (match.match_type.id === 2) {
                     pugView = 'leg/entry_shootout.pug';
                 }
@@ -40,7 +49,7 @@ router.get('/:id', function (req, res, next) {
         debug('Error when getting data for leg ' + error);
         next(error);
     });
-});
+}
 
 /* Render the leg spectate view */
 router.get('/:id/spectate', function (req, res, next) {

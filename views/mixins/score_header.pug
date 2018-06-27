@@ -1,12 +1,8 @@
 mixin get_score_header(match_mode, round_number, players, is_official, add_player_visit = false)
-    div(class='table-responsive no-border')
-        table(class='uv-table-mode' style='table-layout: fixed;')
-            tbody: tr: td(id='td-round-header')
-                    label= match_mode.short_name + '/'
-                    label(id='round-number')= 'R' + round_number
+    +get_round_header(match_mode.short_name, round_number)
 
     div(class='table-responsive no-border')
-        table(class='uv-table-players' id='table-players-score-header' style='table-layout: fixed')
+        table(class='uv-table-players uv-table-players-horizontal' id='table-players-score-header' style='table-layout: fixed')
             tbody
                 tr
                     each player in players
@@ -19,6 +15,30 @@ mixin get_score_header(match_mode, round_number, players, is_official, add_playe
                         each player in players
                             +get_current_player_visit(player)
     hr
+
+mixin get_score_header_vertical(match_mode, round_number, players, is_official, add_player_visit = false)
+    +get_round_header(match_mode.short_name, round_number)
+
+    div(class='table-responsive no-border')
+        table(class='uv-table-players uv-table-players-vertical' id='table-players-score-header' style='table-layout: fixed;')
+            tbody
+                each player in players
+                    tr
+                        +get_player_cell(player, is_official)
+                        if add_player_visit
+                            +get_current_player_visit(player)
+                    tr
+                        +get_player_legs(player)
+                    tr
+                        td
+    hr
+
+mixin get_round_header(match_mode, round_number)
+    div(class='table-responsive no-border')
+        table(class='uv-table-mode' style='table-layout: fixed;')
+            tbody: tr: td(id='td-round-header')
+                    label= match_mode + '/'
+                    label(id='round-number')= 'R' + round_number
 
 mixin get_player_cell(player, is_official)
     - var playerId = player.player_id;

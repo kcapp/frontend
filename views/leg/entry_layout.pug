@@ -11,106 +11,22 @@ block scripts
     script.
         var scores = {};
         var leg = !{JSON.stringify(leg)}
-        var legId = leg.id
+        var legId = leg.id;
 
         var currentDart = 1;
 
-        function getCurrentDart() {
-            var dart;
-            if (currentDart === 1) {
-                dart = $('.uv-active-player-visits .first');
-            }
-            else if (currentDart === 2) {
-                dart = $('.uv-active-player-visits .second');
-            }
-            else if (currentDart === 3) {
-                dart = $('.uv-active-player-visits .third');
-            }
-            else {
-                return null;
-            }
-            return dart;
-        }
-
-        function updateTotalVisitScore(score) {
-            var totalScoreContainer = $('.uv-active-player-visits .dart-score-total');
-            var total = parseInt(totalScoreContainer.html()) + parseInt(score);
-            totalScoreContainer.html(total);
-        }
-
-        function setDartValue(dart, score, multiplier) {
-            var scoreInt = parseInt(score);
-            var dartText = score
-
-            if (scoreInt === 0 ) {
-                multiplier = 1;
-                currentMultiplier = 1;
-                score = 0;
-            }
-
-            if (multiplier == 3) {
-                dartText = 'T-' + score / multiplier;
-                dart.removeClass('dart-score-single dart-score-double').addClass('dart-score-triple');
-            }
-            else if (multiplier == 2) {
-                dartText = 'D-' + score / multiplier;
-                dart.removeClass('dart-score-single dart-score-triple').addClass('dart-score-double');
-            }
-            else if (score === 0) {
-                dartText = 'Miss';
-                dart.removeClass('dart-score-double dart-score-triple').addClass('dart-score-single');
-            }
-            else {
-                dart.removeClass('dart-score-double dart-score-triple').addClass('dart-score-single');
-            }
-            dart.text(dartText);
-            dart.attr('data-score', score / multiplier);
-            dart.attr('data-multiplier', multiplier);
-
-            updateTotalVisitScore(score)
-            scores[currentDart] = scoreInt;
-        }
-
-        function resetUIelements() {
-            currentDart = 1;
-            $('.uv-active-player-visits .first').text('')
-                .removeClass('dart-score-single dart-score-double dart-score-triple');
-            $('.uv-active-player-visits .first').removeAttr('data-score');
-            $('.uv-active-player-visits .first').attr('data-multiplier', 1);
-            $('.uv-active-player-visits .first').attr('data-checkout', 0);
-
-            $('.uv-active-player-visits .second').text('')
-                .removeClass('dart-score-single dart-score-double dart-score-triple');
-            $('.uv-active-player-visits .second').removeAttr('data-score');
-            $('.uv-active-player-visits .second').attr('data-multiplier', 1);
-            $('.uv-active-player-visits .second').attr('data-checkout', 0);
-
-            $('.uv-active-player-visits .third').text('')
-                .removeClass('dart-score-single dart-score-double dart-score-triple');
-            $('.uv-active-player-visits .third').removeAttr('data-score');
-            $('.uv-active-player-visits .third').attr('data-multiplier', 1);
-            $('.uv-active-player-visits .third').attr('data-checkout', 0);
-
-            $('#submit-score-button').data('busted', 0);
-            $('#submit-score-button').data('finished', 0);
-        }
-
-        function clearDart(dart) {
-            dart.text('');
-            dart.attr('data-score', 0);
-            dart.attr('data-multiplier', 1);
-            dart.removeClass('dart-score-single dart-score-double dart-score-triple');
-            dart.removeAttr('data-score');
+        var isDualMonitor = window.innerWidth > 1920;
+        isDualMonitor = localStorage.kcapp_is_dual_screen ? localStorage.kcapp_is_dual_screen == 'true' : isDualMonitor;
+        if (isDualMonitor && leg.players.length % 2 !== 0 && !location.href.includes('vertical')) {
+            location.href = location.href + '/vertical';
         }
 
         $(function () {
             FastClick.attach(document.body);
 
-            var isDualMonitor = window.innerWidth > 1920;
-
             if (isDualMonitor) {
                 // Move header when dual monitors
-                $('#td-round-header').attr('style', 'text-align: right; padding-right: 19em;');
+                $('#td-round-header').attr('style', 'text-align: left; padding-left: 19em;');
             }
 
             if (leg.is_finished) {
@@ -185,18 +101,8 @@ block scripts
                     }, 1000);
                 }
 
-                // Move header when dual monitors
-                console.log('isDualMonitor: ' + isDualMonitor + ', size: ' + window.innerWidth + 'x' + window.innerHeight);
-                if (isDualMonitor) {
-                    if (players[0].player_id === currentPlayerId) {
-                        $('#td-round-header').attr('style', 'text-align: left; padding-left: 19em;');
-                    } else {
-                        $('#td-round-header').attr('style', 'text-align: right; padding-right: 19em;');
-                    }
-                }
-
                 $('.uv-active-player-visits .dart-score-total').html(0);
-                resetUIelements();
+                resetElements();
             });
         });
 
@@ -315,6 +221,94 @@ block scripts
             });
         });
 
+        function getCurrentDart() {
+            var dart;
+            if (currentDart === 1) {
+                dart = $('.uv-active-player-visits .first');
+            }
+            else if (currentDart === 2) {
+                dart = $('.uv-active-player-visits .second');
+            }
+            else if (currentDart === 3) {
+                dart = $('.uv-active-player-visits .third');
+            }
+            else {
+                return null;
+            }
+            return dart;
+        }
+
+        function updateTotalVisitScore(score) {
+            var totalScoreContainer = $('.uv-active-player-visits .dart-score-total');
+            var total = parseInt(totalScoreContainer.html()) + parseInt(score);
+            totalScoreContainer.html(total);
+        }
+
+        function setDartValue(dart, score, multiplier) {
+            var scoreInt = parseInt(score);
+            var dartText = score
+
+            if (scoreInt === 0 ) {
+                multiplier = 1;
+                currentMultiplier = 1;
+                score = 0;
+            }
+
+            if (multiplier == 3) {
+                dartText = 'T-' + score / multiplier;
+                dart.removeClass('dart-score-single dart-score-double').addClass('dart-score-triple');
+            }
+            else if (multiplier == 2) {
+                dartText = 'D-' + score / multiplier;
+                dart.removeClass('dart-score-single dart-score-triple').addClass('dart-score-double');
+            }
+            else if (score === 0) {
+                dartText = 'Miss';
+                dart.removeClass('dart-score-double dart-score-triple').addClass('dart-score-single');
+            }
+            else {
+                dart.removeClass('dart-score-double dart-score-triple').addClass('dart-score-single');
+            }
+            dart.text(dartText);
+            dart.attr('data-score', score / multiplier);
+            dart.attr('data-multiplier', multiplier);
+
+            updateTotalVisitScore(score)
+            scores[currentDart] = scoreInt;
+        }
+
+        function resetElements() {
+            currentDart = 1;
+            $('.uv-active-player-visits .first').text('')
+                .removeClass('dart-score-single dart-score-double dart-score-triple');
+            $('.uv-active-player-visits .first').removeAttr('data-score');
+            $('.uv-active-player-visits .first').attr('data-multiplier', 1);
+            $('.uv-active-player-visits .first').attr('data-checkout', 0);
+
+            $('.uv-active-player-visits .second').text('')
+                .removeClass('dart-score-single dart-score-double dart-score-triple');
+            $('.uv-active-player-visits .second').removeAttr('data-score');
+            $('.uv-active-player-visits .second').attr('data-multiplier', 1);
+            $('.uv-active-player-visits .second').attr('data-checkout', 0);
+
+            $('.uv-active-player-visits .third').text('')
+                .removeClass('dart-score-single dart-score-double dart-score-triple');
+            $('.uv-active-player-visits .third').removeAttr('data-score');
+            $('.uv-active-player-visits .third').attr('data-multiplier', 1);
+            $('.uv-active-player-visits .third').attr('data-checkout', 0);
+
+            $('#submit-score-button').data('busted', 0);
+            $('#submit-score-button').data('finished', 0);
+        }
+
+        function clearDart(dart) {
+            dart.text('');
+            dart.attr('data-score', 0);
+            dart.attr('data-multiplier', 1);
+            dart.removeClass('dart-score-single dart-score-double dart-score-triple');
+            dart.removeAttr('data-score');
+        }
+
     block script_check_visit_finished
         script.
             function updatePlayerScore(score) {
@@ -410,7 +404,8 @@ block content
     block title
 
     - var round_number = Math.floor(leg.visits.length / leg.players.length) + 1;
-    +get_score_header(match.match_mode, round_number, leg_players, match.tournament_id != null, true)
+    block score_header
+        +get_score_header(match.match_mode, round_number, leg_players, match.tournament_id != null, true)
 
     div(class='table-responsive')
         table(id='score-selector-table' class='table' style='display: none;')
