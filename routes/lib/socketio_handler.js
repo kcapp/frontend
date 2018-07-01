@@ -109,6 +109,29 @@ module.exports = (io, app) => {
                                 nsp.emit('error', { message: message, code: error.code });
                             });
                     });
+
+                    client.on('undo_visit', function (data) {
+                        //var body = JSON.parse(data);
+                        debug('Received undo_visit from %s', ip);
+                        axios.delete(app.locals.kcapp.api + '/visit/' + legId + '/last')
+                            .then(() => {
+                                axios.all([
+                                    axios.get(app.locals.kcapp.api + '/leg/' + legId),
+                                    axios.get(app.locals.kcapp.api + '/leg/' + legId + '/players')
+                                ]).then(axios.spread((leg, players) => {
+                                    nsp.emit('undo_visit', {});
+                                    nsp.emit('score_update', { leg: leg.data, players: players.data, is_undo: true });
+                                })).catch(error => {
+                                    var message = error.message + ' (' + error.response.data.trim() + ')'
+                                    debug('Error when getting leg: ' + message);
+                                    nsp.emit('error', { message: error.message, code: error.code });
+                                });
+                            }).catch(error => {
+                                var message = error.message + ' (' + error.response.data.trim() + ')'
+                                debug('Error when undoing visit: ' + message);
+                                nsp.emit('error', { message: message, code: error.code });
+                            });
+                    });
                 });
                 debug("Created socket.io namespace '%s'", namespace);
             }

@@ -179,7 +179,7 @@ router.delete('/:id/visit/:visitid', function (req, res, next) {
         .then(() => {
             res.status(200).send().end();
         }).catch(error => {
-            debug('Unable to set current player: ' + error);
+            debug('Unable to dlete visit: ' + error);
             next(error);
         });
 });

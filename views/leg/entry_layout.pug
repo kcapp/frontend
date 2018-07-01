@@ -168,6 +168,10 @@ block scripts
 
             $('#undo-button').click(function () {
                 if (currentDart <= 1) {
+                    disableEnter = true;
+                    showConfirm('Delete last Visit', function() {
+                        socket.emit('undo_visit', { });
+                    }, function(){ /* NOOP */ });
                     return;
                 }
                 var playerId = $('#submit-score-button').data('current-player-id');

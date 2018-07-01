@@ -83,6 +83,10 @@ function configureSocketEvents(socket, leg, playersMap, liveScoreUpdate, venueSo
         }
     });
 
+    socket.on('undo_visit', function (data) {
+        $('#table-leg-visits > tbody > tr').eq(1).remove();
+    });
+
     socket.on('score_update', function (data) {
         var players = data.players;
         for (key in players) {
@@ -117,24 +121,26 @@ function configureSocketEvents(socket, leg, playersMap, liveScoreUpdate, venueSo
         $('#total').text(0);
 
         // Update the visits table
-        var visit = data.leg.visits[data.leg.visits.length - 1];
-        var playerName = playersMap[visit.player_id].name;
-        var total = (visit.first_dart.multiplier * visit.first_dart.value) +
-            (visit.second_dart.multiplier * visit.second_dart.value) +
-            (visit.third_dart.multiplier * visit.third_dart.value);
-        if (visit.is_bust) {
-            total = 'BUST';
+        if (!data.is_undo) {
+            var visit = data.leg.visits[data.leg.visits.length - 1];
+            var playerName = playersMap[visit.player_id].name;
+            var total = (visit.first_dart.multiplier * visit.first_dart.value) +
+                (visit.second_dart.multiplier * visit.second_dart.value) +
+                (visit.third_dart.multiplier * visit.third_dart.value);
+            if (visit.is_bust) {
+                total = 'BUST';
+            }
+            // Append the score to the beginning of the table
+            var html =
+                "<tr>" +
+                "<td>" + playerName + "</td>" +
+                "<td class='col-sm-2 dart-score-container no-border'><label class='" + getDartCSS(visit.first_dart) + "'>" + getScoreString(visit.first_dart) + "</label></td>" +
+                "<td class='col-sm-2 dart-score-container no-border'><label class='" + getDartCSS(visit.second_dart) + "'>" + getScoreString(visit.second_dart) + "</label></td>" +
+                "<td class='col-sm-2 dart-score-container no-border'><label class='" + getDartCSS(visit.third_dart) + "'>" + getScoreString(visit.third_dart) + "</label></td>" +
+                "<td><label>" + total + "</label></td>" +
+                "</tr>";
+            $('#table-leg-visits > tbody > tr:first').after(html);
         }
-        // Append the score to the beginning of the table
-        var html =
-            "<tr>" +
-            "<td>" + playerName + "</td>" +
-            "<td class='col-sm-2 dart-score-container no-border'><label class='" + getDartCSS(visit.first_dart) + "'>" + getScoreString(visit.first_dart) + "</label></td>" +
-            "<td class='col-sm-2 dart-score-container no-border'><label class='" + getDartCSS(visit.second_dart) + "'>" + getScoreString(visit.second_dart) + "</label></td>" +
-            "<td class='col-sm-2 dart-score-container no-border'><label class='" + getDartCSS(visit.third_dart) + "'>" + getScoreString(visit.third_dart) + "</label></td>" +
-            "<td><label>" + total + "</label></td>" +
-            "</tr>";
-        $('#table-leg-visits > tbody > tr:first').after(html);
     });
 
     socket.on('leg_finished', function (data) {
