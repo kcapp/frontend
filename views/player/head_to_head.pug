@@ -48,6 +48,16 @@ block content
                     th(class='head-to-head-header') Legs Win %
                     td(class='head-to-head-player2')= ((player2.legs_won * 100) / player2.legs_played).toFixed(2) + '%'
                 tr
+                    th(colspan='3' class='head-to-head-header'): h3 Elo
+                tr
+                    td(class='head-to-head-player1')= head2head.player_elo[player1.id].tournament_elo
+                    th(class='head-to-head-header') Current
+                    td(class='head-to-head-player2')= head2head.player_elo[player2.id].tournament_elo
+                tr
+                    td(class='head-to-head-player1')= (head2head.player_elo[player1.id].win_probability * 100).toFixed(0) + '%'
+                    th(class='head-to-head-header') Win Probability
+                    td(class='head-to-head-player2')= (head2head.player_elo[player2.id].win_probability * 100).toFixed(0) + '%'
+                tr
                     th(colspan='3' class='head-to-head-header'): h3 Form
                 tr
                     mixin player_form_table(matches, playerID, align)

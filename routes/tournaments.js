@@ -8,14 +8,17 @@ var _ = require('underscore');
 
 /** Get all tournaments */
 router.get('/', function (req, res, next) {
-    axios.get(req.app.locals.kcapp.api + '/tournament')
-        .then(response => {
-            var tournaments = response.data;
-            res.render('tournaments', { tournaments: tournaments });
-        }).catch(error => {
-            debug('Error when getting tournaments: ' + error);
-            next(error);
+    axios.all([
+        axios.get(req.app.locals.kcapp.api + '/tournament'),
+        axios.get(req.app.locals.kcapp.api + '/tournament/standings')
+    ]).then(axios.spread((tournaments, standings) => {
+        res.render('tournaments', {
+            tournaments: tournaments.data, standings: standings.data
         });
+    })).catch(error => {
+        debug('Error when getting data for tournament ' + error);
+        next(error);
+    });
 });
 
 /* Get tournament with the given ID */

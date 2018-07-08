@@ -382,6 +382,7 @@ block content
                         th Division
                         th Group
                         th Final Standing
+                        th Elo
                 tbody
                     each standing in tournament_standings
                         tr
@@ -393,6 +394,7 @@ block content
                             td= standing.final_standing + ' / ' + standing.total_players
                                 if standing.final_standing === 1
                                     span(style='padding-left: 0.2em' class='glyphicon glyphicon-star glyphWinner' aria-hidden='true')
+                            td= standing.elo
 
 
         div(role='tabpanel' id='progression' class='tab-pane')
