@@ -3,6 +3,9 @@ extends ../layout.pug
 include ../mixins/score_header.pug
 include ../mixins/player_order.pug
 
+block append head
+    script(src='/javascripts/responsivevoice.1.5.8..js')
+
 block scripts
     script(src='/javascripts/fastclick-1.0.6.min.js')
     script(src='/javascripts/socket.io-2.0.3.min.js')
@@ -13,6 +16,7 @@ block scripts
         var leg = !{JSON.stringify(leg)}
         var legId = leg.id;
 
+        var VOICE = "US English Female";
         var currentDart = 1;
 
         var isDualMonitor = window.innerWidth > 1920;
@@ -118,6 +122,7 @@ block scripts
                 var secondMultiplier = parseInt($('.uv-active-player-visits .second').attr('data-multiplier'));
                 var thirdScore = parseInt($('.uv-active-player-visits .third').attr('data-score'));
                 var thirdMultiplier =  parseInt($('.uv-active-player-visits .third').attr('data-multiplier'));
+                var total = firstScore * firstMultiplier + secondScore * secondMultiplier + thirdScore * thirdMultiplier;
 
                 var currentPlayerId = $(this).data('current-player-id');
                 var data = JSON.stringify({
@@ -129,7 +134,9 @@ block scripts
                 });
 
                 var isFinished = $(this).data('finished');
+                var isBust = $(this).data('busted');
                 if (isFinished) {
+                    responsiveVoice.speak("Game shot!", VOICE);
                     executePost(window.location.origin + '/legs/' + legId + '/finish', data, 'application/json',
                         function (response) {
                             location.href = window.location.origin + '/legs/' + legId + '/result';
@@ -140,6 +147,12 @@ block scripts
                     )
                 }
                 else {
+                    if (isBust) {
+                        responsiveVoice.speak("Noscore", VOICE, { pitch: 0.8 });
+                    }
+                    else {
+                        responsiveVoice.speak("" + total, VOICE);
+                    }
                     socket.emit('throw', data);
                 }
                 event.preventDefault();
