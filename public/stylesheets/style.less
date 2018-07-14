@@ -43,7 +43,7 @@ body {
     font-size: 1em;
     font-weight:400;
     text-transform: uppercase;
-    padding:18px 20px;
+    padding:10px 20px;
     text-align: left;
     background-color:#1ABC9C;
     border-top-left-radius: 4px;
@@ -85,6 +85,10 @@ body {
     -ms-border-radius: 4px;
     -webkit-box-shadow: 0 1px 1px rgba(0,0,0,.05);
     box-shadow: 0 1px 1px rgba(0,0,0,.05);
+    h3, p {
+        margin: 0px;
+        padding: 0px;
+    }
 }
 
 #table-leg-visits {
@@ -103,38 +107,27 @@ body {
 
 #players-table {
     width: 100%;
+    thead {
+        tr:nth-child(1) {
+            background-color: #1ABC9C;
+            color: white;
+            border: 0px;
+        }
+        tr:nth-child(2) {
+            background-color: #1ABC9C;
+            color: white;
+            border: 0px;
+        }
+    }
     tr {
         border-bottom: 1px solid #e9e9e9;
         color: #999;
         height: 40px;
         line-height: 40px;
     }
-}
-
-#players-table1 {
-    thead {
-        tr:nth-child(2) {
-            background-color: #efefef;
-            border: 3px solid #ddd;
-        }
-        .th-bordered {
-            background-color: #efefef;
-            border: 3px solid #ddd;
-            text-align: center;
-        }
-    }
-    tr:last-child {
-        border-bottom: 3px solid #dddddd;
-    }
-    td:nth-child(2) {
-        border-left: 3px solid #dddddd;
-    }
-    td:last-child {
-        border-right: 3px solid #dddddd;
-    }
     button {
         border: none;
-        min-width: 50px;
+        min-width: 30px;
         color: #fff;
         font-size: 11px;
         border-radius: 3px;
@@ -143,6 +136,70 @@ body {
     }
     .text-left {
         text-align: left;
+        padding-left: 20px;
+    }
+    .text-right {
+        text-align: right;
+        padding-right: 20px;
+    }
+    .badge {
+        font-weight: 300;
+    }
+}
+
+#player-owes-table {
+    width: 100%;
+    thead {
+        tr:nth-child(1) {
+            background-color: #1ABC9C;
+            color: white;
+            border: 0px;
+        }
+    }
+    tr {
+        border-bottom: 1px solid #e9e9e9;
+        color: #000;
+        height: 40px;
+        line-height: 40px;
+    }
+    button {
+        border: none;
+        min-width: 30px;
+        color: #fff;
+        font-size: 11px;
+        border-radius: 3px;
+        font-weight: 300;
+        background-color: #337ab7;
+    }
+    .text-left {
+        text-align: left;
+        padding-left: 20px;
+    }
+    .text-right {
+        text-align: right;
+        padding-right: 20px;
+    }
+    .badge {
+        font-weight: 300;
+    }
+    .fas {
+        color: #000;
+        font-size: 16px;
+    }
+}
+
+#players-options {
+    button {
+        width: 200px;
+        float: left;
+        margin-right: 20px;
+    }
+}
+
+#add-player-modal {
+    .btn-submit {
+        float: right;
+        width: 150px;
     }
 }
 
@@ -265,8 +322,8 @@ a:hover {
 
 #player-statistics-table,
 #player-scores-table,
-#player-accuracy-table,
-#player-owes-table {
+#player-accuracy-table
+{
     tr:last-child {
         border-bottom: 3px solid #dddddd;
     }
