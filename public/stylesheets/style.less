@@ -5,9 +5,17 @@
 @dart-single: #000000;
 @dart-double: orange;
 @dart-triple: #d9534f;
+
 body {
-    font-family: "Open Sans"
+    font-family: "Open Sans";
+    background-color: #e5eaef;
 }
+
+.pt-20 {padding-top: 20px;}
+.no-padding {padding: 0px !important;}
+
+.ml-10 {margin-left: 10px;}
+.ml-20 {margin-left: 20px;}
 
 .navbar {
     margin-bottom: 0px;
@@ -19,7 +27,64 @@ body {
     border: none;
     border-bottom: 1px solid #ddd;
     border-radius: 0px;
-    color: black;
+    color: white;
+    background-color: #434a55;
+    a {
+        color: white !important;
+    }
+    .navbar-brand {
+        margin-right: 30px;
+    }
+}
+
+.block-container-header {
+    position: relative;
+    color: #fff;
+    font-size: 1em;
+    font-weight:400;
+    text-transform: uppercase;
+    padding:18px 20px;
+    text-align: left;
+    background-color:#1ABC9C;
+    border-top-left-radius: 4px;
+    -webkit-border-top-left-radius: 4px;
+    -o-border-top-left-radius: 4px;
+    -ms-border-top-left-radius: 4px;
+    -moz-border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
+    -webkit-border-top-right-radius: 4px;
+    -o-border-top-right-radius: 4px;
+    -ms-border-top-right-radius: 4px;
+    -moz-border-top-right-radius: 4px;
+}
+
+.block-container-with-header {
+    background-color: #fff;
+    padding: 20px;
+    margin-bottom: 1em; 
+    border: 1px solid #ebeff6;
+    border-radius: 0 0 4px 4px;
+    -webkit-border-radius: 0 0 4px 4px;
+    -o-border-radius: 0 0 4px 4px;
+    -moz-border-radius: 0 0 4px 4px;
+    -ms-border-radius: 0 0 4px 4px;
+    -webkit-box-shadow: 0 1px 1px rgba(0,0,0,.05);
+    box-shadow: 0 1px 1px rgba(0,0,0,.05);
+    overflow: hidden;
+}
+
+.block-container {
+    background-color: #fff;
+    padding: 20px;
+    margin-bottom: 1em; 
+    border: 1px solid #ebeff6;
+    border-radius: 4px;
+    -webkit-border-radius: 4px;
+    -o-border-radius: 4px;
+    -moz-border-radius: 4px;
+    -ms-border-radius: 4px;
+    -webkit-box-shadow: 0 1px 1px rgba(0,0,0,.05);
+    box-shadow: 0 1px 1px rgba(0,0,0,.05);
 }
 
 #table-leg-visits {
@@ -37,6 +102,16 @@ body {
 }
 
 #players-table {
+    width: 100%;
+    tr {
+        border-bottom: 1px solid #e9e9e9;
+        color: #999;
+        height: 40px;
+        line-height: 40px;
+    }
+}
+
+#players-table1 {
     thead {
         tr:nth-child(2) {
             background-color: #efefef;
@@ -742,4 +817,12 @@ a:hover {
     color: #31708f !important;
     background-color: #d9edf7 !important;
     border-color: #31708f !important;
+}
+
+#all-players-list {
+    margin-left: 20px;
+}
+
+#sortable-player-list {
+    margin-bottom: 0px;
 }

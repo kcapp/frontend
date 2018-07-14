@@ -87,6 +87,27 @@ block scripts
 block content
     div(id='compare-players-alert' class='alert alert-danger' role='alert' hidden='true').
         Select at least one player to use for comparison
+    
+    div(class='pt-20')
+        div(class='block-container no-padding')
+            table(id='players-table')
+                thead
+                tbody
+                    each player in players
+                        tr
+                            th(hidden='true' scope='row')= player.id
+                            td(class='text-left'): a(href='/players/' + player.id + '/statistics')= player.name + (player.nickname !== null ? (" '" + player.nickname + "'") : '')
+                            td= player.matches_played
+                            td= player.matches_won
+                            td= player.matches_played == 0 ? '0.00%' : (player.matches_won * 100 / player.matches_played).toFixed(2) + '%'
+                            td= player.legs_played
+                            td= player.legs_won
+                            td= player.legs_played == 0 ? '0.00%' : (player.legs_won * 100 / player.legs_played).toFixed(2) + '%'
+                            td
+                                button(class='btn btn-primary view-player-btn btn-block' data-player-id=player.id) View
+                            td
+                                input(type='checkbox' data-player=player value=player.id)
+
 
     h2 Players
 
