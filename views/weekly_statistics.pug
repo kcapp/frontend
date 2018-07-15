@@ -82,42 +82,41 @@ block content
                                 td(class='text-right')= stats.accuracy_20 === null ? '-' : stats.accuracy_20.toFixed(2)
                                 td(class='text-right')= stats.accuracy_19 === null ? '-' : stats.accuracy_19.toFixed(2)
 
-    div
-        div(class='row')
-            h3 Shootout
+    if statistics_x01.length === 0
+        div(class='block-container-red') Shootout - no matches played   
+    else 
+        div(class='block-container-red') Shootout
+        div(class='block-container no-padding')
+            div(class='table')
+                table(id='table-shootout-statistics')
+                    thead
+                        tr
+                            th(colspan='6')
+                            th(colspan='4' class='text-center') Per Match
+                        tr
+                            th(class='text-right') Rank
+                            th Player
+                            th(class='text-center') Played
+                            th(class='text-center') Won
+                            th(class='text-right') Win %
+                            th(class='text-center') PPD
+                            th(class='text-right') 60s+
+                            th(class='text-right') 100s+
+                            th(class='text-right') 140s+
+                            th(class='text-right') 180
+                    tbody
+                        - var rank = 1
+                        each stats in statistics_shootout
+                            - var player = players[stats.player_id]
+                            tr
+                                td(class='text-right')= rank++
+                                td(style='width: 12%'): a(href='/players/' + player.id + '/statistics')= player.name
+                                td(class='text-center')= stats.matches_played
+                                td(class='text-center')= stats.matches_won === undefined ? 0 : stats.matches_won
+                                td(class='text-right')= stats.matches_won === undefined ? '0.00%' : (stats.matches_won / stats.matches_played * 100).toFixed(2) + '%'
+                                td(class='text-center')= stats.ppd.toFixed(2)
+                                td(class='text-right')= (stats.scores_60s_plus / stats.matches_played).toFixed(2)
+                                td(class='text-right')= (stats.scores_100s_plus / stats.matches_played).toFixed(2)
+                                td(class='text-right')= (stats.scores_140s_plus / stats.matches_played).toFixed(2)
+                                td(class='text-right')= (stats.scores_180s / stats.matches_played).toFixed(2)
 
-            if statistics_shootout.length === 0
-                p No matches played ...
-            else
-                div(class='table')
-                    table(id='table-shootout-statistics' class='table')
-                        thead
-                            tr
-                                th(colspan='6')
-                                th(colspan='4' class='th-bordered') Per Match
-                            tr
-                                th(class='text-right') Rank
-                                th Player
-                                th(class='text-center') Played
-                                th(class='text-center') Won
-                                th(class='text-right') Win %
-                                th(class='text-center') PPD
-                                th(class='text-right') 60s+
-                                th(class='text-right') 100s+
-                                th(class='text-right') 140s+
-                                th(class='text-right') 180
-                        tbody
-                            - var rank = 1
-                            each stats in statistics_shootout
-                                - var player = players[stats.player_id]
-                                tr
-                                    td(class='text-right')= rank++
-                                    td(style='width: 12%'): a(href='/players/' + player.id + '/statistics')= player.name
-                                    td(class='text-center')= stats.matches_played
-                                    td(class='text-center')= stats.matches_won === undefined ? 0 : stats.matches_won
-                                    td(class='text-right')= stats.matches_won === undefined ? '0.00%' : (stats.matches_won / stats.matches_played * 100).toFixed(2) + '%'
-                                    td(class='text-center')= stats.ppd.toFixed(2)
-                                    td(class='text-right')= (stats.scores_60s_plus / stats.matches_played).toFixed(2)
-                                    td(class='text-right')= (stats.scores_100s_plus / stats.matches_played).toFixed(2)
-                                    td(class='text-right')= (stats.scores_140s_plus / stats.matches_played).toFixed(2)
-                                    td(class='text-right')= (stats.scores_180s / stats.matches_played).toFixed(2)

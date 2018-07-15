@@ -137,9 +137,7 @@ block content
                             td
                                 span(class="badge badge-pill badge-success")= player.legs_played == 0 ? '0.00%' : (player.legs_won * 100 / player.legs_played).toFixed(2) + '%'
                             td
-                                button(class='btn btn-secondary view-player-btn btn-block' data-player-id=player.id)
-                                    i(class="fas fa-eye") 
-                                    span(class='ml-10') View
+                                i(class="fas fa-eye fas-option-button view-player-btn" id='view-match-button' data-player-id=player.id)
                             td
                                 input(type='checkbox' data-player=player value=player.id)
 
