@@ -31,9 +31,9 @@ block content
             h3 Statistics
             p= statistics_x01.from + " to " + statistics_x01.to
         div(class='float-right container-icon-arrow')
-            i(class="fas fa-arrow-circle-right" id='next-btn' data-toggle="tooltip" data-placement="top" title="Next week")
+            i(class="fas fa-arrow-circle-right" id='next-btn' data-toggle="tooltip" data-placement="top" title="Next week" data-current-date=statistics_x01.to)
         div(class='float-right container-icon-arrow')
-            i(class="fas fa-arrow-circle-left" id='previous-btn' data-toggle="tooltip" data-placement="top" title="Previous week")
+            i(class="fas fa-arrow-circle-left" id='previous-btn' data-toggle="tooltip" data-placement="top" title="Previous week" data-current-date=statistics_x01.from)
 
     if statistics_x01.length === 0
         div(class='block-container-red') X01 - no legs played   
