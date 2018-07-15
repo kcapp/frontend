@@ -89,10 +89,10 @@ block content
         div(id='compare-players-alert' class='alert alert-danger pt-20' role='alert' hidden='true').
             Select at least one player to use for comparison
 
-        div(class='block-container-header') 
+        div(class='block-container-header' data-toggle="collapse" data-target="#players-options" aria-expanded="false" aria-controls="collapseExample") 
             i(class="fas fa-cogs") 
             span(class='ml-10') Options
-        div(class='block-container-with-header' id='players-options')
+        div(class='block-container-with-header' id='players-options' class="collapse")
             button(type='button' class='btn btn-primary' id='compare-players-button')
                 i(class="fas fa-user-friends") 
                 span(class='ml-10') Compare Players
