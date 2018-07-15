@@ -290,8 +290,29 @@ block append scripts
         });
 
 block content
-    div(class='clearfix')
-        h2(style='margin-bottom: 5px;' class='pull-left') Leg Result (#{leg.id})
+    div(class='pt-20')
+    div(class='block-container') 
+        div(class='container-info-icon')
+            i(class="fas fa-crosshairs")
+        div(class='float-left pl-20')
+            h3 Leg Result (#{leg.id})
+            div
+                div(class='float-left' style='width: 250px;')
+                    p(style='padding-top: 5px;')
+                        i(class="fas fa-clock") 
+                        span(class='ml-5') Started #{moment(leg.created_at).format('YYYY-MM-DD HH:mm:ss')}
+                    p(style='padding-top: 3px;')
+                        i(class="fas fa-clock") 
+                        span(class='ml-5') Finished #{leg.end_time === null ? '' : moment(leg.end_time).format('YYYY-MM-DD HH:mm:ss')}
+                div(class='float-left' style='width: 250px;')
+                    p(style='padding-top: 3px;')
+                        i(class="fas fa-bullseye") 
+                        span(class='ml-5') Duration #{leg.end_time === null ? '' : moment.duration(moment(leg.end_time).diff(leg.visits[0].created_at)).asMinutes().toFixed() + ' minutes'}
+                    p(style='padding-top: 3px;')
+                        i(class="fas fa-play") 
+                        span(class='ml-5') Rounds: #{Math.ceil(leg.visits.length / leg.players.length)}
+            div(style='clear: both; padding-top: 5px; color: #c7c7c7;')
+                p Starting score was #{leg.starting_score}, and a total of #{leg.darts_thrown ? leg.darts_thrown : 0} darts were thrown by #{leg.players.length} players
 
         div(class='pull-right' style='padding-top: 20px;')
             if match.is_finished
@@ -299,100 +320,132 @@ block content
             else
                 button(type='button' class='btn btn-primary pull-right mt-30' id='continue-match' data-match=match.id) Continue Match
 
-    p.
-        Started: #{moment(leg.created_at).format('YYYY-MM-DD HH:mm:ss')} <br>
-        Finished: #{leg.end_time === null ? '' : moment(leg.end_time).format('YYYY-MM-DD HH:mm:ss')} <br>
-        Duration: #{leg.end_time === null ? '' : moment.duration(moment(leg.end_time).diff(leg.visits[0].created_at)).asMinutes().toFixed() + ' minutes'} <br>
-        Rounds: #{Math.ceil(leg.visits.length / leg.players.length)}
+            - var isFinished = leg.winner_player_id !== null
+            if isFinished
+                div(class='btn-group')
+                    button(type='button' class='btn btn-primary') Options
+                    button(type='button' class='btn btn-primary btn-blcok dropdown-toggle' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false')
+                        span(class='caret')
+                        span(class='sr-only')
+                    ul(class='dropdown-menu')
+                        block advanced_options
+                            li: a(id='button-rematch') Rematch
+                            li(role='separator' class='divider')
+                            li: a(id='button-undo-finish') Undo Leg Finish
 
-    - var isFinished = leg.winner_player_id !== null
-    if isFinished
-        div(class='btn-group')
-            button(type='button' class='btn btn-primary') Options
-            button(type='button' class='btn btn-primary btn-blcok dropdown-toggle' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false')
-                span(class='caret')
-                span(class='sr-only')
-            ul(class='dropdown-menu')
-                block advanced_options
-                    li: a(id='button-rematch') Rematch
-                    li(role='separator' class='divider')
-                    li: a(id='button-undo-finish') Undo Leg Finish
 
-    if isFinished
-        table(style='width: 100%; table-layout: fixed;')
-            tbody
-                tr
-                    each statistic in stats
-                        - var player = players[statistic.player_id]
-                        td(class='text-center')
-                            - var dartsThrown = 0
-                            - var isWinner = statistic.player_id === leg.winner_player_id
-                            +player_statistics_card('player-card', player, statistic, isWinner, statistic.darts_thrown, player.starting_score)
-    h3 Leg Results
-    p.
-        Starting score was #{leg.starting_score}, and a total of #{leg.darts_thrown ? leg.darts_thrown : 0} darts were thrown by #{leg.players.length} players
+    div(class='block-container-options') 
+        div(class='float-left icon')
+            div 
+                a(href='#summary' data-toggle='tab')
+                    i(class="fas fa-signal") 
+                    div(class='undertext') Summary
+        div(class='float-left icon')
+            div 
+                a(href='#visits' data-toggle='tab')
+                    i(class="fas fa-arrow-alt-circle-up") 
+                    div(class='undertext') Visits            
+        div(class='float-left icon')
+            div 
+                a(href='#stats' data-toggle='tab')
+                    i(class="fas fa-flag-checkered") 
+                    div(class='undertext') Stats 
 
-    if isFinished
-        button(id='btn-collapse-visits' class='btn btn-primary btn-block' data-toggle='collapse' data-target='#visits-div')= isFinished ? 'Show Visits' : 'Hide Visits'
-    div(id='visits-div' class=isFinished ? 'collapse' : 'collapse in')
-        table(class='table' id='table-leg-visits')
-            thead
-                tr
-                    th Player
-                    th First Dart
-                    th Second Dart
-                    th Third Dart
-                    th Total
-                    th Remaining
-                    th Thrown
-                    th PPD
-                    if !isFinished
-                        th(class='text-center') Options
-            tbody
-                each visit in leg.visits
-                    - var visit_score = (visit.first_dart.value * visit.first_dart.multiplier) + (visit.second_dart.value * visit.second_dart.multiplier) + (visit.third_dart.value * visit.third_dart.multiplier)
-                    tr(id='visit-' + visit.id)
-                        td= players[visit.player_id].name
-
-                        +dart_container(visit.first_dart.value, visit.first_dart.multiplier, 'first-dart-visit-' + visit.id, true)
-                        +dart_container(visit.second_dart.value, visit.second_dart.multiplier, 'second-dart-visit-' + visit.id, true)
-                        +dart_container(visit.third_dart.value, visit.third_dart.multiplier, 'third-dart-visit-' + visit.id, true)
-
-                        td(class='total-visit-score-' + visit.id): label= visit_score
-                        td: label= visit.scores
-                        td= visit.darts_thrown
-                        td(class='visit-ppd-' + visit.id)= (visit_score / 3).toFixed(2)
-                        if !isFinished
-                            td(class='text-center')
-                                button(type="button" class="btn btn-default edit-visit" data-visit=visit.id data-issave='0')
-                                    span(class="glyphicon glyphicon-edit" aria-hidden="true")
-                                button(type="button" class="btn btn-default delete-visit" data-visit=visit.id)
-                                    span(class="glyphicon glyphicon-trash" aria-hidden="true")
-    br
-    - var checkouts = leg.checkout_statistics
-    if checkouts.checkout_attempts
-        button(id='btn-collapse-checkouts' class='btn btn-primary btn-block' data-toggle='collapse' data-target='#checkouts-div') Show Checkouts
-        div(id='checkouts-div' class='collapse')
-            h3 Checkout Attempts
-            div(class='table-responsive')
-                table(id='table-leg-checkouts' class='table')
-                    thead
-                        tr
-                            th Dart
-                            th Count
-                            th Attempt %
-                            th Actual
+    div(class='tab-content')
+        div(role='tabpanel' id='summary' class='tab-pane active') 
+            if isFinished
+                table(style='width: 100%; table-layout: fixed;')
                     tbody
-                        each count, value in checkouts.checkout_attempts
+                        tr
+                            each statistic in stats
+                                - var player = players[statistic.player_id]
+                                td(class='text-center' style='padding: 10px;')
+                                    div
+                                        - var dartsThrown = 0
+                                        - var isWinner = statistic.player_id === leg.winner_player_id
+                                        +player_summary_card(player, statistic, isWinner, statistic.darts_thrown, player.starting_score)
+
+        div(role='tabpanel' id='visits' class='tab-pane') 
+            table(class='table' id='table-leg-visits')
+                thead
+                    tr
+                        th Player
+                        th First Dart
+                        th Second Dart
+                        th Third Dart
+                        th Total
+                        th Remaining
+                        th Thrown
+                        th PPD
+                        if !isFinished
+                            th(class='text-center') Options
+                tbody
+                    each visit in leg.visits
+                        - var visit_score = (visit.first_dart.value * visit.first_dart.multiplier) + (visit.second_dart.value * visit.second_dart.multiplier) + (visit.third_dart.value * visit.third_dart.multiplier)
+                        tr(id='visit-' + visit.id)
+                            td= players[visit.player_id].name
+
+                            +dart_container(visit.first_dart.value, visit.first_dart.multiplier, 'first-dart-visit-' + visit.id, true)
+                            +dart_container(visit.second_dart.value, visit.second_dart.multiplier, 'second-dart-visit-' + visit.id, true)
+                            +dart_container(visit.third_dart.value, visit.third_dart.multiplier, 'third-dart-visit-' + visit.id, true)
+
+                            td(class='total-visit-score-' + visit.id): label= visit_score
+                            td: label= visit.scores
+                            td= visit.darts_thrown
+                            td(class='visit-ppd-' + visit.id)= (visit_score / 3).toFixed(2)
+                            if !isFinished
+                                td(class='text-center')
+                                    button(type="button" class="btn btn-default edit-visit" data-visit=visit.id data-issave='0')
+                                        span(class="glyphicon glyphicon-edit" aria-hidden="true")
+                                    button(type="button" class="btn btn-default delete-visit" data-visit=visit.id)
+                                        span(class="glyphicon glyphicon-trash" aria-hidden="true")
+
+
+        div(role='tabpanel' id='stats' class='tab-pane') 
+            - var checkouts = leg.checkout_statistics
+            if checkouts.checkout_attempts
+                div
+                    h3 Checkout Attempts
+                    div(class='table-responsive')
+                        table(id='table-leg-checkouts' class='table')
+                            thead
+                                tr
+                                    th Dart
+                                    th Count
+                                    th Attempt %
+                                    th Actual
+                            tbody
+                                each count, value in checkouts.checkout_attempts
+                                    tr
+                                        +dart_container(value / 2, 2)
+                                        td= count
+                                        td= (count * 100 / checkouts.count).toFixed(2) + '%'
+                                        if value == checkouts.checkout
+                                            td: span(class='glyphicon glyphicon-ok' aria-hidden='true')
+                                        else
+                                            td
+            div(class='block-container')
+                h3 Scores
+                canvas(id='canvas-scores')
+
+            div(id='hits-div')
+                h3 Hits
+                div(class='table-responsive')
+                    table(id='leg-hits-table' class='table')
+                        thead
                             tr
-                                +dart_container(value / 2, 2)
-                                td= count
-                                td= (count * 100 / checkouts.count).toFixed(2) + '%'
-                                if value == checkouts.checkout
-                                    td: span(class='glyphicon glyphicon-ok' aria-hidden='true')
-                                else
-                                    td
-    br
+                                th Dart
+                                th Count
+                                th Hit %
+                        tbody
+                            each score, key in leg.hits
+                                each count, multiplier in leg.hits[key]
+                                    if count !== 0
+                                        tr
+                                            +dart_container(key, multiplier)
+                                            td= count
+                                            td= (count * 100 / leg.darts_thrown).toFixed(2) + '%'
+
     if !isFinished
         h3 Player Order
         div
@@ -402,38 +455,3 @@ block content
                         input(style='display: none;' type='checkbox' class='form-check-input' id='checkbox-player-' + players[id].id value=players[id].id)
                         label(style='margin-left: 10px; width: 160px;' class='player-name-label form-check-label btn btn-warning' for='checkbox-player-' + players[id].id)= players[id].name
             button(type='submit' name='submit' style='margin-left: 10px' id='change-order-button' class='btn btn-primary') Change Order
-    div
-        h3 Scores
-        canvas(id='canvas-scores')
-    br
-    button(id='btn-collapse-heatmap' class='btn btn-primary btn-block' data-toggle='collapse' data-target='#heatmap-div') Show Heatmap
-    div(id='heatmap-div' class='collapse')
-        h3 Leg Heatmap
-        select(id='heatmap-value-selector' name='dartValues')
-            option(value=0 default=true) All
-            option(value=1) Singles
-            option(value=2) Doubles
-            option(value=3) Trebles
-        div(style='text-align: center;')
-            canvas(id='dartboard-heatmap')
-
-    br
-    button(id='btn-collapse-hits' class='btn btn-primary btn-block' data-toggle='collapse' data-target='#hits-div') Show Hits
-    div(id='hits-div' class='collapse')
-        h3 Hits
-        div(class='table-responsive')
-            table(id='leg-hits-table' class='table')
-                thead
-                    tr
-                        th Dart
-                        th Count
-                        th Hit %
-                tbody
-                    each score, key in leg.hits
-                        each count, multiplier in leg.hits[key]
-                            if count !== 0
-                                tr
-                                    +dart_container(key, multiplier)
-                                    td= count
-                                    td= (count * 100 / leg.darts_thrown).toFixed(2) + '%'
-    br

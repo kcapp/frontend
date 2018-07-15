@@ -16,6 +16,7 @@ body {
 .pl-20 {padding-left: 20px;}
 .no-padding {padding: 0px !important;}
 
+.ml-5 {margin-left: 5px;}
 .ml-10 {margin-left: 10px;}
 .ml-20 {margin-left: 20px;}
 
@@ -70,6 +71,19 @@ body {
     .round-border-4px;
     .block-container-header-common;
     background-color:#1ABC9C;
+    a {
+        color: white;
+    }
+}
+
+.block-container-header-center {
+    .round-border-4px;
+    .block-container-header-common;
+    text-align: center;
+    background-color:#1ABC9C;
+    a {
+        color: white;
+    }
 }
 
 .block-container-header-red {
@@ -90,6 +104,33 @@ body {
     -ms-border-radius: 0 0 4px 4px;
     -webkit-box-shadow: 0 1px 1px rgba(0,0,0,.05);
     box-shadow: 0 1px 1px rgba(0,0,0,.05);
+    overflow: hidden;
+    .info {
+        font-weight: 700;
+    }
+        .label-winner {
+        background-color: #337ab7;
+        color: white;
+        border-radius: 5px;
+        padding: 5px;
+        margin-top: 20px;
+    }
+    .label-loser {
+        //background-color: #000000;
+        //color: #fff;
+        border-radius: 5px;
+        padding: 5px;
+        margin-top: 20px;
+        font-weight: 700;
+    }
+}
+
+.block-container-mid {
+    background-color: #fff;
+    padding: 20px;
+    border-bottom: 1px solid #ebeff6;
+    -webkit-box-shadow: 0 1px 1px 1px rgba(0,0,0,.05);
+    box-shadow: 0 1px 1px 1px rgba(0,0,0,.05);
     overflow: hidden;
 }
 
@@ -115,9 +156,62 @@ body {
     }
 }
 
+.block-container-options {
+    background-color: #fff;
+    padding: 8px;
+    margin-bottom: 1em; 
+    border: 1px solid #ebeff6;
+    border-radius: 4px;
+    -webkit-border-radius: 4px;
+    -o-border-radius: 4px;
+    -moz-border-radius: 4px;
+    -ms-border-radius: 4px;
+    -webkit-box-shadow: 0 1px 1px rgba(0,0,0,.05);
+    box-shadow: 0 1px 1px rgba(0,0,0,.05);
+    overflow: hidden;
+    h3, p {
+        margin: 0px;
+        padding: 0px;
+    }
+    .icon {
+        width: 80px;
+        font-size: 18px;
+        color: #c7c7c7;
+        text-align: center;
+        .undertext {
+            font-size: 10pt;
+        }
+        a, a:active {
+            color: #c7c7c7;
+        }
+        a:hover {
+            color: #000;
+        }
+    }
+}
+
 .block-container-red {
     color: white;
     background-color: #D95459;
+    padding: 10px;
+    margin-bottom: 1em; 
+    border-radius: 4px;
+    -webkit-border-radius: 4px;
+    -o-border-radius: 4px;
+    -moz-border-radius: 4px;
+    -ms-border-radius: 4px;
+    -webkit-box-shadow: 0 1px 1px rgba(0,0,0,.05);
+    box-shadow: 0 1px 1px rgba(0,0,0,.05);
+    overflow: hidden;
+    h3, p {
+        margin: 0px;
+        padding: 0px;
+    }
+}
+
+.block-container-orange {
+    color: white;
+    background-color: #FFA800;
     padding: 10px;
     margin-bottom: 1em; 
     border-radius: 4px;
@@ -258,10 +352,37 @@ body {
     }
 }
 
+#player-comparison-table {
+    width: 100%;
+    thead {
+        th {
+            padding: 0px 5px;
+            text-align: center;
+        }
+        .block-container-header {
+            text-align: center;
+        }
+    }
+    tbody {
+        td {
+            padding: 0px 5px;
+        }
+        .block-container-mid {
+            text-align: center;
+        }
+        .block-container-with-header {
+            border: none;
+        }
+    }
+}
+
 .fas-option-button {
     font-size: 25px;
     color: #828282;
     vertical-align: middle;
+    &:hover {
+        color: black;
+    }
 }
 
 .container-icon-arrow {
@@ -318,8 +439,8 @@ body {
         font-weight: 300;
     }
     .fas {
-        color: #000;
-        font-size: 16px;
+        color: #828282;
+        font-size: 18px;
     }
 }
 
@@ -336,10 +457,6 @@ body {
         float: right;
         width: 150px;
     }
-}
-
-.table-responsive {
-    margin-bottom: 10px;
 }
 
 a:hover {
@@ -511,20 +628,6 @@ a:hover {
         font-weight: 300;
         border-radius: 3px;
     }
-}
-
-#player-comparison-table {
-    thead {
-        background-color: #efefef;
-        border-top: 2px solid #ddd;
-    }
-    tr:last-child {
-        border-bottom: 1px solid #efefef;
-    }
-    td:first-child {
-        text-align: left;
-    }
-    .center-table
 }
 
 #players-table {
@@ -888,15 +991,15 @@ a:hover {
     width: 100%;
     border: 0px;
     background-color: inherit;
+    text-align: center;
 }
 
 .player-card {
     margin: 0 auto;
     min-height: 200px;
-    width: 80%;
+    width: 90%;
     border: 3px solid #eee;
     border-radius: 5px;
-    padding: 20px;
     background-color: #f9f9f9;
     .playername {
         font-size: 15pt;
@@ -909,20 +1012,19 @@ a:hover {
         margin-bottom: 10px;
         border-top: 1px solid #cecece;
     }
-    .info {
-        font-weight: 700;
-    }
     .label-winner {
         background-color: #337ab7;
         color: white;
         border-radius: 5px;
         padding: 5px;
+        margin-top: 20px;
     }
     .label-loser {
-        background-color: #000000;
-        color: #fff;
+        //background-color: #000000;
+        //color: #fff;
         border-radius: 5px;
         padding: 5px;
+        margin-top: 20px;
     }
 }
 
