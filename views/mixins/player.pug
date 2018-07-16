@@ -31,7 +31,7 @@ mixin player_statistics_card(clazz, player, statistics, isWinner = false, dartsT
 
         div(class='info') 
             div(style='text-align: center;')
-                table(style='width: 100%;' id='scores-badges')
+                table(style='margin: 0 auto' id='scores-badges')
                     tr
                         td
                             span= '60+' 
@@ -113,23 +113,25 @@ mixin player_summary_card(player, statistics, isWinner = false, dartsThrown, sta
                 div= '- / ' + (statistics.checkout_attempts ? statistics.checkout_attempts : 0)
 
         div(class='info') 
-            div(style='width: 50%; margin: 0 auto;')
-                div(class='float-left' style='padding-right: 4px;')
-                    div= "60+ " 
-                    div
-                        span(class="badge badge-pill badge-success")= statistics.scores_60s_plus
-                div(class='float-left' style='padding-right: 4px;')
-                    div= "100+ " 
-                    div
-                        span(class="badge badge-pill badge-success")= statistics.scores_100s_plus
-                div(class='float-left' style='padding-right: 4px;')
-                    div= "140+ " 
-                    div
-                        span(class="badge badge-pill badge-success")= statistics.scores_140s_plus
-                div(class='float-left' style='padding-right: 4px;')
-                    div= "180+ " 
-                    div
-                        span(class="badge badge-pill badge-success")= statistics.scores_180s
+            div(style='text-align: center;')
+                table(style='margin: 0 auto' id='scores-badges')
+                    tr
+                        td
+                            span= '60+' 
+                            br
+                            span(class="badge badge-pill badge-success")= ' ' + statistics.scores_60s_plus 
+                        td
+                            span= '100+'
+                            br
+                            span(class="badge badge-pill badge-success")= ' ' + statistics.scores_100s_plus
+                        td
+                            span= '140+'
+                            br
+                            span(class="badge badge-pill badge-success")= ' ' + statistics.scores_140s_plus
+                        td
+                            span= '180'
+                            br
+                            span(class="badge badge-pill badge-success")= ' ' + statistics.scores_180s
             
         div(style='clear: both;')
 
