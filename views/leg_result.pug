@@ -366,85 +366,92 @@ block content
                                         +player_summary_card(player, statistic, isWinner, statistic.darts_thrown, player.starting_score)
 
         div(role='tabpanel' id='visits' class='tab-pane') 
-            table(class='table' id='table-leg-visits')
-                thead
-                    tr
-                        th Player
-                        th First Dart
-                        th Second Dart
-                        th Third Dart
-                        th Total
-                        th Remaining
-                        th Thrown
-                        th PPD
-                        if !isFinished
-                            th(class='text-center') Options
-                tbody
-                    each visit in leg.visits
-                        - var visit_score = (visit.first_dart.value * visit.first_dart.multiplier) + (visit.second_dart.value * visit.second_dart.multiplier) + (visit.third_dart.value * visit.third_dart.multiplier)
-                        tr(id='visit-' + visit.id)
-                            td= players[visit.player_id].name
-
-                            +dart_container(visit.first_dart.value, visit.first_dart.multiplier, 'first-dart-visit-' + visit.id, true)
-                            +dart_container(visit.second_dart.value, visit.second_dart.multiplier, 'second-dart-visit-' + visit.id, true)
-                            +dart_container(visit.third_dart.value, visit.third_dart.multiplier, 'third-dart-visit-' + visit.id, true)
-
-                            td(class='total-visit-score-' + visit.id): label= visit_score
-                            td: label= visit.scores
-                            td= visit.darts_thrown
-                            td(class='visit-ppd-' + visit.id)= (visit_score / 3).toFixed(2)
+            div(class='block-container no-padding')
+                table(class='table' id='table-leg-visits')
+                    thead
+                        tr
+                            th Player
+                            th(class='text-center') First Dart
+                            th(class='text-center') Second Dart
+                            th(class='text-center') Third Dart
+                            th(class='text-center') Total
+                            th(class='text-center') Remaining
+                            th(class='text-center') Thrown
+                            th(class='text-center') PPD
                             if !isFinished
-                                td(class='text-center')
-                                    button(type="button" class="btn btn-default edit-visit" data-visit=visit.id data-issave='0')
-                                        span(class="glyphicon glyphicon-edit" aria-hidden="true")
-                                    button(type="button" class="btn btn-default delete-visit" data-visit=visit.id)
-                                        span(class="glyphicon glyphicon-trash" aria-hidden="true")
+                                th(class='text-center') Options
+                    tbody
+                        each visit in leg.visits
+                            - var visit_score = (visit.first_dart.value * visit.first_dart.multiplier) + (visit.second_dart.value * visit.second_dart.multiplier) + (visit.third_dart.value * visit.third_dart.multiplier)
+                            tr(id='visit-' + visit.id)
+                                td= players[visit.player_id].name
+
+                                +dart_container(visit.first_dart.value, visit.first_dart.multiplier, 'first-dart-visit-' + visit.id, true)
+                                +dart_container(visit.second_dart.value, visit.second_dart.multiplier, 'second-dart-visit-' + visit.id, true)
+                                +dart_container(visit.third_dart.value, visit.third_dart.multiplier, 'third-dart-visit-' + visit.id, true)
+
+                                td(class='text-center total-visit-score-' + visit.id): label= visit_score
+                                td(class='text-center'): label= visit.scores
+                                td(class='text-center')= visit.darts_thrown
+                                td(class='text-center visit-ppd-' + visit.id)= (visit_score / 3).toFixed(2)
+                                if !isFinished
+                                    td(class='text-center')
+                                        button(type="button" class="btn btn-default edit-visit" data-visit=visit.id data-issave='0')
+                                            span(class="glyphicon glyphicon-edit" aria-hidden="true")
+                                        button(type="button" class="btn btn-default delete-visit" data-visit=visit.id)
+                                            span(class="glyphicon glyphicon-trash" aria-hidden="true")
 
 
         div(role='tabpanel' id='stats' class='tab-pane') 
-            - var checkouts = leg.checkout_statistics
-            if checkouts.checkout_attempts
-                div
-                    h3 Checkout Attempts
-                    div(class='table-responsive')
-                        table(id='table-leg-checkouts' class='table')
-                            thead
-                                tr
-                                    th Dart
-                                    th Count
-                                    th Attempt %
-                                    th Actual
-                            tbody
-                                each count, value in checkouts.checkout_attempts
-                                    tr
-                                        +dart_container(value / 2, 2)
-                                        td= count
-                                        td= (count * 100 / checkouts.count).toFixed(2) + '%'
-                                        if value == checkouts.checkout
-                                            td: span(class='glyphicon glyphicon-ok' aria-hidden='true')
-                                        else
-                                            td
-            div(class='block-container')
-                h3 Scores
-                canvas(id='canvas-scores')
-
-            div(id='hits-div')
-                h3 Hits
-                div(class='table-responsive')
-                    table(id='leg-hits-table' class='table')
-                        thead
-                            tr
-                                th Dart
-                                th Count
-                                th Hit %
-                        tbody
-                            each score, key in leg.hits
-                                each count, multiplier in leg.hits[key]
-                                    if count !== 0
+            div(style='float: left; width: 61%;')
+                div(class='block-container-header')= 'Checkout attempts'
+                div(class='block-container')
+                    - var checkouts = leg.checkout_statistics
+                    if checkouts.checkout_attempts
+                        div
+                            div(class='table-responsive')
+                                table(id='table-leg-checkouts' class='table')
+                                    thead
                                         tr
-                                            +dart_container(key, multiplier)
-                                            td= count
-                                            td= (count * 100 / leg.darts_thrown).toFixed(2) + '%'
+                                            th Dart
+                                            th(class='text-center') Count
+                                            th(class='text-center') Attempt %
+                                            th(class='text-center') Actual
+                                    tbody
+                                        each count, value in checkouts.checkout_attempts
+                                            tr
+                                                +dart_container(value / 2, 2)
+                                                td(class='no-border text-center')= count
+                                                td(class='no-border text-center')= (count * 100 / checkouts.count).toFixed(2) + '%'
+                                                if value == checkouts.checkout
+                                                    td(class='no-border text-center'): span(class='glyphicon glyphicon-ok' aria-hidden='true')
+                                                else
+                                                    td(class='no-border text-center')
+            
+            div(style='float: right; width: 37%;')
+                div(class='block-container-header')= 'Hits'
+                div(class='block-container-with-header')
+                    div(id='hits-div')
+                        div(class='table-responsive')
+                            table(id='leg-hits-table' class='table')
+                                thead
+                                    tr
+                                        th Dart
+                                        th Count
+                                        th Hit %
+                                tbody
+                                    each score, key in leg.hits
+                                        each count, multiplier in leg.hits[key]
+                                            if count !== 0
+                                                tr
+                                                    +dart_container(key, multiplier)
+                                                    td(class='no-border text-center')= count
+                                                    td(class='no-border text-center')= (count * 100 / leg.darts_thrown).toFixed(2) + '%'
+
+            div(style='float: left; width: 61%;')
+                div(class='block-container-header')= 'Scores'
+                div(class='block-container')
+                    canvas(id='canvas-scores')
 
     if !isFinished
         h3 Player Order

@@ -31,14 +31,24 @@ mixin player_statistics_card(clazz, player, statistics, isWinner = false, dartsT
 
         div(class='info') 
             div(style='text-align: center;')
-                span= '60+' 
-                    span(class="badge badge-pill badge-success")= ' ' + statistics.scores_60s_plus 
-                span= '100+'
-                    span(class="badge badge-pill badge-success")= ' ' + statistics.scores_100s_plus
-                span= '140+'
-                    span(class="badge badge-pill badge-success")= ' ' + statistics.scores_140s_plus
-                span= '180'
-                    span(class="badge badge-pill badge-success")= ' ' + statistics.scores_180s
+                table(style='width: 100%;' id='scores-badges')
+                    tr
+                        td
+                            span= '60+' 
+                            br
+                            span(class="badge badge-pill badge-success")= ' ' + statistics.scores_60s_plus 
+                        td
+                            span= '100+'
+                            br
+                            span(class="badge badge-pill badge-success")= ' ' + statistics.scores_100s_plus
+                        td
+                            span= '140+'
+                            br
+                            span(class="badge badge-pill badge-success")= ' ' + statistics.scores_140s_plus
+                        td
+                            span= '180'
+                            br
+                            span(class="badge badge-pill badge-success")= ' ' + statistics.scores_180s
 
         div(style='clear: both;')
 

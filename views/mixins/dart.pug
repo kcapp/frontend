@@ -20,8 +20,8 @@ mixin dart_label(value, multiplier, id)
 //- Mixin for creating a <label> inside a <td> displaying a dart thrown
 mixin dart_container(value, multiplier, id, addSelector, clazz)
     - var labelID = id === undefined ? undefiend : id + '-label';
-
-    td(id=id class='col-sm-2 dart-score-container no-border' data-order=value + multiplier data-multiplier=multiplier data-score=value)
+    
+    td(id=id class='dart-score-container no-border' data-order=value + multiplier data-multiplier=multiplier data-score=value)
         +dart_label(value, multiplier, labelID)
         if (addSelector)
             +dart_selector(id)

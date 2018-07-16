@@ -63,11 +63,19 @@ block content
             thead
                 tr
                     th(hidden=true)
-                    th(class='text-left') Start Time
-                    th Venue
-                    th Type
+                    th(class='text-left') 
+                        i(class="fas fa-clock") 
+                        span(class='ml-10') Start Time
+                    th
+                        i(class="fas fa-location-arrow") 
+                        span(class='ml-10') Venue
+                    th 
+                        i(class="fas fa-expand") 
+                        span(class='ml-10') Type
                     th Mode
-                    th(class='text-left') Players
+                    th(class='text-left')
+                        i(class="fas fa-users") 
+                        span(class='ml-10') Players
                     th(class='text-center') Results
             tbody
                 each match in matches

@@ -228,20 +228,6 @@ body {
     }
 }
 
-#table-leg-visits {
-    tr {
-        border-bottom: 1px solid #ddd;
-    }
-    td {
-        height: 40px;
-    }
-    label {
-        display: block;
-        margin-bottom: 0px;
-    }
-    .center-table
-}
-
 #players-table {
     width: 100%;
     thead {
@@ -312,7 +298,8 @@ body {
     }
 }
 
-#table-matches-list {
+#table-matches-list,
+#table-leg-visits {
     width: 100%;
     tr {
         height: 40px;
@@ -342,13 +329,19 @@ body {
     }
     .label-secondary {
         margin-right: 1px;
-        background-color: #1ABC9C;
+        background-color: rgb(0, 73, 59);
         font-weight: 700;
     }
     .label-success {
         margin-right: 1px;
         background-color: #007cff;
         font-weight: 700;
+    }
+}
+
+#scores-badges {
+    .badge {
+        min-width: 40px;
     }
 }
 
@@ -498,17 +491,15 @@ a:hover {
 }
 
 .dart-score-container {
-    td {
-        padding: 3px;
-    }
+    text-align: center;
     label {
-        min-width: 50px;
+        min-width: 150px;
         color: #fff;
-        line-height: 2;
-        font-size: 15pt;
         border-radius: 3px;
-        font-size: 12pt;
+        font-size: 10pt;
         font-weight: 300;
+        padding: 3px 0px;
+        margin: 0px;
     }
 }
 
@@ -661,6 +652,11 @@ a:hover {
         display: block;
     }
     .center-table
+    tbody {
+        td {
+            border-top: none;
+        }
+    }
 }
 
 .uv-table-players {
@@ -855,12 +851,6 @@ a:hover {
 .pagination {
     margin-top: 0px;
     margin-bottom: 5px;
-}
-
-.dart-score-container {
-    label {
-        min-height: 32px;
-    }
 }
 
 #table-player,
