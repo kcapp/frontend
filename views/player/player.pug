@@ -151,8 +151,8 @@ block content
     div(class='block-container') 
         div(class='float-left')
             div(class='player-pic-cutout')
-                img(src='https://images.pexels.com/photos/257360/pexels-photo-257360.jpeg?auto=compress&cs=tinysrgb&h=350' style='width: 98px; height: 130px;')
-                //+get_player_profile_pic(player)
+                //dummy image img(src='https://images.pexels.com/photos/257360/pexels-photo-257360.jpeg?auto=compress&cs=tinysrgb&h=350' style='width: 98px; height: 130px;')
+                +get_player_profile_pic(player)
         div(class='float-left pl-20') 
             h2= player.name
             h4(style='color: #a5a5a5;')= player.nickname ? player.nickname : '-'
