@@ -290,6 +290,7 @@ block append scripts
         });
 
 block content
+    - var isFinished = leg.winner_player_id !== null
     div(class='pt-20')
     div(class='block-container') 
         div(class='container-info-icon')
@@ -314,26 +315,6 @@ block content
             div(style='clear: both; padding-top: 5px; color: #c7c7c7;')
                 p Starting score was #{leg.starting_score}, and a total of #{leg.darts_thrown ? leg.darts_thrown : 0} darts were thrown by #{leg.players.length} players
 
-        div(class='pull-right' style='padding-top: 20px;')
-            if match.is_finished
-                button(type='button' class='btn btn-primary pull-right mt-30' id='back-to-match' data-match=leg.match_id) Back to Match
-            else
-                button(type='button' class='btn btn-primary pull-right mt-30' id='continue-match' data-match=match.id) Continue Match
-
-            - var isFinished = leg.winner_player_id !== null
-            if isFinished
-                div(class='btn-group')
-                    button(type='button' class='btn btn-primary') Options
-                    button(type='button' class='btn btn-primary btn-blcok dropdown-toggle' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false')
-                        span(class='caret')
-                        span(class='sr-only')
-                    ul(class='dropdown-menu')
-                        block advanced_options
-                            li: a(id='button-rematch') Rematch
-                            li(role='separator' class='divider')
-                            li: a(id='button-undo-finish') Undo Leg Finish
-
-
     div(class='block-container-options') 
         div(class='float-left icon')
             div 
@@ -350,6 +331,24 @@ block content
                 a(href='#stats' data-toggle='tab')
                     i(class="fas fa-flag-checkered") 
                     div(class='undertext') Stats 
+        div(class='float-right icon')
+                a(id='button-rematch')
+                    i(class="fas fa-sync") 
+                    div(class='undertext') Rematch 
+        div(class='float-right icon')
+                a(id='button-undo-finish')
+                    i(class="fas fa-sync") 
+                    div(class='undertext') Undo leg finish 
+        if match.is_finished
+            div(class='float-right icon')
+                a(id='back-to-match' data-match=leg.match_id)
+                    i(class="fas fa-caret-square-left") 
+                    div(class='undertext') Back to match
+        else
+            div(class='float-right icon')
+                a(id='continue-match' data-match=match.id)
+                    i(class="fas fa-caret-square-left") 
+                    div(class='undertext') Continue match
 
     div(class='tab-content')
         div(role='tabpanel' id='summary' class='tab-pane active') 
