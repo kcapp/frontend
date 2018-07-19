@@ -19,3 +19,39 @@ function getChartConfig(title, type, xAxisLabel, yAxisLabel, lables, datasets) {
     }
     return config;
 }
+
+function getDoughnutPercentageChartConfig(value, chartTitle) {
+    var fillValue = 100 - value;
+    var config = {
+        type: 'doughnut',
+        data: {
+            datasets: [{
+                data: [
+                    value,
+                    fillValue,
+                ],
+                backgroundColor: [
+                    '#4daea8',
+                    '#bbc3d4',
+                ]
+            }],
+            labels: []
+        },
+        options: {
+            responsive: true,
+            legend: {
+                position: 'top',
+            },
+            title: {
+                display: true,
+                text: chartTitle
+            },
+            animation: {
+                animateScale: true,
+                animateRotate: true
+            }
+        }
+    };
+
+    return config;
+}
