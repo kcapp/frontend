@@ -60,9 +60,20 @@ body {
     }
 }
 
-.label-fat-18-grey {font-size: 18pt; font-weight: 700; color: #949494;}
-.label-fat-33 {font-size: 33pt; font-weight: 700; color: #000;}
+.keyinfo {
+    min-width: 22%;
+    .float-left;
+}
+
+.label-fat-18-grey {font-size: 18pt; font-weight: 700; color: #949494; text-transform: uppercase;}
 .label-fat-21-grey {font-size: 21px; font-weight: 700; color: #949494; text-transform: uppercase;}
+.label-fat-33 {font-size: 33pt; font-weight: 700; color: #000;}
+.label-fat-25 {font-size: 25pt; font-weight: 700; color: #000;}
+
+
+.width25prc {
+    min-width: 25%;
+}
 
 .width33prc {
     min-width: 33%;
@@ -414,6 +425,8 @@ body {
 
 #table-matches-list,
 #table-leg-visits {
+    margin-top: 0px !important;
+    padding-top: 0px !important;
     width: 100%;
     tr {
         height: 40px;
@@ -451,6 +464,57 @@ body {
         background-color: #007cff;
         font-weight: 700;
     }
+}
+
+#table-player-profile-hits,
+#table-player-profile-visits {
+    margin-top: 0px !important;
+    padding-top: 0px !important;
+    width: 100%;
+    tr {
+        height: 40px;
+        border-bottom: 1px solid #e9e9e9;
+        padding: 10px;
+    }
+    thead {
+        tr:nth-child(1) {
+            .block-container-header;
+        }
+        text-transform: uppercase;
+    }
+    .text-right {
+        text-align: right;
+        padding-right: 10px;
+    }
+    .text-center {
+        text-align: center;
+        padding-left: 20px;
+    }
+    .text-left {
+        text-align: left;
+        padding-left: 20px;
+    }
+    .label-secondary {
+        margin-right: 1px;
+        background-color: rgb(0, 73, 59);
+        font-weight: 700;
+    }
+    .label-success {
+        margin-right: 1px;
+        background-color: #007cff;
+        font-weight: 700;
+    }
+    .dart-score-container {
+        padding-left: 10px;
+        padding-top: 10px;
+    }
+}
+
+
+#table-player-profile-hits_paginate,
+#table-player-profile-visits_paginate {
+    margin-right: 20px;
+    margin-bottom: 20px;
 }
 
 #scores-badges {

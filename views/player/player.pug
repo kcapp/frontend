@@ -16,12 +16,12 @@ block scripts
         include ../chart/chart_helper.js
     script.
         $(function () {
-            $('#table-player-hits').DataTable({
+            $('#table-player-profile-hits').DataTable({
                 searching: false, bInfo : false, bLengthChange: false,
                 pageLength: 15,
                 order: [[ 1,  'desc' ]]
             });
-            $('#table-player-visits').DataTable({
+            $('#table-player-profile-visits').DataTable({
                 searching: false, bInfo : false, bLengthChange: false,
                 pageLength: 15,
                 order: [[ 3,  'desc' ]],
@@ -206,15 +206,18 @@ block content
 
             div(role='tabpanel' id='overview' class='tab-pane active')
                 div(class='block-container')
-                    div(class='width33prc float-left')
+                    div(class='keyinfo')
                         div(class='label-fat-18-grey') FIRST 9 PPD
-                        div(class='label-fat-33')= statistics.first_nine_ppd.toFixed(2)
-                    div(class='width33prc float-left')
+                        div(class='label-fat-25')= statistics.first_nine_ppd.toFixed(2)
+                    div(class='keyinfo')
                         div(class='label-fat-18-grey') OVERALL PPD
-                        div(class='label-fat-33')= statistics.ppd.toFixed(2)
-                    div(class='width33prc float-left')
-                        div(class='label-fat-18-grey') CHECKOUT PERCENTAGE
-                        div(class='label-fat-33')= statistics.checkout_percentage === null ? '-' : statistics.checkout_percentage.toFixed(2) + '%'
+                        div(class='label-fat-25')= statistics.ppd.toFixed(2)
+                    div(class='keyinfo')
+                        div(class='label-fat-18-grey') CHECKOUT %
+                        div(class='label-fat-25')= statistics.checkout_percentage === null ? '-' : statistics.checkout_percentage.toFixed(2) + '%'
+                    div(class='keyinfo')
+                        div(class='label-fat-18-grey') HIGHEST CHECKOUT
+                        div(class='label-fat-25')= statistics.highest_checkout.value
 
                 div(class='divide-double')
                     div(class='divide-double-first')
@@ -299,55 +302,57 @@ block content
                         td(class='olabel') Best 501
                         td(class='olabel') Best 701
 
-            div(role='tabpanel' id='hits' class='tab-pane block-container')
-                if statistics.hits
-                    table(id='table-player-hits')
-                        thead
-                            tr
-                                th Dart
-                                th Count
-                                th Hit %
-                                th Per Visit
-                                th Per Leg
-                                th Per Match
-                        tbody
-                                each score, key in statistics.hits
-                                    each value, multiplier in statistics.hits[key]
-                                        tr
-                                            +dart_container(key, multiplier)
-                                            td= value
-                                            td= (value * 100 / statistics.darts_thrown).toFixed(2) + '%'
-                                            td= (value / statistics.total_visits).toFixed(2)
-                                            td= (value / player.legs_played).toFixed(2)
-                                            td= (value / player.matches_played).toFixed(2)
-                else
-                    div No data available
-    
-    
-            div(role='tabpanel' id='visits' class='tab-pane block-container')
-                if statistics.visits
-                    table(id='table-player-visits')
-                        thead
-                            tr
-                                th Vist
-                                th
-                                th
-                                th Count
-                                th Visit %
-                                th Per Leg
-                                th Per Match
-                        tbody
-                            each visit in statistics.visits
+            div(role='tabpanel' id='hits' class='tab-pane')
+                div(class='block-container no-padding')
+                    if statistics.hits
+                        table(id='table-player-profile-hits' style='margin: 0px; padding-top: 0px;')
+                            thead
                                 tr
-                                    +dart_container(visit.first_dart.value, visit.first_dart.multiplier)
-                                    +dart_container(visit.second_dart.value, visit.second_dart.multiplier)
-                                    +dart_container(visit.third_dart.value, visit.third_dart.multiplier)
-                                    td= visit.count
-                                    td= (visit.count * 100 / statistics.total_visits).toFixed(2) + '%'
-                                    td= (visit.count / player.legs_played).toFixed(2)
-                                    td= (visit.count / player.matches_played).toFixed(2)
-                else
-                    div No data available
+                                    th(class='text-center') Dart
+                                    th(class='text-center') Count
+                                    th(class='text-center') Hit %
+                                    th(class='text-center') Per Visit
+                                    th(class='text-center') Per Leg
+                                    th(class='text-center') Per Match
+                            tbody
+                                    each score, key in statistics.hits
+                                        each value, multiplier in statistics.hits[key]
+                                            tr
+                                                +dart_container(key, multiplier, 'first-dart-visit', true)
+                                                td(class='text-center')= value
+                                                td(class='text-center')= (value * 100 / statistics.darts_thrown).toFixed(2) + '%'
+                                                td(class='text-center')= (value / statistics.total_visits).toFixed(2)
+                                                td(class='text-center')= (value / player.legs_played).toFixed(2)
+                                                td(class='text-center')= (value / player.matches_played).toFixed(2)
+                    else
+                        div(class='block-container') No data available
+    
+    
+            div(role='tabpanel' id='visits' class='tab-pane')
+                div(class='block-container no-padding')
+                    if statistics.visits
+                        table(id='table-player-profile-visits' style='margin: 0px; padding-top: 0px;')
+                            thead
+                                tr
+                                    th(class='text-center') Vist
+                                    th
+                                    th
+                                    th(class='text-center') Count
+                                    th(class='text-center') Visit %
+                                    th(class='text-center') Per Leg
+                                    th(class='text-center') Per Match
+                            tbody
+                                each visit in statistics.visits
+                                    tr
+                                        +dart_container(visit.first_dart.value, visit.first_dart.multiplier)
+                                        +dart_container(visit.second_dart.value, visit.second_dart.multiplier)
+                                        +dart_container(visit.third_dart.value, visit.third_dart.multiplier)
+                                        td(class='text-center')= visit.count
+                                        td(class='text-center')= (visit.count * 100 / statistics.total_visits).toFixed(2) + '%'
+                                        td(class='text-center')= (visit.count / player.legs_played).toFixed(2)
+                                        td(class='text-center')= (visit.count / player.matches_played).toFixed(2)
+                    else
+                        div(class='block-container') No data available
 
             div(role='tabpanel' id='checkouts' class='tab-pane block-container')
                 table(id='table-checkouts')
