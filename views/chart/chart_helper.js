@@ -69,8 +69,8 @@ function getPolarChartConfig(value1, value2, chartTitle1, chartTitle2, canvasTit
                     value2
                 ],
                 backgroundColor: [
-                    '#4daea8',
-                    '#bbc3d4',
+                    'rgba(77, 174, 168, 0.5)',
+                    'rgba(77, 174, 168, 0.8)',
                 ]
             }
         ],

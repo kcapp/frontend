@@ -27,7 +27,7 @@ block scripts
                 order: [[ 3,  'desc' ]],
                 columnDefs: [ { targets: [ 0, 1, 2 ], orderable: false, searchable: false } ]
             });
-            $('#table-player-checkouts').DataTable({
+            $('#table-player-checkouts1').DataTable({
                 searching: false, bInfo : false, bLengthChange: false,
                 pageLength: 10,
                 order: [[ 0,  'asc' ]],
@@ -303,7 +303,7 @@ block content
                         td(class='olabel') Best 701
 
             div(role='tabpanel' id='hits' class='tab-pane')
-                div(class='block-container no-padding')
+                div(class='block-container no-padding no-border')
                     if statistics.hits
                         table(id='table-player-profile-hits' style='margin: 0px; padding-top: 0px;')
                             thead
@@ -354,72 +354,65 @@ block content
                     else
                         div(class='block-container') No data available
 
-            div(role='tabpanel' id='checkouts' class='tab-pane block-container')
-                table(id='table-checkouts')
-                    tr
-                        td(class='glyph')
-                            span(class='glyphicon glyphicon glyphicon-screenshot' aria-hidden='true')
-                        td(class='glyph')
-                            span(class="glyphicon glyphicon-screenshot" aria-hidden="true")
-                    tr
-                        td(class='number')= statistics.checkout_percentage === null ? '-' : statistics.checkout_percentage.toFixed(2) + '%'
-                        +best_statistics_td(statistics.highest_checkout, 'number')
-                    tr
-                        td(class='olabel') Checkout %
-                        td(class='olabel') Highest Checkout
+            div(role='tabpanel' id='checkouts' class='tab-pane')
                 table(id='table-player-checkouts')
                     thead
                         tr
-                            th Checkout
-                            th Done
-                            th Count
-                            th Checkouts
+                            th 
+                                div(class='block-container-header pl-20')
+                                    table(class='table-player-checkouts-header')
+                                        tr
+                                            td Checkout
+                                            td Done
+                                            td Count
+                                            td Visits
                     tbody
                         each checkout in checkouts
                             tr
-                                td= checkout.checkout
-                                if checkout.completed
-                                    td(data-order=1): span(class='glyphicon glyphicon-ok' aria-hidden='true')
-                                else
-                                    td(data-order=0): span(class='glyphicon glyphicon-remove' aria-hidden='true')
-                                td= checkout.count
-                                if checkout.visits
-                                    td(width='70%')
-                                        table(id='table-player-checkouts-details')
-                                            thead
-                                                tr
-                                                    th(colspan='3') Visits
-                                                    th Count
-                                            tbody
-                                                each visit in checkout.visits
-                                                    tr
-                                                        +dart_container(visit.first_dart.value, visit.first_dart.multiplier)
-                                                        +dart_container(visit.second_dart.value, visit.second_dart.multiplier)
-                                                        +dart_container(visit.third_dart.value, visit.third_dart.multiplier)
-                                                        td(width='10%')= visit.count
-                                else
-                                    td -
+                                td
+                                    div(class='block-container-no-margin')
+                                        table(class='table-player-checkouts-row')
+                                            tr
+                                                td= checkout.checkout
+                                                if checkout.completed
+                                                    td(data-order=1): i(class="fas fa-check-circle") 
+                                                else
+                                                    td(data-order=0): i(class="fas fa-times-circle")
+                                                td= checkout.count
+                                                td(style='width: 70%;')
+                                                    if checkout.visits
+                                                        table(class='table-player-checkouts-details')
+                                                            tbody
+                                                                each visit in checkout.visits
+                                                                    tr
+                                                                        +dart_container(visit.first_dart.value, visit.first_dart.multiplier)
+                                                                        +dart_container(visit.second_dart.value, visit.second_dart.multiplier)
+                                                                        +dart_container(visit.third_dart.value, visit.third_dart.multiplier)
+                                                                        td(width='10%')= visit.count
+                                                    else
+                                                        div(class='no-checkouts') No checkouts
 
-            div(role='tabpanel' id='tournament' class='tab-pane block-container')
-                table(id='table-tournament-standings')
-                    thead
-                        tr
-                            th Tournament
-                            th Division
-                            th Group
-                            th Final Standing
-                            th Elo
-                    tbody
-                        each standing in tournament_standings
+            div(role='tabpanel' id='tournament' class='tab-pane')
+                div(class='block-container no-padding no-border')
+                    table(id='table-tournament-standings')
+                        thead
                             tr
-                                - var division = standing.tournament_group.division
-                                - var divisionPostfix = division === 1 ? 'st' : division === 2 ? 'nd' : division === 3 ? 'rd' : 'th';
-                                td: a(href='/tournaments/' + standing.tournament.id)= standing.tournament.name
-                                td= division + divisionPostfix
-                                td= standing.tournament_group.name
-                                td= standing.final_standing + ' / ' + standing.total_players
-                                    if standing.final_standing === 1
-                                        span(style='padding-left: 0.2em' class='glyphicon glyphicon-star glyphWinner' aria-hidden='true')
-                                td= standing.elo
+                                th Tournament
+                                th Division
+                                th Group
+                                th Final Standing
+                                th Elo
+                        tbody
+                            each standing in tournament_standings
+                                tr
+                                    - var division = standing.tournament_group.division
+                                    - var divisionPostfix = division === 1 ? 'st' : division === 2 ? 'nd' : division === 3 ? 'rd' : 'th';
+                                    td: a(href='/tournaments/' + standing.tournament.id)= standing.tournament.name
+                                    td= division + divisionPostfix
+                                    td= standing.tournament_group.name
+                                    td= standing.final_standing + ' / ' + standing.total_players
+                                        if standing.final_standing === 1
+                                            span(style='padding-left: 0.2em' class='glyphicon glyphicon-star glyphWinner' aria-hidden='true')
+                                    td= standing.elo
 
     div(style='clear: both;')
