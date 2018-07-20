@@ -7,9 +7,9 @@ mixin get_player_profile_pic(player, width = 98, height = 130)
 
 mixin player_statistics_card(clazz, player, statistics, isWinner = false, dartsThrown, startingScore)
     div(class=clazz)
-        //div(class='glyph')
-        //    +get_player_profile_pic(player, 111, 143)
-        //div(class='playername'): a(href='/players/' + player.id + '/statistics')= player.name
+        div(style='padding-bottom: 20px;')
+            div(class='player-pic-cutout' style='margin: 0 auto;')
+                +get_player_profile_pic(player)
         if match.match_type.id == 2
             div(class='info') PPD
             div= statistics.ppd.toFixed(2)
@@ -91,8 +91,9 @@ mixin player_statistics_card(clazz, player, statistics, isWinner = false, dartsT
 mixin player_summary_card(player, statistics, isWinner = false, dartsThrown, startingScore)
     div(class='block-container-header-center'): a(href='/players/' + player.id + '/statistics')= player.name
     div(class='block-container-with-header')
-        //div(class='glyph')
-        //    +get_player_profile_pic(player, 111, 143)
+        div(style='padding-bottom: 20px;')
+            div(class='player-pic-cutout' style='margin: 0 auto;')
+                +get_player_profile_pic(player)
         if match.match_type.id == 2
             div(class='info') PPD
             div= statistics.ppd.toFixed(2)

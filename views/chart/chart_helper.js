@@ -20,10 +20,10 @@ function getChartConfig(title, type, xAxisLabel, yAxisLabel, lables, datasets) {
     return config;
 }
 
-function getDoughnutPercentageChartConfig(value, chartTitle) {
+function getPercentageChartConfig(value, chartTitle, type) {
     var fillValue = 100 - value;
     var config = {
-        type: 'doughnut',
+        type: type,
         data: {
             datasets: [{
                 data: [
@@ -54,4 +54,60 @@ function getDoughnutPercentageChartConfig(value, chartTitle) {
     };
 
     return config;
+}
+
+function getPolarChartConfig(value1, value2, chartTitle1, chartTitle2, canvasTitle) {
+    var fillValue1 = 100 - value1;
+    var fillValue2 = 100 - value2;
+    var config = {
+        type: 'polarArea',
+        data: {
+        datasets: [
+            {
+                data: [
+                    value1, 
+                    value2
+                ],
+                backgroundColor: [
+                    '#4daea8',
+                    '#bbc3d4',
+                ]
+            }
+        ],
+        labels: [
+            chartTitle1,
+            chartTitle2,
+        ]
+        },
+        options: {
+            scale: {
+                ticks: {
+                    stepSize: 10,
+                    max: 70
+                }
+            },
+            responsive: true,
+            legend: {
+                position: 'left',
+            },
+            title: {
+                display: true,
+                text: canvasTitle
+            },
+            animation: {
+                animateScale: true,
+                animateRotate: true
+            },
+            tooltips: {
+                callbacks: {
+                label: function(item, data) {
+                console.log(data.labels, item);
+                    return data.datasets[item.datasetIndex].label+ ": "+ data.labels[item.index]+ ": "+ data.datasets[item.datasetIndex].data[item.index];
+                }
+            }
+        }
+    }
+  };
+
+  return config;
 }

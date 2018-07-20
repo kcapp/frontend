@@ -33,16 +33,39 @@ body {
         padding: 0px 10px 0px 0px;
     }
     div.divide-triple-last {
+        width: 33%;
         .float-left;
         padding: 0px 0px 0px 10px;
     }
 }
 
-.label-fat-18 {font-size: 18pt; font-weight: 700; color: #949494;}
+#overview {
+    div.divide-double {
+        width: 100%;
+    }
+    div.divide-double-first {
+        width: 67%;
+        .float-left;
+        .block-container {
+            min-height: 350px;
+        }
+    }
+    div.divide-double-second {
+        width: 33%;
+        .float-left;
+        padding: 0px 0px 0px 10px;
+        .block-container {
+            min-height: 350px;
+        }
+    }
+}
+
+.label-fat-18-grey {font-size: 18pt; font-weight: 700; color: #949494;}
 .label-fat-33 {font-size: 33pt; font-weight: 700; color: #000;}
+.label-fat-21-grey {font-size: 21px; font-weight: 700; color: #949494; text-transform: uppercase;}
 
 .width33prc {
-    width: 33%;
+    min-width: 33%;
 }
 
 .divide-triple {
@@ -55,7 +78,6 @@ body {
     width: 100%;
     .block-container;
     .no-padding;
-    //.float-right;
     min-height: 180px;
     canvas {
         width: 100%;

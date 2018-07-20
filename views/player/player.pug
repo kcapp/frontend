@@ -84,18 +84,39 @@ block scripts
             }]
             var ppdChart = new Chart("canvas-ppd", getChartConfig('PPD Per Week', 'line', 'Date', 'PPD', labels, datasetsPPD));
 
-            var player = !{JSON.stringify(statistics)};
-            var percentage = parseFloat(Math.round(player.accuracy_overall * 100) / 100).toFixed(2);
-            var matchesChart = new Chart('canvas-accuracy-overall', getDoughnutPercentageChartConfig(percentage, 'Overall accuracy'));
+            var stats = !{JSON.stringify(statistics)};
+            var percentage = parseFloat(Math.round(stats.accuracy_overall * 100) / 100).toFixed(2);
+            var matchesChart = new Chart('canvas-accuracy-overall', getPercentageChartConfig(percentage, 'Overall accuracy', 'doughnut'));
             $('#canvas-accuracy-overall-percentage').text(percentage + ' %');
 
-            var percentage20 = parseFloat(Math.round(player.accuracy_20 * 100) / 100).toFixed(2);
-            var matchesChart = new Chart('canvas-accuracy-20', getDoughnutPercentageChartConfig(percentage20, 'Accuracy 20s'));
+            var percentage20 = parseFloat(Math.round(stats.accuracy_20 * 100) / 100).toFixed(2);
+            var matchesChart = new Chart('canvas-accuracy-20', getPercentageChartConfig(percentage20, 'Accuracy 20s', 'doughnut'));
             $('#canvas-accuracy-20-percentage').text(percentage20 + ' %');
 
-            var percentage19 = parseFloat(Math.round(player.accuracy_19 * 100) / 100).toFixed(2);
-            var matchesChart = new Chart('canvas-accuracy-19', getDoughnutPercentageChartConfig(percentage19, 'Accuracy 19s'));
+            var percentage19 = parseFloat(Math.round(stats.accuracy_19 * 100) / 100).toFixed(2);
+            var matchesChart = new Chart('canvas-accuracy-19', getPercentageChartConfig(percentage19, 'Accuracy 19s', 'doughnut'));
             $('#canvas-accuracy-19-percentage').text(percentage19 + ' %');
+
+            var player = !{JSON.stringify(player)};
+            var percentageMatches = player.matches_played == 0 ? '0.00' : (player.matches_won * 100 / player.matches_played).toFixed(2);
+            var percentageLegs = player.legs_played == 0 ? '0.00' : (player.legs_won * 100 / player.legs_played).toFixed(2);
+
+            var matchesChart = new Chart(
+                'canvas-win-percentage-matches', 
+                getPolarChartConfig(
+                    percentageMatches, 
+                    percentageLegs, 
+                    percentageMatches + '% matches', 
+                    percentageLegs + '% legs', 
+                    'Winning percentage'
+                )
+            );
+            var legsChart = new Chart('canvas-win-percentage-legs', getPercentageChartConfig(
+                percentageLegs, 
+                'Leg winning percentage: ' + percentageLegs + '%',
+                'pie'
+                )
+            );
 
             var datasetCheckout = [{
                 label: "%",
@@ -142,7 +163,7 @@ block content
     div(class='block-container') 
         div(class='float-left')
             div(class='player-pic-cutout')
-                img(src='https://images.pexels.com/photos/257360/pexels-photo-257360.jpeg?auto=compress&cs=tinysrgb&h=350' style='width: 98px; height: 130px;')
+                //img(src='https://images.pexels.com/photos/257360/pexels-photo-257360.jpeg?auto=compress&cs=tinysrgb&h=350' style='width: 98px; height: 130px;')
                 //+get_player_profile_pic(player)
         div(class='float-left pl-20') 
             h2= player.name
@@ -186,16 +207,31 @@ block content
             div(role='tabpanel' id='overview' class='tab-pane active')
                 div(class='block-container')
                     div(class='width33prc float-left')
-                        div(class='label-fat-18') FIRST 9 PPD
+                        div(class='label-fat-18-grey') FIRST 9 PPD
                         div(class='label-fat-33')= statistics.first_nine_ppd.toFixed(2)
                     div(class='width33prc float-left')
-                        div(class='label-fat-18') OVERALL PPD
+                        div(class='label-fat-18-grey') OVERALL PPD
                         div(class='label-fat-33')= statistics.ppd.toFixed(2)
                     div(class='width33prc float-left')
-                        div(class='label-fat-18') CHECKOUT PERCENTAGE
+                        div(class='label-fat-18-grey') CHECKOUT PERCENTAGE
                         div(class='label-fat-33')= statistics.checkout_percentage === null ? '-' : statistics.checkout_percentage.toFixed(2) + '%'
 
-                        
+                div(class='divide-double')
+                    div(class='divide-double-first')
+                        div(class='block-container')
+                            canvas(id='canvas-win-percentage-matches')
+                            div(id='canvas-win-percentage-matches-percentage' class='label-mid')
+                    div(class='divide-double-second')
+                        div(class='block-container')
+                            div(class='label-fat-21-grey') Matches played 
+                            div(class='label-fat-18-grey' style='color: black;')= player.matches_played
+                            div(class='label-fat-21-grey') Matches won 
+                            div(class='label-fat-18-grey' style='color: black; margin-bottom: 30px;')= player.matches_won
+                            div(class='label-fat-21-grey') Legs played
+                            div(class='label-fat-18-grey' style='color: black;')= player.legs_played
+                            div(class='label-fat-21-grey') Legs won
+                            div(class='label-fat-18-grey' style='color: black;')= player.legs_won                            
+                div(style='clear: both;')
 
                 div(class='divide-triple-first')
                     div(class='accuracy-chart') 
@@ -209,24 +245,6 @@ block content
                     div(class='accuracy-chart') 
                         canvas(id='canvas-accuracy-19')
                         div(id='canvas-accuracy-19-percentage' class='label-mid')
-
-                table(id='table-overview')
-                    tr
-                        td(class='glyph')
-                            span(class='glyphicon glyphicon-signal' aria-hidden='true')
-                        td(class='glyph')
-                            span(class='glyphicon glyphicon-star' aria-hidden='true')
-                        td(class='glyph')
-                            span(class='glyphicon glyphicon-adjust' aria-hidden='true')
-                    tr
-                        td(class='number')= player.matches_played + ' / ' + player.legs_played
-                        td(class='number')= player.matches_won + ' / '  + player.legs_won
-                        td(class='number')= (player.matches_played == 0 ? '0.00' : (player.matches_won * 100 / player.matches_played).toFixed(2)) + '% / ' + (player.legs_played == 0 ? '0.00' : (player.legs_won * 100 / player.legs_played).toFixed(2)) + '%'
-                    tr
-                        td(class='olabel') Matches / Legs Played
-                        td(class='olabel') Matches / Legs Won
-                        td(class='olabel') Matches / Legs Win %
-
 
             div(role='tabpanel' id='progression' class='tab-pane')
                 div(style='width: 100%')
