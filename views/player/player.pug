@@ -27,7 +27,7 @@ block scripts
                 order: [[ 3,  'desc' ]],
                 columnDefs: [ { targets: [ 0, 1, 2 ], orderable: false, searchable: false } ]
             });
-            $('#table-player-checkouts1').DataTable({
+            $('#table-player-checkouts').DataTable({
                 searching: false, bInfo : false, bLengthChange: false,
                 pageLength: 10,
                 order: [[ 0,  'asc' ]],
@@ -368,7 +368,8 @@ block content
                                             td Visits
                     tbody
                         each checkout in checkouts
-                            tr
+                            - trclass = !checkout.completed ? 'tr-no-checkout' : ''
+                            tr(class=trclass)
                                 td
                                     div(class='block-container-no-margin')
                                         table(class='table-player-checkouts-row')
