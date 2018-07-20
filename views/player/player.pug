@@ -87,15 +87,15 @@ block scripts
             var stats = !{JSON.stringify(statistics)};
             var percentage = parseFloat(Math.round(stats.accuracy_overall * 100) / 100).toFixed(2);
             var matchesChart = new Chart('canvas-accuracy-overall', getPercentageChartConfig(percentage, 'Overall accuracy', 'doughnut'));
-            $('#canvas-accuracy-overall-percentage').text(percentage + ' %');
+            $('#canvas-accuracy-overall-percentage').text(percentage + '%');
 
             var percentage20 = parseFloat(Math.round(stats.accuracy_20 * 100) / 100).toFixed(2);
             var matchesChart = new Chart('canvas-accuracy-20', getPercentageChartConfig(percentage20, 'Accuracy 20s', 'doughnut'));
-            $('#canvas-accuracy-20-percentage').text(percentage20 + ' %');
+            $('#canvas-accuracy-20-percentage').text(percentage20 + '%');
 
             var percentage19 = parseFloat(Math.round(stats.accuracy_19 * 100) / 100).toFixed(2);
             var matchesChart = new Chart('canvas-accuracy-19', getPercentageChartConfig(percentage19, 'Accuracy 19s', 'doughnut'));
-            $('#canvas-accuracy-19-percentage').text(percentage19 + ' %');
+            $('#canvas-accuracy-19-percentage').text(percentage19 + '%');
 
             var player = !{JSON.stringify(player)};
             var percentageMatches = player.matches_played == 0 ? '0.00' : (player.matches_won * 100 / player.matches_played).toFixed(2);

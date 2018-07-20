@@ -38,6 +38,7 @@ function getPercentageChartConfig(value, chartTitle, type) {
             labels: []
         },
         options: {
+            cutoutPercentage: 80,
             responsive: true,
             legend: {
                 position: 'top',
@@ -59,6 +60,8 @@ function getPercentageChartConfig(value, chartTitle, type) {
 function getPolarChartConfig(value1, value2, chartTitle1, chartTitle2, canvasTitle) {
     var fillValue1 = 100 - value1;
     var fillValue2 = 100 - value2;
+    var lowerMargin = Math.min(value1, value2) * 0.8;
+    var higherMargin = Math.ceil(Math.max(value1, value2) / 10) * 10;
     var config = {
         type: 'polarArea',
         data: {
@@ -82,8 +85,9 @@ function getPolarChartConfig(value1, value2, chartTitle1, chartTitle2, canvasTit
         options: {
             scale: {
                 ticks: {
-                    stepSize: 10,
-                    max: 70
+                    stepSize: 5,
+                    max: higherMargin,
+                    min: lowerMargin
                 }
             },
             responsive: true,
