@@ -261,27 +261,40 @@ block content
                         h3 Scores
                         canvas(id='canvas-scores')
 
-            div(role='tabpanel' id='highscores' class='tab-pane block-container')
+            div(role='tabpanel' id='highscores' class='tab-pane')
+                table(style='width: 100%;')
+                    tr
+                        td(style='width: 25%;')
+                            div(class='highscore-card')
+                                div= statistics.scores_60s_plus
+                                div(class='hs-star rank4') 
+                                    i(class="fas fa-star")
+                                div(class='hs-label') 60+
+                        td(style='width: 25%;')
+                            div(class='highscore-card')
+                                div= statistics.scores_100s_plus
+                                div(class='hs-star rank4') 
+                                    i(class="fas fa-star")
+                                    i(class="fas fa-star")
+                                div(class='hs-label') 100+
+                        td(style='width: 25%;')
+                            div(class='highscore-card')
+                                div= statistics.scores_140s_plus
+                                div(class='hs-star rank4') 
+                                    i(class="fas fa-star")
+                                    i(class="fas fa-star")
+                                    i(class="fas fa-star")
+                                div(class='hs-label') 140+
+                        td(style='width: 25%;')
+                            div(class='highscore-card-no-margin')= statistics.scores_180s
+                                div(class='hs-star rank4') 
+                                    i(class="fas fa-star")
+                                    i(class="fas fa-star")
+                                    i(class="fas fa-star")
+                                    i(class="fas fa-star")
+                                div(class='hs-label') 180
+
                 table(id='table-highscores')
-                    tr
-                        td(class='glyph glyph60')
-                            span(class='glyphicon glyphicon-fire' aria-hidden='true')
-                        td(class='glyph glyph100')
-                            span(class='glyphicon glyphicon-fire' aria-hidden='true')
-                        td(class='glyph glyph140')
-                            span(class='glyphicon glyphicon-fire' aria-hidden='true')
-                        td(class='glyph glyph180')
-                            span(class='glyphicon glyphicon-fire' aria-hidden='true')
-                    tr
-                        td(class='number')= statistics.scores_60s_plus
-                        td(class='number')= statistics.scores_100s_plus
-                        td(class='number')= statistics.scores_140s_plus
-                        td(class='number')= statistics.scores_180s
-                    tr
-                        td(class='olabel') 60+
-                        td(class='olabel') 100+
-                        td(class='olabel') 140+
-                        td(class='olabel') 180
                     tr
                         td(class='glyph')
                             span(class='glyphicon glyphicon-tasks' aria-hidden='true')
