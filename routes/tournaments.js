@@ -8,6 +8,7 @@ var _ = require('underscore');
 
 /** Get all tournaments */
 router.get('/', function (req, res, next) {
+    console.log('dupa');
     axios.all([
         axios.get(req.app.locals.kcapp.api + '/tournament'),
         axios.get(req.app.locals.kcapp.api + '/tournament/standings')

@@ -59,7 +59,7 @@ block content
                 else
                     each id in match.players
                         th
-                            div(class='block-container-header'): a(href='/players/' + player.id + '/statistics')= players[id].name
+                            div(class='block-container-header'): a(href='/players/' + id + '/statistics')= players[id].name
                 th(class='block-container-header-red' style='width: 100px;') Results
         tbody
             - var idx = 1
