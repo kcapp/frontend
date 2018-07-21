@@ -1,0 +1,32 @@
+extends layout.pug
+
+block content
+
+    div(class='pt-20')
+    div(class='block-container-orange') 
+        div(class='container-info-icon')
+            i(class="fas fa-trophy")
+        div(class='float-left pl-20')
+            h3 Elo
+            p .
+
+    div(class='block-container no-padding')
+        table(id='table-tournaments-list')
+            thead
+                tr
+                    th(class='pl-10') Rank
+                    th(class='text-left') Player
+                    th(class='text-left') &nbsp;
+                    th(class='text-right') Played
+            tbody
+                - playerCount = standings.length
+                - redStep = Math.floor(256 / playerCount) 
+                each standing in standings
+                    - redValue = 256 - ((standing.rank - 1) * redStep)
+                    tr
+                        td(class='pl-10')= standing.rank
+                        td(class='text-left'): a(href='/players/' + standing.player_id + '/statistics')= standing.player_name
+                        - var length = Math.ceil(0.2 * standing.elo)
+                        td(class='text-left')
+                            div(class='elo-bar' style='width: ' + length + 'px; background-color: rgb(' + redValue + ', 0, 0)')= standing.elo
+                        td(class='text-right')= standing.elo_matches
