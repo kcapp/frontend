@@ -42,27 +42,6 @@ body {
     }
 }
 
-#overview {
-    div.divide-double {
-        width: 100%;
-    }
-    div.divide-double-first {
-        width: 67%;
-        .float-left;
-        .block-container {
-            min-height: 350px;
-        }
-    }
-    div.divide-double-second {
-        width: 33%;
-        .float-left;
-        padding: 0px 0px 0px 10px;
-        .block-container {
-            min-height: 350px;
-        }
-    }
-}
-
 .keyinfo {
     min-width: 22%;
     .float-left;
@@ -89,19 +68,23 @@ body {
 }
 
 .accuracy-chart {
-    width: 100%;
-    .block-container;
-    .no-padding;
+    .mr-10;
     min-height: 180px;
     canvas {
         width: 100%;
     }
     .label-mid {
-        margin-top: -70px;
-        margin-left: 40%;
+        position: relative;
+        margin-top: -21%;
+        margin-left: 38%;
         font-size: 14pt;
         font-weight: 700;
     }
+}
+
+.accuracy-chart-no-margin {
+    .accuracy-chart;
+    margin-right: 0px;
 }
 
 .rank1 {
@@ -119,20 +102,29 @@ body {
 
 .highscore-card {
     .block-container;
-    margin-right: 10px;
-    height: 200px;
-    font-size: 45px;
-    font-weight: 700;
-    text-align: center;
-    padding-bottom: 10px;
+    .mr-10;
+    div {
+        font-size: 45px;
+        font-weight: 700;
+        text-align: center;
+    }
+    i {
+        font-size: 20px;
+    }
+    .mb-10;
 }
 
 .highscore-card-no-margin {
     .block-container;
-    height: 200px;
-    font-size: 45px;
-    font-weight: 700;
-    text-align: center;
+    div {
+        font-size: 45px;
+        font-weight: 700;
+        text-align: center;
+    }
+    i {
+        font-size: 20px;
+    }
+    .mb-10;
 }
 
 .hs-label {

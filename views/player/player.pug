@@ -164,7 +164,7 @@ block content
         div(class='float-left')
             div(class='player-pic-cutout')
                 //img(src='https://images.pexels.com/photos/257360/pexels-photo-257360.jpeg?auto=compress&cs=tinysrgb&h=350' style='width: 98px; height: 130px;')
-                //+get_player_profile_pic(player)
+                +get_player_profile_pic(player)
         div(class='float-left pl-20') 
             h2= player.name
             h4(style='color: #a5a5a5;')= player.nickname ? player.nickname : '-'
@@ -219,35 +219,36 @@ block content
                         div(class='label-fat-18-grey') HIGHEST CHECKOUT
                         div(class='label-fat-25')= statistics.highest_checkout.value
 
-                div(class='divide-double')
-                    div(class='divide-double-first')
-                        div(class='block-container')
-                            canvas(id='canvas-win-percentage-matches')
-                            div(id='canvas-win-percentage-matches-percentage' class='label-mid')
-                    div(class='divide-double-second')
-                        div(class='block-container')
-                            div(class='label-fat-21-grey') Matches played 
-                            div(class='label-fat-18-grey' style='color: black;')= player.matches_played
-                            div(class='label-fat-21-grey') Matches won 
-                            div(class='label-fat-18-grey' style='color: black; margin-bottom: 30px;')= player.matches_won
-                            div(class='label-fat-21-grey') Legs played
-                            div(class='label-fat-18-grey' style='color: black;')= player.legs_played
-                            div(class='label-fat-21-grey') Legs won
-                            div(class='label-fat-18-grey' style='color: black;')= player.legs_won                            
-                div(style='clear: both;')
+                table(style='width: 100%;')
+                    tr
+                        td(colspan='2')
+                            div(class='block-container mr-10')
+                                canvas(id='canvas-win-percentage-matches')
+                                div(id='canvas-win-percentage-matches-percentage' class='label-mid')
+                        td(style='vertical-align: top;')
+                            div(class='block-container')
+                                div(class='label-fat-21-grey') Matches played 
+                                div(class='label-fat-18-grey' style='color: black;')= player.matches_played
+                                div(class='label-fat-21-grey') Matches won 
+                                div(class='label-fat-18-grey' style='color: black; margin-bottom: 37px;')= player.matches_won
+                                div(class='label-fat-21-grey') Legs played
+                                div(class='label-fat-18-grey' style='color: black;')= player.legs_played
+                                div(class='label-fat-21-grey') Legs won
+                                div(class='label-fat-18-grey' style='color: black;')= player.legs_won 
+                    tr
+                        td(style='width: 33%;')
+                            div(class='block-container accuracy-chart') 
+                                canvas(id='canvas-accuracy-overall')
+                                div(id='canvas-accuracy-overall-percentage' class='label-mid')
+                        td(style='width: 33%;')
+                            div(class='block-container accuracy-chart') 
+                                canvas(id='canvas-accuracy-20')
+                                div(id='canvas-accuracy-20-percentage' class='label-mid')
+                        td(style='width: 33%;')
+                            div(class='block-container accuracy-chart-no-margin') 
+                                canvas(id='canvas-accuracy-19')
+                                div(id='canvas-accuracy-19-percentage' class='label-mid')
 
-                div(class='divide-triple-first')
-                    div(class='accuracy-chart') 
-                        canvas(id='canvas-accuracy-overall')
-                        div(id='canvas-accuracy-overall-percentage' class='label-mid')
-                div(class='divide-triple')
-                    div(class='accuracy-chart') 
-                        canvas(id='canvas-accuracy-20')
-                        div(id='canvas-accuracy-20-percentage' class='label-mid')
-                div(class='divide-triple-last')
-                    div(class='accuracy-chart') 
-                        canvas(id='canvas-accuracy-19')
-                        div(id='canvas-accuracy-19-percentage' class='label-mid')
 
             div(role='tabpanel' id='progression' class='tab-pane')
                 div(style='width: 100%')
@@ -286,34 +287,40 @@ block content
                                     i(class="fas fa-star")
                                 div(class='hs-label') 140+
                         td(style='width: 25%;')
-                            div(class='highscore-card-no-margin')= statistics.scores_180s
+                            div(class='highscore-card-no-margin')
+                                div= statistics.scores_180s
                                 div(class='hs-star rank4') 
                                     i(class="fas fa-star")
                                     i(class="fas fa-star")
                                     i(class="fas fa-star")
                                     i(class="fas fa-star")
                                 div(class='hs-label') 180
-
-                table(id='table-highscores')
                     tr
-                        td(class='glyph')
-                            span(class='glyphicon glyphicon-tasks' aria-hidden='true')
-                        td(class='glyph txt-italic') 301
-                        td(class='glyph txt-italic') 501
-                        td(class='glyph txt-italic') 701
-                    tr
-                        td(class='number')
-                            +best_statistics(statistics.best_ppd, 'number')
-                            label(style='font-weight: 300;')= ' / '
-                            +best_statistics(statistics.best_first_nine_ppd, 'number')
-                        +best_statistics_td(statistics.best_301, 'number')
-                        +best_statistics_td(statistics.best_501, 'number')
-                        +best_statistics_td(statistics.best_701, 'number')
-                    tr
-                        td(class='olabel') Best PPD / First 9
-                        td(class='olabel') Best 301
-                        td(class='olabel') Best 501
-                        td(class='olabel') Best 701
+                        td(colspan='2' style='vertical-align: top;')
+                            div(class='block-container mr-10')
+                                div(style='font-size: 18pt;')
+                                    span Best PPD
+                                    span(class='float-right') 
+                                        +best_statistics(statistics.best_ppd, 'number')
+                                div(style='font-size: 18pt;')
+                                    span Best first 9 PPD
+                                    span(class='float-right') 
+                                        +best_statistics(statistics.best_first_nine_ppd, 'number')
+                        td(colspan='2' style='vertical-align: top;')
+                            div(class='block-container')
+                                div(style='font-size: 18pt;')
+                                    span Best 301
+                                    span(class='float-right') 
+                                        +best_statistics(statistics.best_301, 'number')
+                                div(style='clear: both;')
+                                div(style='font-size: 18pt;')
+                                    span Best 501
+                                    span(class='float-right') 
+                                        +best_statistics(statistics.best_501, 'number')
+                                div(style='font-size: 18pt;')
+                                    span Best 701
+                                    span(class='float-right') 
+                                        +best_statistics(statistics.best_701, 'number')
 
             div(role='tabpanel' id='hits' class='tab-pane')
                 div(class='block-container no-padding no-border')
