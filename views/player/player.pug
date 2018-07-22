@@ -163,7 +163,6 @@ block content
     div(class='block-container') 
         div(class='float-left')
             div(class='player-pic-cutout')
-                //img(src='https://images.pexels.com/photos/257360/pexels-photo-257360.jpeg?auto=compress&cs=tinysrgb&h=350' style='width: 98px; height: 130px;')
                 +get_player_profile_pic(player)
         div(class='float-left pl-20') 
             h2= player.name
@@ -269,31 +268,31 @@ block content
                             div(class='highscore-card')
                                 div= statistics.scores_60s_plus
                                 div(class='hs-star rank4') 
-                                    i(class="fas fa-star")
+                                    i(class="fas fa-star highscore")
                                 div(class='hs-label') 60+
                         td(style='width: 25%;')
                             div(class='highscore-card')
                                 div= statistics.scores_100s_plus
                                 div(class='hs-star rank4') 
-                                    i(class="fas fa-star")
-                                    i(class="fas fa-star")
+                                    i(class="fas fa-star highscore")
+                                    i(class="fas fa-star highscore")
                                 div(class='hs-label') 100+
                         td(style='width: 25%;')
                             div(class='highscore-card')
                                 div= statistics.scores_140s_plus
                                 div(class='hs-star rank4') 
-                                    i(class="fas fa-star")
-                                    i(class="fas fa-star")
-                                    i(class="fas fa-star")
+                                    i(class="fas fa-star highscore")
+                                    i(class="fas fa-star highscore")
+                                    i(class="fas fa-star highscore")
                                 div(class='hs-label') 140+
                         td(style='width: 25%;')
                             div(class='highscore-card-no-margin')
                                 div= statistics.scores_180s
                                 div(class='hs-star rank4') 
-                                    i(class="fas fa-star")
-                                    i(class="fas fa-star")
-                                    i(class="fas fa-star")
-                                    i(class="fas fa-star")
+                                    i(class="fas fa-star highscore")
+                                    i(class="fas fa-star highscore")
+                                    i(class="fas fa-star highscore")
+                                    i(class="fas fa-star highscore")
                                 div(class='hs-label') 180
                     tr
                         td(colspan='2' style='vertical-align: top;')

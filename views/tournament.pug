@@ -1,6 +1,7 @@
 extends layout.pug
 
 include mixins/statistics.pug
+include mixins/player.pug
 
 block append head
     link(rel='stylesheet' type='text/css' href='/stylesheets/datatables-1.10.16.min.css')
@@ -14,18 +15,8 @@ block scripts
                 pageLength: 5,
                 order: [[ 1,  'desc' ]]
             });
-        });
 
-        $(function() {
-            $('#table-matches-list').on('mouseup', '#continue-match-button', function (e) {
-                location.href = '/matches/' + $(this).data('match')
-            });
-            $('#table-matches-list').on('mouseup', '#spectate-match-button', function(e) {
-                location.href = '/matches/' + $(this).data('match') + '/spectate'
-            });
-            $('#table-matches-list').on('mouseup', '#view-match-button', function (e) {
-                location.href = '/matches/' + $(this).data('match') + '/result'
-            });
+            $('[data-toggle="tooltip"]').tooltip();
         });
 
 block content
@@ -154,61 +145,87 @@ block content
                                                     td(class='col-sm-2')
                                                 td(class='col-sm-2 text-center')
                                                     if !match.is_finished
-                                                        i(class="fas fa-play-circle fas-option-button" id='continue-match-button' data-match=match.id data-toggle="tooltip" data-placement="top" title="Continue")
-                                                        i(class="fas fa-eye fas-option-button pl-10" id='spectate-match-button' data-match=match.id data-toggle="tooltip" data-placement="top" title="Spectate")
+                                                        a(href='/matches/' + match.id)
+                                                            i(class="fas fa-play-circle fas-option-button" id='continue-match-button' data-match=match.id data-toggle="tooltip" data-placement="top" title="Continue")
+                                                        a(href='/matches/' + match.id + '/spectate')
+                                                            i(class="fas fa-eye fas-option-button pl-10" id='spectate-match-button' data-toggle="tooltip" data-placement="top" title="Spectate")
                                                     else
-                                                        i(class="fas fa-eye fas-option-button" id='view-match-button' data-match=match.id data-toggle="tooltip" data-placement="top" title="View")
+                                                        a(href='/matches/' + match.id + '/result')
+                                                            i(class="fas fa-eye fas-option-button" data-toggle="tooltip" data-placement="top" title="View")
 
         if hasStatistics
-            div(role='tabpanel' id='statistics' class='tab-pane')
-                mixin top_statistics(rank, idx, statistics)
-                    if statistics[idx]
-                        td= rank
-                        td: a(href='/players/' + statistics[idx].player_id + '/statistics')= players[statistics[idx].player_id].name
-                        +best_statistics_td(statistics[idx])
-                    else
-                        td= rank
-                        td -
-                        td -
 
-                h3 Top 5
-                table(class='table table-striped' id='table-tournament-statistics')
-                    thead
-                        tr
-                            th Rank
-                            th Player
-                            th Checkout
-                            th Rank
-                            th Player
-                            th PPD
-                            th Rank
-                            th Player
-                            th Fist 9 PPD
-                            th Rank
-                            th Player
-                            th Darts Thown
-                    tbody
-                        - var rank = 1
-                        each idx in [0, 1, 2, 3, 4]
-                            - var dartsThrown = statistics.best_501_darts_thrown ? statistics.best_501_darts_thrown : statistics.best_301_darts_thrown ? statistics.best_301_darts_thrown : null
-                            tr
-                                +top_statistics(rank, idx, statistics.checkout_highest)
-                                +top_statistics(rank, idx, statistics.best_ppd)
-                                +top_statistics(rank, idx, statistics.best_first_nine_ppd)
-                                +top_statistics(rank, idx, dartsThrown)
-                                - rank++
+            mixin top_statistics(rank, idx, statistics)
+                if statistics[idx]
+                    td(class='cutout-with-rank')
+                        div(class='float-left')
+                            div(class='player-pic-cutout-small')
+                                +get_player_profile_pic(players[statistics[idx].player_id], 49, 65)
+                            +rank_circle(rank)
+                    td(class='valign-mid'): a(href='/players/' + statistics[idx].player_id + '/statistics')= players[statistics[idx].player_id].name
+                    +best_statistics_td(statistics[idx], 'valign-mid')
+                else
+                    td -
+                    td -
+
+            div(role='tabpanel' id='statistics' class='tab-pane')
+                div(class='block-container')= 'Tournament records'
+                table(class='tournament-records')
+                    tr
+                        td(style='width: 25%;')
+                            div(class='block-container-red mr-10') Highest checkout
+                            div(class='highscore-card')
+                                table(class='table table-striped' id='table-tournament-statistics')
+                                    tbody
+                                        - var rank = 1
+                                        each idx in [0, 1, 2, 3, 4]
+                                            tr
+                                                +top_statistics(rank, idx, statistics.checkout_highest)
+                                                - rank++
+                        td(style='width: 25%;')
+                            div(class='block-container-red mr-10') Best PPD
+                            div(class='highscore-card')
+                                table(class='table table-striped' id='table-tournament-statistics')
+                                    tbody
+                                        - var rank = 1
+                                        each idx in [0, 1, 2, 3, 4]
+                                            tr
+                                                +top_statistics(rank, idx, statistics.best_ppd)
+                                                - rank++
+                        td(style='width: 25%;')
+                            div(class='block-container-red mr-10') Best first 9 PPD
+                            div(class='highscore-card')
+                                table(class='table table-striped' id='table-tournament-statistics')
+                                    tbody
+                                        - var rank = 1
+                                        each idx in [0, 1, 2, 3, 4]
+                                            tr
+                                                +top_statistics(rank, idx, statistics.best_first_nine_ppd)
+                                                - rank++
+                        td(style='width: 25%;')
+                            div(class='block-container-red') Least darts thrown
+                            div(class='highscore-card-no-margin')
+                                table(class='table table-striped' id='table-tournament-statistics')
+                                    tbody
+                                        - var rank = 1
+                                        each idx in [0, 1, 2, 3, 4]
+                                            - var dartsThrown = statistics.best_501_darts_thrown ? statistics.best_501_darts_thrown : statistics.best_301_darts_thrown ? statistics.best_301_darts_thrown : null
+                                            tr
+                                                +top_statistics(rank, idx, dartsThrown)
+                                                - rank++
 
         div(role='tabpanel' id='playoffs' class='tab-pane')
             include bracket.pug
         if tournament.standings
             div(role='tabpanel' id='standings' class='tab-pane')
-                table(class='table table-striped' id='table-tournament-standings')
-                    thead
-                        tr
-                            th Position
-                            th Player
-                    tbody
-                        each standing in tournament.standings
+                div(class='block-container no-padding')   
+                    table(class='table' id='table-tournament-standings')
+                        thead
                             tr
-                                td= standing.rank
-                                td: a(href='/players/' + standing.player_id + '/statistics')= standing.player_name
+                                th Position
+                                th Player
+                        tbody
+                            each standing in tournament.standings
+                                tr
+                                    td= standing.rank
+                                    td: a(href='/players/' + standing.player_id + '/statistics')= standing.player_name

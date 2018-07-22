@@ -11,6 +11,10 @@ body {
     background-color: #e5eaef;
 }
 
+.valign-mid {
+    vertical-align: middle;
+}
+
 .pr-5 {padding-right: 5px;}
 
 .pt-20 {padding-top: 20px;}
@@ -126,10 +130,17 @@ body {
         font-weight: 700;
         text-align: center;
     }
-    i {
+    i.highscore {
         font-size: 20px;
     }
     .mb-10;
+}
+
+.cutout-with-rank {
+    .rank-circle {
+        margin-left: -25px;
+        margin-top: 10px;
+    }
 }
 
 .highscore-card-no-margin {
@@ -139,7 +150,7 @@ body {
         font-weight: 700;
         text-align: center;
     }
-    i {
+    i.highscore {
         font-size: 20px;
     }
     .mb-10;
@@ -154,11 +165,49 @@ body {
     font-size: 20px;
 }
 
+.tournament-records {
+    width: 100%;
+    td {
+        vertical-align: top;
+    }
+    td.valign-mid {
+        .valign-mid;
+    }
+    .highscore-card, .highscore-card-no-margin {
+        padding-top: 10px;
+        padding-bottom: 10px;
+    }
+}
+
 .player-pic-cutout {
     overflow: hidden;
     border-radius: 100%;
     width: 98px;
     height: 98px;
+    box-shadow: 0px 0px 0px 2000px #ffffff;
+    img {
+        margin-top: -16px;
+    }
+}
+
+.rank-circle {
+    position: absolute;
+    .fa-stack {
+        font-size: 13px !important;
+    }
+    color: #c1c1c1;
+    .fixfont {
+        font-family: 'Open Sans';
+        font-weight: 700;
+        font-size: 15px;
+    }
+}
+
+.player-pic-cutout-small {
+    overflow: hidden;
+    border-radius: 100%;
+    width: 49px;
+    height: 49px;
     box-shadow: 0px 0px 0px 2000px #ffffff;
     img {
         margin-top: -16px;
