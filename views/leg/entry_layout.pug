@@ -20,19 +20,8 @@ block scripts
         var VOICE = "US English Female";
         var currentDart = 1;
 
-        var isDualMonitor = window.innerWidth > 1920;
-        isDualMonitor = localStorage.kcapp_is_dual_screen ? localStorage.kcapp_is_dual_screen == 'true' : isDualMonitor;
-        if (isDualMonitor && leg.players.length % 2 !== 0 && !location.href.includes('vertical')) {
-            location.href = location.href + '/vertical';
-        }
-
         $(function () {
             FastClick.attach(document.body);
-
-            if (isDualMonitor) {
-                // Move header when dual monitors
-                $('#td-round-header').attr('style', 'text-align: left; padding-left: 19em;');
-            }
 
             if (leg.is_finished) {
                 return;
@@ -47,6 +36,7 @@ block scripts
             socket.on('connected', function (data) {
                 console.log(data);
             });
+            
             socket.on('score_update', function (data) {
                 $('#submit-score-button').prop('disabled', false);
 

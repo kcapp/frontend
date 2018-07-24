@@ -27,7 +27,34 @@ block content
     div(class='row')
 
     - var round_number = Math.floor(leg.visits.length / leg.players.length) + 1;
-    +get_score_header(match.match_mode, round_number, leg_players, match.tournament_id != null)
+        div
+            table(id='scores-table')
+                tbody
+                    tr
+                        each player in leg_players
+                            - var playerId = player.player_id;
+                            - var clazz = player.is_current_player ? 'scorecard-active' : 'scorecard-inactive'
+                            td
+                                div(class=clazz)
+                                    div(id='player-name-' + playerId class='label-player-name')= players[playerId].name
+                                    div(id='player-id-' + playerId class='label label-block label-player-score' + (player.is_current_player ? ' current-player' : ''))= player.current_score
+                                
+                                    div(id='player-legs-' + player.player_id class='player-legs')
+                                        label= (player.wins ? player.wins : '0')
+                    tr
+                        each player in leg_players
+                            - var clazz = player.is_current_player ? 'uv-active-player-visits' : 'uv-inactive-player-visits'
+                                td(id='player-visit-' + player.player_id class=clazz)
+                                    table(style='width: 100%;')
+                                        tbody
+                                            tr
+                                                td(class=''): label(class='first' text='0' data-multiplier='1')
+                                                td(class=''): label(class='second' text='0' data-multiplier='1')
+                                                td(class=''): label(class='third' text='0' data-multiplier='1')
+                                            tr
+                                                td(style='padding: 3px;')
+                                            tr
+                                                td(colspan='3' class='dart-score-total')= 0
 
     if !leg.is_finished && leg.board_stream_url
         img(src=leg.board_stream_url class='center-image' alt='Board live stream')
