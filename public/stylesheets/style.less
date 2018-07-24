@@ -458,6 +458,39 @@ body {
     }
 }
 
+#scores-table {
+    width: 100%;
+    table-layout: fixed;
+    tr {
+        td {
+            padding-right: 10px;
+        }
+    }
+    td:last-child {
+        padding-right: 0px;
+
+    }
+}
+
+.block-container-blue {
+    .pad10;
+    color: white;
+    background-color: #29598e;
+    margin-bottom: 1em; 
+    border-radius: 4px;
+    -webkit-border-radius: 4px;
+    -o-border-radius: 4px;
+    -moz-border-radius: 4px;
+    -ms-border-radius: 4px;
+    -webkit-box-shadow: 0 1px 1px rgba(0,0,0,.05);
+    box-shadow: 0 1px 1px rgba(0,0,0,.05);
+    overflow: hidden;
+    h3, p {
+        margin: 0px;
+        padding: 0px;
+    }
+}
+
 .block-container-orange {
     .pad10;
     color: white;
@@ -810,9 +843,9 @@ a:hover {
 }
 
 .label-player-score {
-    font-weight: 300;
-    padding: 5px 0px 0px 0px;
-    font-size: 20pt;
+    font-weight: 700;
+    padding: 10px 0px 0px 0px;
+    font-size: 40pt;
 }
 
 .label-player-name {
@@ -1032,24 +1065,33 @@ a:hover {
     border-right: none;
 }
 
-.uv-active-player-score {
+.player-score-block-container {
+    .text-center;
+    color: white;
+    .block-container;
+    padding: 20px 20px 10px 20px;
+    border-radius: 8px;
+    .label-player-name {
+        font-size: 18pt;
+    }
+}
+
+.scorecard-active {
+    .player-score-block-container;
     background-color: #337ab7;
 }
 
-.uv-active-player-legs {
-    background-color: #255b8a;
-    color: white;
-    font-size: 15px;
+.scorecard-inactive {
+    .player-score-block-container;
+    background-color: #a9a9a9;
 }
 
-.uv-inactive-player-score {
-    background-color: #5f5d5d;
-}
-
-.uv-inactive-player-legs {
-    background-color: #000000;
+.player-legs {
+    margin-top: 15px;
+    border-top: 1px solid #efefef;
     color: white;
-    font-size: 15px;
+    font-size: 25px;
+    padding: 10px 0px 0px 0px;
 }
 
 .uv-inactive-player-visits {

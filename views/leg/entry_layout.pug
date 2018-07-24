@@ -11,6 +11,7 @@ block scripts
     script(src='/javascripts/socket.io-2.0.3.min.js')
     script
         include socketio_helper.js
+        include keyboard_scripts.js
     script.
         var scores = {};
         var leg = !{JSON.stringify(leg)}
@@ -69,7 +70,7 @@ block scripts
                     label.text(player.current_score);
 
                     if (player.player_id === currentPlayerId) {
-                        td.removeClass().addClass('uv-active-player-score');
+                        td.removeClass().addClass('scorecard-active');
                         tdLegs.removeClass().addClass('uv-active-player-legs');
                         tdVisit.removeClass().addClass('uv-active-player-visits');
                         $('#submit-score-button').data('current-player-id', player.player_id);
@@ -78,7 +79,7 @@ block scripts
                         isLastVisitFishNChips = players[i === 0 ?  players.length - 1 : i - 1].modifiers.is_fish_and_chips;
                     }
                     else {
-                        td.removeClass().addClass('uv-inactive-player-score');
+                        td.removeClass().addClass('scorecard-active');
                         tdLegs.removeClass().addClass('uv-inactive-player-legs');
                         tdVisit.removeClass().addClass('uv-inactive-player-visits');
                         label.removeClass('current-player');
@@ -416,13 +417,50 @@ block scripts
 
 
 block content
+    - var round_number = Math.floor(leg.visits.length / leg.players.length) + 1;
     div(id='cancel-leg-failed-alert' class='alert alert-danger' role='alert' hidden='true').
         Unable to cancel leg
-    block title
 
-    - var round_number = Math.floor(leg.visits.length / leg.players.length) + 1;
+    div(class='pt-20')
+    div(class='block-container-blue') 
+        div(class='float-left')= 'Leg (X01) '  
+        div(class='float-left pl-10')= match.match_mode.short_name + '/'
+        div(class='float-left')= 'R' + round_number
+
     block score_header
-        +get_score_header(match.match_mode, round_number, leg_players, match.tournament_id != null, true)
+        // OH.MY.GOD
+        //+get_score_header(match.match_mode, round_number, leg_players, match.tournament_id != null, true)
+        div
+            table(id='scores-table')
+                tbody
+                    tr
+                        each player in leg_players
+                            - var playerId = player.player_id;
+                            - var clazz = player.is_current_player ? 'scorecard-active' : 'scorecard-inactive'
+                            td
+                                div(class=clazz)
+                                    div(id='player-name-' + playerId class='label-player-name')= players[playerId].name
+                                    div(id='player-id-' + playerId class='label label-block label-player-score' + (player.is_current_player ? ' current-player' : ''))= player.current_score
+                                
+                                    div(id='player-legs-' + player.player_id class='player-legs')
+                                        label= (player.wins ? player.wins : '0')
+                    tr
+                        each player in leg_players
+                            - var clazz = player.is_current_player ? 'uv-active-player-visits' : 'uv-inactive-player-visits'
+                                td(id='player-visit-' + player.player_id class=clazz)
+                                    table(style='width: 100%;')
+                                        tbody
+                                            tr
+                                                td(class=''): label(class='first' text='0' data-multiplier='1')
+                                                td(class=''): label(class='second' text='0' data-multiplier='1')
+                                                td(class=''): label(class='third' text='0' data-multiplier='1')
+                                            tr
+                                                td(style='padding: 3px;')
+                                            tr
+                                                td(colspan='3' class='dart-score-total')= 0
+                                    
+
+
 
     div(class='table-responsive')
         table(id='score-selector-table' class='table' style='display: none;')
