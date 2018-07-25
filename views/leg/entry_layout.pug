@@ -6,7 +6,6 @@ include ../mixins/player_order.pug
 block append head
     script(src='/javascripts/responsivevoice.1.5.8..js')
     script(src='/javascripts/views/entry_layout.js')
-    script(src='./keyboard_scripts.js')
 
 block scripts
     script(src='/javascripts/fastclick-1.0.6.min.js')
@@ -22,28 +21,28 @@ block scripts
         var VOICE = "US English Female";
         var currentDart = 1;
 
+        // Returns current dart container of active player
+        function getCurrentDartContainer(currentDart) {
+            var dart;
+            switch (currentDart) {
+                case 1:
+                    dart = $('.visits-active .first');
+                    break;
+                case 2:
+                    dart = $('.visits-active .second');
+                    break;
+                case 3:
+                    dart = $('.visits-active .third');
+                    break;
+                default:
+                    dart = null;
+                    break;
+            }
+            return dart;
+        }
+
         $(function () {
             // Functions to be loaded after document load 
-
-            // Returns current dart container of active player
-            function getCurrentDartContainer(currentDart) {
-                var dart;
-                switch (currentDart) {
-                    case 1:
-                        dart = $('.visits-active .first');
-                        break;
-                    case 2:
-                        dart = $('.visits-active .second');
-                        break;
-                    case 3:
-                        dart = $('.visits-active .third');
-                        break;
-                    default:
-                        dart = null;
-                        break;
-                }
-                return dart;
-            }
 
             function setMultiplierClass(dartContainer, multiplier) {
                 dartContainer.removeClass('dart-score-single dart-score-double dart-score-triple');

@@ -5,12 +5,12 @@ $(function () {
     var dartText = '';
     var currentMultiplier = 1;
 
-    $(document).keydown(function (e) {
+    $(document).keypress(function (e) {
         if (e.key === 'Backspace') {
             var totalScoreContainer = $('.visits-active .dart-score-total');
             var currentPlayerScore = parseInt(totalScoreContainer.html());
 
-            var dart = getCurrentDart();
+            var dart = getCurrentDartContainer(currentDart);
             if (dartText !== '') {
                 dartText = dartText.substring(0, dartText.length - 1);
                 if (dartText === '') {
@@ -30,10 +30,10 @@ $(function () {
         return;
     });
 
-    $(document).keypress(function (e) {
+    $(document).keydown(function (e) {
         var totalScoreContainer = $('.visits-active .total-score');
         var currentPlayerScore = parseInt(totalScoreContainer.html());
-        var dart = getCurrentDart();
+        var dart = getCurrentDartContainer(currentDart);
         switch (e.key) {
             case 'Enter':
                 if (disableEnter) {
