@@ -5,6 +5,8 @@ include ../mixins/player_order.pug
 
 block append head
     script(src='/javascripts/responsivevoice.1.5.8..js')
+    script(src='/javascripts/views/entry_layout.js')
+    script(src='./keyboard_scripts.js')
 
 block scripts
     script(src='/javascripts/fastclick-1.0.6.min.js')
@@ -21,304 +23,88 @@ block scripts
         var currentDart = 1;
 
         $(function () {
-            FastClick.attach(document.body);
+            // Functions to be loaded after document load 
 
-            if (leg.is_finished) {
-                return;
+            // Returns current dart container of active player
+            function getCurrentDartContainer(currentDart) {
+                var dart;
+                switch (currentDart) {
+                    case 1:
+                        dart = $('.visits-active .first');
+                        break;
+                    case 2:
+                        dart = $('.visits-active .second');
+                        break;
+                    case 3:
+                        dart = $('.visits-active .third');
+                        break;
+                    default:
+                        dart = null;
+                        break;
+                }
+                return dart;
             }
-            var socket = getLegsNamespace(leg);
-            socket.on('spectator_connected', function (data) {
-                alertify.success(data + ' connected');
-            });
-            socket.on('spectator_disconnected', function (data) {
-                alertify.warning(data + ' disconnected');
-            });
-            socket.on('connected', function (data) {
-                console.log(data);
-            });
-            
-            socket.on('score_update', function (data) {
-                $('#submit-score-button').prop('disabled', false);
 
-                // Set the global leg object
-                leg = data.leg;
-                scores = {};
-
-                $('#round-number').text('R' + (Math.floor(leg.visits.length / leg.players.length) + 1));
-
-                // Set updated score per player
-                var currentPlayerId = leg.current_player_id;
-                var players = data.players;
-                var totalFishNChips = 0;
-                var isLastVisitFishNChips = false;
-                for (var i = 0; i < players.length; i++) {
-                    var player = players[i];
-                    var td = $('#player-score-' + player.player_id);
-                    var tdLegs = $('#player-legs-' + player.player_id);
-                    var tdVisit = $('#player-visit-' + player.player_id);
-                    var label = td.find('.label-player-score');
-                    label.text(player.current_score);
-
-                    if (player.player_id === currentPlayerId) {
-                        td.removeClass().addClass('scorecard-active');
-                        tdLegs.removeClass().addClass('uv-active-player-legs');
-                        tdVisit.removeClass().addClass('uv-active-player-visits');
-                        $('#submit-score-button').data('current-player-id', player.player_id);
-                        label.addClass('current-player');
-
-                        isLastVisitFishNChips = players[i === 0 ?  players.length - 1 : i - 1].modifiers.is_fish_and_chips;
-                    }
-                    else {
-                        td.removeClass().addClass('scorecard-active');
-                        tdLegs.removeClass().addClass('uv-inactive-player-legs');
-                        tdVisit.removeClass().addClass('uv-inactive-player-visits');
-                        label.removeClass('current-player');
-                        label.removeAttr('data-current-player-id');
-
-                        if (player.modifiers.is_vilius_visit) {
-                            td.addClass('player-modifier-vilius');
-                        }
-
-                        if (player.modifiers.is_fish_and_chips) {
-                            td.addClass('player-modifier-fish-n-chips');
-                        }
-                    }
-                    if (player.modifiers.is_beer_match) {
-                        td.addClass('player-modifier-beer');
-                    }
-
-                    totalFishNChips += player.visit_statistics.fish_and_chips_counter;
+            function setMultiplierClass(dartContainer, multiplier) {
+                dartContainer.removeClass('dart-score-single dart-score-double dart-score-triple');
+                if (multiplier == 1) {
+                    className = 'dart-score-single';
+                } else if (multiplier == 2) {
+                    className = 'dart-score-double';
+                } else if (multiplier == 3) {
+                    className = 'dart-score-triple';
                 }
-                if (isLastVisitFishNChips) {
-                    var msg = alertify.notify('<h4>Fish & Chips:</h4><h3>' + (totalFishNChips - 1) + '</h3>', 'fish-n-chips', 5, function(){  });
-                    var interval = setInterval(function(){
-                        msg.setContent('<h4>Fish & Chips:</h4><h3>' + totalFishNChips + '</h3>');
-                    }, 1000);
+                dartContainer.addClass(className);
+            }
+
+            // Set multiplier and score on active player's current dart container
+            function setCurrentDartContainerValues(dart, score, multiplier) {
+                var scoreInt = parseInt(score);
+                // Missed ?
+                if (scoreInt === 0 ) {
+                    multiplier = 1;
+                    currentMultiplier = 1;
+                    score = 0;
                 }
 
-                $('.uv-active-player-visits .dart-score-total').html(0);
-                resetElements();
-            });
-        });
-
-        $(function () {
-            var socket = getLegsNamespace(leg);
-
-            $('#submit-score-button').click(function (event) {
-                $(this).attr('disabled', true);
-
-                var firstScore = parseInt($('.uv-active-player-visits .first').attr('data-score'));
-                var firstMultiplier = parseInt($('.uv-active-player-visits .first').attr('data-multiplier'));
-                var secondScore = parseInt($('.uv-active-player-visits .second').attr('data-score'));
-                var secondMultiplier = parseInt($('.uv-active-player-visits .second').attr('data-multiplier'));
-                var thirdScore = parseInt($('.uv-active-player-visits .third').attr('data-score'));
-                var thirdMultiplier =  parseInt($('.uv-active-player-visits .third').attr('data-multiplier'));
-                var total = firstScore * firstMultiplier + secondScore * secondMultiplier + thirdScore * thirdMultiplier;
-
-                var currentPlayerId = $(this).data('current-player-id');
-                var data = JSON.stringify({
-                    leg_id: legId,
-                    player_id: currentPlayerId,
-                    first_dart: { value: firstScore, multiplier: firstMultiplier },
-                    second_dart: { value: secondScore, multiplier: secondMultiplier },
-                    third_dart: { value: thirdScore, multiplier: thirdMultiplier }
-                });
-
-                var isFinished = $(this).data('finished');
-                var isBust = $(this).data('busted');
-                if (isFinished) {
-                    responsiveVoice.speak("Game shot!", VOICE);
-                    executePost(window.location.origin + '/legs/' + legId + '/finish', data, 'application/json',
-                        function (response) {
-                            location.href = window.location.origin + '/legs/' + legId + '/result';
-                        },
-                        function (error) {
-                            console.log("Unable to proceed: " + error.responseText);
-                        }
-                    )
+                // Triple
+                if (multiplier == 3) {
+                    dartText = 'T-' + score / multiplier;
+                    setMultiplierClass(dart, multiplier)
                 }
+                // Double
+                else if (multiplier == 2) {
+                    dartText = 'D-' + score / multiplier;
+                    setMultiplierClass(dart, multiplier)
+                }
+                // Missed
+                else if (score === 0) {
+                    dartText = 'Miss';
+                    setMultiplierClass(dart, multiplier)
+                }
+                // Single
                 else {
-                    if (isBust) {
-                        responsiveVoice.speak("Noscore", VOICE, { pitch: 0.8 });
-                    }
-                    else {
-                        responsiveVoice.speak("" + total, VOICE);
-                    }
-                    socket.emit('throw', data);
+                    dartText = score;
+                    setMultiplierClass(dart, 1)
                 }
-                event.preventDefault();
-            });
 
-            $('#toggle-buttons').click(function () {
-                $('#score-selector-table').toggle();
-            });
+                dart.text(dartText);
+                dart.attr('data-text', dartText);
+                dart.attr('data-score', score / multiplier);
+                dart.attr('data-multiplier', multiplier);
 
-            $('#score-selector-table .throw-buttons :button').click(function () {
-                var dart = getCurrentDart();
-                if (dart === null) {
-                    alert('Please submit previous score!');
-                    return;
-                }
-                var multiplier = $(this).data('multiplier')
-                var score = $(this).attr('title')
-                setDartValue(dart, score, multiplier)
-
-                var scoreNumeric = parseInt(score)
-                checkVisitFinished(dart, scoreNumeric)
-
-                // Remove focus from the button incase keyboard is used to enter next score
-                $(this).blur();
-            });
-
-            $('#undo-button').click(function () {
-                if (currentDart <= 1) {
-                    disableEnter = true;
-                    showConfirm('Delete last Visit', function() {
-                        socket.emit('undo_visit', { });
-                    }, function(){ /* NOOP */ });
-                    return;
-                }
-                var playerId = $('#submit-score-button').data('current-player-id');
-                var currentPlayerScore = parseInt($('.current-player').text());
-                currentDart--;
-                var lastScore = scores[currentDart];
-                updatePlayerScore(-lastScore);
-                updateTotalVisitScore(-lastScore);
-                delete scores[currentDart]
-
-                // Emit a undo throw to spectators
-                socket.emit('undo_throw', {
-                        current_player_id: playerId,
-                        score: -lastScore,
-                        dart_text: '',
-                        multiplier: 1,
-                        is_bust: false,
-                        is_finished: false,
-                        is_undo: true,
-                        darts_thrown: currentDart
-                });
-
-                var dart = getCurrentDart();
-                clearDart(dart);
-
-                // Remove focus from the button incase keyboard is used to enter next score
-                $(this).blur();
-            });
-
-            $('#btn-change-player-order').click(function() {
-                $('#modal-player-selector').modal({ show: true, keyboard: false, backdrop: 'static' });
-            });
-
-            $('#edit-scores-button').click(function () {
-                location.href = '/legs/' + legId + '/result';
-            });
-
-            $('#cancel-leg-button').click(function () {
-                showConfirm('Leg will be cancelled.', function() {
-                    executeDelete('/legs/' + legId + '/cancel',
-                        function (response) {
-                            location.href = '/matches';
-                        },
-                        function (error) {
-                            var alert = $('#cancel-leg-failed-alert');
-                            alert.show();
-                            alert.text('Unable to cancel leg, see log for details (' + error.statusText + ')');
-                        }
-                    );
-                }, function(){ /* NOOP */ });
-            });
-        });
-
-        function getCurrentDart() {
-            var dart;
-            if (currentDart === 1) {
-                dart = $('.uv-active-player-visits .first');
-            }
-            else if (currentDart === 2) {
-                dart = $('.uv-active-player-visits .second');
-            }
-            else if (currentDart === 3) {
-                dart = $('.uv-active-player-visits .third');
-            }
-            else {
-                return null;
-            }
-            return dart;
-        }
-
-        function updateTotalVisitScore(score) {
-            var totalScoreContainer = $('.uv-active-player-visits .dart-score-total');
-            var total = parseInt(totalScoreContainer.html()) + parseInt(score);
-            totalScoreContainer.html(total);
-        }
-
-        function setDartValue(dart, score, multiplier) {
-            var scoreInt = parseInt(score);
-            var dartText = score
-
-            if (scoreInt === 0 ) {
-                multiplier = 1;
-                currentMultiplier = 1;
-                score = 0;
+                updateTotalVisitScore(score)
+                scores[currentDart] = scoreInt;
             }
 
-            if (multiplier == 3) {
-                dartText = 'T-' + score / multiplier;
-                dart.removeClass('dart-score-single dart-score-double').addClass('dart-score-triple');
+            // Add given score to active player's total score container
+            function updateTotalVisitScore(score) {
+                var totalScoreContainer = $('.visits-active .total-score');
+                var total = parseInt(totalScoreContainer.html()) + parseInt(score);
+                totalScoreContainer.html(total);
             }
-            else if (multiplier == 2) {
-                dartText = 'D-' + score / multiplier;
-                dart.removeClass('dart-score-single dart-score-triple').addClass('dart-score-double');
-            }
-            else if (score === 0) {
-                dartText = 'Miss';
-                dart.removeClass('dart-score-double dart-score-triple').addClass('dart-score-single');
-            }
-            else {
-                dart.removeClass('dart-score-double dart-score-triple').addClass('dart-score-single');
-            }
-            dart.text(dartText);
-            dart.attr('data-score', score / multiplier);
-            dart.attr('data-multiplier', multiplier);
 
-            updateTotalVisitScore(score)
-            scores[currentDart] = scoreInt;
-        }
-
-        function resetElements() {
-            currentDart = 1;
-            $('.uv-active-player-visits .first').text('')
-                .removeClass('dart-score-single dart-score-double dart-score-triple');
-            $('.uv-active-player-visits .first').removeAttr('data-score');
-            $('.uv-active-player-visits .first').attr('data-multiplier', 1);
-            $('.uv-active-player-visits .first').attr('data-checkout', 0);
-
-            $('.uv-active-player-visits .second').text('')
-                .removeClass('dart-score-single dart-score-double dart-score-triple');
-            $('.uv-active-player-visits .second').removeAttr('data-score');
-            $('.uv-active-player-visits .second').attr('data-multiplier', 1);
-            $('.uv-active-player-visits .second').attr('data-checkout', 0);
-
-            $('.uv-active-player-visits .third').text('')
-                .removeClass('dart-score-single dart-score-double dart-score-triple');
-            $('.uv-active-player-visits .third').removeAttr('data-score');
-            $('.uv-active-player-visits .third').attr('data-multiplier', 1);
-            $('.uv-active-player-visits .third').attr('data-checkout', 0);
-
-            $('#submit-score-button').data('busted', 0);
-            $('#submit-score-button').data('finished', 0);
-        }
-
-        function clearDart(dart) {
-            dart.text('');
-            dart.attr('data-score', 0);
-            dart.attr('data-multiplier', 1);
-            dart.removeClass('dart-score-single dart-score-double dart-score-triple');
-            dart.removeAttr('data-score');
-        }
-
-    block script_check_visit_finished
-        script.
+            // Update score iside current player's container
             function updatePlayerScore(score) {
                 var currentPlayer = $('.current-player');
                 var currentScore = parseInt(currentPlayer.text());
@@ -405,6 +191,254 @@ block scripts
                 updatePlayerScore(scoreNumeric);
             }
 
+            // ---------------------
+            // TODO - refactor below
+            // ---------------------
+
+            FastClick.attach(document.body);
+
+            if (leg.is_finished) {
+                return;
+            }
+            var socket = getLegsNamespace(leg);
+            socket.on('spectator_connected', function (data) {
+                alertify.success(data + ' connected');
+            });
+            socket.on('spectator_disconnected', function (data) {
+                alertify.warning(data + ' disconnected');
+            });
+            socket.on('connected', function (data) {
+                console.log(data);
+            });
+
+            socket.on('score_update', function (data) {
+                $('#submit-score-button').prop('disabled', false);
+
+                // Set the global leg object
+                leg = data.leg;
+                scores = {};
+
+                $('#round-number').text('R' + (Math.floor(leg.visits.length / leg.players.length) + 1));
+
+                // Set updated score per player
+                var currentPlayerId = leg.current_player_id;
+                var players = data.players;
+                var totalFishNChips = 0;
+                var isLastVisitFishNChips = false;
+                for (var i = 0; i < players.length; i++) {
+                    var player = players[i];
+                    var td = $('#player-score-' + player.player_id);
+                    var tdLegs = $('#player-legs-' + player.player_id);
+                    var tdVisit = $('#player-visit-' + player.player_id);
+                    var label = td.find('.label-player-score');
+                    label.text(player.current_score);
+
+                    if (player.player_id === currentPlayerId) {
+                        td.removeClass().addClass('scorecard-active');
+                        tdLegs.removeClass().addClass('uv-active-player-legs');
+                        tdVisit.removeClass().addClass('visits-active');
+                        $('#submit-score-button').data('current-player-id', player.player_id);
+                        label.addClass('current-player');
+
+                        isLastVisitFishNChips = players[i === 0 ?  players.length - 1 : i - 1].modifiers.is_fish_and_chips;
+                    }
+                    else {
+                        td.removeClass().addClass('scorecard-active');
+                        tdLegs.removeClass().addClass('uv-inactive-player-legs');
+                        tdVisit.removeClass().addClass('visits-inactive');
+                        label.removeClass('current-player');
+                        label.removeAttr('data-current-player-id');
+
+                        if (player.modifiers.is_vilius_visit) {
+                            td.addClass('player-modifier-vilius');
+                        }
+
+                        if (player.modifiers.is_fish_and_chips) {
+                            td.addClass('player-modifier-fish-n-chips');
+                        }
+                    }
+                    if (player.modifiers.is_beer_match) {
+                        td.addClass('player-modifier-beer');
+                    }
+
+                    totalFishNChips += player.visit_statistics.fish_and_chips_counter;
+                }
+                if (isLastVisitFishNChips) {
+                    var msg = alertify.notify('<h4>Fish & Chips:</h4><h3>' + (totalFishNChips - 1) + '</h3>', 'fish-n-chips', 5, function(){  });
+                    var interval = setInterval(function(){
+                        msg.setContent('<h4>Fish & Chips:</h4><h3>' + totalFishNChips + '</h3>');
+                    }, 1000);
+                }
+
+                $('.visits-active .dart-score-total').html(0);
+                resetElements();
+            });
+
+            var socket = getLegsNamespace(leg);
+
+            $('#submit-score-button').click(function (event) {
+                $(this).attr('disabled', true);
+
+                var firstScore = getActiveVisitDartScore(1);
+                var firstMultiplier = getActiveVisitDartMultiplier(1);
+                var secondScore = getActiveVisitDartScore(2);
+                var secondMultiplier = getActiveVisitDartMultiplier(2);
+                var thirdScore = getActiveVisitDartScore(3)
+                var thirdMultiplier =  getActiveVisitDartMultiplier(3);
+                
+                var total = firstScore * firstMultiplier + secondScore * secondMultiplier + thirdScore * thirdMultiplier;
+
+                var currentPlayerId = $(this).data('current-player-id');
+                var data = JSON.stringify({
+                    leg_id: legId,
+                    player_id: currentPlayerId,
+                    first_dart: { value: firstScore, multiplier: firstMultiplier },
+                    second_dart: { value: secondScore, multiplier: secondMultiplier },
+                    third_dart: { value: thirdScore, multiplier: thirdMultiplier }
+                });
+
+                var isFinished = $(this).data('finished');
+                var isBust = $(this).data('busted');
+                if (isFinished) {
+                    responsiveVoice.speak("Game shot!", VOICE);
+                    executePost(window.location.origin + '/legs/' + legId + '/finish', data, 'application/json',
+                        function (response) {
+                            location.href = window.location.origin + '/legs/' + legId + '/result';
+                        },
+                        function (error) {
+                            console.log("Unable to proceed: " + error.responseText);
+                        }
+                    )
+                }
+                else {
+                    if (isBust) {
+                        responsiveVoice.speak("Noscore", VOICE, { pitch: 0.8 });
+                    }
+                    else {
+                        responsiveVoice.speak("" + total, VOICE);
+                    }
+                    socket.emit('throw', data);
+                }
+                event.preventDefault();
+            });
+
+            $('#toggle-buttons').click(function () {
+                $('#score-selector-table').toggle();
+            });
+
+            // Click button
+            $('#score-selector-table .throw-buttons :button').click(function () {
+                // Returns active player's current dart container
+                var dart = getCurrentDartContainer(currentDart);
+                // Handle empty
+                if (dart === null) {
+                    alert('Please submit previous score!');
+                    return;
+                }
+                // Get multiplier and score from pressed button
+                var multiplier = $(this).data('multiplier');
+                var score = $(this).attr('title');
+
+                setCurrentDartContainerValues(dart, score, multiplier);
+
+                var scoreNumeric = parseInt(score);
+                checkVisitFinished(dart, scoreNumeric);
+
+                // Remove focus from the button incase keyboard is used to enter next score
+                $(this).blur();
+            });
+
+            $('#undo-button').click(function () {
+                if (currentDart <= 1) {
+                    disableEnter = true;
+                    showConfirm('Delete last Visit', function() {
+                        socket.emit('undo_visit', { });
+                    }, function(){ /* NOOP */ });
+                    return;
+                }
+                var playerId = $('#submit-score-button').data('current-player-id');
+                var currentPlayerScore = parseInt($('.current-player').text());
+                currentDart--;
+                var lastScore = scores[currentDart];
+                updatePlayerScore(-lastScore);
+                updateTotalVisitScore(-lastScore);
+                delete scores[currentDart]
+
+                // Emit a undo throw to spectators
+                socket.emit('undo_throw', {
+                        current_player_id: playerId,
+                        score: -lastScore,
+                        dart_text: '',
+                        multiplier: 1,
+                        is_bust: false,
+                        is_finished: false,
+                        is_undo: true,
+                        darts_thrown: currentDart
+                });
+
+                var dart = getCurrentDartContainer(currentDart);
+                clearDart(dart);
+
+                // Remove focus from the button incase keyboard is used to enter next score
+                $(this).blur();
+            });
+
+            $('#btn-change-player-order').click(function() {
+                $('#modal-player-selector').modal({ show: true, keyboard: false, backdrop: 'static' });
+            });
+
+            $('#edit-scores-button').click(function () {
+                location.href = '/legs/' + legId + '/result';
+            });
+
+            $('#cancel-leg-button').click(function () {
+                showConfirm('Leg will be cancelled.', function() {
+                    executeDelete('/legs/' + legId + '/cancel',
+                        function (response) {
+                            location.href = '/matches';
+                        },
+                        function (error) {
+                            var alert = $('#cancel-leg-failed-alert');
+                            alert.show();
+                            alert.text('Unable to cancel leg, see log for details (' + error.statusText + ')');
+                        }
+                    );
+                }, function(){ /* NOOP */ });
+            });
+        });
+
+        function resetElements() {
+            currentDart = 1;
+            $('.visits-active .first').text('')
+                .removeClass('dart-score-single dart-score-double dart-score-triple');
+            $('.visits-active .first').removeAttr('data-score');
+            $('.visits-active .first').attr('data-multiplier', 1);
+            $('.visits-active .first').attr('data-checkout', 0);
+
+            $('.visits-active .second').text('')
+                .removeClass('dart-score-single dart-score-double dart-score-triple');
+            $('.visits-active .second').removeAttr('data-score');
+            $('.visits-active .second').attr('data-multiplier', 1);
+            $('.visits-active .second').attr('data-checkout', 0);
+
+            $('.visits-active .third').text('')
+                .removeClass('dart-score-single dart-score-double dart-score-triple');
+            $('.visits-active .third').removeAttr('data-score');
+            $('.visits-active .third').attr('data-multiplier', 1);
+            $('.visits-active .third').attr('data-checkout', 0);
+
+            $('#submit-score-button').data('busted', 0);
+            $('#submit-score-button').data('finished', 0);
+        }
+
+        function clearDart(dart) {
+            dart.text('');
+            dart.attr('data-score', 0);
+            dart.attr('data-multiplier', 1);
+            dart.removeClass('dart-score-single dart-score-double dart-score-triple');
+            dart.removeAttr('data-score');
+        }
+
 
 block content
     - var round_number = Math.floor(leg.visits.length / leg.players.length) + 1;
@@ -436,22 +470,26 @@ block content
                                         label= (player.wins ? player.wins : '0')
                     tr
                         each player in leg_players
-                            - var clazz = player.is_current_player ? 'uv-active-player-visits' : 'uv-inactive-player-visits'
+                            - var clazz = player.is_current_player ? 'visits-active' : 'visits-inactive'
                                 td(id='player-visit-' + player.player_id class=clazz)
-                                    table(style='width: 100%;')
+                                    table(style='width: 100%; table-layout: fixed;')
                                         tbody
                                             tr
-                                                td(class=''): label(class='first' text='0' data-multiplier='1')
-                                                td(class=''): label(class='second' text='0' data-multiplier='1')
-                                                td(class=''): label(class='third' text='0' data-multiplier='1')
+                                                td
+                                                    div(class='dart-score')
+                                                        div(class='first' data-multiplier='1') &nbsp;
+                                                td
+                                                    div(class='dart-score')
+                                                        div(class='second' data-multiplier='1') &nbsp;
+                                                td
+                                                    div(class='dart-score')
+                                                        div(class='third' data-multiplier='1') &nbsp;
                                             tr
                                                 td(style='padding: 3px;')
                                             tr
-                                                td(colspan='3' class='dart-score-total')= 0
+                                                td(colspan='3')
+                                                    div(class='total-score')= 0
                                     
-
-
-
     div(class='table-responsive')
         table(id='score-selector-table' class='table' style='display: none;')
             tbody

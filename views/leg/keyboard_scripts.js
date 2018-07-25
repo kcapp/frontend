@@ -7,7 +7,7 @@ $(function () {
 
     $(document).keydown(function (e) {
         if (e.key === 'Backspace') {
-            var totalScoreContainer = $('.uv-active-player-visits .dart-score-total');
+            var totalScoreContainer = $('.visits-active .dart-score-total');
             var currentPlayerScore = parseInt(totalScoreContainer.html());
 
             var dart = getCurrentDart();
@@ -31,7 +31,7 @@ $(function () {
     });
 
     $(document).keypress(function (e) {
-        var totalScoreContainer = $('.uv-active-player-visits .dart-score-total');
+        var totalScoreContainer = $('.visits-active .total-score');
         var currentPlayerScore = parseInt(totalScoreContainer.html());
         var dart = getCurrentDart();
         switch (e.key) {
