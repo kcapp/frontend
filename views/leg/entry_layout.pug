@@ -105,18 +105,20 @@ block scripts
 
             // Update score iside current player's container
             function updatePlayerScore(score) {
-                var currentPlayer = $('.current-player');
-                var currentScore = parseInt(currentPlayer.text());
-                currentPlayer.text(currentScore - score);
+                // For unknown reason current player is stored as data attribute on submit button
+                var currentPlayerId = $('#submit-score-button').data('current-player-id');
+                var currentPlayerScoreContainer = $('#player-score-' + currentPlayerId);
+                var currentScore = parseInt(currentPlayerScoreContainer.text());
+                currentPlayerScoreContainer.text(currentScore - score);
             }
 
             function checkVisitFinished(dart, scoreNumeric) {
                 var isBust = false;
                 var isFinished = false;
 
-                var currentPlayer = $('.current-player');
-                var currentPlayerScore = parseInt(currentPlayer.text());
                 var currentPlayerId = $('#submit-score-button').data('current-player-id');
+                var currentPlayerScoreContainer = $('#player-score-' + currentPlayerId);
+                var currentPlayerScore = parseInt(currentPlayerScoreContainer.text());
 
                 var scoreAfterThrow = parseInt(currentPlayerScore - scoreNumeric);
                 if (scoreAfterThrow == 0) {
@@ -226,38 +228,24 @@ block scripts
                 var isLastVisitFishNChips = false;
                 for (var i = 0; i < players.length; i++) {
                     var player = players[i];
-                    var td = $('#player-score-' + player.player_id);
-                    var tdLegs = $('#player-legs-' + player.player_id);
-                    var tdVisit = $('#player-visit-' + player.player_id);
-                    var label = td.find('.label-player-score');
-                    label.text(player.current_score);
+
+                    var playerScoreCard = $('#scorecard-player-' + player.player_id);
+                    var scoreContainer = $('#player-score-' + player.player_id);
+                    var visitContainer = $('#player-visit-' + player.player_id);
+
+                    scoreContainer.text(player.current_score);
 
                     if (player.player_id === currentPlayerId) {
-                        td.removeClass().addClass('scorecard-active');
-                        tdLegs.removeClass().addClass('uv-active-player-legs');
-                        tdVisit.removeClass().addClass('visits-active');
-                        $('#submit-score-button').data('current-player-id', player.player_id);
-                        label.addClass('current-player');
+                        playerScoreCard.removeClass().addClass('scorecard scorecard-active');
+                        visitContainer.removeClass().addClass('visits-active');
 
                         isLastVisitFishNChips = players[i === 0 ?  players.length - 1 : i - 1].modifiers.is_fish_and_chips;
+
+                        $('#submit-score-button').data('current-player-id', player.player_id);
                     }
                     else {
-                        td.removeClass().addClass('scorecard-active');
-                        tdLegs.removeClass().addClass('uv-inactive-player-legs');
-                        tdVisit.removeClass().addClass('visits-inactive');
-                        label.removeClass('current-player');
-                        label.removeAttr('data-current-player-id');
-
-                        if (player.modifiers.is_vilius_visit) {
-                            td.addClass('player-modifier-vilius');
-                        }
-
-                        if (player.modifiers.is_fish_and_chips) {
-                            td.addClass('player-modifier-fish-n-chips');
-                        }
-                    }
-                    if (player.modifiers.is_beer_match) {
-                        td.addClass('player-modifier-beer');
+                        playerScoreCard.removeClass().addClass('scorecard-inactive');
+                        visitContainer.removeClass().addClass('visits-inactive');
                     }
 
                     totalFishNChips += player.visit_statistics.fish_and_chips_counter;
@@ -269,7 +257,7 @@ block scripts
                     }, 1000);
                 }
 
-                $('.visits-active .dart-score-total').html(0);
+                $('.visits-active .total-score').html(0);
                 resetElements();
             });
 
@@ -459,11 +447,11 @@ block content
                     tr
                         each player in leg_players
                             - var playerId = player.player_id;
-                            - var clazz = player.is_current_player ? 'scorecard-active' : 'scorecard-inactive'
+                            - var clazz = player.is_current_player ? 'scorecard scorecard-active' : 'scorecard scorecard-inactive'
                             td
-                                div(class=clazz)
+                                div(class=clazz id='scorecard-player-' + playerId)
                                     div(id='player-name-' + playerId class='label-player-name')= players[playerId].name
-                                    div(id='player-id-' + playerId class='label label-block label-player-score' + (player.is_current_player ? ' current-player' : ''))= player.current_score
+                                    div(id='player-score-' + playerId class='label label-block label-player-score')= player.current_score
                                 
                                     div(id='player-legs-' + player.player_id class='player-legs')
                                         label= (player.wins ? player.wins : '0')

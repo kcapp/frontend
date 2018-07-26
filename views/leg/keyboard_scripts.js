@@ -106,7 +106,7 @@ $(function () {
             showAlert('Invalid value', function () { });
         }
         if (dartText !== '') {
-            setDartValue(dart, dartText * currentMultiplier, currentMultiplier);
+            setCurrentDartContainerValues(dart, dartText * currentMultiplier, currentMultiplier);
         }
         // Make sure we don't change score for current player before we press ENTER
         totalScoreContainer.html(currentPlayerScore);
