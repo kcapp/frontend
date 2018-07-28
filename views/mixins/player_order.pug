@@ -50,7 +50,7 @@ mixin player_order(legPlayers)
                                 tr
                                     each player in legPlayers
                                         - var playerId = player.player_id
-                                        td(id='player-score-' + playerId class='uv-inactive-player-score' data-player-id=playerId)
+                                        td(id='player-score-' + playerId class='block-container-blue' data-player-id=playerId)
                                             label(id='player-name-' + playerId class='label-player-name')= players[playerId].name
                     h5 Order
                     div(class='table-responsive no-border')

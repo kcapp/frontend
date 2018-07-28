@@ -555,14 +555,30 @@ block content
         Unable to cancel leg
 
     div(class='pt-20')
-    div(class='block-container-blue') 
-        div(class='float-left')= 'Leg (X01) '  
-        div(class='float-left pl-10')= match.match_mode.short_name + '/'
-        div(class='float-left')= 'R' + round_number
+    div(class='block-container-blue' style='overflow: visible;') 
+        div(class='float-left font-24')= 'Leg (X01) '  
+        div(class='float-left font-24 pl-10')= match.match_mode.short_name + '/'
+        div(class='float-left font-24')= 'R' + round_number
+        div(class='float-right')
+            div(class='btn-group')
+                button(type='button' class='btn btn-primary dropdown-toggle' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false') Options&nbsp;&nbsp;
+                    span(class='caret')
+                    span(class='sr-only')
+                ul(class='dropdown-menu')
+                    block advanced_options
+                        li: a(id='edit-scores-button') Edit scores
+                        li: a(id='btn-change-player-order') Change Order
+                        li: a(id='toggle-buttons') Toggle buttons
+                        li: a(id='btn-open-chat') Open Chat
+                        li(role='separator' class='divider')
+                        li: a(id='cancel-leg-button') Cancel Leg
+
+            div(class='btn-group')
+                ul(class='dropdown-menu')
+                    block advanced_options
+        div(style='clear: both;')
 
     block score_header
-        // OH.MY.GOD
-        //+get_score_header(match.match_mode, round_number, leg_players, match.tournament_id != null, true)
         div
             table(id='scores-table')
                 tbody
@@ -646,23 +662,6 @@ block content
                         +button_row([ 8, 7, 6, 5 ])
                     tr(class='throw-buttons row')
                         +button_row([ 4, 3, 2, 1 ])
-
-    div(class='btn-group')
-        button(type='button' class='btn btn-primary dropdown-toggle' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false') Options&nbsp;&nbsp;
-            span(class='caret')
-            span(class='sr-only')
-        ul(class='dropdown-menu')
-            block advanced_options
-                li: a(id='edit-scores-button') Edit scores
-                li: a(id='btn-change-player-order') Change Order
-                li: a(id='toggle-buttons') Toggle buttons
-                li: a(id='btn-open-chat') Open Chat
-                li(role='separator' class='divider')
-                li: a(id='cancel-leg-button') Cancel Leg
-
-    div(class='btn-group')
-        ul(class='dropdown-menu')
-            block advanced_options
 
     //- Spectator chat
     include ../chat/chat.pug
