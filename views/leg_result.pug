@@ -315,41 +315,25 @@ block content
             div(style='clear: both; padding-top: 5px; color: #c7c7c7;')
                 p Starting score was #{leg.starting_score}, and a total of #{leg.darts_thrown ? leg.darts_thrown : 0} darts were thrown by #{leg.players.length} players
 
-    div(class='block-container-options') 
-        div(class='float-left icon')
-            div 
-                a(href='#summary' data-toggle='tab')
-                    i(class="fas fa-signal") 
-                    div(class='undertext') Summary
-        div(class='float-left icon')
-            div 
-                a(href='#visits' data-toggle='tab')
-                    i(class="fas fa-arrow-alt-circle-up") 
-                    div(class='undertext') Visits            
-        div(class='float-left icon')
-            div 
-                a(href='#stats' data-toggle='tab')
-                    i(class="fas fa-flag-checkered") 
-                    div(class='undertext') Stats 
-        div(class='float-right icon')
-                a(id='button-rematch')
-                    i(class="fas fa-sync") 
-                    div(class='undertext') Rematch 
-        div(class='float-right icon')
-                a(id='button-undo-finish')
-                    i(class="fas fa-sync") 
-                    div(class='undertext') Undo leg finish 
-        if match.is_finished
-            div(class='float-right icon')
-                a(id='back-to-match' data-match=leg.match_id)
-                    i(class="fas fa-caret-square-left") 
-                    div(class='undertext') Back to match
-        else
-            div(class='float-right icon')
-                a(id='continue-match' data-match=match.id)
-                    i(class="fas fa-caret-square-left") 
-                    div(class='undertext') Continue match
+    div(class='block-container-options' style='overflow: visible;') 
+        div(class='float-left')
+            ul(class='nav nav-pills')
+                li(role='presentation' class='active'): a(href='#summary' data-toggle='tab') Summary
+                li(role='presentation'): a(href='#visits' data-toggle='tab') Visits
+                li(role='presentation'): a(href='#stats' data-toggle='tab') Stats
 
+        div(class='float-right')
+            div(class='btn-group')
+                button(type='button' class='btn btn-primary dropdown-toggle' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false') Options&nbsp;&nbsp;
+                    span(class='caret')
+                    span(class='sr-only')
+                ul(class='dropdown-menu')
+                    li: a(id='button-rematch') Rematch
+                    li: a(id='button-undo-finish') Undo leg finish
+                    li: a(id='back-to-match' data-match=leg.match_id) Back to match
+                    li: a(id='continue-match' data-match=match.id) Continue match
+        div(style='clear: both;')
+                
     div(class='tab-content')
         div(role='tabpanel' id='summary' class='tab-pane active') 
             if isFinished
