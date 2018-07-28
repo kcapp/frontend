@@ -43,6 +43,7 @@ block scripts
         $(function () {
             // Functions to be loaded after document load 
 
+            var disableEnter = false;
             
             $(document).keydown(function (e) {
                 if (e.key === 'Backspace') {
@@ -138,14 +139,14 @@ block scripts
                             updateTotalVisitScore(scoreNumeric);
                         }
                         dartValue = '';
-                        currentMultiplier = 1;
+                        dartMultiplier = 1;
                         return;
                         break;
                     default: break;
                 }
                 var value = parseInt(dartValue);
 
-                if ((value > 20 && value !== 25) || (value == 25 && currentMultiplier > 2)) {
+                if ((value > 20 && value !== 25) || (value == 25 && dartMultiplier > 2)) {
                     dartValue = dartValue.substring(0, dartValue.length - 1);
                     disableEnter = true;
                     showAlert('Invalid value', function () { });
@@ -180,7 +181,7 @@ block scripts
                 // Missed ?
                 if (scoreInt === 0 ) {
                     multiplier = 1;
-                    currentMultiplier = 1;
+                    dartMultiplier = 1;
                     score = 0;
                 }
 
