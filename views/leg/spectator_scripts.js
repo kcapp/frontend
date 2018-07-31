@@ -20,7 +20,7 @@ function configureSocketEvents(socket, leg, playersMap, liveScoreUpdate, venueSo
     } else {
         // Add a row to the top of the table which contains the current throw for a given player
         var html =
-            "<tr>" +
+            "<tr class='block-container-mid'>" +
             "<td id='current-player' style='vertical-align: baseline;'>" + playersMap[leg.current_player_id].name + "</td>" +
             "<td class='col-sm-2 dart-score-container no-border'><label id='first' text='0'></label></td>" +
             "<td class='col-sm-2 dart-score-container no-border'><label id='second' text='0'></label></td>" +
@@ -93,11 +93,14 @@ function configureSocketEvents(socket, leg, playersMap, liveScoreUpdate, venueSo
             var player = players[key];
             var playerScoreCard = $('#scorecard-player-' + player.player_id);
             var playerScore = $('#player-score-' + player.player_id);
+            var playerVisits = $('#player-visit-' + player.player_id);
             playerScore.text(player.current_score);
             if (player.is_current_player) {
                 playerScoreCard.removeClass().addClass('scorecard scorecard-active');
+                playerVisits.removeClass().addClass('visits-active');
             } else {
                 playerScoreCard.removeClass().addClass('scorecard scorecard-inactive');
+                playerVisits.removeClass().addClass('visits-inactive');
             }
         }
         // Set round number and current player
@@ -105,14 +108,10 @@ function configureSocketEvents(socket, leg, playersMap, liveScoreUpdate, venueSo
         $('#current-player').text(playersMap[data.leg.current_player_id].name);
 
         // Reset UI elements
-        $('.visits-active .first').text('');
-        //$('.visits-active .first').removeClass();
-        $('.visits-active .second').text('');
-        //$('.visits-active .second').removeClass();
-        $('.visits-active .third').text('');
-        //$('.visits-active .third').removeClass();
-        $('.visits-active .total-score').text(0);
-
+        resetThrowContainer($('.visits-active .first'));
+        resetThrowContainer($('.visits-active .second'));
+        resetThrowContainer($('.visits-active .third'));
+        
         // Update the visits table
         if (!data.is_undo) {
             var visit = data.leg.visits[data.leg.visits.length - 1];
@@ -135,6 +134,10 @@ function configureSocketEvents(socket, leg, playersMap, liveScoreUpdate, venueSo
             $('#table-leg-visits > tbody > tr:first').after(html);
         }
     });
+
+    function resetThrowContainer(container) {
+        container.text('').removeClass('dart-score-single dart-score-double dart-score-triple');
+    }
 
     socket.on('leg_finished', function (data) {
         if (location.href.includes('/venues/')) {
