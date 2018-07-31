@@ -42,20 +42,20 @@ function configureSocketEvents(socket, leg, playersMap, liveScoreUpdate, venueSo
             showAlert(playersMap[data.current_player_id].name + ' won the leg', function () {
                 alertify.success('Leg finished');
             });
-            var legsWon = $('.uv-active-player-legs').find('label');
+            var legsWon = $('#player-legs-' + data.current_player_id);
             legsWon.text(parseInt(legsWon.text()) + 1)
             return;
         }
 
         var dart;
         if (data.darts_thrown === 1) {
-            dart = $('#first');
+            dart = $('.visits-active .first');
         }
         else if (data.darts_thrown === 2) {
-            dart = $('#second');
+            dart = $('.visits-active .second');
         }
         else if (data.darts_thrown === 3) {
-            dart = $('#third');
+            dart = $('.visits-active .third');
         }
         else {
             console.log("Unknown darts_thrown: " + data.darts_thrown);
@@ -77,9 +77,9 @@ function configureSocketEvents(socket, leg, playersMap, liveScoreUpdate, venueSo
         }
 
         if (liveScoreUpdate) {
-            var playerScore = $('#player-id-' + data.current_player_id);
+            var playerScore = $('#player-score-' + data.current_player_id);
             playerScore.text(parseInt(playerScore.text()) - data.score);
-            $('#total').text(data.score + parseInt($('#total').text()));
+            $('.visits-active .total-score').text(data.score + parseInt($('.visits-active .total-score').text()));
         }
     });
 
@@ -91,20 +91,13 @@ function configureSocketEvents(socket, leg, playersMap, liveScoreUpdate, venueSo
         var players = data.players;
         for (key in players) {
             var player = players[key];
-            var playerLabel = $('#player-id-' + player.player_id);
-            var playerTD = $('#player-score-' + player.player_id);
-            var playerLegsTD = $('#player-legs-' + player.player_id);
-            playerLabel.text(player.current_score);
+            var playerScoreCard = $('#scorecard-player-' + player.player_id);
+            var playerScore = $('#player-score-' + player.player_id);
+            playerScore.text(player.current_score);
             if (player.is_current_player) {
-                playerTD.removeClass('uv-inactive-player-score');
-                playerTD.addClass('uv-active-player-score');
-                playerLegsTD.removeClass('uv-inactive-player-legs');
-                playerLegsTD.addClass('uv-active-player-legs');
+                playerScoreCard.removeClass().addClass('scorecard scorecard-active');
             } else {
-                playerTD.addClass('uv-inactive-player-score');
-                playerTD.removeClass('uv-active-player-score');
-                playerLegsTD.addClass('uv-inactive-player-legs');
-                playerLegsTD.removeClass('uv-active-player-legs');
+                playerScoreCard.removeClass().addClass('scorecard scorecard-inactive');
             }
         }
         // Set round number and current player
@@ -112,13 +105,13 @@ function configureSocketEvents(socket, leg, playersMap, liveScoreUpdate, venueSo
         $('#current-player').text(playersMap[data.leg.current_player_id].name);
 
         // Reset UI elements
-        $('#first').text('');
-        $('#first').removeClass();
-        $('#second').text('');
-        $('#second').removeClass();
-        $('#third').text('');
-        $('#third').removeClass();
-        $('#total').text(0);
+        $('.visits-active .first').text('');
+        //$('.visits-active .first').removeClass();
+        $('.visits-active .second').text('');
+        //$('.visits-active .second').removeClass();
+        $('.visits-active .third').text('');
+        //$('.visits-active .third').removeClass();
+        $('.visits-active .total-score').text(0);
 
         // Update the visits table
         if (!data.is_undo) {

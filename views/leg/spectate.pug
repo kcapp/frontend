@@ -33,28 +33,36 @@ block content
                     tr
                         each player in leg_players
                             - var playerId = player.player_id;
-                            - var clazz = player.is_current_player ? 'scorecard-active' : 'scorecard-inactive'
+                            - var clazz = player.is_current_player ? 'scorecard scorecard-active' : 'scorecard scorecard-inactive'
                             td
-                                div(class=clazz)
+                                div(class=clazz id='scorecard-player-' + playerId)
                                     div(id='player-name-' + playerId class='label-player-name')= players[playerId].name
-                                    div(id='player-id-' + playerId class='label label-block label-player-score' + (player.is_current_player ? ' current-player' : ''))= player.current_score
+                                    div(id='player-score-' + playerId class='label label-block label-player-score')= player.current_score
                                 
                                     div(id='player-legs-' + player.player_id class='player-legs')
                                         label= (player.wins ? player.wins : '0')
+
                     tr
                         each player in leg_players
-                            - var clazz = player.is_current_player ? 'uv-active-player-visits' : 'uv-inactive-player-visits'
+                            - var clazz = player.is_current_player ? 'visits-active' : 'visits-inactive'
                                 td(id='player-visit-' + player.player_id class=clazz)
-                                    table(style='width: 100%;')
+                                    table(style='width: 100%; table-layout: fixed;')
                                         tbody
                                             tr
-                                                td(class=''): label(class='first' text='0' data-multiplier='1')
-                                                td(class=''): label(class='second' text='0' data-multiplier='1')
-                                                td(class=''): label(class='third' text='0' data-multiplier='1')
+                                                td
+                                                    div(class='dart-score')
+                                                        div(class='first' data-multiplier='1') &nbsp;
+                                                td
+                                                    div(class='dart-score')
+                                                        div(class='second' data-multiplier='1') &nbsp;
+                                                td
+                                                    div(class='dart-score')
+                                                        div(class='third' data-multiplier='1') &nbsp;
                                             tr
                                                 td(style='padding: 3px;')
                                             tr
-                                                td(colspan='3' class='dart-score-total')= 0
+                                                td(colspan='3')
+                                                    div(class='total-score')= 0
 
     if !leg.is_finished && leg.board_stream_url
         img(src=leg.board_stream_url class='center-image' alt='Board live stream')
