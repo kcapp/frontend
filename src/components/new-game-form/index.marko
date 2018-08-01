@@ -1,0 +1,77 @@
+<form>
+  <div style="width: 50%; float: left;">
+    <div class="block-container-header">
+      <i class="fas fa-users"/>
+      <span class="ml-10">Players</span>
+    </div>
+    <div class="block-container-with-header">
+      <div class="form-group form-check" id="sortable-player-list">
+        <for(player in state.selected)>
+          <player-selector player=player on-add-player('removePlayer')/>
+        </for>
+      </div>
+    </div>
+    <div class="block-container-header">
+      <i class="fas fa-mouse-pointer"/>
+      <span class="ml-10">Select players</span>
+    </div>
+    <div class="block-container-with-header">
+      <div class="form-group form-check" id="all-players-list">
+        <for(player in state.players)>
+          <player-selector player=player on-add-player('addPlayer')/>
+        </for>
+      </div>
+    </div>
+  </div>
+  <div style="padding-left: 20px; width: 50%; float: right;">
+    <div class="block-container-header">
+      <i class="fas fa-cogs"/>
+      <span class="ml-10">Game settings</span>
+    </div>
+    <div class="block-container-with-header">
+      <div class="form-group" style="clear: both;">
+        <label for="leg-type-select">Starting Score</label>
+        <select class="form-control" id="leg-type-select" onChange('handleScoreChange')>
+          <for(score in state.input.scores)>
+            <option value=score selected=(state.options.starting_score === score)>${score}</option>
+          </for>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="match-type-select">Match Type</label>
+        <select class="form-control" id="match-type-select" onChange('handleTypeChange')>
+          <for(type in state.input.types)>
+            <option value=type.id selected=(state.options.game_type === type.id)>${type.name}</option>
+          </for>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="match-mode-select">Match Mode</label>
+        <select class="form-control" id="match-mode-select" onChange('handleModeChange')>
+          <for(mode in state.input.modes)>
+            <option value=mode.id selected=(state.options.game_mode === mode.id)>${mode.name}</option>
+          </for>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="match-stake-select">Match Stake</label>
+        <select class="form-control" id="match-stake-select" onChange('handleStakeChange')>
+          <option value=null selected>-</option>
+          <for(stake in state.input.stakes)>
+            <option value=stake.id>${stake.name}</option>
+          </for>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="venue-select">Venue</label>
+        <select class="form-control" id="venue-select" onChange('handleVenueChange')>
+          <option value=null selected>-</option>
+          <for(venue in state.input.venues)>
+            <option value=venue.id>${venue.name}</option>
+          </for>
+        </select>
+      </div>
+      <button class="btn btn-primary" type="submit" on-click('newGame')>Start</button>
+    </div>
+  </div>
+</form>

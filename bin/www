@@ -94,4 +94,8 @@ function onListening() {
         ? 'pipe ' + addr
         : 'port ' + addr.port;
     debug('Listening on ' + bind);
+
+    if (process.send) {
+        process.send('online');
+    }
 }
