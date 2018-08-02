@@ -86,9 +86,10 @@ block content
                             if match.tournament_id
                                 div(class='float-left' style='margin-right: 10px;')
                                     label(class='label label-warning') Official
-                            div= moment(match.created_at).format('YYYY-MM-DD HH:mm:ss')
                             if isLive
-                                label(class='label label-info' style='line-height: inherit;') Live
+                                div(class='float-left' style='margin-right: 10px;')
+                                    label(class='label label-info' style='line-height: inherit;') Live
+                            div= moment(match.created_at).format('YYYY-MM-DD HH:mm:ss')
                         td
                             if match.venue
                                 div= match.venue.name
