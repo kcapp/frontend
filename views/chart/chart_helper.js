@@ -65,22 +65,26 @@ function getPolarChartConfig(value1, value2, chartTitle1, chartTitle2, canvasTit
     var config = {
         type: 'polarArea',
         data: {
-        datasets: [
-            {
-                data: [
-                    value1, 
-                    value2
-                ],
-                backgroundColor: [
-                    'rgba(77, 174, 168, 0.5)',
-                    'rgba(77, 174, 168, 0.8)',
-                ]
-            }
-        ],
-        labels: [
-            chartTitle1,
-            chartTitle2,
-        ]
+            datasets: [
+                {
+                    data: [
+                        value1, 
+                        value2
+                    ],
+                    backgroundColor: [
+                        'rgba(77, 174, 168, 0.5)',
+                        'rgba(77, 174, 168, 0.8)',
+                    ],
+                    labels: [
+                        'a',
+                        'b'
+                    ]
+                }
+            ],
+            labels: [
+                chartTitle1,
+                chartTitle2,
+            ]
         },
         options: {
             scale: {
@@ -105,8 +109,7 @@ function getPolarChartConfig(value1, value2, chartTitle1, chartTitle2, canvasTit
             tooltips: {
                 callbacks: {
                 label: function(item, data) {
-                console.log(data.labels, item);
-                    return data.datasets[item.datasetIndex].label+ ": "+ data.labels[item.index]+ ": "+ data.datasets[item.datasetIndex].data[item.index];
+                    return data.labels[item.index];
                 }
             }
         }
