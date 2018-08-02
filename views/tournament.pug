@@ -13,7 +13,8 @@ block scripts
             $('#table-matches-list.table').DataTable({
                 searching: false, bInfo : false, bLengthChange: false,
                 pageLength: 5,
-                order: [[ 1,  'desc' ]]
+                order: [[ 1,  'desc' ]],
+                bAutoWidth: false,
             });
 
             $('[data-toggle="tooltip"]').tooltip();
@@ -116,7 +117,6 @@ block content
                                             th Venue
                                             th Type
                                             th(style='min-width: 300px;') Players
-                                            th Winner
                                             th(class='text-center') Results
                                     tbody
                                         each match in matches[id]
@@ -132,17 +132,17 @@ block content
                                                         div= match.venue.name
                                                 td(class='col-sm-1')= match.match_type.name
                                                 td(class='col-sm-1')
-                                                    each id in match.players
-                                                        div(class='float-left')
-                                                            span(class='label label-secondary')= players[id].name
-                                                if match.is_finished
-                                                    td(class='col-sm-1')
+                                                    if match.is_finished
                                                         if match.winner_id === null
                                                             div: span(class='label label-default' style='line-height: inherit;') Draw
                                                         else
-                                                            div: span(class='label label-success' style='line-height: inherit;')= players[match.winner_id].name
-                                                else
-                                                    td(class='col-sm-2')
+                                                            each id in match.players
+                                                                if id == match.winner_id
+                                                                    span(class='label label-success' style='line-height: inherit;')= players[match.winner_id].name
+                                                                else
+                                                                    span(class='label label-secondary')= players[id].name
+                                                    else
+                                                        td(class='col-sm-2')= ''
                                                 td(class='col-sm-2 text-center')
                                                     if !match.is_finished
                                                         a(href='/matches/' + match.id)
