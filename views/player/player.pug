@@ -16,12 +16,12 @@ block scripts
         include ../chart/chart_helper.js
     script.
         $(function () {
-            $('#table-player-hits').DataTable({
+            $('#table-player-profile-hits').DataTable({
                 searching: false, bInfo : false, bLengthChange: false,
                 pageLength: 15,
                 order: [[ 1,  'desc' ]]
             });
-            $('#table-player-visits').DataTable({
+            $('#table-player-profile-visits').DataTable({
                 searching: false, bInfo : false, bLengthChange: false,
                 pageLength: 15,
                 order: [[ 3,  'desc' ]],
@@ -46,28 +46,6 @@ block scripts
                 window.location.hash = e.target.hash;
             });
          });
-    script.
-        var scoresMap = !{JSON.stringify(statistics.hits)};
-        $(function () {
-            var canvas = $("#dartboard-heatmap")[0];
-            drawHeatmap(canvas, scoresMap, 0, 5, 20, 30);
-            $("#heatmap-value-selector").change(function () {
-                var size = 5;
-                var spread = 20;
-                var intensity = 30;
-                var display = this.value;
-                if (display == 2) {
-                    size = 10;
-                } else if (display == 3) {
-                    size = 3
-                    spread = 10
-                }
-                drawHeatmap(canvas, scoresMap, display, size, spread, intensity);
-            });
-            $('.nav a[href="#heatmap"]').on('shown.bs.tab', function (e) {
-                drawHeatmap(canvas, scoresMap, 0, 5, 20, 30);
-            });
-        });
     script.
         var progression = !{JSON.stringify(progression)};
         var labels = [];
@@ -105,6 +83,40 @@ block scripts
                 fill: false
             }]
             var ppdChart = new Chart("canvas-ppd", getChartConfig('PPD Per Week', 'line', 'Date', 'PPD', labels, datasetsPPD));
+
+            var stats = !{JSON.stringify(statistics)};
+            var percentage = parseFloat(Math.round(stats.accuracy_overall * 100) / 100).toFixed(2);
+            var matchesChart = new Chart('canvas-accuracy-overall', getPercentageChartConfig(percentage, 'Overall accuracy', 'doughnut'));
+            $('#canvas-accuracy-overall-percentage').text(percentage + '%');
+
+            var percentage20 = parseFloat(Math.round(stats.accuracy_20 * 100) / 100).toFixed(2);
+            var matchesChart = new Chart('canvas-accuracy-20', getPercentageChartConfig(percentage20, 'Accuracy 20s', 'doughnut'));
+            $('#canvas-accuracy-20-percentage').text(percentage20 + '%');
+
+            var percentage19 = parseFloat(Math.round(stats.accuracy_19 * 100) / 100).toFixed(2);
+            var matchesChart = new Chart('canvas-accuracy-19', getPercentageChartConfig(percentage19, 'Accuracy 19s', 'doughnut'));
+            $('#canvas-accuracy-19-percentage').text(percentage19 + '%');
+
+            var player = !{JSON.stringify(player)};
+            var percentageMatches = player.matches_played == 0 ? '0.00' : (player.matches_won * 100 / player.matches_played).toFixed(2);
+            var percentageLegs = player.legs_played == 0 ? '0.00' : (player.legs_won * 100 / player.legs_played).toFixed(2);
+
+            var matchesChart = new Chart(
+                'canvas-win-percentage-matches', 
+                getPolarChartConfig(
+                    percentageMatches, 
+                    percentageLegs, 
+                    percentageMatches + '% matches', 
+                    percentageLegs + '% legs', 
+                    'Winning percentage'
+                )
+            );
+            var legsChart = new Chart('canvas-win-percentage-legs', getPercentageChartConfig(
+                percentageLegs, 
+                'Leg winning percentage: ' + percentageLegs + '%',
+                'pie'
+                )
+            );
 
             var datasetCheckout = [{
                 label: "%",
@@ -147,266 +159,280 @@ block scripts
         });
 
 block content
-    h2(style='padding: 10px 0px 20px 0px;') Statistics for #{player.name}
+    div(class='pt-20')
+    div(class='block-container') 
+        div(class='float-left')
+            div(class='player-pic-cutout')
+                +get_player_profile_pic(player)
+        div(class='float-left pl-20') 
+            h2= player.name
+            h4(style='color: #a5a5a5;')= player.nickname ? player.nickname : '-'
+        div(class='float-right')
+            label(class='player-color-label' style='background-color: ' + player.color + '; color: ' + player.color + ';')= player.color
 
-    ul(class='nav nav-pills')
-        li(role='presentation' class='active'): a(href='#overview' data-toggle='tab') Overview
-        li(role='presentation'): a(href='#player' data-toggle='tab') Player
-        li(role='presentation'): a(href='#highscores' data-toggle='tab') High scores
-        li(role='presentation'): a(href='#hits' data-toggle='tab') Hits
-        li(role='presentation'): a(href='#heatmap' data-toggle='tab') Heatmap
-        li(role='presentation'): a(href='#visits' data-toggle='tab') Visits
-        li(role='presentation'): a(href='#checkouts' data-toggle='tab') Checkouts
-        li(role='presentation'): a(href='#progression' data-toggle='tab') Progression
-        li(role='presentation'): a(href='#tournament' data-toggle='tab') Tournaments
+    div(style='display: flex;')
+        div(class='block-container player-profile-menu')
+            div(class='player-profile-menu-item') 
+                i(class="fas fa-thumbtack") 
+                span 
+                    a(href='#overview' data-toggle='tab') Overview
+            div(class='player-profile-menu-item') 
+                i(class="fas fa-star") 
+                span 
+                    a(href='#highscores' data-toggle='tab') High scores
+            div(class='player-profile-menu-item') 
+                i(class="fas fa-crosshairs") 
+                span 
+                    a(href='#hits' data-toggle='tab') Hits
+            div(class='player-profile-menu-item') 
+                i(class="fas fa-eye") 
+                span 
+                    a(href='#visits' data-toggle='tab') Visits
+            div(class='player-profile-menu-item') 
+                i(class="fas fa-check-double") 
+                span 
+                    a(href='#checkouts' data-toggle='tab') Checkouts
+            div(class='player-profile-menu-item') 
+                i(class="fas fa-chart-line") 
+                span 
+                    a(href='#progression' data-toggle='tab') Progression
+            div(class='player-profile-menu-item') 
+                i(class="fas fa-trophy") 
+                span 
+                    a(href='#tournament' data-toggle='tab') Tournaments
 
-    div(class='tab-content' style='padding-top: 20px;')
-        div(role='tabpanel' id='overview' class='tab-pane active')
-            table(id='table-overview' style='width: 100%;')
-                tr
-                    td(class='glyph')
-                        span(class='glyphicon glyphicon-signal' aria-hidden='true')
-                    td(class='glyph')
-                        span(class='glyphicon glyphicon-star' aria-hidden='true')
-                    td(class='glyph')
-                        span(class='glyphicon glyphicon-adjust' aria-hidden='true')
-                tr
-                    td(class='number')= player.matches_played + ' / ' + player.legs_played
-                    td(class='number')= player.matches_won + ' / '  + player.legs_won
-                    td(class='number')= (player.matches_played == 0 ? '0.00' : (player.matches_won * 100 / player.matches_played).toFixed(2)) + '% / ' + (player.legs_played == 0 ? '0.00' : (player.legs_won * 100 / player.legs_played).toFixed(2)) + '%'
-                tr
-                    td(class='olabel') Matches / Legs Played
-                    td(class='olabel') Matches / Legs Won
-                    td(class='olabel') Matches / Legs Win %
-                tr
-                    td(class='glyph')
-                        span(class='glyphicon glyphicon-th' aria-hidden='true')
-                    td(class='glyph')
-                        span(class='glyphicon glyphicon-list-alt' aria-hidden='true')
-                    td(class='glyph')
-                        span(class='glyphicon glyphicon glyphicon-screenshot' aria-hidden='true')
-                tr
-                    td(class='number')= statistics.first_nine_ppd.toFixed(2)
-                    td(class='number')= statistics.ppd.toFixed(2)
-                    td(class='number')= statistics.checkout_percentage === null ? '-' : statistics.checkout_percentage.toFixed(2) + '%'
-                tr
-                    td(class='olabel') First 9 PPD
-                    td(class='olabel') Overall PPD
-                    td(class='olabel') Checkout%
-                tr
-                    td(class='glyph txt-italic') Overall
-                    td(class='glyph txt-italic') 20s
-                    td(class='glyph txt-italic') 19s
-                tr
-                    td(class='number')= statistics.accuracy_overall === null ? '-' : statistics.accuracy_overall.toFixed(2)
-                    td(class='number')= statistics.accuracy_20 === null ? '-' : statistics.accuracy_20.toFixed(2)
-                    td(class='number')= statistics.accuracy_19 === null ? '-' : statistics.accuracy_19.toFixed(2)
-                tr
-                    td(class='olabel') Overall Accuracy
-                    td(class='olabel') Accuracy 20s
-                    td(class='olabel') Accuracy 19s
+        div(class='player-profile-content tab-content' style='width: 100%;')
 
-        div(role='tabpanel' id='player' class='tab-pane')
-            table(id='table-player' style='width: 100%;')
-                tr
-                    td(class='glyph')
-                        span(class='glyphicon glyphicon-user' aria-hidden='true')
-                    td(class='glyph')
-                        span(class='glyphicon glyphicon-bullhorn' aria-hidden='true')
-                    td(class='glyph')
-                        span(class='glyphicon glyphicon-star-empty' aria-hidden='true')
-                    td(class='glyph')
-                        span(class='glyphicon glyphicon-picture' aria-hidden='true')
-                tr
-                    td(class='number')= player.name
-                    td(class='number')= player.nickname ? player.nickname : '-'
-                    td(class='number'): label(style='background-color: ' + player.color + '; color: ' + player.color + ';')= player.color
-                    td
-                        +get_player_profile_pic(player)
-                tr
-                    td(class='olabel') Name
-                    td(class='olabel') Nickname
-                    td(class='olabel') Color
-                    td(class='olabel') Player
+            div(role='tabpanel' id='overview' class='tab-pane active')
+                div(class='block-container')
+                    div(class='keyinfo')
+                        div(class='label-fat-18-grey') FIRST 9 PPD
+                        div(class='label-fat-25')= statistics.first_nine_ppd.toFixed(2)
+                    div(class='keyinfo')
+                        div(class='label-fat-18-grey') OVERALL PPD
+                        div(class='label-fat-25')= statistics.ppd.toFixed(2)
+                    div(class='keyinfo')
+                        div(class='label-fat-18-grey') CHECKOUT %
+                        div(class='label-fat-25')= statistics.checkout_percentage === null ? '-' : statistics.checkout_percentage.toFixed(2) + '%'
+                    div(class='keyinfo')
+                        div(class='label-fat-18-grey') HIGHEST CHECKOUT
+                        div(class='label-fat-25')= statistics.highest_checkout ? statistics.highest_checkout.value : '-'
 
-        div(role='tabpanel' id='highscores' class='tab-pane')
-            table(id='table-highscores' style='width: 100%;')
-                tr
-                    td(class='glyph glyph60')
-                        span(class='glyphicon glyphicon-fire' aria-hidden='true')
-                    td(class='glyph glyph100')
-                        span(class='glyphicon glyphicon-fire' aria-hidden='true')
-                    td(class='glyph glyph140')
-                        span(class='glyphicon glyphicon-fire' aria-hidden='true')
-                    td(class='glyph glyph180')
-                        span(class='glyphicon glyphicon-fire' aria-hidden='true')
-                tr
-                    td(class='number')= statistics.scores_60s_plus
-                    td(class='number')= statistics.scores_100s_plus
-                    td(class='number')= statistics.scores_140s_plus
-                    td(class='number')= statistics.scores_180s
-                tr
-                    td(class='olabel') 60+
-                    td(class='olabel') 100+
-                    td(class='olabel') 140+
-                    td(class='olabel') 180
-                tr
-                    td(class='glyph')
-                        span(class='glyphicon glyphicon-tasks' aria-hidden='true')
-                    td(class='glyph txt-italic') 301
-                    td(class='glyph txt-italic') 501
-                    td(class='glyph txt-italic') 701
-                tr
-                    td(class='number')
-                        +best_statistics(statistics.best_ppd, 'number')
-                        label(style='font-weight: 300;')= ' / '
-                        +best_statistics(statistics.best_first_nine_ppd, 'number')
-                    +best_statistics_td(statistics.best_301, 'number')
-                    +best_statistics_td(statistics.best_501, 'number')
-                    +best_statistics_td(statistics.best_701, 'number')
-                tr
-                    td(class='olabel') Best PPD / First 9
-                    td(class='olabel') Best 301
-                    td(class='olabel') Best 501
-                    td(class='olabel') Best 701
-
-        div(role='tabpanel' id='hits' class='tab-pane')
-            if statistics.hits
-                table(id='table-player-hits')
-                    thead
-                        tr
-                            th Dart
-                            th Count
-                            th Hit %
-                            th Per Visit
-                            th Per Leg
-                            th Per Match
-                    tbody
-                            each score, key in statistics.hits
-                                each value, multiplier in statistics.hits[key]
-                                    tr
-                                        +dart_container(key, multiplier)
-                                        td= value
-                                        td= (value * 100 / statistics.darts_thrown).toFixed(2) + '%'
-                                        td= (value / statistics.total_visits).toFixed(2)
-                                        td= (value / player.legs_played).toFixed(2)
-                                        td= (value / player.matches_played).toFixed(2)
-            else
-                div No data available
-
-        div(role='tabpanel' id='heatmap' class='tab-pane')
-            select(id='heatmap-value-selector' name='dart-values')
-                option(value=0 default=true) All
-                option(value=1) Singles
-                option(value=2) Doubles
-                option(value=3) Trebles
-            div(style='text-align: center; width: 100%;')
-                canvas(id='dartboard-heatmap')
-
-        div(role='tabpanel' id='visits' class='tab-pane')
-            if statistics.visits
-                table(id='table-player-visits')
-                    thead
-                        tr
-                            th Vist
-                            th
-                            th
-                            th Count
-                            th Visit %
-                            th Per Leg
-                            th Per Match
-                    tbody
-                        each visit in statistics.visits
-                            tr
-                                +dart_container(visit.first_dart.value, visit.first_dart.multiplier)
-                                +dart_container(visit.second_dart.value, visit.second_dart.multiplier)
-                                +dart_container(visit.third_dart.value, visit.third_dart.multiplier)
-                                td= visit.count
-                                td= (visit.count * 100 / statistics.total_visits).toFixed(2) + '%'
-                                td= (visit.count / player.legs_played).toFixed(2)
-                                td= (visit.count / player.matches_played).toFixed(2)
-            else
-                div No data available
-
-        div(role='tabpanel' id='checkouts' class='tab-pane')
-            table(id='table-checkouts' style='width: 100%;')
-                tr
-                    td(class='glyph')
-                        span(class='glyphicon glyphicon glyphicon-screenshot' aria-hidden='true')
-                    td(class='glyph')
-                        span(class="glyphicon glyphicon-screenshot" aria-hidden="true")
-                tr
-                    td(class='number')= statistics.checkout_percentage === null ? '-' : statistics.checkout_percentage.toFixed(2) + '%'
-                    +best_statistics_td(statistics.highest_checkout, 'number')
-                tr
-                    td(class='olabel') Checkout %
-                    td(class='olabel') Highest Checkout
-            table(id='table-player-checkouts')
-                thead
+                table(style='width: 100%;')
                     tr
-                        th Checkout
-                        th Done
-                        th Count
-                        th Checkouts
-                tbody
-                    each checkout in checkouts
-                        tr
-                            td= checkout.checkout
-                            if checkout.completed
-                                td(data-order=1): span(class='glyphicon glyphicon-ok' aria-hidden='true')
-                            else
-                                td(data-order=0): span(class='glyphicon glyphicon-remove' aria-hidden='true')
-                            td= checkout.count
-                            if checkout.visits
-                                td(width='70%')
-                                    table(id='table-player-checkouts-details')
-                                        thead
+                        td(colspan='2')
+                            div(class='block-container mr-10')
+                                canvas(id='canvas-win-percentage-matches')
+                                div(id='canvas-win-percentage-matches-percentage' class='label-mid')
+                        td(style='vertical-align: top;')
+                            div(class='block-container')
+                                div(class='label-fat-21-grey') Matches played 
+                                div(class='label-fat-18-grey' style='color: black;')= player.matches_played
+                                div(class='label-fat-21-grey') Matches won 
+                                div(class='label-fat-18-grey' style='color: black; margin-bottom: 37px;')= player.matches_won
+                                div(class='label-fat-21-grey') Legs played
+                                div(class='label-fat-18-grey' style='color: black;')= player.legs_played
+                                div(class='label-fat-21-grey') Legs won
+                                div(class='label-fat-18-grey' style='color: black;')= player.legs_won 
+                    tr
+                        td(style='width: 33%;')
+                            div(class='block-container accuracy-chart') 
+                                canvas(id='canvas-accuracy-overall')
+                                div(id='canvas-accuracy-overall-percentage' class='label-mid')
+                        td(style='width: 33%;')
+                            div(class='block-container accuracy-chart') 
+                                canvas(id='canvas-accuracy-20')
+                                div(id='canvas-accuracy-20-percentage' class='label-mid')
+                        td(style='width: 33%;')
+                            div(class='block-container accuracy-chart-no-margin') 
+                                canvas(id='canvas-accuracy-19')
+                                div(id='canvas-accuracy-19-percentage' class='label-mid')
+
+
+            div(role='tabpanel' id='progression' class='tab-pane')
+                div(style='width: 100%')
+                    div(class='block-container')
+                        h3 PPD
+                        canvas(id='canvas-ppd')
+                    div(class='block-container')
+                        h3 Checkout %
+                        canvas(id='canvas-checkout')
+                    div(class='block-container')
+                        h3 Scores
+                        canvas(id='canvas-scores')
+
+            div(role='tabpanel' id='highscores' class='tab-pane')
+                table(style='width: 100%;')
+                    tr
+                        td(style='width: 25%;')
+                            div(class='highscore-card')
+                                div= statistics.scores_60s_plus
+                                div(class='hs-star rank4') 
+                                    i(class="fas fa-star highscore")
+                                div(class='hs-label') 60+
+                        td(style='width: 25%;')
+                            div(class='highscore-card')
+                                div= statistics.scores_100s_plus
+                                div(class='hs-star rank4') 
+                                    i(class="fas fa-star highscore")
+                                    i(class="fas fa-star highscore")
+                                div(class='hs-label') 100+
+                        td(style='width: 25%;')
+                            div(class='highscore-card')
+                                div= statistics.scores_140s_plus
+                                div(class='hs-star rank4') 
+                                    i(class="fas fa-star highscore")
+                                    i(class="fas fa-star highscore")
+                                    i(class="fas fa-star highscore")
+                                div(class='hs-label') 140+
+                        td(style='width: 25%;')
+                            div(class='highscore-card-no-margin')
+                                div= statistics.scores_180s
+                                div(class='hs-star rank4') 
+                                    i(class="fas fa-star highscore")
+                                    i(class="fas fa-star highscore")
+                                    i(class="fas fa-star highscore")
+                                    i(class="fas fa-star highscore")
+                                div(class='hs-label') 180
+                    tr
+                        td(colspan='2' style='vertical-align: top;')
+                            div(class='block-container mr-10')
+                                div(style='font-size: 18pt;')
+                                    span Best PPD
+                                    span(class='float-right') 
+                                        +best_statistics(statistics.best_ppd, 'number')
+                                div(style='font-size: 18pt;')
+                                    span Best first 9 PPD
+                                    span(class='float-right') 
+                                        +best_statistics(statistics.best_first_nine_ppd, 'number')
+                        td(colspan='2' style='vertical-align: top;')
+                            div(class='block-container')
+                                div(style='font-size: 18pt;')
+                                    span Best 301
+                                    span(class='float-right') 
+                                        +best_statistics(statistics.best_301, 'number')
+                                div(style='clear: both;')
+                                div(style='font-size: 18pt;')
+                                    span Best 501
+                                    span(class='float-right') 
+                                        +best_statistics(statistics.best_501, 'number')
+                                div(style='font-size: 18pt;')
+                                    span Best 701
+                                    span(class='float-right') 
+                                        +best_statistics(statistics.best_701, 'number')
+
+            div(role='tabpanel' id='hits' class='tab-pane')
+                div(class='block-container no-padding no-border')
+                    if statistics.hits
+                        table(id='table-player-profile-hits' style='margin: 0px; padding-top: 0px;')
+                            thead
+                                tr
+                                    th(class='text-center') Dart
+                                    th(class='text-center') Count
+                                    th(class='text-center') Hit %
+                                    th(class='text-center') Per Visit
+                                    th(class='text-center') Per Leg
+                                    th(class='text-center') Per Match
+                            tbody
+                                    each score, key in statistics.hits
+                                        each value, multiplier in statistics.hits[key]
                                             tr
-                                                th(colspan='3') Visits
-                                                th Count
-                                        tbody
-                                            each visit in checkout.visits
-                                                tr
-                                                    +dart_container(visit.first_dart.value, visit.first_dart.multiplier)
-                                                    +dart_container(visit.second_dart.value, visit.second_dart.multiplier)
-                                                    +dart_container(visit.third_dart.value, visit.third_dart.multiplier)
-                                                    td(width='10%')= visit.count
-                            else
-                                td -
+                                                +dart_container(key, multiplier, 'first-dart-visit', true)
+                                                td(class='text-center')= value
+                                                td(class='text-center')= (value * 100 / statistics.darts_thrown).toFixed(2) + '%'
+                                                td(class='text-center')= (value / statistics.total_visits).toFixed(2)
+                                                td(class='text-center')= (value / player.legs_played).toFixed(2)
+                                                td(class='text-center')= (value / player.matches_played).toFixed(2)
+                    else
+                        div(class='block-container') No data available
+    
+    
+            div(role='tabpanel' id='visits' class='tab-pane')
+                div(class='block-container no-padding')
+                    if statistics.visits
+                        table(id='table-player-profile-visits' style='margin: 0px; padding-top: 0px;')
+                            thead
+                                tr
+                                    th(class='text-center') Visit
+                                    th
+                                    th
+                                    th(class='text-center') Count
+                                    th(class='text-center') Visit %
+                                    th(class='text-center') Per Leg
+                                    th(class='text-center') Per Match
+                            tbody
+                                each visit in statistics.visits
+                                    tr
+                                        +dart_container(visit.first_dart.value, visit.first_dart.multiplier)
+                                        +dart_container(visit.second_dart.value, visit.second_dart.multiplier)
+                                        +dart_container(visit.third_dart.value, visit.third_dart.multiplier)
+                                        td(class='text-center')= visit.count
+                                        td(class='text-center')= (visit.count * 100 / statistics.total_visits).toFixed(2) + '%'
+                                        td(class='text-center')= (visit.count / player.legs_played).toFixed(2)
+                                        td(class='text-center')= (visit.count / player.matches_played).toFixed(2)
+                    else
+                        div(class='block-container') No data available
 
-        div(role='tabpanel' id='tournament' class='tab-pane')
-            table(id='table-tournament-standings'  style='width: 100%;')
-                thead
-                    tr
-                        th Tournament
-                        th Division
-                        th Group
-                        th Final Standing
-                        th Elo
-                tbody
-                    each standing in tournament_standings
+            div(role='tabpanel' id='checkouts' class='tab-pane')
+                table(id='table-player-checkouts')
+                    thead
                         tr
-                            - var division = standing.tournament_group.division
-                            - var divisionPostfix = division === 1 ? 'st' : division === 2 ? 'nd' : division === 3 ? 'rd' : 'th';
-                            td: a(href='/tournaments/' + standing.tournament.id)= standing.tournament.name
-                            td= division + divisionPostfix
-                            td= standing.tournament_group.name
-                            td= standing.final_standing + ' / ' + standing.total_players
-                                if standing.final_standing === 1
-                                    span(style='padding-left: 0.2em' class='glyphicon glyphicon-star glyphWinner' aria-hidden='true')
-                            td= standing.elo
+                            th 
+                                div(class='block-container-header pl-20')
+                                    table(class='table-player-checkouts-header')
+                                        tr
+                                            td Checkout
+                                            td Done
+                                            td Count
+                                            td Visits
+                    tbody
+                        each checkout in checkouts
+                            - trclass = !checkout.completed ? 'tr-no-checkout' : ''
+                            tr(class=trclass)
+                                td
+                                    div(class='block-container-no-margin')
+                                        table(class='table-player-checkouts-row')
+                                            tr
+                                                td= checkout.checkout
+                                                if checkout.completed
+                                                    td(data-order=1): i(class="fas fa-check-circle") 
+                                                else
+                                                    td(data-order=0): i(class="fas fa-times-circle")
+                                                td= checkout.count
+                                                td(style='width: 70%;')
+                                                    if checkout.visits
+                                                        table(class='table-player-checkouts-details')
+                                                            tbody
+                                                                each visit in checkout.visits
+                                                                    tr
+                                                                        +dart_container(visit.first_dart.value, visit.first_dart.multiplier)
+                                                                        +dart_container(visit.second_dart.value, visit.second_dart.multiplier)
+                                                                        +dart_container(visit.third_dart.value, visit.third_dart.multiplier)
+                                                                        td(width='10%')= visit.count
+                                                    else
+                                                        div(class='no-checkouts') No checkouts
 
+            div(role='tabpanel' id='tournament' class='tab-pane')
+                div(class='block-container no-padding no-border')
+                    table(id='table-tournament-standings')
+                        thead
+                            tr
+                                th Tournament
+                                th Division
+                                th Group
+                                th Final Standing
+                                th Elo
+                        tbody
+                            each standing in tournament_standings
+                                tr
+                                    - var division = standing.tournament_group.division
+                                    - var divisionPostfix = division === 1 ? 'st' : division === 2 ? 'nd' : division === 3 ? 'rd' : 'th';
+                                    td: a(href='/tournaments/' + standing.tournament.id)= standing.tournament.name
+                                    td= division + divisionPostfix
+                                    td= standing.tournament_group.name
+                                    td= standing.final_standing + ' / ' + standing.total_players
+                                        if standing.final_standing === 1
+                                            span(style='padding-left: 0.2em' class='glyphicon glyphicon-star glyphWinner' aria-hidden='true')
+                                    td= standing.elo
 
-        div(role='tabpanel' id='progression' class='tab-pane')
-            div(style='width: 100%')
-                div
-                    h3 PPD
-                    canvas(id='canvas-ppd')
-                div
-                    h3 Checkout %
-                    canvas(id='canvas-checkout')
-                div
-                    h3 Scores
-                    canvas(id='canvas-scores')
-
-
+    div(style='clear: both;')

@@ -1,16 +1,15 @@
 
 mixin get_player_profile_pic(player, width = 98, height = 130)
     if player.profile_pic_url
-        img(class='glyphicon glyphicon-user' height=height width=width src=player.profile_pic_url)
+        img(class='glyphicon glyphicon-user' height=height width=width src=player.profile_pic_url data-player=player.id)
     else
         span(class='glyphicon glyphicon-user glyphicon-user-profile')
 
 mixin player_statistics_card(clazz, player, statistics, isWinner = false, dartsThrown, startingScore)
     div(class=clazz)
-        div(class='glyph')
-            +get_player_profile_pic(player, 111, 143)
-        div(class='playername'): a(href='/players/' + player.id + '/statistics')= player.name
-        div: hr
+        div(style='padding-bottom: 20px;')
+            div(class='player-pic-cutout' style='margin: 0 auto;')
+                +get_player_profile_pic(player)
         if match.match_type.id == 2
             div(class='info') PPD
             div= statistics.ppd.toFixed(2)
@@ -30,11 +29,28 @@ mixin player_statistics_card(clazz, player, statistics, isWinner = false, dartsT
             else
                 div= '- / ' + (statistics.checkout_attempts ? statistics.checkout_attempts : 0)
 
-        div(class='info') Scores
-        div= "60+: " + statistics.scores_60s_plus
-        div= "100+: " + statistics.scores_100s_plus
-        div= "140+: " + statistics.scores_140s_plus
-        div= "180s: " + statistics.scores_180s
+        div(class='info') 
+            div(style='text-align: center;')
+                table(style='margin: 0 auto' id='scores-badges')
+                    tr
+                        td
+                            span= '60+' 
+                            br
+                            span(class="badge badge-pill badge-success")= ' ' + statistics.scores_60s_plus 
+                        td
+                            span= '100+'
+                            br
+                            span(class="badge badge-pill badge-success")= ' ' + statistics.scores_100s_plus
+                        td
+                            span= '140+'
+                            br
+                            span(class="badge badge-pill badge-success")= ' ' + statistics.scores_140s_plus
+                        td
+                            span= '180'
+                            br
+                            span(class="badge badge-pill badge-success")= ' ' + statistics.scores_180s
+
+        div(style='clear: both;')
 
         //- Get darts thrown per player
         if dartsThrown
@@ -50,7 +66,6 @@ mixin player_statistics_card(clazz, player, statistics, isWinner = false, dartsT
             div(class='info') Scored
             div= player.remaining_score
 
-        div(style='margin-top: 20px;'): hr
         if match.match_type.id == 2
             if isWinner
                 div(class='label-winner') WINNER
@@ -62,9 +77,97 @@ mixin player_statistics_card(clazz, player, statistics, isWinner = false, dartsT
             else
                 if player.remaining_score
                     div(class='label-loser')= player.remaining_score + ' left'
+                else
+                    div(class='label-loser') &nbsp;
         else
             if isWinner
                 div(class='label-winner') WINNER
             else
                 if player.remaining_score
                     div(class='label-loser')= player.remaining_score + ' left'
+                else
+                    div(class='label-loser') &nbsp;
+
+mixin player_summary_card(player, statistics, isWinner = false, dartsThrown, startingScore)
+    div(class='block-container-header-center'): a(href='/players/' + player.id + '/statistics')= player.name
+    div(class='block-container-with-header')
+        div(style='padding-bottom: 20px;')
+            div(class='player-pic-cutout' style='margin: 0 auto;')
+                +get_player_profile_pic(player)
+        if match.match_type.id == 2
+            div(class='info') PPD
+            div= statistics.ppd.toFixed(2)
+            div(class='info') Score
+            div= player.remaining_score
+        else
+            div(class='info') PPD / First 9
+            div= statistics.ppd.toFixed(2) + ' / ' + statistics.first_nine_ppd.toFixed(2)
+            div(class='info') Accuracy Overall / 20 / 19
+            div
+            - var accuracy_20 = statistics.accuracy_20 === null ? '-' : statistics.accuracy_20.toFixed(2)
+            - var accuracy_19 = statistics.accuracy_19 === null ? '-' : statistics.accuracy_19.toFixed(2)
+            div= statistics.accuracy_overall.toFixed(2) + ' / ' + accuracy_20 + ' / ' + accuracy_19
+            div(class='info') Checkout % / Attempts
+            if statistics.checkout_percentage !== null && statistics.checkout_percentage !== 0
+                div= statistics.checkout_percentage.toFixed(2) + '% / ' + statistics.checkout_attempts
+            else
+                div= '- / ' + (statistics.checkout_attempts ? statistics.checkout_attempts : 0)
+
+        div(class='info') 
+            div(style='text-align: center;')
+                table(style='margin: 0 auto' id='scores-badges')
+                    tr
+                        td
+                            span= '60+' 
+                            br
+                            span(class="badge badge-pill badge-success")= ' ' + statistics.scores_60s_plus 
+                        td
+                            span= '100+'
+                            br
+                            span(class="badge badge-pill badge-success")= ' ' + statistics.scores_100s_plus
+                        td
+                            span= '140+'
+                            br
+                            span(class="badge badge-pill badge-success")= ' ' + statistics.scores_140s_plus
+                        td
+                            span= '180'
+                            br
+                            span(class="badge badge-pill badge-success")= ' ' + statistics.scores_180s
+            
+        div(style='clear: both;')
+
+        //- Get darts thrown per player
+        if dartsThrown
+            if match.match_type.id == 1
+                div(class='info') Darts Thrown
+                div= dartsThrown
+
+        if match.match_type.id == 3 && startingScore
+            div(class='info') Starting Score
+            div= startingScore
+
+        if match.match_type.id == 2
+            div(class='info') Scored
+            div= player.remaining_score
+            
+        if match.match_type.id == 2
+            if isWinner
+                div(class='label-winner') WINNER
+            else
+                div(class='label-loser') &nbsp;
+        else if match.match_type.id == 3
+            if isWinner
+                div(class='label-winner') WINNER
+            else
+                if player.remaining_score
+                    div(class='label-loser')= player.remaining_score + ' left'
+                else
+                    div(class='label-loser') &nbsp;
+        else
+            if isWinner
+                div(class='label-winner') WINNER
+            else
+                if player.remaining_score
+                    div(class='label-loser')= player.remaining_score + ' left'
+                else
+                    div(class='label-loser') &nbsp;

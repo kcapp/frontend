@@ -38,28 +38,41 @@ block scripts
         });
 
 block content
+    div(class='pt-20')
     div(id='add-payback-failed-alert' class='alert alert-danger' role='alert' hidden='true').
         Unable to add payback. See log for details
     div(id='add-payback-success-alert' class='alert alert-success' role='alert' hidden='true').
         Payback successfully registered
 
-    h2 Owes
-    p.
-        This table shows which players owe eachother items for lost legs
-    table(id='player-owes-table' class='table')
-        thead
-            tr
-                th Buyer
-                th Receiver
-                th Item
-                th Amount
-        tbody
-            each owe in owes
+    div(class='block-container') 
+        div(class='container-info-icon')
+            i(class="fas fa-beer")
+        div(class='float-left pl-20')
+            h3 Owes
+            p This table shows which players owe each other items for lost legs
+    
+    div(class='block-container no-padding')
+        table(id='player-owes-table')
+            thead
                 tr
-                    td= players[owe.player_ower_id].name
-                    td= players[owe.player_owee_id].name
-                    td= owe.owe_type.item
-                    td= owe.amount
+                    th(class='text-left') Buyer
+                    th(class='text-left') Receiver
+                    th(class='text-left') Item
+                    th(class='text-left') &nbsp;
+            tbody
+                each owe in owes
+                    tr
+                        td(class='text-left')= players[owe.player_ower_id].name
+                        td(class='text-left')= players[owe.player_owee_id].name
+                        td(class='text-left')= owe.owe_type.item + ' (' + owe.amount + ')'
+                        td(class='text-left')
+                            - var n = 0;
+                            while n < owe.amount
+                                if owe.owe_type.id === 2
+                                    i(class="fas fa-beer" style='padding-right: 5px;')
+                                else
+                                    i(class="fas fa-cookie-bite" style='padding-right: 5px;')
+                                - n++
 
     button(type='button' class='btn btn-block btn-primary' id='show-payback-modal-button' data-toggle='modal' data-target='#register-payback-modal') Register Payback
     div(class='modal fade' id='register-payback-modal' tabindex='-1' role='dialog' aria-labelledby='register-payback-modal-label')

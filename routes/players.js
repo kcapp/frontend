@@ -77,7 +77,7 @@ router.get('/compare', function (req, res, next) {
         axios.get(req.app.locals.kcapp.api + '/player'),
         axios.get(req.app.locals.kcapp.api + '/player/compare?id=' + playerIds.join("&id="))
     ]).then(axios.spread((players, statistics) => {
-        statistics = _.sortBy(statistics.data, function (stat) { return players[stat.player_id].name; });
+        statistics = _.sortBy(statistics.data, function (stat) { return players.data[stat.player_id].name; });
         res.render('player/players_comparison', {
             players: players.data,
             statistics: statistics

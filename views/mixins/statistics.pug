@@ -11,3 +11,9 @@ mixin best_statistics_td(best, clazz)
         td(class=clazz): a(href='/legs/' + best.leg_id + '/result')= isFloat ? best.value.toFixed(2) : best.value
     else
         td(class=clazz) -
+
+mixin rank_circle(number)
+    div(class='rank-circle')
+        span(class="fa-stack fa-2x")
+            i(class="fas fa-circle fa-stack-2x")
+            i(class="fab fa-stack-1x fa-inverse fixfont")= number

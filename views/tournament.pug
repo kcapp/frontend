@@ -1,6 +1,7 @@
 extends layout.pug
 
 include mixins/statistics.pug
+include mixins/player.pug
 
 block append head
     link(rel='stylesheet' type='text/css' href='/stylesheets/datatables-1.10.16.min.css')
@@ -9,188 +10,222 @@ block append head
 block scripts
     script.
         $(function () {
-            $('.table-matches-list').DataTable({
+            $('#table-matches-list.table').DataTable({
                 searching: false, bInfo : false, bLengthChange: false,
                 pageLength: 5,
-                order: [[ 1,  'desc' ]]
+                order: [[ 1,  'desc' ]],
+                bAutoWidth: false,
             });
-        });
 
-        $(function() {
-            $('.table-matches-list').on('mouseup', '#continue-match-button', function (e) {
-                location.href = '/matches/' + $(this).data('match')
-            });
-            $('.table-matches-list').on('mouseup', '#spectate-match-button', function(e) {
-                location.href = '/matches/' + $(this).data('match') + '/spectate'
-            });
-            $('.table-matches-list').on('mouseup', '#view-match-button', function (e) {
-                location.href = '/matches/' + $(this).data('match') + '/result'
-            });
+            $('[data-toggle="tooltip"]').tooltip();
         });
 
 block content
-    h2(style='padding: 10px 0px 20px 0px;')= tournament.name
-
     - var hasStatistics = !_.isEmpty(statistics)
-    ul(class='nav nav-pills')
-        li(role='presentation' class='active'): a(href='#season' data-toggle='tab') Season
-        if hasStatistics
-            li(role='presentation'): a(href='#statistics' data-toggle='tab') Statistics
-        li(role='presentation'): a(href='#playoffs' data-toggle='tab') Playoffs
-        if  tournament.standings
-            li(role='presentation'): a(href='#standings' data-toggle='tab') Final Standings
+    div(class='pt-20')
+    div(class='block-container-orange') 
+        div(class='container-info-icon')
+            i(class="fas fa-trophy")
+        div(class='float-left pl-20')
+            h3= tournament.name
+            p Tournament
+        div(style='float: right; padding-top: 4px;')
+            ul(class='nav nav-pills')
+                li(role='presentation' class='active'): a(href='#season' data-toggle='tab') Season
+                if hasStatistics
+                    li(role='presentation'): a(href='#statistics' data-toggle='tab') Statistics
+                li(role='presentation'): a(href='#playoffs' data-toggle='tab') Playoffs
+                if  tournament.standings
+                    li(role='presentation'): a(href='#standings' data-toggle='tab') Final Standings
 
-    div(class='tab-content' style='padding-top: 20px;')
+    div(class='tab-content')
         div(role='tabpanel' id='season' class='tab-pane active')
             each group, id in overview
-                h3= group[0].tournament_group.name
-                table(class='table table-striped' id='table-tournament-overview')
-                    thead
-                        tr
-                            th Pos
-                            th Player
-                            th P
-                            th W
-                            th D
-                            th L
-                            th F
-                            th A
-                            th +/-
-                            th PTS
-                            if hasStatistics
-                                th PPD / First 9
-                                th Checkout %
-                                th 60s+
-                                th 100s+
-                                th 140s+
-                                th 180
-                                th Overall
-                                th 20s
-                                th 19s
-                    tbody
-                        - var rank = 1
-                        each player in group
-                            tr
-                                td
-                                    div= rank++
-                                    if player.is_winner
-                                        span(class='glyphicon glyphicon-star glyphWinner' aria-hidden='true')
-                                    else if player.is_promoted
-                                        span(class='glyphicon glyphicon-triangle-top glyphPromoted' aria-hidden='true')
-                                    else if player.is_relegated
-                                        span(class='glyphicon glyphicon-triangle-bottom glyphRelegated' aria-hidden='true')
-                                td: a(href='/players/' + player.player_id + '/statistics')= players[player.player_id].name
-                                td= player.played
-                                td= player.matches_won
-                                td= player.matches_draw
-                                td= player.matches_lost
-                                td= player.legs_for
-                                td= player.legs_against
-                                td= player.legs_difference
-                                td= player.points
-                                if hasStatistics
-                                    td= player.ppd.toFixed(2) + ' / ' + player.first_nine_ppd.toFixed(2)
-                                    td= player.checkout_percentage.toFixed(2) + '%'
-                                    td= player.scores_60s_plus
-                                    td= player.scores_100s_plus
-                                    td= player.scores_140s_plus
-                                    td= player.scores_180s
-                                    td= player.accuracy_overall.toFixed(2)
-                                    td= player.accuracy_20.toFixed(2)
-                                    td= player.accuracy_19.toFixed(2)
-                h4 Matches
-                table(class='table' class='table-matches-list')
-                        thead
-                            tr
-                                th(hidden=true)
-                                th Start Time
-                                th Venue
-                                th Type
-                                th Players
-                                th Winner
-                                th Results
-                        tbody
-                            each match in matches[id]
-                                - var isLive = !match.is_finished && moment.duration(moment().diff(match.last_throw_time)).asMinutes().toFixed() < 2
-                                tr
-                                    th(hidden='true' scope='row')= match.id
-                                    td(class='col-sm-2')
-                                        div(style='display: inline-block; padding-right: 6px')= moment(match.created_at).format('YYYY-MM-DD HH:mm:ss')
-                                        if isLive
-                                            label(class='label label-info' style='line-height: inherit;') Live
-                                    td(class='col-sm-1')
-                                        if match.venue
-                                            div= match.venue.name
-                                    td(class='col-sm-1')= match.match_type.name
-                                    td(class='col-sm-1')
-                                        each id in match.players
-                                            div(style='margin-bottom: 5px;')
-                                                span(class='label label-primary' style='line-height: inherit;')= players[id].name
-                                    if match.is_finished
-                                        td(class='col-sm-1')
-                                            if match.winner_id === null
-                                                div: span(class='label label-default' style='line-height: inherit;') Draw
-                                            else
-                                                div: span(class='label label-success' style='line-height: inherit;')= players[match.winner_id].name
-                                    else
-                                        td(class='col-sm-2')
-                                    td(class='col-sm-2')
-                                        if !match.is_finished
-                                            button(type='button' id='continue-match-button' data-match=match.id class='btn btn-primary btn-block') Continue
-                                            button(type='button' id='spectate-match-button' data-match=match.id class='btn btn-primary btn-block') Spectate
-                                        else
-                                            utton(type='button' id='view-match-button' data-match=match.id class='btn btn-primary btn-block') View
+                div(class='block-container pad10')
+                    div(class='float-left' style='font-size: 30px;')= group[0].tournament_group.name
+                    div(style='float: right; padding-top: 4px;')
+                        ul(class='nav nav-pills')
+                            li(role='presentation' class='active'): a(href='#standings-' + group[0].tournament_group.id data-toggle='tab') Standings
+                            li(role='presentation'): a(href='#matches-' + group[0].tournament_group.id data-toggle='tab') Matches
+                
+                div(class='tab-content')
+                    div(role='tabpanel' id='standings-' + group[0].tournament_group.id class='tab-pane active')                            
+                        div(class='block-container no-padding')
+                            table(class='table-tournament-overview')
+                                thead
+                                    tr
+                                        th(class='pl-10') Pos
+                                        th Player
+                                        th(class='text-right') P
+                                        th(class='text-right') W
+                                        th(class='text-right') D
+                                        th(class='text-right') L
+                                        th(class='text-right') F
+                                        th(class='text-right') A
+                                        th(class='text-right') +/-
+                                        th(class='text-right') PTS
+                                        if hasStatistics
+                                            th(class='text-center') PPD / First 9
+                                            th(class='text-right') Checkout %
+                                            th(class='text-right') 60s+
+                                            th(class='text-right') 100s+
+                                            th(class='text-right') 140s+
+                                            th(class='text-right') 180
+                                            th(class='text-right') Overall
+                                            th(class='text-right') 20s
+                                            th(class='text-right') 19s
+                                tbody
+                                    - var rank = 1
+                                    each player in group
+                                        tr
+                                            td(class='pl-10')
+                                                div
+                                                    span(class='pr-5')= rank++
+                                                    if player.is_winner
+                                                        i(class="fas fa-star")
+                                                    else if player.is_promoted
+                                                        i(class="fas fa-caret-up")
+                                                    else if player.is_relegated
+                                                        i(class="fas fa-caret-down")
+                                            td: a(href='/players/' + player.player_id + '/statistics')= players[player.player_id].name
+                                            td(class='text-right')= player.played
+                                            td(class='text-right')= player.matches_won
+                                            td(class='text-right')= player.matches_draw
+                                            td(class='text-right')= player.matches_lost
+                                            td(class='text-right')= player.legs_for
+                                            td(class='text-right')= player.legs_against
+                                            td(class='text-right')= player.legs_difference
+                                            td(class='text-right')= player.points
+                                            if hasStatistics
+                                                td(class='text-center')= player.ppd.toFixed(2) + ' / ' + player.first_nine_ppd.toFixed(2)
+                                                td(class='text-right')= player.checkout_percentage.toFixed(2) + '%'
+                                                td(class='text-right')= player.scores_60s_plus
+                                                td(class='text-right')= player.scores_100s_plus
+                                                td(class='text-right')= player.scores_140s_plus
+                                                td(class='text-right')= player.scores_180s
+                                                td(class='text-right')= player.accuracy_overall.toFixed(2)
+                                                td(class='text-right')= player.accuracy_20.toFixed(2)
+                                                td(class='text-right')= player.accuracy_19.toFixed(2)
+
+                    div(role='tabpanel' id='matches-' + group[0].tournament_group.id class='tab-pane')   
+                        div(class='block-container no-padding')                         
+                            table(class='table' id='table-matches-list')
+                                    thead
+                                        tr
+                                            th(hidden=true)
+                                            th Start Time
+                                            th Venue
+                                            th Type
+                                            th(style='min-width: 300px;') Players
+                                            th(class='text-center') Results
+                                    tbody
+                                        each match in matches[id]
+                                            - var isLive = !match.is_finished && moment.duration(moment().diff(match.last_throw_time)).asMinutes().toFixed() < 2
+                                            tr
+                                                th(hidden='true' scope='row')= match.id
+                                                td(class='col-sm-2')
+                                                    div(style='display: inline-block; padding-right: 6px')= moment(match.created_at).format('YYYY-MM-DD HH:mm:ss')
+                                                    if isLive
+                                                        label(class='label label-info' style='line-height: inherit;') Live
+                                                td(class='col-sm-1')
+                                                    if match.venue
+                                                        div= match.venue.name
+                                                td(class='col-sm-1')= match.match_type.name
+                                                td(class='col-sm-1')
+                                                    if match.is_finished
+                                                        if match.winner_id === null
+                                                            div: span(class='label label-default' style='line-height: inherit;') Draw
+                                                        else
+                                                            each id in match.players
+                                                                if id == match.winner_id
+                                                                    span(class='label label-success' style='line-height: inherit;')= players[match.winner_id].name
+                                                                else
+                                                                    span(class='label label-secondary')= players[id].name
+                                                    else
+                                                        td(class='col-sm-2')= ''
+                                                td(class='col-sm-2 text-center')
+                                                    if !match.is_finished
+                                                        a(href='/matches/' + match.id)
+                                                            i(class="fas fa-play-circle fas-option-button" id='continue-match-button' data-match=match.id data-toggle="tooltip" data-placement="top" title="Continue")
+                                                        a(href='/matches/' + match.id + '/spectate')
+                                                            i(class="fas fa-eye fas-option-button pl-10" id='spectate-match-button' data-toggle="tooltip" data-placement="top" title="Spectate")
+                                                    else
+                                                        a(href='/matches/' + match.id + '/result')
+                                                            i(class="fas fa-eye fas-option-button" data-toggle="tooltip" data-placement="top" title="View")
 
         if hasStatistics
-            div(role='tabpanel' id='statistics' class='tab-pane')
-                mixin top_statistics(rank, idx, statistics)
-                    if statistics[idx]
-                        td= rank
-                        td: a(href='/players/' + statistics[idx].player_id + '/statistics')= players[statistics[idx].player_id].name
-                        +best_statistics_td(statistics[idx])
-                    else
-                        td= rank
-                        td -
-                        td -
 
-                h3 Top 5
-                table(class='table table-striped' id='table-tournament-statistics')
-                    thead
-                        tr
-                            th Rank
-                            th Player
-                            th Checkout
-                            th Rank
-                            th Player
-                            th PPD
-                            th Rank
-                            th Player
-                            th Fist 9 PPD
-                            th Rank
-                            th Player
-                            th Darts Thown
-                    tbody
-                        - var rank = 1
-                        each idx in [0, 1, 2, 3, 4]
-                            - var dartsThrown = statistics.best_501_darts_thrown ? statistics.best_501_darts_thrown : statistics.best_301_darts_thrown ? statistics.best_301_darts_thrown : null
-                            tr
-                                +top_statistics(rank, idx, statistics.checkout_highest)
-                                +top_statistics(rank, idx, statistics.best_ppd)
-                                +top_statistics(rank, idx, statistics.best_first_nine_ppd)
-                                +top_statistics(rank, idx, dartsThrown)
-                                - rank++
+            mixin top_statistics(rank, idx, statistics)
+                if statistics[idx]
+                    td(class='cutout-with-rank')
+                        div(class='float-left')
+                            div(class='player-pic-cutout-small')
+                                +get_player_profile_pic(players[statistics[idx].player_id], 49, 65)
+                            +rank_circle(rank)
+                    td(class='valign-mid'): a(href='/players/' + statistics[idx].player_id + '/statistics')= players[statistics[idx].player_id].name
+                    +best_statistics_td(statistics[idx], 'valign-mid')
+                else
+                    td -
+                    td -
+
+            div(role='tabpanel' id='statistics' class='tab-pane')
+                div(class='block-container')= 'Tournament records'
+                table(class='tournament-records')
+                    tr
+                        td(style='width: 25%;')
+                            div(class='block-container-red mr-10') Highest checkout
+                            div(class='highscore-card')
+                                table(class='table table-striped' id='table-tournament-statistics')
+                                    tbody
+                                        - var rank = 1
+                                        each idx in [0, 1, 2, 3, 4]
+                                            tr
+                                                +top_statistics(rank, idx, statistics.checkout_highest)
+                                                - rank++
+                        td(style='width: 25%;')
+                            div(class='block-container-red mr-10') Best PPD
+                            div(class='highscore-card')
+                                table(class='table table-striped' id='table-tournament-statistics')
+                                    tbody
+                                        - var rank = 1
+                                        each idx in [0, 1, 2, 3, 4]
+                                            tr
+                                                +top_statistics(rank, idx, statistics.best_ppd)
+                                                - rank++
+                        td(style='width: 25%;')
+                            div(class='block-container-red mr-10') Best first 9 PPD
+                            div(class='highscore-card')
+                                table(class='table table-striped' id='table-tournament-statistics')
+                                    tbody
+                                        - var rank = 1
+                                        each idx in [0, 1, 2, 3, 4]
+                                            tr
+                                                +top_statistics(rank, idx, statistics.best_first_nine_ppd)
+                                                - rank++
+                        td(style='width: 25%;')
+                            div(class='block-container-red') Least darts thrown
+                            div(class='highscore-card-no-margin')
+                                table(class='table table-striped' id='table-tournament-statistics')
+                                    tbody
+                                        - var rank = 1
+                                        each idx in [0, 1, 2, 3, 4]
+                                            - var dartsThrown = statistics.best_501_darts_thrown ? statistics.best_501_darts_thrown : statistics.best_301_darts_thrown ? statistics.best_301_darts_thrown : null
+                                            tr
+                                                +top_statistics(rank, idx, dartsThrown)
+                                                - rank++
 
         div(role='tabpanel' id='playoffs' class='tab-pane')
             include bracket.pug
         if tournament.standings
             div(role='tabpanel' id='standings' class='tab-pane')
-                table(class='table table-striped' id='table-tournament-standings')
-                    thead
-                        tr
-                            th Position
-                            th Player
-                    tbody
-                        each standing in tournament.standings
+                div(class='block-container no-padding')   
+                    table(class='table' id='table-tournament-standings')
+                        thead
                             tr
-                                td= standing.rank
-                                td: a(href='/players/' + standing.player_id + '/statistics')= standing.player_name
+                                th Position
+                                th Player
+                        tbody
+                            each standing in tournament.standings
+                                tr
+                                    td= standing.rank
+                                    td: a(href='/players/' + standing.player_id + '/statistics')= standing.player_name
