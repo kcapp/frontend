@@ -4,7 +4,7 @@ class {
     }
 }
 style {
-    label {
+    .player-name-label {
         margin-left: 10px;
         width: 150px;
     }
@@ -17,6 +17,7 @@ style {
         margin-left: 10px;
         width: 50px;
     }
+
     .players-all > div {
         float: left;
         padding-bottom: 10px;
@@ -24,13 +25,12 @@ style {
     }
     .players-selected > div {
         padding-bottom: 10px;
-        margin-left: 20px;
     }
 }
 $ var player = input.player;
 <div on-click('handlePlayerClick')>
   <input class="form-check-input" type="checkbox" value=player.id/>
   <label class="player-name-label form-check-label btn btn-primary">${player.name}</label>
-  <input class="form input-player-handicap" type="textbox" name="player_handicap" hidden="true" value=0/>
+  <input class="form input-player-handicap" type="textbox" hidden="true" value=0/>
   <div class="clearfix"/>
 </div>
