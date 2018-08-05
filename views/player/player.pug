@@ -216,7 +216,7 @@ block content
                         div(class='label-fat-25')= statistics.checkout_percentage === null ? '-' : statistics.checkout_percentage.toFixed(2) + '%'
                     div(class='keyinfo')
                         div(class='label-fat-18-grey') HIGHEST CHECKOUT
-                        div(class='label-fat-25')= statistics.highest_checkout.value
+                        div(class='label-fat-25')= statistics.highest_checkout ? statistics.highest_checkout.value : '-'
 
                 table(style='width: 100%;')
                     tr

@@ -64,17 +64,15 @@ block content
                 tr
                     th(hidden=true)
                     th(class='text-left') 
-                        i(class="fas fa-clock") 
                         span(class='ml-10') Start Time
+                    th(class='text-left')
+                        span Status
                     th
-                        i(class="fas fa-location-arrow") 
                         span(class='ml-10') Venue
                     th 
-                        i(class="fas fa-expand") 
                         span(class='ml-10') Type
                     th Mode
                     th(class='text-left')
-                        i(class="fas fa-users") 
                         span(class='ml-10') Players
                     th(class='text-center') Results
             tbody
@@ -87,8 +85,20 @@ block content
                                 div(class='float-left' style='margin-right: 10px;')
                                     label(class='label label-warning') Official
                             div= moment(match.created_at).format('YYYY-MM-DD HH:mm:ss')
-                            if isLive
-                                label(class='label label-info' style='line-height: inherit;') Live
+                        td(class='text-left')
+                            if match.is_abandoned
+                                div
+                                    label(class='label label-warning' style='line-height: inherit;') Abandoned
+                            else if isLive
+                                div
+                                    label(class='label label-info' style='line-height: inherit;') Live
+                            else if match.is_finished
+                                if match.winner_id == null
+                                    div
+                                        label(class='label label-default' style='line-height: inherit;') Finished (draw)
+                                else
+                                    div
+                                        label(class='label label-success' style='line-height: inherit;') Finished
                         td
                             if match.venue
                                 div= match.venue.name

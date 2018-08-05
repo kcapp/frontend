@@ -83,6 +83,12 @@ block append scripts
     script.
         var leg = !{JSON.stringify(leg)}
 
+        $(document).keydown(function (e) {
+            if (e.key == 'Enter') {
+                $('#continue-match').trigger('click');
+            }
+        });
+
         $(function () {
             $('#leg-hits-table').DataTable({
                 searching: false,
@@ -90,7 +96,6 @@ block append scripts
                 iDisplayLength: 50,
                 order: [[ 1,  'desc' ]]
             });
-            $('#continue-match').focus();
 
             $('.edit-visit').click(function () {
                 var visitNumber = $(this).data('visit');
@@ -290,6 +295,7 @@ block append scripts
         });
 
 block content
+    - var isMatchFinished = match.is_finished
     - var isFinished = leg.winner_player_id !== null
     div(class='pt-20')
     div(class='block-container') 
@@ -321,17 +327,13 @@ block content
                 li(role='presentation' class='active'): a(href='#summary' data-toggle='tab') Summary
                 li(role='presentation'): a(href='#visits' data-toggle='tab') Visits
                 li(role='presentation'): a(href='#stats' data-toggle='tab') Stats
-
-        div(class='float-right')
-            div(class='btn-group')
-                button(type='button' class='btn btn-primary dropdown-toggle' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false') Options&nbsp;&nbsp;
-                    span(class='caret')
-                    span(class='sr-only')
-                ul(class='dropdown-menu')
-                    li: a(id='button-rematch') Rematch
-                    li: a(id='button-undo-finish') Undo leg finish
-                    li: a(id='back-to-match' data-match=leg.match_id) Back to match
-                    li: a(id='continue-match' data-match=match.id) Continue match
+        div(style='float: right; padding-top: 4px;')
+            ul(class='nav nav-pills')
+                li(role='presentation'): a(id='button-rematch') Rematch
+                li(role='presentation'): a(id='button-undo-finish') Undo leg finish
+                li(role='presentation'): a(id='back-to-match' data-match=leg.match_id) Match results
+                if !isMatchFinished
+                    li(role='presentation' class='active'): a(id='continue-match' data-match=match.id) Continue match
         div(style='clear: both;')
                 
     div(class='tab-content')

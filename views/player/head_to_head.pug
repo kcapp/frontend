@@ -14,6 +14,21 @@ block scripts
 
 
 block content
+    div(class='pt-20')
+    div(class='block-container') 
+        table(style='width: 100%;')
+            tr
+                td(style='width: 40%; text-align: right;')
+                    span(style='font-size: 30px; padding-right: 20px;')= player1.name
+                    div(class='player-pic-cutout float-right')
+                        span 
+                            +get_player_profile_pic(player1)
+                td(style='width: 20%; text-align: center; font-size: 35px; font-weight: 700;') VS
+                td(style='width: 40%; text-align: left;')
+                    span(style='font-size: 30px; padding-left: 20px;')= player2.name
+                    div(class='player-pic-cutout float-left')
+                        +get_player_profile_pic(player2)
+
     h2(style='padding: 10px 0px 20px 0px;') Head to Head
 
     div(class='table-responsive')
@@ -23,12 +38,6 @@ block content
                     td(class='head-to-head-player1'): h2= player1.name
                     th(class='head-to-head-header'): h2 vs
                     td(class='head-to-head-player2'): h2= player2.name
-                tr
-                    td(class='head-to-head-player1')
-                        +get_player_profile_pic(player1, 98, 130)
-                    th(class='head-to-head-header')
-                    td(class='head-to-head-player2')
-                        +get_player_profile_pic(player2, 98, 130)
                 tr
                     th(colspan='3' class='head-to-head-header'): h3 Overall
                 tr
