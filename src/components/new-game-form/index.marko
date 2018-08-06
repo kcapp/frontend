@@ -28,50 +28,12 @@
       <i class="fas fa-cogs"/>
       <span class="ml-10">Game settings</span>
     </div>
-    <div class="block-container-with-header">
-      <div class="form-group">
-        <label for="match-type-select">Match Type</label>
-        <select class="form-control" onChange('handleTypeChange')>
-          <for(type in state.input.types)>
-            <option value=type.id selected=(state.options.game_type === type.id)>${type.name}</option>
-          </for>
-        </select>
-      </div>
-      <div class="form-group">
-        <label for="leg-type-select">Starting Score</label>
-        <select class="form-control" onChange('handleScoreChange') disabled=(state.options.game_type === 2)>
-          <for(score in state.input.scores)>
-            <option value=score selected=(state.options.starting_score === score)>${score}</option>
-          </for>
-          <option value=0 hidden selected=(state.options.starting_score === 0)>0</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label for="match-mode-select">Match Mode</label>
-        <select class="form-control" onChange('handleModeChange')>
-          <for(mode in state.input.modes)>
-            <option value=mode.id selected=(state.options.game_mode === mode.id)>${mode.name}</option>
-          </for>
-        </select>
-      </div>
-      <div class="form-group">
-        <label for="match-stake-select">Match Stake</label>
-        <select class="form-control" onChange('handleStakeChange')>
-          <option value=null selected=(state.options.stake == null)>-</option>
-          <for(stake in state.input.stakes)>
-            <option value=stake.id selected=(state.options.stake === stake.id)>${stake.item}</option>
-          </for>
-        </select>
-      </div>
-      <div class="form-group">
-        <label for="venue-select">Venue</label>
-        <select class="form-control" onChange('handleVenueChange')>
-          <option value=null selected=(state.options.venue === null)>-</option>
-          <for(venue in state.input.venues)>
-            <option value=venue.id selected=(state.options.venue === venue.id)>${venue.name}</option>
-          </for>
-        </select>
-      </div>
+    <div key="potato" class="block-container-with-header">
+      <game-option-selector values=input.types options=state.options key="game-type" label="Match Type" attribute="game_type" defaultValue=1/>
+      <game-option-selector values=input.scores options=state.options key="starting-score" label="Starting Score" attribute="starting_score" defaultValue=501/>
+      <game-option-selector values=input.modes options=state.options key="game-mode" label="Match Mode" attribute="game_mode" defaultValue=1/>
+      <game-option-selector values=input.stakes options=state.options key="stake" label="Match Stake" attribute="stake" addNull=true defaultAttrName="item"/>
+      <game-option-selector values=input.venues options=state.options key="venue" label="Venue" attribute="venue" addNull=true/>
       <button class="btn btn-primary" type="submit" on-click('newGame')>Start</button>
     </div>
   </div>

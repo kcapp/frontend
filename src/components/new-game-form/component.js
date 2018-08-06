@@ -22,10 +22,6 @@ module.exports = {
         }
     },
     onMount() {
-        // Read venue from localStorage and set it
-        this.state.options.venue = localStorageUtil.getInt("venue") || null;
-        this.setStateDirty('options');
-
         document.addEventListener("keydown", this.onKeyDown.bind(this), false);
         document.addEventListener("keypress", this.onKeyPress.bind(this), false);
     },
@@ -72,28 +68,50 @@ module.exports = {
             case '9': this.state.playerId += '9'; break;
             case '0': this.state.playerId += '0'; break;
             case '/':
-                var value = this.cycleValues(this.state.input.types, this.state.options.game_type);
-                this.handleTypeChange(null, { value: value });
+                var component = this.getComponent('game-type');
+                component.state.index = this.cycleValues(this.state.input.types, this.state.options.game_type);
+                this.state.options.game_type = component.state.index;
+
+                // If this is 9 Dart Shootout, make sure to set score to 0 and disable the selector
+                var scoreComponent = this.getComponent('starting-score')
+                if (this.state.options.game_type === 2) { // TODO Externalize this 9 Dart Shootout Constant
+                    scoreComponent.state.index = 0;
+                    scoreComponent.state.enabled = false;
+                } else if (this.state.options.starting_score === 0) {
+                    scoreComponent.state.index = scoreComponent.state.defaultValue;
+                    scoreComponent.state.enabled = true;
+                }
+                this.state.options.starting_score = scoreComponent.state.index
                 break;
             case '*':
-                var value = this.cycleValues(this.state.input.scores, this.state.options.starting_score, true);
-                this.handleScoreChange(null, { value: value });
+                // Don't allow cycling of score when 9 Dart Shootout is selected
+                if (this.state.options.game_type !== 2) {
+                    var component = this.getComponent('starting-score');
+                    var score = this.cycleValues(this.state.input.scores, this.state.options.starting_score);
+                    if (score === 0) {
+                        // Don't allow cycling to 0 as starting score
+                        score = this.cycleValues(this.state.input.scores, score);
+                    }
+                    component.state.index = score
+                    this.state.options.starting_score = component.state.index;
+                }
                 break;
             case '-':
-                var value = this.cycleValues(this.state.input.modes, this.state.options.game_mode);
-                this.handleModeChange(null, { value: value });
+                var component = this.getComponent('game-mode');
+                component.state.index = this.cycleValues(this.state.input.modes, this.state.options.game_mode);
+                this.state.options.game_mode = component.state.index;
                 break;
             case '+':
-                var value = this.cycleValues(this.state.input.stakes, this.state.options.stake);
-                this.handleStakeChange(null, { value: value });
+                var component = this.getComponent('stake');
+                component.state.index = this.cycleValues(this.state.input.stakes, this.state.options.stake);
+                this.state.options.stake = component.state.index;
                 break;
             default: /* NOOP */; break;
         }
     },
-    cycleValues(values, current, raw = false) {
-        var index = _.findIndex(values, (value) => { return (raw ? value : value.id) === current });
-        index = (index + 1) % values.length;
-        return raw ? values[index] : values[index].id;
+    cycleValues(values, current) {
+        var index = _.findIndex(values, (value) => { return value.id === current });
+        return values[(index + 1) % values.length].id;
     },
     addPlayer(event, selected) {
         var player = selected.input.player;
@@ -134,36 +152,8 @@ module.exports = {
             }).catch(error => {
                 console.log(error);
             });
-
         if (event) {
             event.preventDefault();
         }
-    },
-    handleTypeChange(event, selectedEl) {
-        this.state.options.game_type = parseInt(selectedEl.value);
-        if (this.state.options.game_type === 2) {
-            this.state.options.starting_score = 0;
-        } else if (this.state.options.starting_score === 0) {
-            this.state.options.starting_score = 301;
-        }
-        this.setStateDirty('options');
-    },
-    handleScoreChange(event, selectedEl) {
-        if (this.state.options.game_type !== 2) {
-            this.state.options.starting_score = parseInt(selectedEl.value);
-            this.setStateDirty('options');
-        }
-    },
-    handleModeChange(event, selectedEl) {
-        this.state.options.game_mode = parseInt(selectedEl.value);
-        this.setStateDirty('options');
-    },
-    handleStakeChange(event, selectedEl) {
-        this.state.options.stake = parseInt(selectedEl.value);
-        this.setStateDirty('options');
-    },
-    handleVenueChange(event, selectedEl) {
-        this.state.options.venue = parseInt(selectedEl.value);
-        this.setStateDirty('options');
     }
 }

@@ -42,7 +42,7 @@ router.get('/markojs', function (req, res) {
         res.marko(indexTemplate, {
             players: _.sortBy(players.data, (player) => player.name),
             modes: matchModes.data,
-            scores: [301, 501, 701],
+            scores: [{ id: 0, name: 0, hidden: true }, { id: 301, name: 301 }, { id: 501, name: 501 }, { id: 701, name: 701 }],
             types: matchTypes.data,
             venues: venues.data,
             stakes: oweTypes.data
