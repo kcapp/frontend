@@ -47,13 +47,15 @@ router.get('/:id/statistics', function (req, res, next) {
     axios.all([
         axios.get(req.app.locals.kcapp.api + '/player/' + playerId),
         axios.get(req.app.locals.kcapp.api + '/player/' + playerId + '/statistics'),
+        axios.get(req.app.locals.kcapp.api + '/player/' + playerId + '/statistics/previous'),
         axios.get(req.app.locals.kcapp.api + '/player/' + playerId + '/progression'),
         axios.get(req.app.locals.kcapp.api + '/player/' + playerId + '/checkouts'),
         axios.get(req.app.locals.kcapp.api + '/player/' + playerId + '/tournament')
-    ]).then(axios.spread((player, statistics, progression, checkouts, tournament) => {
+    ]).then(axios.spread((player, statistics, previous_statistics, progression, checkouts, tournament) => {
         res.render('player/player', {
             player: player.data,
             statistics: statistics.data,
+            previous_statistics: previous_statistics.data,
             progression: progression.data,
             checkouts: checkouts.data,
             tournament_standings: tournament.data
