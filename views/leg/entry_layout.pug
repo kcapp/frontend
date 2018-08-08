@@ -52,14 +52,10 @@ block scripts
 
                     var dart = getCurrentDartContainer(currentDart);
                     if (dartValue !== '') {
-                        dartValue = dartValue.substring(0, dartValue.length - 1);
-                        if (dartValue === '') {
-                            clearDart(dart);
-                            scores[currentDart] = 0;
-                        }
-                        else {
-                            setCurrentDartContainerValues(dart, dartValue * dartMultiplier, dartMultiplier);
-                        }
+                        dartValue = '';
+                        clearDart(dart);
+                        scores[currentDart] = 0;
+                        
                         // Make sure we don't change score for current player before we press ENTER
                         totalScoreContainer.html(currentPlayerScore);
                     } else {
