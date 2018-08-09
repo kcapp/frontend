@@ -156,6 +156,8 @@ block scripts
                 fill: false
             }]
             var scoresChart = new Chart("canvas-scores", getChartConfig('Scores Per Week|', 'line', 'Date', 'Count', labels, datasetsScores));
+
+            $('[data-toggle="tooltip"]').tooltip();
         });
 
 block content
@@ -210,19 +212,21 @@ block content
                         div(class='label-fat-25')
                             - var diff = (statistics.first_nine_ppd - previous_statistics.first_nine_ppd).toFixed(2)
                             - var change = diff > 0 ? 'fas fa-arrow-alt-circle-up' : diff < 0 ? 'fas fa-arrow-alt-circle-down' : 'fas fa-arrow-alt-circle-right'
+                            - var col = diff > 0 ? 'col-green' : diff < 0 ? 'col-red' : 'col-grey'
                             div= statistics.first_nine_ppd.toFixed(2)
-                            div(style='font-size: 18px; color: #949494;')
+                            div(style='font-size: 18px;' class=col)
                                 i(class=change)
-                                span(style='margin-left: 5px;')= Math.abs(diff)
+                                span(style='margin-left: 5px;' data-toggle="tooltip" data-placement="bottom" title="Since last week")= Math.abs(diff)
                     div(class='keyinfo')
                         div(class='label-fat-18-grey') OVERALL PPD
                         div(class='label-fat-25')
                             - var diff = (statistics.ppd - previous_statistics.ppd).toFixed(2)
                             - var change = diff > 0 ? 'fas fa-arrow-alt-circle-up' : diff < 0 ? 'fas fa-arrow-alt-circle-down' : 'fas fa-arrow-alt-circle-right'
+                            - var col = diff > 0 ? 'col-green' : diff < 0 ? 'col-red' : 'col-grey'
                             div= statistics.ppd.toFixed(2)
-                            div(style='font-size: 18px; color: #949494;')
+                            div(style='font-size: 18px;' class=col)
                                 i(class=change)
-                                span(style='margin-left: 5px;')= Math.abs(diff)
+                                span(style='margin-left: 5px;' data-toggle="tooltip" data-placement="bottom" title="Since last week")= Math.abs(diff)
                     div(class='keyinfo')
                         div(class='label-fat-18-grey') CHECKOUT %
                         div(class='label-fat-25')
@@ -230,10 +234,11 @@ block content
                             - var pcp = previous_statistics.checkout_percentage === null ? 0 : previous_statistics.checkout_percentage.toFixed(2)
                             - var diff = (cp - pcp).toFixed(2)
                             - var change = diff > 0 ? 'fas fa-arrow-alt-circle-up' : diff < 0 ? 'fas fa-arrow-alt-circle-down' : 'fas fa-arrow-alt-circle-right'
+                            - var col = diff > 0 ? 'col-green' : diff < 0 ? 'col-red' : 'col-grey'
                             div= cp + '%'
-                            div(style='font-size: 18px; color: #949494;')
+                            div(style='font-size: 18px;' class=col)
                                 i(class=change)
-                                span(style='margin-left: 5px;')= Math.abs(diff) + '%'
+                                span(style='margin-left: 5px;' data-toggle="tooltip" data-placement="bottom" title="Since last week")= Math.abs(diff) + '%'
                     div(class='keyinfo')
                         div(class='label-fat-18-grey') HIGHEST CHECKOUT
                         div(class='label-fat-25')= statistics.highest_checkout ? statistics.highest_checkout.value : '-'
