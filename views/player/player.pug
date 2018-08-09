@@ -207,17 +207,37 @@ block content
                 div(class='block-container')
                     div(class='keyinfo')
                         div(class='label-fat-18-grey') FIRST 9 PPD
-                        div(class='label-fat-25')= statistics.first_nine_ppd.toFixed(2)
+                        div(class='label-fat-25')
+                            - var diff = (statistics.first_nine_ppd - previous_statistics.first_nine_ppd).toFixed(2)
+                            - var change = diff > 0 ? 'fas fa-arrow-alt-circle-up' : diff < 0 ? 'fas fa-arrow-alt-circle-down' : 'fas fa-arrow-alt-circle-right'
+                            div= statistics.first_nine_ppd.toFixed(2)
+                            div(style='font-size: 18px; color: #949494;')
+                                i(class=change)
+                                span(style='margin-left: 5px;')= Math.abs(diff)
                     div(class='keyinfo')
                         div(class='label-fat-18-grey') OVERALL PPD
-                        div(class='label-fat-25')= statistics.ppd.toFixed(2)
+                        div(class='label-fat-25')
+                            - var diff = (statistics.ppd - previous_statistics.ppd).toFixed(2)
+                            - var change = diff > 0 ? 'fas fa-arrow-alt-circle-up' : diff < 0 ? 'fas fa-arrow-alt-circle-down' : 'fas fa-arrow-alt-circle-right'
+                            div= statistics.ppd.toFixed(2)
+                            div(style='font-size: 18px; color: #949494;')
+                                i(class=change)
+                                span(style='margin-left: 5px;')= Math.abs(diff)
                     div(class='keyinfo')
                         div(class='label-fat-18-grey') CHECKOUT %
-                        div(class='label-fat-25')= statistics.checkout_percentage === null ? '-' : statistics.checkout_percentage.toFixed(2) + '%'
+                        div(class='label-fat-25')
+                            - var cp = statistics.checkout_percentage === null ? 0 : statistics.checkout_percentage.toFixed(2)
+                            - var pcp = previous_statistics.checkout_percentage === null ? 0 : previous_statistics.checkout_percentage.toFixed(2)
+                            - var diff = (cp - pcp).toFixed(2)
+                            - var change = diff > 0 ? 'fas fa-arrow-alt-circle-up' : diff < 0 ? 'fas fa-arrow-alt-circle-down' : 'fas fa-arrow-alt-circle-right'
+                            div= cp + '%'
+                            div(style='font-size: 18px; color: #949494;')
+                                i(class=change)
+                                span(style='margin-left: 5px;')= Math.abs(diff) + '%'
                     div(class='keyinfo')
                         div(class='label-fat-18-grey') HIGHEST CHECKOUT
                         div(class='label-fat-25')= statistics.highest_checkout ? statistics.highest_checkout.value : '-'
-
+                        
                 table(style='width: 100%;')
                     tr
                         td(colspan='2')
