@@ -1,0 +1,40 @@
+<form>
+  <div class="game-players">
+    <div class="block-container-header">
+      <i class="fas fa-users"/>
+      <span class="ml-10">Players</span>
+    </div>
+    <div class="block-container-with-header">
+      <div class="form-group form-check players-selected">
+        <for(player in state.selected)>
+          <player-selector player=player on-add-player('removePlayer')/>
+        </for>
+      </div>
+    </div>
+    <div class="block-container-header">
+      <i class="fas fa-mouse-pointer"/>
+      <span class="ml-10">Select players</span>
+    </div>
+    <div class="block-container-with-header">
+      <div class="form-group form-check players-all">
+        <for(player in state.players)>
+          <player-selector player=player on-add-player('addPlayer')/>
+        </for>
+      </div>
+    </div>
+  </div>
+  <div class="game-options">
+    <div class="block-container-header">
+      <i class="fas fa-cogs"/>
+      <span class="ml-10">Game settings</span>
+    </div>
+    <div key="potato" class="block-container-with-header">
+      <game-option-selector values=input.types options=state.options key="game-type" label="Match Type" attribute="game_type" defaultValue=1/>
+      <game-option-selector values=input.scores options=state.options key="starting-score" label="Starting Score" attribute="starting_score" defaultValue=501/>
+      <game-option-selector values=input.modes options=state.options key="game-mode" label="Match Mode" attribute="game_mode" defaultValue=1/>
+      <game-option-selector values=input.stakes options=state.options key="stake" label="Match Stake" attribute="stake" addNull=true defaultAttrName="item"/>
+      <game-option-selector values=input.venues options=state.options key="venue" label="Venue" attribute="venue" addNull=true/>
+      <button class="btn btn-primary" type="submit" on-click('newGame')>Start</button>
+    </div>
+  </div>
+</form>
