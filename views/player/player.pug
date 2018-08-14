@@ -250,15 +250,13 @@ block content
                                 canvas(id='canvas-win-percentage-matches')
                                 div(id='canvas-win-percentage-matches-percentage' class='label-mid')
                         td(style='vertical-align: top;')
-                            div(class='block-container')
-                                div(class='label-fat-21-grey') Matches played 
-                                div(class='label-fat-18-grey' style='color: black;')= player.matches_played
-                                div(class='label-fat-21-grey') Matches won 
-                                div(class='label-fat-18-grey' style='color: black; margin-bottom: 37px;')= player.matches_won
-                                div(class='label-fat-21-grey') Legs played
-                                div(class='label-fat-18-grey' style='color: black;')= player.legs_played
-                                div(class='label-fat-21-grey') Legs won
-                                div(class='label-fat-18-grey' style='color: black;')= player.legs_won 
+                            div(class='block-container' style='min-height: 333px;')
+                                div(class='label-fat-15-grey') Tournament elo / current elo
+                                div(class='label-fat-18-grey' style='color: black;padding-bottom: 20px; font-size: 25pt;')= player.tournament_elo + ' / ' + player.current_elo
+                                div(class='label-fat-15-grey') Matches played / matches won
+                                div(class='label-fat-18-grey' style='color: black;padding-bottom: 20px; font-size: 25pt;')= player.matches_played + ' / ' + player.matches_won
+                                div(class='label-fat-15-grey') Legs played / legs won
+                                div(class='label-fat-18-grey' style='color: black; font-size: 25pt;')= player.legs_played + ' / ' + player.legs_won 
                     tr
                         td(style='width: 33%;')
                             div(class='block-container accuracy-chart') 
