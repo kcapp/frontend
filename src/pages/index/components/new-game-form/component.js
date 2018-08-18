@@ -1,6 +1,8 @@
 const _ = require("underscore");
 const axios = require('axios');
-const localStorageUtil = require("../../util/localStorage");
+const localStorageUtil = require("../../../../util/localStorage");
+
+const NINE_DART_SHOOTOUT = 2;
 
 module.exports = {
     onCreate() {
@@ -57,16 +59,26 @@ module.exports = {
                     this.removePlayer(null, { input: { player: player } });
                 }
                 break;
-            case '1': this.state.playerId += '1'; break;
-            case '2': this.state.playerId += '2'; break;
-            case '3': this.state.playerId += '3'; break;
-            case '4': this.state.playerId += '4'; break;
-            case '5': this.state.playerId += '5'; break;
-            case '6': this.state.playerId += '6'; break;
-            case '7': this.state.playerId += '7'; break;
-            case '8': this.state.playerId += '8'; break;
-            case '9': this.state.playerId += '9'; break;
-            case '0': this.state.playerId += '0'; break;
+            case '1':
+                this.state.playerId += '1'; break;
+            case '2':
+                this.state.playerId += '2'; break;
+            case '3':
+                this.state.playerId += '3'; break;
+            case '4':
+                this.state.playerId += '4'; break;
+            case '5':
+                this.state.playerId += '5'; break;
+            case '6':
+                this.state.playerId += '6'; break;
+            case '7':
+                this.state.playerId += '7'; break;
+            case '8':
+                this.state.playerId += '8'; break;
+            case '9':
+                this.state.playerId += '9'; break;
+            case '0':
+                this.state.playerId += '0'; break;
             case '/':
                 var component = this.getComponent('game-type');
                 component.state.index = this.cycleValues(this.state.input.types, this.state.options.game_type);
@@ -74,7 +86,7 @@ module.exports = {
 
                 // If this is 9 Dart Shootout, make sure to set score to 0 and disable the selector
                 var scoreComponent = this.getComponent('starting-score')
-                if (this.state.options.game_type === 2) { // TODO Externalize this 9 Dart Shootout Constant
+                if (this.state.options.game_type === NINE_DART_SHOOTOUT) {
                     scoreComponent.state.index = 0;
                     scoreComponent.state.enabled = false;
                 } else if (this.state.options.starting_score === 0) {
@@ -85,7 +97,7 @@ module.exports = {
                 break;
             case '*':
                 // Don't allow cycling of score when 9 Dart Shootout is selected
-                if (this.state.options.game_type !== 2) {
+                if (this.state.options.game_type !== NINE_DART_SHOOTOUT) {
                     var component = this.getComponent('starting-score');
                     var score = this.cycleValues(this.state.input.scores, this.state.options.starting_score);
                     if (score === 0) {
@@ -106,7 +118,8 @@ module.exports = {
                 component.state.index = this.cycleValues(this.state.input.stakes, this.state.options.stake);
                 this.state.options.stake = component.state.index;
                 break;
-            default: /* NOOP */; break;
+            default:
+                break; // NOOP
         }
     },
     cycleValues(values, current) {

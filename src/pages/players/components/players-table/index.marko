@@ -1,0 +1,49 @@
+<table>
+  <thead>
+    <tr>
+      <th/>
+      <th colspan="3">Matches</th>
+      <th colspan="3">Legs</th>
+      <th colspan="2"/>
+    </tr>
+    <tr>
+      <th class="text-left">Name</th>
+      <th>Played</th>
+      <th>Won</th>
+      <th>Win %</th>
+      <th>Played</th>
+      <th>Won</th>
+      <th>Win %</th>
+      <th>Statistics</th>
+      <th>Compare</th>
+    </tr>
+  </thead>
+  <tbody>
+    <for(player in input.players)>
+      <tr>
+        <td class="text-left">
+          $ var displayName = player.name + (player.nickname !== null ? (" '" + player.nickname + "'") : '');
+          <a href="/players/${player.id}/statistics">${displayName}</a>
+        </td>
+        <td>${player.matches_played}</td>
+        <td>${player.matches_won}</td>
+        <td>
+          $ var winPercentage = player.matches_played == 0 ? '0.00%' : (player.matches_won * 100 / player.matches_played).toFixed(2)
+          <span class="badge badge-pill badge-success">${winPercentage}%</span>
+        </td>
+        <td>${player.legs_played}</td>
+        <td>${player.legs_won}</td>
+        <td>
+          $ var winPercentage = player.legs_played == 0 ? '0.00%' : (player.legs_won * 100 / player.legs_played).toFixed(2)
+          <span class="badge badge-pill badge-success">${winPercentage}%</span>
+        </td>
+        <td>
+          <i class="fas fa-eye fas-option-button" data-player=player.id on-click('viewPlayer')/>
+        </td>
+        <td>
+          <input type="checkbox" value=player.id checked=state.selected.includes(player.id) on-click('playerSelected')/>
+        </td>
+      </tr>
+    </for>
+  </tbody>
+</table>

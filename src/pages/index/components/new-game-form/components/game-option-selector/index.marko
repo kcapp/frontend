@@ -4,7 +4,7 @@ $ var defaultAttrName = input.defaultAttrName || 'name';
   <label>${input.label}</label>
   <select class="form-control" onChange('handleStateChange') disabled=(!state.enabled)>
     <if(input.addNull)>
-      <option value="null" selected=(state.index === null)>-</option>
+      <option value=-1 selected=(state.index === null)>-</option>
     </if>
     <for(value in input.values)>
       <option value=value[defaultAttrId] hidden=value.hidden selected=(state.index === value[defaultAttrId])>${value[defaultAttrName]}</option>

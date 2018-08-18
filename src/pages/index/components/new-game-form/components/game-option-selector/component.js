@@ -1,4 +1,4 @@
-const localStorageUtil = require("../../../../util/localStorage");
+const localStorageUtil = require("../../../../../../util/localStorage");
 
 module.exports = {
     onCreate(input) {
@@ -15,8 +15,7 @@ module.exports = {
         this.state.index = localStorageUtil.getInt(this.state.attribute) || this.state.index;
     },
     handleStateChange(event, selected) {
-        console.log("Hello?");
-        this.state.index = selected.value === 'null' ? null : parseInt(selected.value);
+        this.state.index = selected.value === -1 ? null : parseInt(selected.value);
         this.state.options[this.state.attribute] = this.state.index;
         console.log(this.state.options[this.state.attribute]);
     }

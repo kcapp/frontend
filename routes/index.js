@@ -3,7 +3,7 @@ var debug = require('debug')('kcapp:index');
 var express = require('express');
 var router = express.Router();
 
-var indexTemplate = require('../src/index.marko');
+var indexTemplate = require('../src/pages/index/index.marko');
 
 var axios = require('axios');
 var _ = require('underscore');
@@ -30,8 +30,7 @@ router.get('/', function (req, res, next) {
     });
 });
 
-router.get('/markojs', function (req, res) {
-
+router.get('/markojs', function (req, res, next) {
     axios.all([
         axios.get(req.app.locals.kcapp.api + '/player/active'),
         axios.get(req.app.locals.kcapp.api + '/match/modes'),

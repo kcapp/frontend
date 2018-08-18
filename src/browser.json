@@ -1,5 +1,5 @@
 {
     "dependencies": [
-        "./global-style/styles.less"
+        "./global-style/style.less"
     ]
 }
