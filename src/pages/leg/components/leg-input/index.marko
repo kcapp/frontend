@@ -1,0 +1,19 @@
+<div class="alert alert-danger" id="cancel-leg-failed-alert" role="alert" hidden="true">Unable to cancel leg</div>
+<div class="pt-20"/>
+<leg-header name=state.matchName round=state.roundNumber/>
+<div>
+  <table>
+    <tbody>
+      <tr>
+        <for(player in input.leg_players)>
+          <player-scorecard-header player=player name=input.players[player.player_id].name/>
+        </for>
+      </tr>
+      <tr>
+        <for(player in input.leg_players)>
+          <player-scorecard key="players[]" player=player/>
+        </for>
+      </tr>
+    </tbody>
+  </table>
+</div>

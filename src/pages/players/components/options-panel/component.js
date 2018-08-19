@@ -1,3 +1,4 @@
+const _ = require("underscore");
 module.exports = {
     onCreate() {
 
@@ -5,16 +6,18 @@ module.exports = {
 
     onInput(input) {
         this.state = {
-            selected: []
+            selected: input.selected
         }
     },
 
     comparePlayers(event) {
-        console.log(event);
-        var queryParameters = '?';
+        var params = '?';
         for (var i = 0; i < this.state.selected.length; i++) {
-            query += 'player_id=' + this.state.selected[i] + '&';
+            params += 'player_id=' + this.state.selected[i] + '&';
         }
-        location.href = '/players/compare' + queryParameters;
+        location.href = '/players/compare' + params;
+    },
+    addPlayer(event) {
+        this.emit('add-player');
     }
 }

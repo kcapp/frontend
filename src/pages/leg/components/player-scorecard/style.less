@@ -1,0 +1,43 @@
+@dart-inactive: #dddddd;
+@dart-single: #000000;
+@dart-double: orange;
+@dart-triple: #d9534f;
+
+table {
+    width: 100%;
+    table-layout: fixed;
+}
+
+.dart-score {
+    .block-container;
+    .no-padding;
+    .text-center;
+    min-height: 56px;
+    .first, .second, .third {
+        padding: 10px 15px 10px 15px;
+        font-size: 24px;
+        font-weight: 700;
+    }
+}
+.total-score {
+    .block-container;
+    .text-center;
+    .font-24;
+    font-weight: 700;
+}
+
+.dart-score-inactive {
+    background-color: @dart-inactive  !important;
+}
+.dart-score-single {
+    background-color: @dart-single;
+    color: white;
+}
+.dart-score-double {
+    background-color: @dart-double;
+    color: white;
+}
+.dart-score-triple {
+    background-color: @dart-triple;
+    color: white;
+}

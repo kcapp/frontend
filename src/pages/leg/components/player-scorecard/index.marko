@@ -1,0 +1,34 @@
+<td class=(state.isCurrentPlayer ? "visits-active" : "visits-inactive")>
+  <table>
+    <tbody>
+      <tr>
+        <td>
+          <div class="dart-score">
+            $ var first = state.throws[1];
+            <div class="first ${first.class}">${first.text}</div>
+          </div>
+        </td>
+        <td>
+          <div class="dart-score">
+            $ var second = state.throws[2];
+            <div class="second ${second.class}">${second.text}</div>
+          </div>
+        </td>
+        <td>
+          <div class="dart-score">
+            $ var third = state.throws[3];
+            <div class="third ${third.class}">${third.text}</div>
+          </div>
+        </td>
+      </tr>
+      <tr>
+        <td style="padding: 3px;"/>
+      </tr>
+      <tr>
+        <td colspan="3">
+          <div class="total-score">${state.totalScore}</div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</td>
