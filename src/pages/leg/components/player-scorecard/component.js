@@ -1,58 +1,58 @@
-module.exports = {
-    onCreate() {
 
-    },
+const CLASS_DART_SINGLE = 'dart-score-single';
+const CLASS_DART_DOUBLE = 'dart-score-double';
+const CLASS_DART_TRIPLE = 'dart-score-triple';
+
+const DART_CONTAINER_MAP = { 1: 'first', 2: 'second', 3: 'third' };
+
+module.exports = {
     onInput(input) {
         var player = input.player;
         this.state = {
             isCurrentPlayer: player.is_current_player,
             totalScore: 0,
-            throws: [],
-            currentDart: 1
+            currentDart: 1,
+            isSubmitted: true
         }
-        // Make this array 1-index based, so it matches thrown darts
-        this.state.throws[1] = { value: 0, text: '', multiplier: 1, class: 'dart-score-single' };
-        this.state.throws[2] = { value: 0, text: '', multiplier: 1, class: 'dart-score-single' };
-        this.state.throws[3] = { value: 0, text: '', multiplier: 1, class: 'dart-score-single' };
+    },
+    getCurrentDart() {
+        return this.getComponent(DART_CONTAINER_MAP[this.state.currentDart]);
     },
     getCurrentValue() {
-        return this.state.throws[this.state.currentDart].value;
+        var dart = this.getCurrentDart();
+        return dart ? dart.state.value : 0;
     },
     getCurrentMultiplier() {
-        return this.state.throws[this.state.currentDart].multiplier;
+        var dart = this.getCurrentDart()
+        return dart ? dart.state.multiplier : 1;
+    },
+    removeLast() {
+        if (this.state.currentDart <= 1 && this.state.isSubmitted) {
+            return;
+        }
+        if (this.state.isSubmitted) {
+            this.state.currentDart--;
+            var dart = this.getCurrentDart();
+            this.state.totalScore -= dart.getValue();
+            dart.reset();
+        } else {
+            var dart = this.getCurrentDart()
+            dart.reset();
+        }
     },
     confirmThrow() {
-        var dart = this.state.throws[this.state.currentDart];
-        this.state.totalScore += dart.value * dart.multiplier;
-        this.state.currentDart++;
-    },
-    setMultiplier(multiplier) {
-        if (this.state.currentDart > 3) {
-            return;
-        }
-        var dart = this.state.throws[this.state.currentDart];
-        dart.multiplier = multiplier;
-        if (dart.value !== 0) {
-            if (multiplier === 3) {
-                dart.class = 'dart-score-triple';
-                dart.text = 'T-' + dart.value;
-            } else if (multiplier === 2) {
-                dart.class = 'dart-score-double';
-                dart.text = 'D-' + dart.value;
-            } else {
-                dart.class = 'dart-score-single';
-                dart.text = dart.value;
+        if (this.state.currentDart <= 3) {
+            var value = this.getCurrentDart().getValue();
+            if (value === 0) {
+                this.setDart(0, 1);
             }
+            this.state.totalScore += value;
+            this.state.currentDart++;
+            this.state.isSubmitted = true;
         }
-        this.setStateDirty('throws');
+        return this.state.currentDart - 1;
     },
-    setValue(value) {
-        if (value === '') {
-            return;
-        }
-        var dart = this.state.throws[this.state.currentDart];
-        dart.text += value;
-        dart.value = parseInt(dart.value + '' + value);
-        this.setStateDirty('throws');
+    setDart(value, multiplier) {
+        this.getCurrentDart().setDart(value, multiplier);
     }
 };

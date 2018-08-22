@@ -9,25 +9,28 @@ module.exports = {
         var matchName = input.match.match_mode.short_name;
         this.state = {
             roundNumber: roundNumber,
-            matchName: matchName,
-            text: '',
-            thrownDarts: 0
+            matchName: matchName
         }
     },
     onMount() {
         document.addEventListener("keydown", this.onKeyDown.bind(this), false);
         document.addEventListener("keypress", this.onKeyPress.bind(this), false);
     },
-    onKeyPress(e) {
+    onKeyDown(e) {
+        if (e.key === 'Backspace') {
+            var component = this.findActive(this.getComponents('players'));
 
+            component.removeLast();
+            e.preventDefault();
+        }
+        return;
     },
 
-    onKeyDown(e) {
+    onKeyPress(e) {
         var component = this.findActive(this.getComponents('players'));
 
-
-        //var text = this.state.text;
         var text = '';
+        var currentValue = component.getCurrentValue();
         var currentMultiplier = component.getCurrentMultiplier();
         switch (e.key) {
             case 'Enter':
@@ -52,13 +55,13 @@ module.exports = {
                 dartText = '';
                 currentMultiplier = 1;*/
 
-                /*this.state.thrownDarts++;
-                if (this.state.thrownDarts > 3) {
-                    console.log("Submitt"); // TODO Submit the score
-                }else {
-                    component.confirmThrow();
-                }*/
-                component.confirmThrow();
+
+                var thrown = component.confirmThrow();
+                if (thrown > 3) {
+                    // Submit score to server!
+                    console.log("Submitt!");
+                }
+                console.log(thrown);
                 console.log('Enter');
                 return;
             case '/': // Single
@@ -69,30 +72,22 @@ module.exports = {
                 break;
             case ',': // Triple
             case '-': // Triple
-                /*var value = parseInt(dartText);
-                if (value === 25) {
-                    disableEnter = true;
-                    showAlert('Invalid value', function () { });
+                if (currentValue === 25) {
+                    // Don't allow Triple bull
                     return;
                 }
-                currentMultiplier = 3;*/
                 currentMultiplier = 3;
                 break;
             case '+': // Cycle through multipliers
-                /*var value = parseInt(dartText);
-                if (dartText === '' || value === 0) {
+                if (currentValue === 0) {
                     return;
                 }
                 currentMultiplier++;
-                if (value === 25) {
+                if (currentValue === 25) {
                     currentMultiplier = currentMultiplier > 2 ? 1 : currentMultiplier;
                 } else {
                     currentMultiplier = currentMultiplier > 3 ? 1 : currentMultiplier;
                 }
-                setDartValue(dart, dartText * currentMultiplier, currentMultiplier);
-                totalScoreContainer.html(currentPlayerScore);*/
-                currentMultiplier++;
-                currentMultiplier = currentMultiplier > 3 ? 1 : currentMultiplier;
                 break;
             case '1': text += '1'; break;
             case '2': text += '2'; break;
@@ -106,10 +101,7 @@ module.exports = {
             case '0': text += '0'; break;
             default: /* Return */; return;
         }
-        component.setMultiplier(currentMultiplier);
-
-        // this.state.text = text;
-        component.setValue(text);
+        component.setDart(text, currentMultiplier);
     },
     findActive(components) {
         return _.filter(components, function (component) {
