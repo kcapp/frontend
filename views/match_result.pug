@@ -19,27 +19,27 @@ block scripts
 block content
     - var duration = moment.duration(moment(match.last_throw_time).diff(match.first_throw_time)).asMinutes().toFixed()
     div(class='pt-20')
-    div(class='block-container') 
+    div(class='block-container')
         div(class='container-info-icon')
             i(class="fas fa-trophy")
         div(class='float-left pl-20')
             h3 Match Result (#{match.id})
             div(class='float-left' style='width: 250px;')
                 p(style='padding-top: 5px;')
-                    i(class="fas fa-clock") 
+                    i(class="fas fa-clock")
                     span(class='ml-5') Started #{moment(match.created_at).format('YYYY-MM-DD HH:mm:ss')}
                 p(style='padding-top: 3px;')
-                    i(class="fas fa-clock") 
+                    i(class="fas fa-clock")
                     span(class='ml-5') Finished #{match.end_time === undefined ? '-' : moment(match.end_time).format('YYYY-MM-DD HH:mm:ss')}
                 p(style='padding-top: 3px;')
-                    i(class="fas fa-stopwatch") 
+                    i(class="fas fa-stopwatch")
                     span(class='ml-5') Duration #{match.end_time === undefined || duration == 0 ? '-' : duration + ' minutes'}
             div(class='float-left' style='width: 250px;')
                 p(style='padding-top: 3px;')
-                    i(class="fas fa-bullseye") 
+                    i(class="fas fa-bullseye")
                     span(class='ml-5') #{match.match_mode.name}
                 p(style='padding-top: 3px;')
-                    i(class="fas fa-trophy") 
+                    i(class="fas fa-trophy")
                     span(class='ml-5') Stakes #{match.owe_type_id === null ? "None" : match.owe_type.item}
 
 
