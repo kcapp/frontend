@@ -86,15 +86,15 @@ block scripts
 
             var stats = !{JSON.stringify(statistics)};
             var percentage = parseFloat(Math.round(stats.accuracy_overall * 100) / 100).toFixed(2);
-            var matchesChart = new Chart('canvas-accuracy-overall', getPercentageChartConfig(percentage, 'Overall accuracy', 'doughnut'));
+            var matchesChart = new Chart('canvas-accuracy-overall', getPercentageChartConfig(percentage, 'Overall accuracy', 'doughnut', '', false));
             $('#canvas-accuracy-overall-percentage').text(percentage + '%');
 
             var percentage20 = parseFloat(Math.round(stats.accuracy_20 * 100) / 100).toFixed(2);
-            var matchesChart = new Chart('canvas-accuracy-20', getPercentageChartConfig(percentage20, 'Accuracy 20s', 'doughnut'));
+            var matchesChart = new Chart('canvas-accuracy-20', getPercentageChartConfig(percentage20, 'Accuracy 20s', 'doughnut', '', false));
             $('#canvas-accuracy-20-percentage').text(percentage20 + '%');
 
             var percentage19 = parseFloat(Math.round(stats.accuracy_19 * 100) / 100).toFixed(2);
-            var matchesChart = new Chart('canvas-accuracy-19', getPercentageChartConfig(percentage19, 'Accuracy 19s', 'doughnut'));
+            var matchesChart = new Chart('canvas-accuracy-19', getPercentageChartConfig(percentage19, 'Accuracy 19s', 'doughnut', '', false));
             $('#canvas-accuracy-19-percentage').text(percentage19 + '%');
 
             var player = !{JSON.stringify(player)};
@@ -102,18 +102,18 @@ block scripts
             var percentageLegs = player.legs_played == 0 ? '0.00' : (player.legs_won * 100 / player.legs_played).toFixed(2);
 
             var matchesChart = new Chart(
-                'canvas-win-percentage-matches', 
+                'canvas-win-percentage-matches',
                 getPolarChartConfig(
-                    percentageMatches, 
-                    percentageLegs, 
-                    percentageMatches + '% matches', 
-                    percentageLegs + '% legs', 
-                    'Winning percentage'
+                    percentageMatches,
+                    percentageLegs,
+                    percentageMatches + '% matches',
+                    percentageLegs + '% legs',
+                    'Winning Percentage'
                 )
             );
             var legsChart = new Chart('canvas-win-percentage-legs', getPercentageChartConfig(
-                percentageLegs, 
-                'Leg winning percentage: ' + percentageLegs + '%',
+                percentageLegs,
+                'Leg winning Percentage: ' + percentageLegs + '%',
                 'pie'
                 )
             );
@@ -162,11 +162,11 @@ block scripts
 
 block content
     div(class='pt-20')
-    div(class='block-container') 
+    div(class='block-container')
         div(class='float-left')
             div(class='player-pic-cutout')
                 +get_player_profile_pic(player)
-        div(class='float-left pl-20') 
+        div(class='float-left pl-20')
             h2= player.name
             h4(style='color: #a5a5a5;')= player.nickname ? player.nickname : '-'
         div(class='float-right')
@@ -174,33 +174,33 @@ block content
 
     div(style='display: flex;')
         div(class='block-container player-profile-menu')
-            div(class='player-profile-menu-item') 
-                i(class="fas fa-thumbtack") 
-                span 
+            div(class='player-profile-menu-item')
+                i(class="fas fa-thumbtack")
+                span
                     a(href='#overview' data-toggle='tab') Overview
-            div(class='player-profile-menu-item') 
-                i(class="fas fa-star") 
-                span 
+            div(class='player-profile-menu-item')
+                i(class="fas fa-star")
+                span
                     a(href='#highscores' data-toggle='tab') High scores
-            div(class='player-profile-menu-item') 
-                i(class="fas fa-crosshairs") 
-                span 
+            div(class='player-profile-menu-item')
+                i(class="fas fa-crosshairs")
+                span
                     a(href='#hits' data-toggle='tab') Hits
-            div(class='player-profile-menu-item') 
-                i(class="fas fa-eye") 
-                span 
+            div(class='player-profile-menu-item')
+                i(class="fas fa-eye")
+                span
                     a(href='#visits' data-toggle='tab') Visits
-            div(class='player-profile-menu-item') 
-                i(class="fas fa-check-double") 
-                span 
+            div(class='player-profile-menu-item')
+                i(class="fas fa-check-double")
+                span
                     a(href='#checkouts' data-toggle='tab') Checkouts
-            div(class='player-profile-menu-item') 
-                i(class="fas fa-chart-line") 
-                span 
+            div(class='player-profile-menu-item')
+                i(class="fas fa-chart-line")
+                span
                     a(href='#progression' data-toggle='tab') Progression
-            div(class='player-profile-menu-item') 
-                i(class="fas fa-trophy") 
-                span 
+            div(class='player-profile-menu-item')
+                i(class="fas fa-trophy")
+                span
                     a(href='#tournament' data-toggle='tab') Tournaments
 
         div(class='player-profile-content tab-content' style='width: 100%;')
@@ -208,22 +208,22 @@ block content
             div(role='tabpanel' id='overview' class='tab-pane active')
                 div(class='block-container')
                     div(class='keyinfo')
-                        div(class='label-fat-18-grey') FIRST 9 PPD
-                        div(class='label-fat-25')
-                            - var diff = (statistics.first_nine_ppd - previous_statistics.first_nine_ppd).toFixed(2)
-                            - var change = diff > 0 ? 'fas fa-arrow-alt-circle-up' : diff < 0 ? 'fas fa-arrow-alt-circle-down' : 'fas fa-arrow-alt-circle-right'
-                            - var col = diff > 0 ? 'col-green' : diff < 0 ? 'col-red' : 'col-grey'
-                            div= statistics.first_nine_ppd.toFixed(2)
-                            div(style='font-size: 18px;' class=col)
-                                i(class=change)
-                                span(style='margin-left: 5px;' data-toggle="tooltip" data-placement="bottom" title="Since last week")= Math.abs(diff)
-                    div(class='keyinfo')
                         div(class='label-fat-18-grey') OVERALL PPD
                         div(class='label-fat-25')
                             - var diff = (statistics.ppd - previous_statistics.ppd).toFixed(2)
                             - var change = diff > 0 ? 'fas fa-arrow-alt-circle-up' : diff < 0 ? 'fas fa-arrow-alt-circle-down' : 'fas fa-arrow-alt-circle-right'
                             - var col = diff > 0 ? 'col-green' : diff < 0 ? 'col-red' : 'col-grey'
                             div= statistics.ppd.toFixed(2)
+                            div(style='font-size: 18px;' class=col)
+                                i(class=change)
+                                span(style='margin-left: 5px;' data-toggle="tooltip" data-placement="bottom" title="Since last week")= Math.abs(diff)
+                    div(class='keyinfo')
+                        div(class='label-fat-18-grey') FIRST 9 PPD
+                        div(class='label-fat-25')
+                            - var diff = (statistics.first_nine_ppd - previous_statistics.first_nine_ppd).toFixed(2)
+                            - var change = diff > 0 ? 'fas fa-arrow-alt-circle-up' : diff < 0 ? 'fas fa-arrow-alt-circle-down' : 'fas fa-arrow-alt-circle-right'
+                            - var col = diff > 0 ? 'col-green' : diff < 0 ? 'col-red' : 'col-grey'
+                            div= statistics.first_nine_ppd.toFixed(2)
                             div(style='font-size: 18px;' class=col)
                                 i(class=change)
                                 span(style='margin-left: 5px;' data-toggle="tooltip" data-placement="bottom" title="Since last week")= Math.abs(diff)
@@ -242,7 +242,7 @@ block content
                     div(class='keyinfo')
                         div(class='label-fat-18-grey') HIGHEST CHECKOUT
                         div(class='label-fat-25')= statistics.highest_checkout ? statistics.highest_checkout.value : '-'
-                        
+
                 table(style='width: 100%;')
                     tr
                         td(colspan='2')
@@ -251,23 +251,23 @@ block content
                                 div(id='canvas-win-percentage-matches-percentage' class='label-mid')
                         td(style='vertical-align: top;')
                             div(class='block-container' style='min-height: 333px;')
-                                div(class='label-fat-15-grey') Tournament elo / current elo
+                                div(class='label-fat-15-grey') Tournament elo / Current elo
                                 div(class='label-fat-18-grey' style='color: black;padding-bottom: 20px; font-size: 25pt;')= player.tournament_elo + ' / ' + player.current_elo
-                                div(class='label-fat-15-grey') Matches played / matches won
+                                div(class='label-fat-15-grey') Matches played / Matches won
                                 div(class='label-fat-18-grey' style='color: black;padding-bottom: 20px; font-size: 25pt;')= player.matches_played + ' / ' + player.matches_won
-                                div(class='label-fat-15-grey') Legs played / legs won
-                                div(class='label-fat-18-grey' style='color: black; font-size: 25pt;')= player.legs_played + ' / ' + player.legs_won 
+                                div(class='label-fat-15-grey') Legs played / Legs won
+                                div(class='label-fat-18-grey' style='color: black; font-size: 25pt;')= player.legs_played + ' / ' + player.legs_won
                     tr
                         td(style='width: 33%;')
-                            div(class='block-container accuracy-chart') 
+                            div(class='block-container accuracy-chart')
                                 canvas(id='canvas-accuracy-overall')
                                 div(id='canvas-accuracy-overall-percentage' class='label-mid')
                         td(style='width: 33%;')
-                            div(class='block-container accuracy-chart') 
+                            div(class='block-container accuracy-chart')
                                 canvas(id='canvas-accuracy-20')
                                 div(id='canvas-accuracy-20-percentage' class='label-mid')
                         td(style='width: 33%;')
-                            div(class='block-container accuracy-chart-no-margin') 
+                            div(class='block-container accuracy-chart-no-margin')
                                 canvas(id='canvas-accuracy-19')
                                 div(id='canvas-accuracy-19-percentage' class='label-mid')
 
@@ -290,20 +290,20 @@ block content
                         td(style='width: 25%;')
                             div(class='highscore-card')
                                 div= statistics.scores_60s_plus
-                                div(class='hs-star rank4') 
+                                div(class='hs-star rank4')
                                     i(class="fas fa-star highscore")
                                 div(class='hs-label') 60+
                         td(style='width: 25%;')
                             div(class='highscore-card')
                                 div= statistics.scores_100s_plus
-                                div(class='hs-star rank4') 
+                                div(class='hs-star rank4')
                                     i(class="fas fa-star highscore")
                                     i(class="fas fa-star highscore")
                                 div(class='hs-label') 100+
                         td(style='width: 25%;')
                             div(class='highscore-card')
                                 div= statistics.scores_140s_plus
-                                div(class='hs-star rank4') 
+                                div(class='hs-star rank4')
                                     i(class="fas fa-star highscore")
                                     i(class="fas fa-star highscore")
                                     i(class="fas fa-star highscore")
@@ -311,7 +311,7 @@ block content
                         td(style='width: 25%;')
                             div(class='highscore-card-no-margin')
                                 div= statistics.scores_180s
-                                div(class='hs-star rank4') 
+                                div(class='hs-star rank4')
                                     i(class="fas fa-star highscore")
                                     i(class="fas fa-star highscore")
                                     i(class="fas fa-star highscore")
@@ -322,26 +322,26 @@ block content
                             div(class='block-container mr-10')
                                 div(style='font-size: 18pt;')
                                     span Best PPD
-                                    span(class='float-right') 
+                                    span(class='float-right')
                                         +best_statistics(statistics.best_ppd, 'number')
                                 div(style='font-size: 18pt;')
                                     span Best first 9 PPD
-                                    span(class='float-right') 
+                                    span(class='float-right')
                                         +best_statistics(statistics.best_first_nine_ppd, 'number')
                         td(colspan='2' style='vertical-align: top;')
                             div(class='block-container')
                                 div(style='font-size: 18pt;')
                                     span Best 301
-                                    span(class='float-right') 
+                                    span(class='float-right')
                                         +best_statistics(statistics.best_301, 'number')
                                 div(style='clear: both;')
                                 div(style='font-size: 18pt;')
                                     span Best 501
-                                    span(class='float-right') 
+                                    span(class='float-right')
                                         +best_statistics(statistics.best_501, 'number')
                                 div(style='font-size: 18pt;')
                                     span Best 701
-                                    span(class='float-right') 
+                                    span(class='float-right')
                                         +best_statistics(statistics.best_701, 'number')
 
             div(role='tabpanel' id='hits' class='tab-pane')
@@ -368,8 +368,8 @@ block content
                                                 td(class='text-center')= (value / player.matches_played).toFixed(2)
                     else
                         div(class='block-container') No data available
-    
-    
+
+
             div(role='tabpanel' id='visits' class='tab-pane')
                 div(class='block-container no-padding')
                     if statistics.visits
@@ -400,7 +400,7 @@ block content
                 table(id='table-player-checkouts')
                     thead
                         tr
-                            th 
+                            th
                                 div(class='block-container-header pl-20')
                                     table(class='table-player-checkouts-header')
                                         tr
@@ -418,7 +418,7 @@ block content
                                             tr
                                                 td= checkout.checkout
                                                 if checkout.completed
-                                                    td(data-order=1): i(class="fas fa-check-circle") 
+                                                    td(data-order=1): i(class="fas fa-check-circle")
                                                 else
                                                     td(data-order=0): i(class="fas fa-times-circle")
                                                 td= checkout.count
