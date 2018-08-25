@@ -49,7 +49,7 @@ block scripts
 
 block content
     div(class='pt-20')
-    div(class='block-container') 
+    div(class='block-container')
         div(class='container-info-icon')
             i(class="fas fa-trophy")
         div(class='float-left pl-20')
@@ -63,13 +63,13 @@ block content
             thead
                 tr
                     th(hidden=true)
-                    th(class='text-left') 
+                    th(class='text-left')
                         span(class='ml-10') Start Time
                     th(class='text-left')
                         span Status
                     th
                         span(class='ml-10') Venue
-                    th 
+                    th
                         span(class='ml-10') Type
                     th Mode
                     th(class='text-left')
@@ -95,7 +95,7 @@ block content
                             else if match.is_finished
                                 if match.winner_id == null
                                     div
-                                        label(class='label label-default' style='line-height: inherit;') Finished (draw)
+                                        label(class='label label-default' style='line-height: inherit;') Finished
                                 else
                                     div
                                         label(class='label label-success' style='line-height: inherit;') Finished
@@ -132,5 +132,5 @@ block content
                             else
                                 i(class="fas fa-eye fas-option-button" id='view-match-button' data-match=match.id data-toggle="tooltip" data-placement="top" title="View")
 
-    div(class='block-container') 
+    div(class='block-container')
         ul(id='pagination-matches' class="sync-pagination pagination-md float-right")

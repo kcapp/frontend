@@ -28,15 +28,21 @@ mixin player_statistics_card(clazz, player, statistics, isWinner = false, dartsT
                 div= statistics.checkout_percentage.toFixed(2) + '% / ' + statistics.checkout_attempts
             else
                 div= '- / ' + (statistics.checkout_attempts ? statistics.checkout_attempts : 0)
+            if match.elo_change
+                div(class='info') Elo
+                - var elo = match.elo_change[player.id]
+                - var change = elo.current_elo_new - elo.current_elo
+                // Display + and - in front of change
+                div= change > 0 ? '+' + change : change
 
-        div(class='info') 
+        div(class='info')
             div(style='text-align: center;')
                 table(style='margin: 0 auto' id='scores-badges')
                     tr
                         td
-                            span= '60+' 
+                            span= '60+'
                             br
-                            span(class="badge badge-pill badge-success")= ' ' + statistics.scores_60s_plus 
+                            span(class="badge badge-pill badge-success")= ' ' + statistics.scores_60s_plus
                         td
                             span= '100+'
                             br
@@ -113,14 +119,14 @@ mixin player_summary_card(player, statistics, isWinner = false, dartsThrown, sta
             else
                 div= '- / ' + (statistics.checkout_attempts ? statistics.checkout_attempts : 0)
 
-        div(class='info') 
+        div(class='info')
             div(style='text-align: center;')
                 table(style='margin: 0 auto' id='scores-badges')
                     tr
                         td
-                            span= '60+' 
+                            span= '60+'
                             br
-                            span(class="badge badge-pill badge-success")= ' ' + statistics.scores_60s_plus 
+                            span(class="badge badge-pill badge-success")= ' ' + statistics.scores_60s_plus
                         td
                             span= '100+'
                             br
@@ -133,7 +139,7 @@ mixin player_summary_card(player, statistics, isWinner = false, dartsThrown, sta
                             span= '180'
                             br
                             span(class="badge badge-pill badge-success")= ' ' + statistics.scores_180s
-            
+
         div(style='clear: both;')
 
         //- Get darts thrown per player
@@ -149,7 +155,7 @@ mixin player_summary_card(player, statistics, isWinner = false, dartsThrown, sta
         if match.match_type.id == 2
             div(class='info') Scored
             div= player.remaining_score
-            
+
         if match.match_type.id == 2
             if isWinner
                 div(class='label-winner') WINNER

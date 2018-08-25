@@ -20,8 +20,8 @@ function getChartConfig(title, type, xAxisLabel, yAxisLabel, lables, datasets) {
     return config;
 }
 
-function getPercentageChartConfig(value, chartTitle, type) {
-    var fillValue = 100 - value;
+function getPercentageChartConfig(value, chartTitle, type, label, displayLegend) {
+    var fillValue = (100 - value).toFixed(2);
     var config = {
         type: type,
         data: {
@@ -35,13 +35,14 @@ function getPercentageChartConfig(value, chartTitle, type) {
                     '#bbc3d4',
                 ]
             }],
-            labels: []
+            labels: [label, label]
         },
         options: {
             cutoutPercentage: 80,
             responsive: true,
             legend: {
                 position: 'top',
+                display: displayLegend
             },
             title: {
                 display: true,
@@ -68,7 +69,7 @@ function getPolarChartConfig(value1, value2, chartTitle1, chartTitle2, canvasTit
             datasets: [
                 {
                     data: [
-                        value1, 
+                        value1,
                         value2
                     ],
                     backgroundColor: [
@@ -96,7 +97,7 @@ function getPolarChartConfig(value1, value2, chartTitle1, chartTitle2, canvasTit
             },
             responsive: true,
             legend: {
-                position: 'left',
+                position: 'left'
             },
             title: {
                 display: true,
@@ -108,13 +109,13 @@ function getPolarChartConfig(value1, value2, chartTitle1, chartTitle2, canvasTit
             },
             tooltips: {
                 callbacks: {
-                label: function(item, data) {
-                    return data.labels[item.index];
+                    label: function (item, data) {
+                        return data.labels[item.index];
+                    }
                 }
             }
         }
-    }
-  };
+    };
 
-  return config;
+    return config;
 }
