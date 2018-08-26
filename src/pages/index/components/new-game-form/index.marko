@@ -29,9 +29,9 @@
       <span class="ml-10">Game settings</span>
     </div>
     <div class="block-container-with-header">
-      <game-option-selector values=input.types options=state.options key="game-type" label="Match Type" attribute="game_type" defaultValue=1/>
-      <game-option-selector values=input.scores options=state.options key="starting-score" label="Starting Score" attribute="starting_score" defaultValue=501/>
-      <game-option-selector values=input.modes options=state.options key="game-mode" label="Match Mode" attribute="game_mode" defaultValue=1/>
+      <game-option-selector values=input.types options=state.options key="game-type" label="Match Type" attribute="game_type" defaultValue=state.options.game_type/>
+      <game-option-selector values=input.scores options=state.options key="starting-score" label="Starting Score" attribute="starting_score" defaultValue=state.options.starting_score/>
+      <game-option-selector values=input.modes options=state.options key="game-mode" label="Match Mode" attribute="game_mode" defaultValue=state.options.game_mode/>
       <game-option-selector values=input.stakes options=state.options key="stake" label="Match Stake" attribute="stake" addNull=true defaultAttrName="item"/>
       <game-option-selector values=input.venues options=state.options key="venue" label="Venue" attribute="venue" addNull=true/>
       <button class="btn btn-primary" type="submit" on-click('newGame')>Start</button>

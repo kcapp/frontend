@@ -1,3 +1,5 @@
+const alertify = require("../../../../util/alertify");
+
 const CLASS_DART_SINGLE = 'dart-score-single';
 const CLASS_DART_DOUBLE = 'dart-score-double';
 const CLASS_DART_TRIPLE = 'dart-score-triple';
@@ -23,8 +25,14 @@ module.exports = {
     setDart(value, multiplier) {
         var dart = this.state;
 
+        var newValue = parseInt(dart.value + '' + value);
+        if (newValue > 20 && newValue !== 25) {
+            alertify.alert('Invalid Value', () => { });
+            return;
+        }
+
         dart.text += value;
-        dart.value = parseInt(dart.value + '' + value);
+        dart.value = newValue;
         dart.multiplier = multiplier;
 
         if (dart.value === 0) {
@@ -39,6 +47,12 @@ module.exports = {
         } else {
             dart.class = CLASS_DART_SINGLE;
             dart.text = dart.value;
+        }
+    },
+    toJSON() {
+        return {
+            value: this.state.value,
+            multiplier: this.state.multiplier
         }
     }
 };

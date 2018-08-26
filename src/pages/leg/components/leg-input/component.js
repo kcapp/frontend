@@ -1,17 +1,45 @@
 const _ = require("underscore");
+const axios = require('axios');
+const io = require('socket.io-client');
 
 module.exports = {
-    onCreate() {
+    onCreate(input) {
+        const socket = io('http://localhost:3000/legs/6483');
 
-    },
-    onInput(input) {
         var roundNumber = Math.floor(input.leg.visits.length / input.leg.players.length) + 1;
         var matchName = input.match.match_mode.short_name;
         this.state = {
+            socket: socket,
+            legId: input.leg.id,
             roundNumber: roundNumber,
             matchName: matchName
         }
+
+        socket.on('connect', (data) => {
+            socket.emit('join', 'Client Connecting');
+        });
+
+        socket.on('error', (data) => {
+            console.log(data);
+        });
+
+        socket.on('score_update', this.onScoreUpdate.bind(this));
     },
+    onScoreUpdate(data) {
+        var leg = data.leg;
+        // Update round number
+        this.state.roundNumber = Math.floor(leg.visits.length / leg.players.length) + 1;
+
+        // Set updated score per player
+        var players = data.players;
+        for (var i = 0; i < players.length; i++) {
+            var player = players[i];
+            var component = this.getComponent('player-' + player.player_id);
+            component.state.currentScore = player.current_score;
+            component.state.isCurrentPlayer = player.player_id === leg.current_player_id;
+        }
+    },
+
     onMount() {
         document.addEventListener("keydown", this.onKeyDown.bind(this), false);
         document.addEventListener("keypress", this.onKeyPress.bind(this), false);
@@ -34,35 +62,14 @@ module.exports = {
         var currentMultiplier = component.getCurrentMultiplier();
         switch (e.key) {
             case 'Enter':
-                /*if (disableEnter) {
-                    disableEnter = false;
-                    return;
+                var dartsThrown = component.getDartsThrown();
+                if (dartsThrown > 3) {
+                    var data = component.getDarts();
+                    data.leg_id = this.state.legId;
+                    this.state.socket.emit('throw', JSON.stringify(data));
+                } else {
+                    component.confirmThrow();
                 }
-                if (currentDart === 4) {
-                    $('#submit-score-button').trigger('click');
-                }
-                else {
-                    var scoreNumeric = 0;
-                    if (dartText === '') {
-                        setDartValue(dart, 0, 1);
-                    }
-                    else {
-                        scoreNumeric = parseInt(dartText) * dart.attr('data-multiplier');
-                    }
-                    checkVisitFinished(dart, scoreNumeric);
-                    updateTotalVisitScore(scoreNumeric);
-                }
-                dartText = '';
-                currentMultiplier = 1;*/
-
-
-                var thrown = component.confirmThrow();
-                if (thrown > 3) {
-                    // Submit score to server!
-                    console.log("Submitt!");
-                }
-                console.log(thrown);
-                console.log('Enter');
                 return;
             case '/': // Single
                 currentMultiplier = 1;
