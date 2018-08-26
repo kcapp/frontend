@@ -68,6 +68,7 @@ module.exports = {
                     data.leg_id = this.state.legId;
                     this.state.socket.emit('throw', JSON.stringify(data));
                 } else {
+                    this.getComponent('player-' + component.state.playerId).state.currentScore -= (currentValue * currentMultiplier);
                     component.confirmThrow();
                 }
                 return;
