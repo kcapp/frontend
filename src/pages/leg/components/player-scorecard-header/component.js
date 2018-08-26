@@ -1,8 +1,5 @@
 module.exports = {
-    onCreate() {
-
-    },
-    onInput(input) {
+    onCreate(input) {
         var player = input.player;
         this.state = {
             name: input.name,

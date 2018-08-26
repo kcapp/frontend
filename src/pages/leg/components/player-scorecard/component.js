@@ -6,7 +6,7 @@ const CLASS_DART_TRIPLE = 'dart-score-triple';
 const DART_CONTAINER_MAP = { 1: 'first', 2: 'second', 3: 'third' };
 
 module.exports = {
-    onInput(input) {
+    onCreate(input) {
         var player = input.player;
         this.state = {
             playerId: player.player_id,
@@ -15,6 +15,15 @@ module.exports = {
             currentDart: 1,
             isSubmitted: true
         }
+    },
+    reset() {
+        this.state.totalScore = 0;
+        this.state.currentDart = 1;
+        this.state.isSubmitted = true;
+        // Reset all the darts to their initial state
+        this.getComponent(DART_CONTAINER_MAP[1]).reset();
+        this.getComponent(DART_CONTAINER_MAP[2]).reset();
+        this.getComponent(DART_CONTAINER_MAP[3]).reset();
     },
     getCurrentDart() {
         return this.getComponent(DART_CONTAINER_MAP[this.state.currentDart]);

@@ -4,7 +4,7 @@ const io = require('socket.io-client');
 
 module.exports = {
     onCreate(input) {
-        const socket = io('http://localhost:3000/legs/6483');
+        const socket = io('http://localhost:3000/legs/' + input.leg.id);
 
         var roundNumber = Math.floor(input.leg.visits.length / input.leg.players.length) + 1;
         var matchName = input.match.match_mode.short_name;
@@ -22,27 +22,38 @@ module.exports = {
         socket.on('error', (data) => {
             console.log(data);
         });
-
-        socket.on('score_update', this.onScoreUpdate.bind(this));
-    },
-    onScoreUpdate(data) {
-        var leg = data.leg;
-        // Update round number
-        this.state.roundNumber = Math.floor(leg.visits.length / leg.players.length) + 1;
-
-        // Set updated score per player
-        var players = data.players;
-        for (var i = 0; i < players.length; i++) {
-            var player = players[i];
-            var component = this.getComponent('player-' + player.player_id);
-            component.state.currentScore = player.current_score;
-            component.state.isCurrentPlayer = player.player_id === leg.current_player_id;
-        }
     },
 
     onMount() {
         document.addEventListener("keydown", this.onKeyDown.bind(this), false);
         document.addEventListener("keypress", this.onKeyPress.bind(this), false);
+
+        this.state.socket.on('score_update', this.onScoreUpdate.bind(this));
+    },
+
+    onScoreUpdate(data) {
+        var leg = data.leg;
+        // Update round number
+        this.state.roundNumber = Math.floor(leg.visits.length / leg.players.length) + 1;
+
+        var scorecardComponents = this.getComponents('players');
+        for (var i = 0; i < scorecardComponents.length; i++) {
+            var component = scorecardComponents[i];
+            var isCurrentPlayer = component.state.playerId === leg.current_player_id;
+            if (isCurrentPlayer) {
+                component.reset();
+            }
+            component.state.isCurrentPlayer = isCurrentPlayer;
+        }
+
+        // Set updated score per player
+        var players = data.players;
+        for (var i = 0; i < players.length; i++) {
+            var player = players[i];
+            var scoreHeaderComponent = this.getComponent('player-' + player.player_id);
+            scoreHeaderComponent.state.currentScore = player.current_score;
+            scoreHeaderComponent.state.isCurrentPlayer = player.player_id === leg.current_player_id;
+        }
     },
     onKeyDown(e) {
         if (e.key === 'Backspace') {
