@@ -14,7 +14,7 @@ module.exports = {
             players: input.players,
             input: input,
             options: {
-                starting_score: 301,
+                starting_score: 501,
                 game_type: 1,
                 game_mode: 1,
                 stake: null,
