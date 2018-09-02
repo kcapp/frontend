@@ -6,6 +6,7 @@ include ../mixins/player_order.pug
 block append head
     script(src='/javascripts/responsivevoice.1.5.8..js')
     script(src='/javascripts/views/entry_layout.js')
+    script(src='/javascripts/moment-2.20.1.min.js')
 
 block scripts
     script(src='/javascripts/fastclick-1.0.6.min.js')
@@ -16,6 +17,7 @@ block scripts
         var scores = {};
         var leg = !{JSON.stringify(leg)}
         var legId = leg.id;
+        var match = !{JSON.stringify(match)}
 
         var VOICE = "US English Female";
         var currentDart = 1;
@@ -41,10 +43,10 @@ block scripts
         }
 
         $(function () {
-            // Functions to be loaded after document load 
+            // Functions to be loaded after document load
 
             var disableEnter = false;
-            
+
             $(document).keydown(function (e) {
                 if (e.key === 'Backspace') {
                     var totalScoreContainer = $('.visits-active .dart-score-total');
@@ -55,7 +57,7 @@ block scripts
                         dartValue = '';
                         clearDart(dart);
                         scores[currentDart] = 0;
-                        
+
                         // Make sure we don't change score for current player before we press ENTER
                         totalScoreContainer.html(currentPlayerScore);
                     } else {
@@ -65,7 +67,6 @@ block scripts
                 }
                 return;
             });
-            
 
             var dartValue = '';
             var dartMultiplier = 1;
@@ -387,7 +388,7 @@ block scripts
                 var secondMultiplier = getActiveVisitDartMultiplier(2);
                 var thirdScore = getActiveVisitDartScore(3)
                 var thirdMultiplier =  getActiveVisitDartMultiplier(3);
-                
+
                 var total = firstScore * firstMultiplier + secondScore * secondMultiplier + thirdScore * thirdMultiplier;
 
                 var currentPlayerId = $(this).data('current-player-id');
@@ -489,6 +490,13 @@ block scripts
                 $('#modal-player-selector').modal({ show: true, keyboard: false, backdrop: 'static' });
             });
 
+            // If this is an official match, which has not had any darts thrown, and was not updated in the last two minutes
+            // show the dialog to set player order
+            var lastUpdated = moment.duration(moment().diff(moment(leg.updated_at))).asMinutes().toFixed();
+            if (match.tournament_id && leg.visits.length === 0 && lastUpdated > 2) {
+                $('#btn-change-player-order').trigger('click');
+            }
+
             $('#edit-scores-button').click(function () {
                 location.href = '/legs/' + legId + '/result';
             });
@@ -551,8 +559,8 @@ block content
         Unable to cancel leg
 
     div(class='pt-20')
-    div(class='block-container-blue' style='overflow: visible;') 
-        div(class='float-left font-24')= 'Leg (X01) '  
+    div(class='block-container-blue' style='overflow: visible;')
+        div(class='float-left font-24')= 'Leg (X01) '
         div(class='float-left font-24 pl-10')= match.match_mode.short_name + '/'
         div(class='float-left font-24')= 'R' + round_number
         div(class='float-right')
@@ -586,7 +594,7 @@ block content
                                 div(class=clazz id='scorecard-player-' + playerId)
                                     div(id='player-name-' + playerId class='label-player-name')= players[playerId].name
                                     div(id='player-score-' + playerId class='label label-block label-player-score')= player.current_score
-                                
+
                                     div(id='player-legs-' + player.player_id class='player-legs')
                                         label= (player.wins ? player.wins : '0')
                     tr
@@ -610,7 +618,7 @@ block content
                                             tr
                                                 td(colspan='3')
                                                     div(class='total-score')= 0
-                                    
+
     div(class='table-responsive')
         table(id='score-selector-table' class='table' style='display: none;')
             tbody
