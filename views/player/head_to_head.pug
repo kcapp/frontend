@@ -15,13 +15,13 @@ block scripts
 
 block content
     div(class='pt-20')
-    div(class='block-container') 
+    div(class='block-container')
         table(style='width: 100%;')
             tr
                 td(style='width: 40%; text-align: right;')
                     span(style='font-size: 30px; padding-right: 20px;')= player1.name
                     div(class='player-pic-cutout float-right')
-                        span 
+                        span
                             +get_player_profile_pic(player1)
                 td(style='width: 20%; text-align: center; font-size: 35px; font-weight: 700;') VS
                 td(style='width: 40%; text-align: left;')
@@ -79,11 +79,11 @@ block content
                                         td
                                     else
                                         if match.winner_id === null
-                                            td(style='background-color: #5bc0de; font-weight: bold;' data-match-id=match.id): label(style='display: block; cursor: pointer;') D
+                                            td(style='background-color: #5bc0de; font-weight: bold;' data-match-id=match.id): label(style='display: block; cursor: pointer; text-align: center;') D
                                         else if match.winner_id === playerID
-                                            td(style='background-color: #5cb85c; font-weight: bold;' data-match-id=match.id): label(style='display: block; cursor: pointer;') W
+                                            td(style='background-color: #5cb85c; font-weight: bold;' data-match-id=match.id): label(style='display: block; cursor: pointer; text-align: center;') W
                                         else
-                                            td(style='background-color: #e02a2a; font-weight: bold;' data-match-id=match.id): label(style='display: block; cursor: pointer;') L
+                                            td(style='background-color: #e02a2a; font-weight: bold;' data-match-id=match.id): label(style='display: block; cursor: pointer; text-align: center;') L
 
                     td(class='text-center')
                         +player_form_table(head2head.last_matches[player1.id], player1.id, 'right')

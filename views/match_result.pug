@@ -17,7 +17,10 @@ block scripts
         });
 
 block content
-    - var duration = moment.duration(moment(match.last_throw_time).diff(match.first_throw_time)).asMinutes().toFixed()
+    if match.first_throw_time
+        - var duration = moment.duration(moment(match.last_throw_time).diff(match.first_throw_time)).asMinutes().toFixed() + ' minutes'
+    else
+        - var duration = '-'
     div(class='pt-20')
     div(class='block-container')
         div(class='container-info-icon')
@@ -33,7 +36,7 @@ block content
                     span(class='ml-5') Finished #{match.end_time === undefined ? '-' : moment(match.end_time).format('YYYY-MM-DD HH:mm:ss')}
                 p(style='padding-top: 3px;')
                     i(class="fas fa-stopwatch")
-                    span(class='ml-5') Duration #{match.end_time === undefined || duration == 0 ? '-' : duration + ' minutes'}
+                    span(class='ml-5') Duration #{duration}
             div(class='float-left' style='width: 250px;')
                 p(style='padding-top: 3px;')
                     i(class="fas fa-bullseye")

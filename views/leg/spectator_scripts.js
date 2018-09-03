@@ -111,7 +111,7 @@ function configureSocketEvents(socket, leg, playersMap, liveScoreUpdate, venueSo
         resetThrowContainer($('.visits-active .first'));
         resetThrowContainer($('.visits-active .second'));
         resetThrowContainer($('.visits-active .third'));
-        
+
         // Update the visits table
         if (!data.is_undo) {
             var visit = data.leg.visits[data.leg.visits.length - 1];
@@ -124,7 +124,7 @@ function configureSocketEvents(socket, leg, playersMap, liveScoreUpdate, venueSo
             }
             // Append the score to the beginning of the table
             var html =
-                "<tr>" +
+                "<tr class='block-container-mid'>" +
                 "<td>" + playerName + "</td>" +
                 "<td class='col-sm-2 dart-score-container no-border'><label class='" + getDartCSS(visit.first_dart) + "'>" + getScoreString(visit.first_dart) + "</label></td>" +
                 "<td class='col-sm-2 dart-score-container no-border'><label class='" + getDartCSS(visit.second_dart) + "'>" + getScoreString(visit.second_dart) + "</label></td>" +
