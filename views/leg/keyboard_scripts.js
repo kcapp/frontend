@@ -64,6 +64,7 @@ $(function () {
                 currentMultiplier = 2;
                 break;
             case ',': // Triple
+            case '.': // Triple
             case '-': // Triple
                 var value = parseInt(dartText);
                 if (value === 25) {

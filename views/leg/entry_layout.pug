@@ -390,6 +390,9 @@ block scripts
                 var thirdMultiplier =  getActiveVisitDartMultiplier(3);
 
                 var total = firstScore * firstMultiplier + secondScore * secondMultiplier + thirdScore * thirdMultiplier;
+                if (total === 0) {
+                    total = "Noscore";
+                }
 
                 var currentPlayerId = $(this).data('current-player-id');
                 var data = JSON.stringify({

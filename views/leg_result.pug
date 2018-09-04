@@ -298,7 +298,7 @@ block content
     - var isMatchFinished = match.is_finished
     - var isFinished = leg.winner_player_id !== null
     div(class='pt-20')
-    div(class='block-container') 
+    div(class='block-container')
         div(class='container-info-icon')
             i(class="fas fa-crosshairs")
         div(class='float-left pl-20')
@@ -306,22 +306,22 @@ block content
             div
                 div(class='float-left' style='width: 250px;')
                     p(style='padding-top: 5px;')
-                        i(class="fas fa-clock") 
+                        i(class="fas fa-clock")
                         span(class='ml-5') Started #{moment(leg.created_at).format('YYYY-MM-DD HH:mm:ss')}
                     p(style='padding-top: 3px;')
-                        i(class="fas fa-clock") 
+                        i(class="fas fa-clock")
                         span(class='ml-5') Finished #{leg.end_time === null ? '' : moment(leg.end_time).format('YYYY-MM-DD HH:mm:ss')}
                 div(class='float-left' style='width: 250px;')
                     p(style='padding-top: 3px;')
-                        i(class="fas fa-bullseye") 
+                        i(class="fas fa-bullseye")
                         span(class='ml-5') Duration #{leg.end_time === null ? '' : moment.duration(moment(leg.end_time).diff(leg.visits[0].created_at)).asMinutes().toFixed() + ' minutes'}
                     p(style='padding-top: 3px;')
-                        i(class="fas fa-play") 
+                        i(class="fas fa-play")
                         span(class='ml-5') Rounds: #{Math.ceil(leg.visits.length / leg.players.length)}
             div(style='clear: both; padding-top: 5px; color: #c7c7c7;')
                 p Starting score was #{leg.starting_score}, and a total of #{leg.darts_thrown ? leg.darts_thrown : 0} darts were thrown by #{leg.players.length} players
 
-    div(class='block-container-options' style='overflow: visible;') 
+    div(class='block-container-options' style='overflow: visible;')
         div(class='float-left')
             ul(class='nav nav-pills')
                 li(role='presentation' class='active'): a(href='#summary' data-toggle='tab') Summary
@@ -335,9 +335,9 @@ block content
                 if !isMatchFinished
                     li(role='presentation' class='active'): a(id='continue-match' data-match=match.id) Continue match
         div(style='clear: both;')
-                
+
     div(class='tab-content')
-        div(role='tabpanel' id='summary' class='tab-pane active') 
+        div(role='tabpanel' id='summary' class='tab-pane active')
             if isFinished
                 table(style='width: 100%; table-layout: fixed;')
                     tbody
@@ -350,7 +350,7 @@ block content
                                         - var isWinner = statistic.player_id === leg.winner_player_id
                                         +player_summary_card(player, statistic, isWinner, statistic.darts_thrown, player.starting_score)
 
-        div(role='tabpanel' id='visits' class='tab-pane') 
+        div(role='tabpanel' id='visits' class='tab-pane')
             div(class='block-container no-padding')
                 table(class='table' id='table-leg-visits')
                     thead
@@ -386,8 +386,7 @@ block content
                                         button(type="button" class="btn btn-default delete-visit" data-visit=visit.id)
                                             span(class="glyphicon glyphicon-trash" aria-hidden="true")
 
-
-        div(role='tabpanel' id='stats' class='tab-pane') 
+        div(role='tabpanel' id='stats' class='tab-pane')
             div(style='float: left; width: 61%;')
                 div(class='block-container-header')= 'Checkout attempts'
                 div(class='block-container')
@@ -412,7 +411,7 @@ block content
                                                     td(class='no-border text-center'): span(class='glyphicon glyphicon-ok' aria-hidden='true')
                                                 else
                                                     td(class='no-border text-center')
-            
+
             div(style='float: right; width: 37%;')
                 div(class='block-container-header')= 'Hits'
                 div(class='block-container-with-header')

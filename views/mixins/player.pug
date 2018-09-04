@@ -31,7 +31,10 @@ mixin player_statistics_card(clazz, player, statistics, isWinner = false, dartsT
             if match.elo_change
                 div(class='info') Elo
                 - var elo = match.elo_change[player.id]
-                - var change = elo.current_elo_new - elo.current_elo
+                if match.tournament
+                    - var change = elo.tournament_elo_new - elo.tournament_elo
+                else
+                    - var change = elo.current_elo_new - elo.current_elo
                 // Display + and - in front of change
                 div= change > 0 ? '+' + change : change
 
