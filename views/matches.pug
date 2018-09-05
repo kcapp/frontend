@@ -75,6 +75,7 @@ block content
                     th(class='text-left')
                         span(class='ml-10') Players
                     th(class='text-center') Results
+                    th(class='text-center')
             tbody
                 each match in matches
                     - var isLive = !match.is_finished && moment.duration(moment().diff(match.last_throw_time)).asMinutes().toFixed() < 2
@@ -118,6 +119,18 @@ block content
                                 each id in match.players
                                     div(class='float-left')
                                         span(class='label label-secondary')= players[id].name
+                        td(class='text-center')
+                            if match.is_finished
+                                - var result = ''
+                                each id in match.players
+                                    - var wins = 0
+                                    each player in match.legs_won
+                                        if id === player
+                                            - wins++
+                                    - result += wins + ' - '
+                                span= result.slice(0, -3)
+                            else
+                                span
                         td(class='text-center icon-options')
                             if !match.is_finished
                                 i(class="fas fa-play-circle fas-option-button" id='continue-match-button' data-match=match.id data-toggle="tooltip" data-placement="top" title="Continue")

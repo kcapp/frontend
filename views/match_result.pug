@@ -15,6 +15,29 @@ block scripts
 
             $('[data-toggle="tooltip"]').tooltip();
         });
+    script.
+        $(function () {
+            // Add script to allow navigating to home page using keyboard
+            $(document).keydown(function (e) {
+                switch (e.key) {
+                    case '1':
+                    case '2':
+                    case '3':
+                    case '4':
+                    case '5':
+                    case '6':
+                    case '7':
+                    case '8':
+                    case '9':
+                        $('#leg-' + e.key).click();
+                        break;
+                    case 'Home':
+                        location.href = '/';
+                        break;
+                    default: // NOOP
+                }
+            });
+        });
 
 block content
     if match.first_throw_time
@@ -69,7 +92,7 @@ block content
             each leg in match.legs
                 tr
                     th(hidden='true' scope='row')= leg.id
-                    td(class='block-container-mid')= '#' + idx++
+                    td(class='block-container-mid')= '#' + idx
                     if hasStatistics
                         each stat in stats
                             td
@@ -88,9 +111,10 @@ block content
                                         i(class="fas fa-minus")
                     if leg.has_scores
                         td(class='block-container-mid')
-                            i(class="fas fa-eye fas-option-button btn-view-results" data-toggle="tooltip" data-placement="top" title="View")
+                            i(id='leg-' + idx class="fas fa-eye fas-option-button btn-view-results" data-toggle="tooltip" data-placement="top" title="View")
                     else
                         td(class='block-container-mid') N/A
+                - idx++
             tr
                 td
                     each statistic in stats

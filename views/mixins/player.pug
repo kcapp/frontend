@@ -16,8 +16,8 @@ mixin player_statistics_card(clazz, player, statistics, isWinner = false, dartsT
             div(class='info') Score
             div= player.remaining_score
         else
-            div(class='info') PPD / First 9
-            div= statistics.ppd.toFixed(2) + ' / ' + statistics.first_nine_ppd.toFixed(2)
+            div(class='info') Three Dart Avg.
+            div= statistics.three_dart_avg.toFixed(2) + ' / ' + statistics.first_nine_three_dart_avg.toFixed(2)
             div(class='info') Accuracy Overall / 20 / 19
             div
             - var accuracy_20 = statistics.accuracy_20 === null ? '-' : statistics.accuracy_20.toFixed(2)
@@ -109,8 +109,8 @@ mixin player_summary_card(player, statistics, isWinner = false, dartsThrown, sta
             div(class='info') Score
             div= player.remaining_score
         else
-            div(class='info') PPD / First 9
-            div= statistics.ppd.toFixed(2) + ' / ' + statistics.first_nine_ppd.toFixed(2)
+            div(class='info') Three Dart Avg.
+            div= statistics.three_dart_avg.toFixed(2) + ' / ' + statistics.first_nine_three_dart_avg.toFixed(2)
             div(class='info') Accuracy Overall / 20 / 19
             div
             - var accuracy_20 = statistics.accuracy_20 === null ? '-' : statistics.accuracy_20.toFixed(2)

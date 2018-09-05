@@ -17,6 +17,26 @@ block append scripts
     script
         include chart/chart_helper.js
     script.
+        $(function () {
+            // Add script to allow navigating to home page using keyboard
+            $(document).keydown(function (e) {
+                switch (e.key) {
+                    case 'Home':
+                        location.href = '/';
+                        break;
+                    case 'Backspace':
+                        $('#back-to-match').click();
+                        e.preventDefault();
+                        break;
+                    case 'PageUp':
+                        $('#back-to-match').click();
+                        break;
+                    default: // NOOP
+                }
+            });
+        });
+
+    script.
         var leg = !{JSON.stringify(leg)}
         var match = !{JSON.stringify(match)}
         var legPlayers = !{JSON.stringify(leg_players)}

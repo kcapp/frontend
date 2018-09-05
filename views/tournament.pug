@@ -66,7 +66,7 @@ block content
                                         th(class='text-right') +/-
                                         th(class='text-right') PTS
                                         if hasStatistics
-                                            th(class='text-center') PPD / First 9
+                                            th(class='text-center') Three Dart Avg.
                                             th(class='text-right') Checkout %
                                             th(class='text-right') 60s+
                                             th(class='text-right') 100s+
@@ -98,7 +98,7 @@ block content
                                             td(class='text-right')= player.legs_difference
                                             td(class='text-right')= player.points
                                             if hasStatistics
-                                                td(class='text-center')= player.ppd.toFixed(2) + ' / ' + player.first_nine_ppd.toFixed(2)
+                                                td(class='text-center')= player.three_dart_avg.toFixed(2) + ' / ' + player.first_nine_three_dart_avg.toFixed(2)
                                                 td(class='text-right')= player.checkout_percentage.toFixed(2) + '%'
                                                 td(class='text-right')= player.scores_60s_plus
                                                 td(class='text-right')= player.scores_100s_plus
@@ -122,7 +122,8 @@ block content
                                             th Venue
                                             th Type
                                             th(style='min-width: 300px;') Players
-                                            th(class='text-center') Results
+                                            th(Class='text-center') Results
+                                            th(class='text-center')
                                     tbody
                                         each match in matches[id]
                                             - var isLive = !match.is_finished && moment.duration(moment().diff(match.last_throw_time)).asMinutes().toFixed() < 2
@@ -165,6 +166,18 @@ block content
                                                     else
                                                         each id in match.players
                                                             span(class='label label-secondary')= players[id].name
+                                                td(class='text-center')
+                                                    if match.is_finished
+                                                        - var result = ''
+                                                        each id in match.players
+                                                            - var wins = 0
+                                                            each player in match.legs_won
+                                                                if id === player
+                                                                    - wins++
+                                                            - result += wins + ' - '
+                                                        span= result.slice(0, -3)
+                                                    else
+                                                        span
                                                 td(class='col-sm-2 text-center')
                                                     if !match.is_finished
                                                         a(href='/matches/' + match.id)

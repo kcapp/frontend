@@ -208,22 +208,22 @@ block content
             div(role='tabpanel' id='overview' class='tab-pane active')
                 div(class='block-container')
                     div(class='keyinfo')
-                        div(class='label-fat-18-grey') OVERALL PPD
+                        div(class='label-fat-18-grey') OVERALL AVG.
                         div(class='label-fat-25')
-                            - var diff = (statistics.ppd - previous_statistics.ppd).toFixed(2)
+                            - var diff = (statistics.three_dart_avg - previous_statistics.three_dart_avg).toFixed(2)
                             - var change = diff > 0 ? 'fas fa-arrow-alt-circle-up' : diff < 0 ? 'fas fa-arrow-alt-circle-down' : 'fas fa-arrow-alt-circle-right'
                             - var col = diff > 0 ? 'col-green' : diff < 0 ? 'col-red' : 'col-grey'
-                            div= statistics.ppd.toFixed(2)
+                            div= statistics.three_dart_avg.toFixed(2)
                             div(style='font-size: 18px;' class=col)
                                 i(class=change)
                                 span(style='margin-left: 5px;' data-toggle="tooltip" data-placement="bottom" title="Since last week")= Math.abs(diff)
                     div(class='keyinfo')
-                        div(class='label-fat-18-grey') FIRST 9 PPD
+                        div(class='label-fat-18-grey') FIRST 9 AVG.
                         div(class='label-fat-25')
-                            - var diff = (statistics.first_nine_ppd - previous_statistics.first_nine_ppd).toFixed(2)
+                            - var diff = (statistics.first_nine_three_dart_avg - previous_statistics.first_nine_three_dart_avg).toFixed(2)
                             - var change = diff > 0 ? 'fas fa-arrow-alt-circle-up' : diff < 0 ? 'fas fa-arrow-alt-circle-down' : 'fas fa-arrow-alt-circle-right'
                             - var col = diff > 0 ? 'col-green' : diff < 0 ? 'col-red' : 'col-grey'
-                            div= statistics.first_nine_ppd.toFixed(2)
+                            div= statistics.first_nine_three_dart_avg.toFixed(2)
                             div(style='font-size: 18px;' class=col)
                                 i(class=change)
                                 span(style='margin-left: 5px;' data-toggle="tooltip" data-placement="bottom" title="Since last week")= Math.abs(diff)
