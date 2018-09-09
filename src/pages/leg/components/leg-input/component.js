@@ -71,7 +71,7 @@ module.exports = {
     },
     onKeyPress(e) {
         if (this.state.submitting) {
-            console.log("Skipping while submitting");
+            // Don't allow input while score is being submitted
             return;
         }
         var component = this.findActive(this.getComponents('players'));
