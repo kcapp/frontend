@@ -1,5 +1,4 @@
 const _ = require("underscore");
-const axios = require('axios');
 const io = require('socket.io-client');
 
 module.exports = {
@@ -12,7 +11,8 @@ module.exports = {
             socket: socket,
             legId: input.leg.id,
             roundNumber: roundNumber,
-            matchName: matchName
+            matchName: matchName,
+            submitting: false
         }
 
         socket.on('connect', (data) => {
@@ -32,6 +32,8 @@ module.exports = {
     },
 
     onScoreUpdate(data) {
+        this.state.submitting = false;
+
         var leg = data.leg;
         // Update round number
         this.state.roundNumber = Math.floor(leg.visits.length / leg.players.length) + 1;
@@ -55,17 +57,23 @@ module.exports = {
             scoreHeaderComponent.state.isCurrentPlayer = player.player_id === leg.current_player_id;
         }
     },
+    onScoreChange(scored, component) {
+        var component = this.findActive(this.getComponents('players'));
+        this.getComponent('player-' + component.state.playerId).setScored(scored);
+    },
     onKeyDown(e) {
         if (e.key === 'Backspace') {
             var component = this.findActive(this.getComponents('players'));
-
             component.removeLast();
             e.preventDefault();
         }
         return;
     },
-
     onKeyPress(e) {
+        if (this.state.submitting) {
+            console.log("Skipping while submitting");
+            return;
+        }
         var component = this.findActive(this.getComponents('players'));
 
         var text = '';
@@ -75,11 +83,12 @@ module.exports = {
             case 'Enter':
                 var dartsThrown = component.getDartsThrown();
                 if (dartsThrown > 3) {
+                    this.state.submitting = true;
+
                     var data = component.getDarts();
                     data.leg_id = this.state.legId;
                     this.state.socket.emit('throw', JSON.stringify(data));
                 } else {
-                    this.getComponent('player-' + component.state.playerId).state.currentScore -= (currentValue * currentMultiplier);
                     component.confirmThrow();
                 }
                 return;

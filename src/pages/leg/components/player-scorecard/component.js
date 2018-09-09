@@ -47,6 +47,8 @@ module.exports = {
             this.state.currentDart--;
             var dart = this.getCurrentDart();
             this.state.totalScore -= dart.getValue();
+
+            this.emit('score-change', -dart.getValue());
             dart.reset();
         } else {
             var dart = this.getCurrentDart()
@@ -63,6 +65,8 @@ module.exports = {
             this.state.totalScore += value;
             this.state.currentDart++;
             this.state.isSubmitted = true;
+
+            this.emit('score-change', value);
         }
     },
     setDart(value, multiplier) {

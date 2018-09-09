@@ -11,7 +11,7 @@
       </tr>
       <tr>
         <for(player in input.leg_players)>
-          <player-scorecard key="players[]" player=player/>
+          <player-scorecard key="players[]" player=player on-score-change('onScoreChange')/>
         </for>
       </tr>
     </tbody>
