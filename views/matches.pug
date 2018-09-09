@@ -75,6 +75,7 @@ block content
                     th(class='text-left')
                         span(class='ml-10') Players
                     th(class='text-center') Results
+                    th(class='text-center')
             tbody
                 each match in matches
                     - var isLive = !match.is_finished && moment.duration(moment().diff(match.last_throw_time)).asMinutes().toFixed() < 2
@@ -106,25 +107,30 @@ block content
                         td= match.match_mode.name
                         if match.is_finished
                             td
-                                if match.is_abandoned
-                                    div: span(class='label label-default') Abandoned
-                                else if match.winner_id === null
-                                    each id in match.players
+                                each id in match.players
+                                    if id != match.winner_id
                                         div(class='float-left')
                                             span(class='label label-secondary')= players[id].name
-                                else
-                                    each id in match.players
-                                        if id != match.winner_id
-                                            div(class='float-left')
-                                                span(class='label label-secondary')= players[id].name
-                                        else
-                                            div(class='float-left')
-                                                span(class='label label-success')= players[match.winner_id].name
+                                    else
+                                        div(class='float-left')
+                                            span(class='label label-success')= players[match.winner_id].name
                         else
                             td
                                 each id in match.players
                                     div(class='float-left')
                                         span(class='label label-secondary')= players[id].name
+                        td(class='text-center')
+                            if match.is_finished
+                                - var result = ''
+                                each id in match.players
+                                    - var wins = 0
+                                    each player in match.legs_won
+                                        if id === player
+                                            - wins++
+                                    - result += wins + ' - '
+                                span= result.slice(0, -3)
+                            else
+                                span
                         td(class='text-center icon-options')
                             if !match.is_finished
                                 i(class="fas fa-play-circle fas-option-button" id='continue-match-button' data-match=match.id data-toggle="tooltip" data-placement="top" title="Continue")

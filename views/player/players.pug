@@ -23,9 +23,6 @@ block scripts
             $('#add-player-modal').on('shown.bs.modal', function () {
                 $('#player-name-input').focus();
             });
-            $('#add-player-form').submit(function(event) {
-                addPlayer();
-            });
             $('#add-player-button').click(function() {
                 addPlayer();
             });
@@ -89,18 +86,18 @@ block content
         div(id='compare-players-alert' class='alert alert-danger pt-20' role='alert' hidden='true').
             Select at least one player to use for comparison
 
-        div(id='toggle-options' class='block-container-header' data-toggle="collapse" data-target="#players-options" aria-expanded="false" aria-controls="collapseExample") 
-            i(class="fas fa-arrow-alt-circle-down") 
+        div(id='toggle-options' class='block-container-header' data-toggle="collapse" data-target="#players-options" aria-expanded="false" aria-controls="collapseExample")
+            i(class="fas fa-arrow-alt-circle-down")
             span(class='ml-10') Toggle options
         div(class='block-container-with-header' id='players-options' class="collapse")
             button(type='button' class='btn btn-primary' id='compare-players-button')
-                i(class="fas fa-user-friends") 
+                i(class="fas fa-user-friends")
                 span(class='ml-10') Compare Players
-            button(type='button' class='btn btn-primary' id='button-add-player' data-toggle='modal' data-target='#add-player-modal') 
-                i(class="fas fa-user-plus") 
+            button(type='button' class='btn btn-primary' id='button-add-player' data-toggle='modal' data-target='#add-player-modal')
+                i(class="fas fa-user-plus")
                 span(class='ml-10') Add Player
-            button(type='button' class='btn btn-primary' id='button-edit-player' data-toggle='modal' data-target='#add-player-modal') 
-                i(class="fas fa-user-edit") 
+            button(type='button' class='btn btn-primary' id='button-edit-player' data-toggle='modal' data-target='#add-player-modal')
+                i(class="fas fa-user-edit")
                 span(class='ml-10') Edit Player
 
         div(class='pt-20')
@@ -143,8 +140,8 @@ block content
 
         div(class='modal fade' id='add-player-modal' tabindex='-1' role='dialog' aria-labelledby='add-player-modal-label')
             div(class='modal-dialog' role='document')
-                div(class='block-container-header') 
-                    i(class="fas fa-user-plus") 
+                div(class='block-container-header')
+                    i(class="fas fa-user-plus")
                     span(class='ml-10') Add player
                     button(type='button' class='close' data-dismiss='modal' aria-label='Close')
                         span(aria-hidden='true') &times;
@@ -165,5 +162,5 @@ block content
 
                         button(type='button' class='btn btn-default btn-close' data-dismiss='modal') Close
                         button(type='submit' class='btn btn-primary btn-submit' data-is-add='true' id='add-player-button')
-                            i(class="fas fa-user-plus") 
+                            i(class="fas fa-user-plus")
                             span(class='ml-10') Add player
