@@ -24,7 +24,7 @@ block scripts
 
 block content
     div(class='pt-20')
-    div(class='block-container') 
+    div(class='block-container')
         div(class='container-info-icon')
             i(class="fas fa-signal")
         div(class='float-left pl-20')
@@ -36,9 +36,9 @@ block content
             i(class="fas fa-arrow-circle-left" id='previous-btn' data-toggle="tooltip" data-placement="top" title="Previous week" data-current-date=statistics_x01.from)
 
     if statistics_x01.length === 0
-        div(class='block-container-red') X01 - no legs played   
-    else 
-        div(class='block-container-red') X01   
+        div(class='block-container-red') X01 - no legs played
+    else
+        div(class='block-container-red') X01
         div(class='block-container no-padding')
             div(class='table')
                 table(id='table-x01-statistics')
@@ -53,7 +53,7 @@ block content
                             th(class='text-center') Played
                             th(class='text-center') Won
                             th(class='text-right') Win %
-                            th(class='text-center') PPD / First 9
+                            th(class='text-center') Three Dart Avg.
                             th(class='text-right') Checkout
                             th(class='text-right') 60s+
                             th(class='text-right') 100s+
@@ -72,7 +72,7 @@ block content
                                 td(class='text-center')= stats.matches_played
                                 td(class='text-center')= stats.matches_won === undefined ? 0 : stats.matches_won
                                 td(class='text-right')= stats.matches_won === undefined ? '0.00%' : (stats.matches_won / stats.matches_played * 100).toFixed(2) + '%'
-                                td(class='text-center')= stats.ppd.toFixed(2) + ' / ' + stats.first_nine_ppd.toFixed(2)
+                                td(class='text-center')= stats.three_dart_avg.toFixed(2) + ' / ' + stats.first_nine_three_dart_avg.toFixed(2)
                                 td(class='text-right')= stats.checkout_percentage === null ? '-' : stats.checkout_percentage.toFixed(2) + ' %'
                                 td(class='text-right')= (stats.scores_60s_plus / stats.matches_played).toFixed(2)
                                 td(class='text-right')= (stats.scores_100s_plus / stats.matches_played).toFixed(2)
@@ -83,8 +83,8 @@ block content
                                 td(class='text-right')= stats.accuracy_19 === null ? '-' : stats.accuracy_19.toFixed(2)
 
     if statistics_x01.length === 0
-        div(class='block-container-red') Shootout - no matches played   
-    else 
+        div(class='block-container-red') Shootout - no matches played
+    else
         div(class='block-container-red') Shootout
         div(class='block-container no-padding')
             div(class='table')

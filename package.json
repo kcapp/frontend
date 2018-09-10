@@ -1,35 +1,39 @@
 {
-  "name": "kcapp",
-  "version": "0.0.0",
-  "private": true,
-  "scripts": {
-    "dev": "browser-refresh ./bin/www",
-    "start": "node ./bin/www"
-  },
-  "dependencies": {
-    "@lasso/marko-taglib": "^1.0.10",
-    "alertifyjs": "^1.11.1",
-    "axios": "^0.18.0",
-    "body-parser": "~1.18.2",
-    "browser-refresh": "^1.7.3",
-    "browser-refresh-taglib": "^1.1.0",
-    "compression": "^1.7.2",
-    "cookie-parser": "~1.4.3",
-    "debug": "~3.1.0",
-    "dns": "^0.2.2",
-    "express": "~4.16.3",
-    "lasso": "^3.2.2",
-    "lasso-less": "^3.0.1",
-    "lasso-marko": "^2.4.4",
-    "less-middleware": "~2.2.1",
-    "marko": "^4.12.3-0",
-    "moment": "^2.22.1",
-    "morgan": "~1.9.0",
-    "pug": "2.0.3",
-    "rotating-file-stream": "^1.3.4",
-    "serve-favicon": "~2.5.0",
-    "socket.io": "^2.1.0",
-    "socket.io-client": "^2.1.1",
-    "underscore": "^1.9.0"
-  }
+    "name": "kcapp",
+    "version": "0.0.0",
+    "private": true,
+    "scripts": {
+        "dev": "browser-refresh ./bin/www",
+        "prod": "cross-env NODE_ENV=production npm start",
+        "start": "node ./bin/www"
+    },
+    "dependencies": {
+        "@lasso/marko-taglib": "^1.0.10",
+        "alertifyjs": "^1.11.1",
+        "axios": "^0.18.0",
+        "body-parser": "~1.18.2",
+        "browser-refresh": "^1.7.3",
+        "browser-refresh-taglib": "^1.1.0",
+        "compression": "^1.7.2",
+        "cookie-parser": "~1.4.3",
+        "debug": "~3.1.0",
+        "dns": "^0.2.2",
+        "express": "~4.16.3",
+        "lasso": "^3.2.2",
+        "lasso-less": "^3.0.1",
+        "lasso-marko": "^2.4.4",
+        "less-middleware": "~3.0.1",
+        "marko": "^4.12.3-0",
+        "moment": "^2.22.1",
+        "morgan": "~1.9.0",
+        "pug": "2.0.3",
+        "rotating-file-stream": "^1.3.4",
+        "serve-favicon": "~2.5.0",
+        "socket.io": "^2.1.0",
+        "socket.io-client": "^2.1.1",
+        "underscore": "^1.9.0"
+    },
+    "devDependencies": {
+        "cross-env": "^5.2.0"
+    }
 }

@@ -20,8 +20,8 @@ block scripts
 
 block content
     div(class='pt-20')
-    div(class='block-container' style='overflow: visible;') 
-        div(class='float-left font-24')= 'Spectate match'  
+    div(class='block-container' style='overflow: visible;')
+        div(class='float-left font-24')= 'Spectate match'
         div(class='float-right')
             div(class='btn-group')
                 button(type='button' class='btn btn-primary dropdown-toggle' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false') Options&nbsp;&nbsp;
@@ -49,7 +49,7 @@ block content
                                 div(class=clazz id='scorecard-player-' + playerId)
                                     div(id='player-name-' + playerId class='label-player-name')= players[playerId].name
                                     div(id='player-score-' + playerId class='label label-block label-player-score')= player.current_score
-                                
+
                                     div(id='player-legs-' + player.player_id class='player-legs')
                                         label= (player.wins ? player.wins : '0')
 
@@ -74,7 +74,7 @@ block content
                                             tr
                                                 td(colspan='3')
                                                     div(class='total-score')= 0
-                    
+
     if !leg.is_finished && leg.board_stream_url
         img(src=leg.board_stream_url class='center-image' alt='Board live stream')
 
@@ -84,10 +84,10 @@ block content
             thead
                 tr
                     th Player
-                    th First
-                    th Second
-                    th Third
-                    th Total
+                    th(class='text-center') First Dart
+                    th(class='text-center') Second Dart
+                    th(class='text-center') Third Dart
+                    th(class='text-center') Total
             tbody
                 each visit in leg.visits
                     tr(class='block-container-mid')

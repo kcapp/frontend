@@ -7,5 +7,8 @@ module.exports = {
             currentScore: player.current_score,
             wins: player.wins ? player.wins : 0
         }
+    },
+    setScored(scored) {
+        this.state.currentScore -= scored;
     }
 };
