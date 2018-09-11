@@ -12,13 +12,20 @@ block scripts
         $(function () {
             $('#table-matches-list.table').DataTable({
                 searching: false, bInfo : false, bLengthChange: false,
-                pageLength: 5,
-                // Put finsihed matches at the end, then sort by when they should be played
-                order: [[ 3,  'asc' ], [ 1, 'asc' ]],
+                pageLength: 15,
+                order: [ [ 1, 'asc' ]],
                 bAutoWidth: false,
             });
 
             $('[data-toggle="tooltip"]').tooltip();
+
+            if (window.location.hash != "") {
+                if (window.location.hash === '#matches') {
+                    $('.tournament-group-matches').click();
+                } else {
+                    $('a[href="' + window.location.hash + '"]').click();
+                }
+            }
         });
 
 block content
@@ -47,7 +54,7 @@ block content
                     div(style='float: right; padding-top: 4px;')
                         ul(class='nav nav-pills')
                             li(role='presentation' class='active'): a(href='#standings-' + group[0].tournament_group.id data-toggle='tab') Standings
-                            li(role='presentation'): a(href='#matches-' + group[0].tournament_group.id data-toggle='tab') Matches
+                            li(role='presentation'): a(href='#matches-' + group[0].tournament_group.id class='tournament-group-matches' data-toggle='tab') Matches
 
                 div(class='tab-content')
                     div(role='tabpanel' id='standings-' + group[0].tournament_group.id class='tab-pane active')
@@ -133,7 +140,7 @@ block content
                                                     if match.tournament_id
                                                         div(class='float-left' style='margin-right: 10px;')
                                                             label(class='label label-warning') Official
-                                                    div= moment(match.created_at).format('YYYY-MM-DD HH:mm:ss')
+                                                    div= moment(match.created_at).format('YYYY-MM-DD')
                                                 th(hidden="true")= match.is_finished
                                                 td(class='text-left')
                                                     if match.is_abandoned
@@ -166,7 +173,7 @@ block content
                                                     else
                                                         each id in match.players
                                                             span(class='label label-secondary')= players[id].name
-                                                td(class='text-center')
+                                                td(class='col-sm-1 text-center')
                                                     if match.is_finished
                                                         - var result = ''
                                                         each id in match.players
@@ -189,7 +196,6 @@ block content
                                                             i(class="fas fa-eye fas-option-button" data-toggle="tooltip" data-placement="top" title="View")
 
         if hasStatistics
-
             mixin top_statistics(rank, idx, statistics)
                 if statistics[idx]
                     td(class='cutout-with-rank')
@@ -200,8 +206,12 @@ block content
                     td(class='valign-mid'): a(href='/players/' + statistics[idx].player_id + '/statistics')= players[statistics[idx].player_id].name
                     +best_statistics_td(statistics[idx], 'valign-mid')
                 else
-                    td -
-                    td -
+                    td(class='cutout-with-rank')
+                        div(class='float-left')
+                            div(class='player-pic-cutout-small')
+                            +rank_circle(rank)
+                    td(class='valign-mid') -
+                    td(class='valign-mid') -
 
             div(role='tabpanel' id='statistics' class='tab-pane')
                 div(class='block-container')= 'Tournament records'
@@ -213,7 +223,7 @@ block content
                                 table(class='table table-striped' id='table-tournament-statistics')
                                     tbody
                                         - var rank = 1
-                                        each idx in [0, 1, 2, 3, 4]
+                                        each idx in [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
                                             tr
                                                 +top_statistics(rank, idx, statistics.checkout_highest)
                                                 - rank++
@@ -223,7 +233,7 @@ block content
                                 table(class='table table-striped' id='table-tournament-statistics')
                                     tbody
                                         - var rank = 1
-                                        each idx in [0, 1, 2, 3, 4]
+                                        each idx in [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
                                             tr
                                                 +top_statistics(rank, idx, statistics.best_ppd)
                                                 - rank++
@@ -233,7 +243,7 @@ block content
                                 table(class='table table-striped' id='table-tournament-statistics')
                                     tbody
                                         - var rank = 1
-                                        each idx in [0, 1, 2, 3, 4]
+                                        each idx in [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
                                             tr
                                                 +top_statistics(rank, idx, statistics.best_first_nine_ppd)
                                                 - rank++
@@ -243,7 +253,7 @@ block content
                                 table(class='table table-striped' id='table-tournament-statistics')
                                     tbody
                                         - var rank = 1
-                                        each idx in [0, 1, 2, 3, 4]
+                                        each idx in [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
                                             - var dartsThrown = statistics.best_501_darts_thrown ? statistics.best_501_darts_thrown : statistics.best_301_darts_thrown ? statistics.best_301_darts_thrown : null
                                             tr
                                                 +top_statistics(rank, idx, dartsThrown)
