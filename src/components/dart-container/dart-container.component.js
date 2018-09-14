@@ -1,4 +1,4 @@
-const alertify = require("../../../../util/alertify");
+const alertify = require("../../util/alertify");
 
 const CLASS_DART_SINGLE = 'dart-score-single';
 const CLASS_DART_DOUBLE = 'dart-score-double';
@@ -18,6 +18,9 @@ module.exports = {
     },
     getValue() {
         return this.state.value * this.state.multiplier;
+    },
+    getScore() {
+        return this.state.value;
     },
     getMultiplier() {
         return this.state.multiplier;

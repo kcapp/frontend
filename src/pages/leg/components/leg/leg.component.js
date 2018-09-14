@@ -1,10 +1,10 @@
 const _ = require("underscore");
-const io = require('socket.io-client');
+const io = require('../../../../util/socket.io-helper.js');
 const axios = require('axios');
 
 module.exports = {
     onCreate(input) {
-        const socket = io('http://localhost:3000/legs/' + input.leg.id);
+        const socket = io.connect('http://localhost:3000/legs/' + input.leg.id);
 
         var roundNumber = Math.floor(input.leg.visits.length / input.leg.players.length) + 1;
         var matchName = input.match.match_mode.short_name;
@@ -16,13 +16,6 @@ module.exports = {
             submitting: false
         }
 
-        socket.on('connect', (data) => {
-            socket.emit('join', 'Client Connecting');
-        });
-
-        socket.on('error', (data) => {
-            console.log(data);
-        });
     },
 
     onMount() {
@@ -33,31 +26,9 @@ module.exports = {
     },
 
     onScoreUpdate(data) {
-        this.state.submitting = false;
-
-        var leg = data.leg;
-        // Update round number
-        this.state.roundNumber = Math.floor(leg.visits.length / leg.players.length) + 1;
-
-        var scorecardComponents = this.getComponents('players');
-        for (var i = 0; i < scorecardComponents.length; i++) {
-            var component = scorecardComponents[i];
-            var isCurrentPlayer = component.state.playerId === leg.current_player_id;
-            if (isCurrentPlayer) {
-                component.reset();
-            }
-            component.state.isCurrentPlayer = isCurrentPlayer;
-        }
-
-        // Set updated score per player
-        var players = data.players;
-        for (var i = 0; i < players.length; i++) {
-            var player = players[i];
-            var scoreHeaderComponent = this.getComponent('player-' + player.player_id);
-            scoreHeaderComponent.state.currentScore = player.current_score;
-            scoreHeaderComponent.state.isCurrentPlayer = player.player_id === leg.current_player_id;
-        }
+        io.onScoreUpdate(data, this);
     },
+
     onScoreChange(scored, component) {
         var component = this.findActive(this.getComponents('players'));
         this.getComponent('player-' + component.state.playerId).setScored(scored);
@@ -70,6 +41,18 @@ module.exports = {
         } else {
             this.state.submitting = false;
         }
+    },
+    onPossibleThrow(isCheckout, isBust, dartsThrown, score, multiplier, isUndo) {
+        var component = this.findActive(this.getComponents('players'));
+        this.state.socket.emit('possible_throw', {
+            current_player_id: component.state.playerId,
+            score: score,
+            multiplier: multiplier,
+            is_bust: isBust,
+            is_finished: isCheckout,
+            darts_thrown: dartsThrown,
+            is_undo: isUndo
+        });
     },
     onLegFinished(finished, component) {
         if (finished) {

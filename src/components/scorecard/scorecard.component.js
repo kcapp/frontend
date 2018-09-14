@@ -1,4 +1,4 @@
-const alertify = require("../../../../util/alertify");
+const alertify = require("../../util/alertify");
 
 const CLASS_DART_SINGLE = 'dart-score-single';
 const CLASS_DART_DOUBLE = 'dart-score-double';
@@ -31,6 +31,9 @@ module.exports = {
         this.getComponent(DART_CONTAINER_MAP[2]).reset();
         this.getComponent(DART_CONTAINER_MAP[3]).reset();
     },
+    getDart(idx) {
+        return this.getComponent(DART_CONTAINER_MAP[idx]);
+    },
     getCurrentDart() {
         return this.getComponent(DART_CONTAINER_MAP[this.state.currentDart]);
     },
@@ -57,6 +60,7 @@ module.exports = {
             this.state.totalScore -= value;
             this.state.player.current_score += value;
             this.emit('score-change', -value);
+            this.emit('possible-throw', false, false, this.state.currentDart, -dart.getScore(), dart.getMultiplier(), true);
             dart.reset();
         } else {
             var dart = this.getCurrentDart()
@@ -77,7 +81,9 @@ module.exports = {
             this.state.isSubmitted = true;
 
             this.emit('score-change', scored);
-            if (this.isCheckout(this.state.player.current_score, dart)) {
+            var isCheckout = this.isCheckout(this.state.player.current_score, dart);
+            var isBust = this.isBust(this.state.player.current_score, scored);
+            if (isCheckout) {
                 submitting = true;
                 alertify.confirm('Leg will be finished.',
                     () => {
@@ -86,7 +92,7 @@ module.exports = {
                         this.removeLast();
                         this.emit('leg-finished', false);
                     });
-            } else if (this.isBust(this.state.player.current_score, scored)) {
+            } else if (isBust) {
                 submitting = true;
                 this.state.isBusted = true;
                 alertify.confirm('Player busted',
@@ -101,6 +107,7 @@ module.exports = {
                     });
             }
             this.state.player.current_score -= scored;
+            this.emit('possible-throw', isCheckout, isBust, this.state.currentDart - 1, dart.getScore(), dart.getMultiplier(), false);
         }
         return submitting;
     },
@@ -116,11 +123,14 @@ module.exports = {
         }
         return false;
     },
-    setDart(value, multiplier) {
-        this.getCurrentDart().setDart(value, multiplier);
+    setDart(value, multiplier, idx) {
+        if (idx) {
+            this.getDart(idx).setDart(value, multiplier);
+        } else {
+            this.getCurrentDart().setDart(value, multiplier);
+        }
         this.state.isSubmitted = false;
     },
-
     getPayload() {
         var first = this.getComponent(DART_CONTAINER_MAP[1]);
         var second = this.getComponent(DART_CONTAINER_MAP[2]);

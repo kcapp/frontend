@@ -1,0 +1,49 @@
+const _ = require("underscore");
+const io = require('../../../../util/socket.io-helper.js');
+
+module.exports = {
+    onCreate(input) {
+        const socket = io.connect('http://localhost:3000/legs/' + input.leg.id);
+
+        var roundNumber = Math.floor(input.leg.visits.length / input.leg.players.length) + 1;
+        var matchName = input.match.match_mode.short_name;
+        this.state = {
+            socket: socket,
+            legId: input.leg.id,
+            roundNumber: roundNumber,
+            matchName: matchName,
+            submitting: false
+        }
+    },
+    onMount() {
+        this.state.socket.on('score_update', this.onScoreUpdate.bind(this));
+        this.state.socket.on('possible_throw', this.onPossibleThrow.bind(this));
+    },
+    onScoreUpdate(data) {
+        io.onScoreUpdate(data, this);
+    },
+    onPossibleThrow(data) {
+        console.log(data);
+        var component = this.findActive(this.getComponents('players'));
+
+        // Set current dart
+        if (data.is_undo) {
+            component.getDart(data.darts_thrown).reset();
+        } else {
+            component.setDart(data.score, data.multiplier, data.darts_thrown);
+        }
+        // Set total score
+        component.state.totalScore += data.score * data.multiplier;
+
+        // Update player score
+        var header = this.getComponent('player-' + data.current_player_id);
+        header.state.currentScore -= (data.score * data.multiplier)
+    },
+    findActive(components) {
+        return _.filter(components, function (component) {
+            if (component.state.isCurrentPlayer) {
+                return component;
+            }
+        })[0];
+    }
+}
