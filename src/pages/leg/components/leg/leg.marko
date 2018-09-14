@@ -6,12 +6,12 @@
     <tbody>
       <tr>
         <for(player in input.leg_players)>
-          <player-scorecard-header key="player-${player.player_id}" player=player name=input.players[player.player_id].name/>
+          <scorecard-header key="player-${player.player_id}" player=player name=input.players[player.player_id].name/>
         </for>
       </tr>
       <tr>
         <for(player in input.leg_players)>
-          <player-scorecard key="players[]" player=player on-score-change('onScoreChange')/>
+          <scorecard key="players[]" legId=state.legId player=player on-score-change('onScoreChange') on-player-busted('onPlayerBusted') on-leg-finished('onLegFinished')/>
         </for>
       </tr>
     </tbody>

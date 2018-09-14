@@ -3,7 +3,7 @@ var debug = require('debug')('kcapp:index');
 var express = require('express');
 var router = express.Router();
 
-var indexTemplate = require('../src/pages/index/index.marko');
+var indexTemplate = require('../src/pages/index/index-template.marko');
 
 var axios = require('axios');
 var _ = require('underscore');

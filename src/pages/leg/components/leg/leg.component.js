@@ -1,5 +1,6 @@
 const _ = require("underscore");
 const io = require('socket.io-client');
+const axios = require('axios');
 
 module.exports = {
     onCreate(input) {
@@ -61,6 +62,27 @@ module.exports = {
         var component = this.findActive(this.getComponents('players'));
         this.getComponent('player-' + component.state.playerId).setScored(scored);
     },
+
+    onPlayerBusted(busted, component) {
+        if (busted) {
+            this.state.socket.emit('throw', JSON.stringify(component.getPayload()));
+            component.state.player.current_score += component.state.totalScore;
+        } else {
+            this.state.submitting = false;
+        }
+    },
+    onLegFinished(finished, component) {
+        if (finished) {
+            axios.post(window.location.origin + '/legs/' + this.state.legId + '/finish', component.getPayload())
+                .then(response => {
+                    location.href = window.location.origin + '/legs/' + this.state.legId + '/result';
+                }).catch(error => {
+                    console.log(error);
+                });
+        } else {
+            this.state.submitting = false;
+        }
+    },
     onKeyDown(e) {
         if (e.key === 'Backspace') {
             var component = this.findActive(this.getComponents('players'));
@@ -84,12 +106,9 @@ module.exports = {
                 var dartsThrown = component.getDartsThrown();
                 if (dartsThrown > 3) {
                     this.state.submitting = true;
-
-                    var data = component.getDarts();
-                    data.leg_id = this.state.legId;
-                    this.state.socket.emit('throw', JSON.stringify(data));
+                    this.state.socket.emit('throw', JSON.stringify(component.getPayload()));
                 } else {
-                    component.confirmThrow();
+                    this.state.submitting = component.confirmThrow();
                 }
                 return;
             case '/': // Single
@@ -99,6 +118,7 @@ module.exports = {
                 currentMultiplier = 2;
                 break;
             case ',': // Triple
+            case '.': // Triple
             case '-': // Triple
                 if (currentValue === 25) {
                     // Don't allow Triple bull

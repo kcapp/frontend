@@ -19,6 +19,9 @@ module.exports = {
     getValue() {
         return this.state.value * this.state.multiplier;
     },
+    getMultiplier() {
+        return this.state.multiplier;
+    },
     reset() {
         this.state = this.initialState();
     },

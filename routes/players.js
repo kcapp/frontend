@@ -6,7 +6,7 @@ var router = express.Router();
 var axios = require('axios');
 var _ = require('underscore');
 
-var playersTemplate = require('../src/pages/players/players.marko');
+var playersTemplate = require('../src/pages/players/players-template.marko');
 
 /* Get a list of all players */
 router.get('/', function (req, res, next) {

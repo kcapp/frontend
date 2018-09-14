@@ -7,7 +7,7 @@ const request = require('request');
 
 const axios = require('axios');
 
-var x01InputTemplate = require('../src/pages/leg/entry_x01.marko');
+var x01InputTemplate = require('../src/pages/leg/leg-template.marko');
 
 /* Render the leg view */
 router.get('/:id', function (req, res, next) {
