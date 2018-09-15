@@ -5,8 +5,11 @@ const CLASS_DART_DOUBLE = 'dart-score-double';
 const CLASS_DART_TRIPLE = 'dart-score-triple';
 
 module.exports = {
-    onCreate() {
+    onCreate(input) {
         this.state = this.initialState();
+        if (input.dart) {
+            this.setDart(input.dart.value, input.dart.multiplier);
+        }
     },
     initialState() {
         return {
