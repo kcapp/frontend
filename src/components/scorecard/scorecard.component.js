@@ -124,11 +124,18 @@ module.exports = {
         return false;
     },
     setDart(value, multiplier, idx) {
+        var dart;
         if (idx) {
-            this.getDart(idx).setDart(value, multiplier);
+            dart = this.getDart(idx);
         } else {
-            this.getCurrentDart().setDart(value, multiplier);
+            dart = this.getCurrentDart();
         }
+        var newValue = parseInt(dart.state.value + '' + value);
+        if (newValue > 20 && newValue !== 25) {
+            alertify.alert('Invalid Value', () => { });
+            return;
+        }
+        dart.setDart(newValue, multiplier);
         this.state.isSubmitted = false;
     },
     getPayload() {

@@ -3,10 +3,10 @@ module.exports = {
         this.state = {
             visits: input.visits
         }
-        console.log(this.state.visits);
     },
-    onMount() {
-        //this.state.visits = this.state.visits.reverse();
-        //this.setStateDirty('visits');
+    setVisits(visits) {
+        this.state.visits = visits;
+        this.setStateDirty('visits');
+        console.log(this.state.visits);
     }
 }

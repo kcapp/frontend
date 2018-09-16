@@ -11,6 +11,11 @@ module.exports = {
             this.setDart(input.dart.value, input.dart.multiplier);
         }
     },
+    onInput(input) {
+        if (input.dart) {
+            this.setDart(input.dart.value, input.dart.multiplier);
+        }
+    },
     initialState() {
         return {
             text: '',
@@ -33,24 +38,17 @@ module.exports = {
     },
     setDart(value, multiplier) {
         var dart = this.state;
-
-        var newValue = parseInt(dart.value + '' + value);
-        if (newValue > 20 && newValue !== 25) {
-            alertify.alert('Invalid Value', () => { });
-            return;
-        }
-
         dart.text += value;
-        dart.value = newValue;
+        dart.value = value;
         dart.multiplier = multiplier;
 
         if (dart.value === 0) {
             dart.text = 'Miss';
             dart.class = CLASS_DART_SINGLE;
-        } else if (multiplier === 3) {
+        } else if (dart.multiplier === 3) {
             dart.class = CLASS_DART_TRIPLE;
             dart.text = 'T-' + dart.value;
-        } else if (multiplier === 2) {
+        } else if (dart.multiplier === 2) {
             dart.class = CLASS_DART_DOUBLE;
             dart.text = 'D-' + dart.value;
         } else {

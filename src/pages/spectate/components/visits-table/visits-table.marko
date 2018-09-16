@@ -1,3 +1,8 @@
+static function reverseIterator(list, callback) {
+    for (var i = list.length - 1; i >= 0; i--) {
+        callback(list[i]);
+    }
+}
 <div class="collapse in" id="toggle-visits-container">
   <h3>Visits</h3>
   <table class="table" id="table-leg-visits" style="table-layout: fixed;">
@@ -11,20 +16,7 @@
       </tr>
     </thead>
     <tbody>
-      <tr class="block-container-mid">
-        <td>${input.players[input.currentPlayer].name}</td>
-        <td class="dart-score-container no-border">
-          <dart-container/>
-        </td>
-        <td class="dart-score-container no-border">
-          <dart-container/>
-        </td>
-        <td class="dart-score-container no-border">
-          <dart-container/>
-        </td>
-        <td/>
-      </tr>
-      <for(visit in state.visits)>
+      <for(visit in state.visits | iterator=reverseIterator)>
         <tr class="block-container-mid">
           <td>${input.players[visit.player_id].name}</td>
           <td class="dart-score-container no-border">

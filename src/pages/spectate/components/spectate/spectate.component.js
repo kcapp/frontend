@@ -21,6 +21,7 @@ module.exports = {
     },
     onScoreUpdate(data) {
         io.onScoreUpdate(data, this);
+        this.getComponent('visits').setVisits(data.leg.visits);
     },
     onPossibleThrow(data) {
         console.log(data);

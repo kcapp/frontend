@@ -37,6 +37,7 @@ exports.onScoreUpdate = (data, thiz) => {
         var player = players[i];
         var scoreHeaderComponent = thiz.getComponent('player-' + player.player_id);
         scoreHeaderComponent.state.player = player;
+        scoreHeaderComponent.state.currentScore = player.current_score;
         scoreHeaderComponent.state.isCurrentPlayer = player.player_id === leg.current_player_id;
     }
 }
