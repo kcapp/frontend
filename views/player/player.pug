@@ -36,15 +36,9 @@ block scripts
         });
     script.
         $(function () {
-            var hash = document.location.hash;
-            if (hash) {
-                $('.nav-pills a[href="' + hash + '"]').tab('show');
+            if (window.location.hash != "") {
+                $('a[href="' + window.location.hash + '"]').click();
             }
-            // Change hash for page-reload
-            $('.nav-pills a').on('shown.bs.tab', function (e) {
-                console.log("Change")
-                window.location.hash = e.target.hash;
-            });
          });
     script.
         var progression = !{JSON.stringify(progression)};

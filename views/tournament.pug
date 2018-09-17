@@ -162,14 +162,13 @@ block content
                                                 td(class='col-sm-1')= match.match_type.name
                                                 td(class='col-sm-1')
                                                     if match.is_finished
-                                                        if match.winner_id === null
-                                                            div: span(class='label label-default' style='line-height: inherit;') Draw
-                                                        else
-                                                            each id in match.players
-                                                                if id == match.winner_id
-                                                                    span(class='label label-success' style='line-height: inherit;')= players[match.winner_id].name
-                                                                else
+                                                        each id in match.players
+                                                            if id != match.winner_id
+                                                                div(class='float-left')
                                                                     span(class='label label-secondary')= players[id].name
+                                                            else
+                                                                div(class='float-left')
+                                                                    span(class='label label-success')= players[match.winner_id].name
                                                     else
                                                         each id in match.players
                                                             span(class='label label-secondary')= players[id].name
