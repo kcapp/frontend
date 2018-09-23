@@ -29,85 +29,167 @@ block content
                     div(class='player-pic-cutout float-left')
                         +get_player_profile_pic(player2)
 
-    h2(style='padding: 10px 0px 20px 0px;') Head to Head
+    div(class='block-container-orange text-center')
+        span(style='font-size: 20px;') Overall
 
-    div(class='table-responsive')
-        table(id='table-player-head-to-head' class='table'  style='table-layout: fixed;')
-            thead
-                tr
-                    td(class='head-to-head-player1'): h2= player1.name
-                    th(class='head-to-head-header'): h2 vs
-                    td(class='head-to-head-player2'): h2= player2.name
-                tr
-                    th(colspan='3' class='head-to-head-header'): h3 Overall
-                tr
-                    td(class='head-to-head-player1')= player1.matches_won + ' / ' + player1.matches_played
-                    th(class='head-to-head-header') Matches Won / Played
-                    td(class='head-to-head-player2')= player2.matches_won + ' / ' + player2.matches_played
-                tr
-                    td(class='head-to-head-player1')= ((player1.matches_won * 100) / player1.matches_played).toFixed(2) + '%'
-                    th(class='head-to-head-header') Matches Win %
-                    td(class='head-to-head-player2')= ((player2.matches_won * 100) / player2.matches_played).toFixed(2) + '%'
-                tr
-                    td(class='head-to-head-player1')= player1.legs_won + ' / ' + player1.legs_played
-                    th(class='head-to-head-header') Legs Won / Played
-                    td(class='head-to-head-player2')= player2.legs_won + ' / ' + player2.legs_played
-                tr
-                    td(class='head-to-head-player1')= ((player1.legs_won * 100) / player1.legs_played).toFixed(2) + '%'
-                    th(class='head-to-head-header') Legs Win %
-                    td(class='head-to-head-player2')= ((player2.legs_won * 100) / player2.legs_played).toFixed(2) + '%'
-                tr
-                    th(colspan='3' class='head-to-head-header'): h3 Elo
-                tr
-                    td(class='head-to-head-player1')= head2head.player_elo[player1.id].tournament_elo
-                    th(class='head-to-head-header') Current
-                    td(class='head-to-head-player2')= head2head.player_elo[player2.id].tournament_elo
-                tr
-                    td(class='head-to-head-player1')= (head2head.player_elo[player1.id].win_probability * 100).toFixed(0) + '%'
-                    th(class='head-to-head-header') Win Probability
-                    td(class='head-to-head-player2')= (head2head.player_elo[player2.id].win_probability * 100).toFixed(0) + '%'
-                tr
-                    th(colspan='3' class='head-to-head-header'): h3 Form
-                tr
-                    mixin player_form_table(matches, playerID, align)
-                        table(class='table-player-form' style='width: 100%; table-layout: fixed;' align=align)
-                            tr
-                                //- Need to loop though in reverse order
-                                each idx in [4, 3, 2, 1, 0]
-                                    - var match = matches[idx]
-                                    if match == null
-                                        td
+    div(class='block-container')
+        table(class='table-vs')
+            tr
+                td= player1.matches_played
+                td= "matches played"
+                td= player2.matches_played
+            tr
+                td= player1.matches_won
+                td= "matches won"
+                td= player2.matches_won
+            tr
+                td= ((player1.matches_won * 100) / player1.matches_played).toFixed(2) + '%'
+                td= "matches win %"
+                td= ((player2.matches_won * 100) / player2.matches_played).toFixed(2) + '%'
+            tr
+                td= player1.legs_played
+                td= "legs played"
+                td= player2.legs_played
+            tr
+                td= player1.legs_won
+                td= "legs won"
+                td= player2.legs_won
+            tr
+                td= ((player1.legs_won * 100) / player1.legs_played).toFixed(2) + '%'
+                td= "legs win %"
+                td= ((player2.legs_won * 100) / player2.legs_played).toFixed(2) + '%'
+
+    div(class='block-container-orange text-center')
+        span(style='font-size: 20px;') Elo
+
+    div(class='block-container')
+        table(class='table-vs')
+            tr
+                td= head2head.player_elo[player1.id].tournament_elo
+                td= "current"
+                td= head2head.player_elo[player2.id].tournament_elo
+            tr
+                td= (head2head.player_elo[player1.id].win_probability * 100).toFixed(0) + '%'
+                td= "winning probability"
+                td= (head2head.player_elo[player2.id].win_probability * 100).toFixed(0) + '%'
+
+    div(class='block-container-orange text-center')
+        span(style='font-size: 20px;') Form
+
+    div(class='block-container')
+        table(class='table-vs-form' style='width: 100%;')
+            tr
+                mixin player_form_table(matches, playerID, align)
+                    table(align=align)
+                        tr
+                            //- Need to loop though in reverse order
+                            each idx in [4, 3, 2, 1, 0]
+                                - var match = matches[idx]
+                                if match == null
+                                    td
+                                else
+                                    if match.winner_id === null
+                                        td(style='padding: 0px 2px 0px 2px;')
+                                            span(class="fa-stack")
+                                                i(class="fa fa-circle fa-stack-2x col-grey")
+                                                strong(class="fa-stack-1x text-primary col-white" data-match-id=match.id)= 'D'
+                                    else if match.winner_id === playerID
+                                        td(style='padding: 0px 2px 0px 2px;')
+                                            span(class="fa-stack")
+                                                i(class="fa fa-circle fa-stack-2x col-green")
+                                                strong(class="fa-stack-1x text-primary col-white" data-match-id=match.id)= 'W'                                        
                                     else
-                                        if match.winner_id === null
-                                            td(style='background-color: #5bc0de; font-weight: bold;' data-match-id=match.id): label(style='display: block; cursor: pointer; text-align: center;') D
-                                        else if match.winner_id === playerID
-                                            td(style='background-color: #5cb85c; font-weight: bold;' data-match-id=match.id): label(style='display: block; cursor: pointer; text-align: center;') W
-                                        else
-                                            td(style='background-color: #e02a2a; font-weight: bold;' data-match-id=match.id): label(style='display: block; cursor: pointer; text-align: center;') L
-
-                    td(class='text-center')
-                        +player_form_table(head2head.last_matches[player1.id], player1.id, 'right')
-                    th(class='head-to-head-header') Last
-                    td(class='text-center')
-                        +player_form_table(head2head.last_matches[player2.id], player2.id, 'left')
-                tr
-                    td(class='text-center')
-                        +player_form_table(head2head.head_to_head_matches, player1.id, 'right')
-                    th(class='head-to-head-header') VS.
-                    td(class='text-center')
-                        +player_form_table(head2head.head_to_head_matches, player2.id, 'left')
+                                        td(style='padding: 0px 2px 0px 2px;')
+                                            span(class="fa-stack")
+                                                i(class="fa fa-circle fa-stack-2x col-dead-red")
+                                                strong(class="fa-stack-1x text-primary col-white" data-match-id=match.id)= 'L'
                 - var player1Wins = head2head.head_to_head_wins[player1.id] ? head2head.head_to_head_wins[player1.id] : 0
                 - var player2Wins = head2head.head_to_head_wins[player2.id] ? head2head.head_to_head_wins[player2.id] : 0
                 - var draws = head2head.head_to_head_wins[0] ? head2head.head_to_head_wins[0] : 0
                 - var total_matches = player1Wins + player2Wins + draws
+
+                td(style='width: 35%; text-align: right;')
+                    +player_form_table(head2head.last_matches[player1.id], player1.id, 'right')
+                td(style='width: 30%; text-align: center;')= 'last'
+                td(style='width: 35%; text-align: left;')
+                    +player_form_table(head2head.last_matches[player2.id], player1.id, 'left')
+            tr    
+                td(style='width: 35%; text-align: right;')
+                    +player_form_table(head2head.head_to_head_matches, player1.id, 'right')
+                td(style='width: 30%; text-align: center;')= 'versus'
+                td(style='width: 35%; text-align: left;')
+                    +player_form_table(head2head.head_to_head_matches, player2.id, 'left')
+            tr
+                td(style='width: 35%; text-align: right; font-size: 20px; font-weight: 600;padding-top: 10px;')= total_matches + ' (' + player1Wins + ' / ' + draws + ' / ' + player2Wins + ')'
+                td(style='width: 30%; text-align: center;padding-top: 10px;') total (W / D / L)
+                td(style='width: 35%; text-align: left; font-size: 20px; font-weight: 600;padding-top: 10px;')= total_matches + ' (' + player2Wins + ' / ' + draws + ' / ' + player1Wins + ')'
+            tr
+                td(style='width: 35%; text-align: right; font-size: 20px; font-weight: 600;padding-top: 10px;')= total_matches == 0 ? '-' : (player1Wins / total_matches * 100).toFixed(2) + '%'
+                td(style='width: 30%; text-align: center;padding-top: 10px;') vs winning %
+                td(style='width: 35%; text-align: left; font-size: 20px; font-weight: 600;padding-top: 10px;')= total_matches == 0 ? '-' : (player2Wins / total_matches * 100).toFixed(2) + '%'
+
+    div(class='block-container-orange text-center')
+        span(style='font-size: 20px;') 301
+
+    div(class='block-container')
+        table(class='table-vs')
+            - var player1stats301 = head2head.player_301_statistics[player1.id]
+            - var player2stats301 = head2head.player_301_statistics[player2.id]
+            if player1stats301 && player2stats301
                 tr
-                    td(class='head-to-head-player1')= total_matches + ' (' + player1Wins + ' / ' + draws + ' / ' + player2Wins + ')'
-                    th(class='head-to-head-header') Total (W / D / L)
-                    td(class='head-to-head-player2')= total_matches + ' (' + player2Wins + ' / ' + draws + ' / ' + player1Wins + ')'
+                    td= player1stats301.ppd.toFixed(2)
+                    td PPD
+                    td= player2stats301.ppd.toFixed(2)
                 tr
-                    td(class='head-to-head-player1')= total_matches == 0 ? '-' : (player1Wins / total_matches * 100).toFixed(2) + '%'
-                    th(class='head-to-head-header') VS. Win %
-                    td(class='head-to-head-player2')= total_matches == 0 ? '-' : (player2Wins / total_matches * 100).toFixed(2) + '%'
+                    td= player1stats301.first_nine_ppd.toFixed(2)
+                    td first 9 PPD
+                    td= player2stats301.first_nine_ppd.toFixed(2)
+                tr
+                    td= player1stats301.checkout_percentage.toFixed(2) + '%'
+                    td checkout %
+                    td= player2stats301.checkout_percentage.toFixed(2) + '%'
+                tr
+                    +best_statistics_td(player1stats301.best_301, '')
+                    td best leg
+                    +best_statistics_td(player2stats301.best_301, '')
+                tr
+                    +best_statistics_td(player1stats301.best_ppd, '')
+                    td best PPD
+                    +best_statistics_td(player2stats301.best_ppd, '')
+                tr
+                    +best_statistics_td(player1stats301.best_first_nine_ppd, '')
+                    td best first 9 PPD
+                    +best_statistics_td(player2stats301.best_first_nine_ppd, '')
+                tr
+                    +best_statistics_td(player1stats301.highest_checkout, '')
+                    td highest checkout
+                    +best_statistics_td(player2stats301.highest_checkout, '')
+                tr
+                    td(colspan='3')
+                        hr
+                tr
+                    td= player1stats301.accuracy_overall.toFixed(2)
+                    td accuracy overall
+                    td= player2stats301.accuracy_overall.toFixed(2)
+                tr
+                    - var p1accuracy20 = player1stats301.accuracy_20 == null ? '-' : player1stats301.accuracy_20.toFixed(2)
+                    - var p2accuracy20 = player2stats301.accuracy_20 == null ? '-' : player2stats301.accuracy_20.toFixed(2)
+                    td= p1accuracy20
+                    td accuracy 20s
+                    td= p2accuracy20
+                tr
+                    - var p1accuracy19 = player1stats301.accuracy_19 == null ? '-' : player1stats301.accuracy_19.toFixed(2)
+                    - var p2accuracy19 = player2stats301.accuracy_19 == null ? '-' : player2stats301.accuracy_19.toFixed(2)
+                    td= p1accuracy19
+                    td accuracy 19s
+                    td= p2accuracy19
+                    
+                
+    div(class='table-responsive')
+        table(id='table-player-head-to-head' class='table'  style='table-layout: fixed;')
+            thead
+                tr
+                    th(colspan='3' class='head-to-head-header')
 
                 mixin x01_statistics(x01, stats1, stats2)
                     tr
@@ -238,3 +320,24 @@ block content
                     +player_top_checkouts_table(head2head.player_checkouts[player1.id], 'right')
                     th
                     +player_top_checkouts_table(head2head.player_checkouts[player2.id], 'left')
+
+    div(class='block-container-orange text-center')
+        span(style='font-size: 20px;') 501
+
+    div(class='block-container')
+        table(class='table-vs')
+            - var player1stats501 = head2head.player_501_statistics[player1.id]
+            - var player2stats501 = head2head.player_501_statistics[player2.id]
+            if player1stats501 && player2stats501
+                tr
+                    td= player1stats501.ppd.toFixed(2)
+                    td PPD
+                    td= player2stats501.ppd.toFixed(2)
+                tr
+                    td= player1stats501.first_nine_ppd.toFixed(2)
+                    td first 9 PPD
+                    td= player2stats501.first_nine_ppd.toFixed(2)
+                tr
+                    td= player1stats501.checkout_percentage.toFixed(2) + '%'
+                    td checkout %
+                    td= player2stats501.checkout_percentage.toFixed(2) + '%'
