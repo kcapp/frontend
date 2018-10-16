@@ -65,23 +65,22 @@ block content
                                         th(class='pl-10') Pos
                                         th Player
                                         th(class='text-right') P
-                                        th(class='text-right') W
+                                        th(class='text-right pl-20') W
                                         th(class='text-right') D
                                         th(class='text-right') L
-                                        th(class='text-right') F
-                                        th(class='text-right') A
-                                        th(class='text-right') +/-
+                                        th(class='text-center pl-10') F - A
+                                        th(class='text-right pl-10') +/-
                                         th(class='text-right') PTS
                                         if hasStatistics
-                                            th(class='text-center') Three Dart Avg.
-                                            th(class='text-right') Checkout %
+                                            th(class='text-center') 3 Dart Avg.
+                                            th(class='text-center') Checkout %
                                             th(class='text-right') 60s+
                                             th(class='text-right') 100s+
                                             th(class='text-right') 140s+
                                             th(class='text-right') 180
-                                            th(class='text-right') Overall
-                                            th(class='text-right') 20s
-                                            th(class='text-right') 19s
+                                            th(class='text-center') Overall
+                                            th(class='text-center') 20s
+                                            th(class='text-center') 19s
                                 tbody
                                     - var rank = 1
                                     each player in group
@@ -97,23 +96,22 @@ block content
                                                         i(class="fas fa-caret-down")
                                             td: a(href='/players/' + player.player_id + '/statistics')= players[player.player_id].name
                                             td(class='text-right')= player.played
-                                            td(class='text-right')= player.matches_won
+                                            td(class='text-right pl-20')= player.matches_won
                                             td(class='text-right')= player.matches_draw
                                             td(class='text-right')= player.matches_lost
-                                            td(class='text-right')= player.legs_for
-                                            td(class='text-right')= player.legs_against
-                                            td(class='text-right')= player.legs_difference
+                                            td(class='text-center pl-10')= player.legs_for + ' - ' + player.legs_against
+                                            td(class='text-right pl-10')= player.legs_difference > 0 ? '+' + player.legs_difference : player.legs_difference
                                             td(class='text-right')= player.points
                                             if hasStatistics
-                                                td(class='text-center')= player.three_dart_avg.toFixed(2) + ' / ' + player.first_nine_three_dart_avg.toFixed(2)
-                                                td(class='text-right')= player.checkout_percentage.toFixed(2) + '%'
+                                                td(class='text-center')= player.three_dart_avg === -1 ? '- / -' : player.three_dart_avg.toFixed(2) + ' / ' + player.first_nine_three_dart_avg.toFixed(2)
+                                                td(class='text-center')= player.checkout_percentage === -1 ? '-' : player.checkout_percentage.toFixed(2) + '%'
                                                 td(class='text-right')= player.scores_60s_plus
                                                 td(class='text-right')= player.scores_100s_plus
                                                 td(class='text-right')= player.scores_140s_plus
                                                 td(class='text-right')= player.scores_180s
-                                                td(class='text-right')= player.accuracy_overall.toFixed(2)
-                                                td(class='text-right')= player.accuracy_20.toFixed(2)
-                                                td(class='text-right')= player.accuracy_19.toFixed(2)
+                                                td(class='text-center')= player.accuracy_overall === -1 ? '-' : player.accuracy_overall.toFixed(2)
+                                                td(class='text-center')= player.accuracy_20 === -1 ? '-' : player.accuracy_20.toFixed(2)
+                                                td(class='text-center')= player.accuracy_19 === -1 ? '-' : player.accuracy_19.toFixed(2)
 
                     div(role='tabpanel' id='matches-' + group[0].tournament_group.id class='tab-pane')
                         div(class='block-container no-padding')
