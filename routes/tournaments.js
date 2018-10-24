@@ -29,7 +29,7 @@ router.get('/:id', function (req, res, next) {
         axios.get(req.app.locals.kcapp.api + '/tournament/' + req.params.id + '/overview'),
         axios.get(req.app.locals.kcapp.api + '/tournament/' + req.params.id + '/matches'),
         axios.get(req.app.locals.kcapp.api + '/tournament/' + req.params.id + '/statistics')
-    ]).then(axios.spread((players, tournament, overview, matches, statisticsResponse) => {
+    ]).then(axios.spread((players, tournament, overviewData, matches, statisticsResponse) => {
         var statistics = statisticsResponse.data;
         if (!_.isEmpty(statistics)) {
             statistics.checkout_highest = _.sortBy(statistics.checkout_highest, (stats) => -stats.value);
@@ -144,8 +144,29 @@ router.get('/:id', function (req, res, next) {
             ]
         };
 
+        var overview = overviewData.data;
+        for (var groupId in overview) {
+            var group = overview[groupId];
+            // Sort players by points earned
+            group.sort((p1, p2) => {  return p2.points - p1.points; });
+            
+            // Calculate rank for each player
+            var rank = 0;
+            for (var i = 0; i < group.length; i++) {
+                var current = group[i];
+                var prev = group[i - 1];
+                
+                if (prev && prev.points == current.points && prev.legs_difference === current.legs_difference) {
+                    current.rank = prev.rank;
+                } else {
+                    current.rank = rank + 1;
+                }
+                rank++;
+            }
+        }
+
         res.render('tournament', {
-            bracket: bracket, tournament: tournament.data, overview: overview.data,
+            bracket: bracket, tournament: tournament.data, overview: overview,
             players: players.data, matches: matches.data, statistics: statistics
         });
     })).catch(error => {

@@ -82,12 +82,11 @@ block content
                                             th(class='text-center') 20s
                                             th(class='text-center') 19s
                                 tbody
-                                    - var rank = 1
                                     each player in group
-                                        tr
+                                        tr(style=style)
                                             td(class='pl-10')
                                                 div
-                                                    span(class='pr-5')= rank++
+                                                    span(class='pr-5')= player.rank
                                                     if player.is_winner
                                                         i(class="fas fa-star")
                                                     else if player.is_promoted
