@@ -67,20 +67,24 @@ router.get('/:id/spectate', function (req, res, next) {
         axios.get(req.app.locals.kcapp.api + '/match/' + req.params.id)
     ]).then(axios.spread((players, response) => {
         var match = response.data;
-        axios.all([
-            axios.get(req.app.locals.kcapp.api + '/leg/' + match.current_leg_id),
-            axios.get(req.app.locals.kcapp.api + '/leg/' + match.current_leg_id + '/players')
-        ]).then(axios.spread((leg, legPlayers) => {
-            res.render('leg/spectate', {
-                leg: leg.data,
-                leg_players: legPlayers.data,
-                players: players.data,
-                match: match
+        if (match.is_finished) {
+            return res.redirect('/matches/' + req.params.id + "/result");
+        } else {
+            axios.all([
+                axios.get(req.app.locals.kcapp.api + '/leg/' + match.current_leg_id),
+                axios.get(req.app.locals.kcapp.api + '/leg/' + match.current_leg_id + '/players')
+            ]).then(axios.spread((leg, legPlayers) => {
+                res.render('leg/spectate', {
+                    leg: leg.data,
+                    leg_players: legPlayers.data,
+                    players: players.data,
+                    match: match
+                });
+            })).catch(error => {
+                debug('Error when getting data for matches ' + error);
+                next(error);
             });
-        })).catch(error => {
-            debug('Error when getting data for matches ' + error);
-            next(error);
-        });
+        }
     })).catch(error => {
         debug('Error when getting data for match ' + error);
         next(error);
@@ -137,6 +141,9 @@ router.post('/new', function (req, res, next) {
             if (match.venue) {
                 this.socketHandler.emitMessage('/venue/' + match.venue.id, 'venue_new_match', {
                     match_id: match.id, leg_id: match.current_leg_id
+                });
+                this.socketHandler.emitMessage('/active', 'new_match', {
+                    match: match
                 });
             }
             res.status(200).send(match).end();

@@ -103,6 +103,8 @@ function configureSocketEvents(socket, leg, playersMap, liveScoreUpdate, venueSo
                 playerVisits.removeClass().addClass('visits-inactive');
             }
         }
+        $('.visits-active .total-score').text(0);
+
         // Set round number and current player
         $('#round-number').text('R' + (Math.floor(data.leg.visits.length / data.leg.players.length) + 1));
         $('#current-player').text(playersMap[data.leg.current_player_id].name);

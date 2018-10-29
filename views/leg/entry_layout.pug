@@ -358,6 +358,10 @@ block scripts
                         isLastVisitFishNChips = players[i === 0 ?  players.length - 1 : i - 1].modifiers.is_fish_and_chips;
 
                         $('#submit-score-button').data('current-player-id', player.player_id);
+
+                        if (player.current_score < 51) {
+                            responsiveVoice.speak(player.player_name + " you require " + player.current_score, VOICE);
+                        }
                     }
                     else {
                         playerScoreCard.removeClass().addClass('scorecard-inactive');
@@ -565,7 +569,7 @@ block content
     div(class='block-container-blue' style='overflow: visible;')
         div(class='float-left font-24')= 'Leg (X01) '
         div(class='float-left font-24 pl-10')= match.match_mode.short_name + '/'
-        div(class='float-left font-24')= 'R' + round_number
+        div(id='round-number' class='float-left font-24')= 'R' + round_number
         div(class='float-right')
             div(class='btn-group')
                 button(type='button' class='btn btn-primary dropdown-toggle' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false') Options&nbsp;&nbsp;
