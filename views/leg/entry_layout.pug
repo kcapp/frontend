@@ -360,7 +360,11 @@ block scripts
                         $('#submit-score-button').data('current-player-id', player.player_id);
 
                         if (player.current_score < 51) {
-                            responsiveVoice.speak(player.player_name + " you require " + player.current_score, VOICE);
+                            if (responsiveVoice.isPlaying()) {
+                                setTimeout(function () {
+                                    responsiveVoice.speak(player.player_name + " you require " + player.current_score, VOICE);
+                                }, 1000)
+                            }
                         }
                     }
                     else {
