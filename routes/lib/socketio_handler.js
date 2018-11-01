@@ -3,6 +3,8 @@ var axios = require('axios');
 var moment = require('moment');
 var lookup = require('./dns_lookup');
 
+var _this = this;
+
 function getClientIP(client) {
     var realIP = client.handshake.headers["x-real-ip"]
     return realIP ? realIP : client.handshake.address;
@@ -106,8 +108,13 @@ module.exports = (io, app) => {
                                 axios.all([
                                     axios.get(app.locals.kcapp.api + '/leg/' + body.leg_id),
                                     axios.get(app.locals.kcapp.api + '/leg/' + body.leg_id + '/players')
-                                ]).then(axios.spread((leg, players) => {
-                                    nsp.emit('score_update', { leg: leg.data, players: players.data });
+                                ]).then(axios.spread((legData, playersData) => {
+                                    var leg = legData.data;
+                                    var players = playersData.data;
+                                    if (leg.visits.length === 1) {
+                                        _this.io.of('/active').emit('first_throw', { leg: leg, players: players });
+                                    }
+                                    nsp.emit('score_update', { leg: leg, players: players });
                                 })).catch(error => {
                                     var message = error.message + ' (' + error.response.data.trim() + ')'
                                     debug('Error when getting leg: ' + message);
