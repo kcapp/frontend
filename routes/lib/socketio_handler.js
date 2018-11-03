@@ -100,6 +100,15 @@ module.exports = (io, app) => {
                         nsp.emit('chat_message', message);
                     });
 
+                    client.on('speak', function (data) {
+                        debug("Recived voice line %s", data);
+                        nsp.emit('say', {
+                            voice: "US English Female",
+                            text: data.text,
+                            options: data.options
+                        });
+                    });
+
                     client.on('throw', function (data) {
                         var body = JSON.parse(data);
                         debug('Received throw from %s (%o)', ip, body);
