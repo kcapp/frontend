@@ -83,7 +83,7 @@ block content
                                             th(class='text-center') 19s
                                 tbody
                                     each player in group
-                                        tr(style=style)
+                                        tr(class='tournament-' + id + '-rank-' + player.rank)
                                             td(class='pl-10')
                                                 div
                                                     span(class='pr-5')= player.rank
@@ -93,7 +93,7 @@ block content
                                                         i(class="fas fa-caret-up")
                                                     else if player.is_relegated
                                                         i(class="fas fa-caret-down")
-                                            td: a(href='/players/' + player.player_id + '/statistics')= players[player.player_id].name
+                                            td: a(href='/players/' + player.player_id + '/statistics#tournament')= players[player.player_id].name
                                             td(class='text-right')= player.played
                                             td(class='text-right pl-20')= player.matches_won
                                             td(class='text-right')= player.matches_draw
