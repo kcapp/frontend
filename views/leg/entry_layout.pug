@@ -328,12 +328,16 @@ block scripts
                 console.log(data);
             });
             socket.on('say', function (data) {
-                if (responsiveVoice.isPlaying()) {
-                    setTimeout(function () {
-                        responsiveVoice.speak(data.text, data.voice, data.options);
-                    }, 1500)
+                if (data.type === 'score' &&  ['100', '140', '180'].includes(data.text)) {
+                    new Audio('/audio/' + data.text + '.mp3').play();
                 } else {
-                    responsiveVoice.speak(data.text, data.voice, data.options);
+                    if (responsiveVoice.isPlaying()) {
+                        setTimeout(function () {
+                            responsiveVoice.speak(data.text, data.voice, data.options);
+                        }, 1500)
+                    } else {
+                        responsiveVoice.speak(data.text, data.voice, data.options);
+                    }
                 }
             });
 
@@ -435,7 +439,7 @@ block scripts
                         socket.emit('speak', { text: "Noscore", options: { pitch: 0.8 } } );
                     }
                     else {
-                        socket.emit('speak', { text: "" + total } );
+                        socket.emit('speak', { text: "" + total, type: 'score' } );
                     }
                     socket.emit('throw', data);
                 }

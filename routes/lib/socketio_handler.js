@@ -105,6 +105,7 @@ module.exports = (io, app) => {
                         nsp.emit('say', {
                             voice: "US English Female",
                             text: data.text,
+                            type: data.type,
                             options: data.options
                         });
                     });
