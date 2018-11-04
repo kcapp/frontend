@@ -313,13 +313,18 @@ block content
     div(class='block-container-orange text-center')
         span(style='font-size: 20px;') Visits
 
-    mixin visit_container_colored(multiplier)
-        if multiplier == 1
-            i(class="fa fa-circle fa-stack-2x col-single")
-        if multiplier == 2
-            i(class="fa fa-circle fa-stack-2x col-double")
-        if multiplier == 3
-            i(class="fa fa-circle fa-stack-2x col-triple")
+    mixin visit_container_colored(dart)
+        span(class="fa-stack")
+            if dart.multiplier == 1
+                i(class="fa fa-circle fa-stack-2x col-single")
+                strong(class="fa-stack-1x text-primary col-white font-15")= dart.value
+            if dart.multiplier == 2
+                i(class="fa fa-circle fa-stack-2x col-double")
+                strong(class="fa-stack-1x text-primary col-white font-15")= 'D' + dart.value
+            if dart.multiplier == 3
+                i(class="fa fa-circle fa-stack-2x col-triple")
+                strong(class="fa-stack-1x text-primary col-white font-15")= 'T' + dart.value
+                    
 
     div(class='block-container')
         table(class='table-vs')
@@ -337,29 +342,21 @@ block content
                     tr
                         td
                             span(class="fa-stack")
-                                +visit_container_colored(p1visits[round].first_dart.multiplier)
-                                strong(class="fa-stack-1x text-primary col-white")= p1visits[round].first_dart.value
+                                +visit_container_colored(p1visits[round].first_dart)
 
                             span(class="fa-stack")
-                                +visit_container_colored(p1visits[round].second_dart.multiplier)
-                                strong(class="fa-stack-1x text-primary col-white")= p1visits[round].second_dart.value
+                                +visit_container_colored(p1visits[round].second_dart)
 
                             span(class="fa-stack")
-                                +visit_container_colored(p1visits[round].third_dart.multiplier)
-                                strong(class="fa-stack-1x text-primary col-white")= p1visits[round].third_dart.value
+                                +visit_container_colored(p1visits[round].third_dart)
                         td= p1pm + ' | ' + p2pm
                         td
                             span(class="fa-stack")
-                                +visit_container_colored(p2visits[round].first_dart.multiplier)
-                                strong(class="fa-stack-1x text-primary col-white")= p2visits[round].first_dart.value
-
+                                +visit_container_colored(p2visits[round].first_dart)
                             span(class="fa-stack")
-                                +visit_container_colored(p2visits[round].second_dart.multiplier)
-                                strong(class="fa-stack-1x text-primary col-white")= p2visits[round].second_dart.value
-
+                                +visit_container_colored(p2visits[round].second_dart)
                             span(class="fa-stack")
                                 +visit_container_colored(p2visits[round].third_dart.multiplier)
-                                strong(class="fa-stack-1x text-primary col-white")= p2visits[round].third_dart.value
 
     div(class='block-container-orange text-center')
         span(style='font-size: 20px;') Checkouts
@@ -369,23 +366,17 @@ block content
             - var p1checkouts = head2head.player_checkouts[player1.id]
             - var p2checkouts = head2head.player_checkouts[player2.id]
 
-            mixin dart_circle(dart)
-                - var value = dart.value === null || dart.value === 0 ? '' : 'D' + dart.value
-                span(class="fa-stack")
-                    +visit_container_colored(dart.multiplier)
-                    strong(class="fa-stack-1x text-primary col-white")= value
-
             if p1checkouts && p2checkouts
                 each round in [0, 1, 2]
                     tr
                         td
                             if p1checkouts[round].completed
-                                +dart_circle(p1checkouts[round].visits[0].first_dart)
-                                +dart_circle(p1checkouts[round].visits[0].second_dart)
-                                +dart_circle(p1checkouts[round].visits[0].third_dart)
+                                +visit_container_colored(p1checkouts[round].visits[0].first_dart)
+                                +visit_container_colored(p1checkouts[round].visits[0].second_dart)
+                                +visit_container_colored(p1checkouts[round].visits[0].third_dart)
                         td
                         td
                             if p2checkouts[round].completed
-                                +dart_circle(p2checkouts[round].visits[0].first_dart)
-                                +dart_circle(p2checkouts[round].visits[0].second_dart)
-                                +dart_circle(p2checkouts[round].visits[0].third_dart)
+                                +visit_container_colored(p2checkouts[round].visits[0].first_dart)
+                                +visit_container_colored(p2checkouts[round].visits[0].second_dart)
+                                +visit_container_colored(p2checkouts[round].visits[0].third_dart)
