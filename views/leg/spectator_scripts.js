@@ -14,6 +14,8 @@ function configureSocketEvents(socket, leg, playersMap, liveScoreUpdate, venueSo
     var tbody = $('#table-leg-visits tbody');
     tbody.html($('tr', tbody).get().reverse());
 
+    var VOICE = "US English Female";
+
     if (leg.is_finished) {
         // Don't setup any sockets if leg is finished
         return;
@@ -33,6 +35,19 @@ function configureSocketEvents(socket, leg, playersMap, liveScoreUpdate, venueSo
     socket.on('connected', function (data) {
         // Send message to client announcing that we are spectating
         socket.emit('spectator_connected', '');
+    });
+
+    socket.on('say', function (data) {
+        var announceVoice = JSON.parse(localStorage.getItem('kcapp_spectate_announce'));
+        if (announceVoice) {
+            if (responsiveVoice.isPlaying()) {
+                setTimeout(function () {
+                    responsiveVoice.speak(data.text, data.voice, data.options);
+                }, 1500)
+            } else {
+                responsiveVoice.speak(data.text, data.voice, data.options);
+            }
+        }
     });
 
     socket.on('possible_throw', function (data) {
@@ -103,6 +118,8 @@ function configureSocketEvents(socket, leg, playersMap, liveScoreUpdate, venueSo
                 playerVisits.removeClass().addClass('visits-inactive');
             }
         }
+        $('.visits-active .total-score').text(0);
+
         // Set round number and current player
         $('#round-number').text('R' + (Math.floor(data.leg.visits.length / data.leg.players.length) + 1));
         $('#current-player').text(playersMap[data.leg.current_player_id].name);

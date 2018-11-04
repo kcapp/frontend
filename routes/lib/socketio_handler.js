@@ -3,6 +3,8 @@ var axios = require('axios');
 var moment = require('moment');
 var lookup = require('./dns_lookup');
 
+var _this = this;
+
 function getClientIP(client) {
     var realIP = client.handshake.headers["x-real-ip"]
     return realIP ? realIP : client.handshake.address;
@@ -22,6 +24,16 @@ module.exports = (io, app) => {
             var namespace = '/legs/' + legId;
             delete this.io.nsps[namespace];
             debug("Removed socket.io namespace '%s'", namespace)
+        },
+        addNamespace: (namespace) => {
+            if (this.io.nsps[namespace] === undefined) {
+                var nsp = this.io.of(namespace);
+                nsp.on('connection', function (client) {
+                    var ip = getClientIP(client);
+                    debug("Client %s connected to '%s'", ip, namespace);
+                });
+                debug("Created socket.io namespace '%s'", namespace);
+            }
         },
         setupVenueNamespace: (venueId) => {
             var namespace = '/venue/' + venueId;
@@ -88,6 +100,15 @@ module.exports = (io, app) => {
                         nsp.emit('chat_message', message);
                     });
 
+                    client.on('speak', function (data) {
+                        debug("Recived voice line %s", data);
+                        nsp.emit('say', {
+                            voice: "US English Female",
+                            text: data.text,
+                            options: data.options
+                        });
+                    });
+
                     client.on('throw', function (data) {
                         var body = JSON.parse(data);
                         debug('Received throw from %s (%o)', ip, body);
@@ -96,8 +117,13 @@ module.exports = (io, app) => {
                                 axios.all([
                                     axios.get(app.locals.kcapp.api + '/leg/' + body.leg_id),
                                     axios.get(app.locals.kcapp.api + '/leg/' + body.leg_id + '/players')
-                                ]).then(axios.spread((leg, players) => {
-                                    nsp.emit('score_update', { leg: leg.data, players: players.data });
+                                ]).then(axios.spread((legData, playersData) => {
+                                    var leg = legData.data;
+                                    var players = playersData.data;
+                                    if (leg.visits.length === 1) {
+                                        _this.io.of('/active').emit('first_throw', { leg: leg, players: players });
+                                    }
+                                    nsp.emit('score_update', { leg: leg, players: players });
                                 })).catch(error => {
                                     var message = error.message + ' (' + error.response.data.trim() + ')'
                                     debug('Error when getting leg: ' + message);
