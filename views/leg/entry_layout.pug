@@ -44,7 +44,6 @@ block scripts
 
         $(function () {
             // Functions to be loaded after document load
-
             var disableEnter = false;
 
             $(document).keydown(function (e) {
@@ -317,6 +316,7 @@ block scripts
             if (leg.is_finished) {
                 return;
             }
+
             var socket = getLegsNamespace(leg);
             socket.on('spectator_connected', function (data) {
                 alertify.success(data + ' connected');
@@ -391,8 +391,6 @@ block scripts
                 $('.visits-active .total-score').html(0);
                 resetElements();
             });
-
-            var socket = getLegsNamespace(leg);
 
             $('#submit-score-button').click(function (event) {
                 $(this).attr('disabled', true);
@@ -514,6 +512,11 @@ block scripts
             var lastUpdated = moment.duration(moment().diff(moment(leg.updated_at))).asMinutes().toFixed();
             if (match.tournament_id && leg.visits.length === 0 && lastUpdated > 2) {
                 $('#btn-change-player-order').trigger('click');
+            } else {
+                if (leg.visits.length === 0) {
+                    var legNum = match.legs.length + ["st","nd","rd"][((match.legs.length+90)%100-10)%10-1]||"th";
+                    socket.emit('speak', { text: legNum + " leg, " + $('#player-name-' + leg.current_player_id).text() + " to throw first" } );
+                }
             }
 
             $('#edit-scores-button').click(function () {
