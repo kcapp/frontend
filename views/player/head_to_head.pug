@@ -112,7 +112,7 @@ block content
                     +player_form_table(head2head.last_matches[player1.id], player1.id, 'right')
                 td(style='width: 30%; text-align: center;')= 'last'
                 td(style='width: 35%; text-align: left;')
-                    +player_form_table(head2head.last_matches[player2.id], player1.id, 'left')
+                    +player_form_table(head2head.last_matches[player2.id], player2.id, 'left')
             tr
                 td(style='width: 35%; text-align: right;')
                     +player_form_table(head2head.head_to_head_matches, player1.id, 'right')
@@ -324,7 +324,7 @@ block content
             if dart.multiplier == 3
                 i(class="fa fa-circle fa-stack-2x col-triple")
                 strong(class="fa-stack-1x text-primary col-white font-15")= 'T' + dart.value
-                    
+
 
     div(class='block-container')
         table(class='table-vs')
