@@ -82,8 +82,10 @@ block content
                                             th(class='text-center') 20s
                                             th(class='text-center') 19s
                                 tbody
+                                    - var rowNum = 0
                                     each player in group
-                                        tr(class='tournament-' + id + '-rank-' + player.rank)
+                                        - rowNum++
+                                        tr(class='tournament-' + id + '-rank-' + rowNum)
                                             td(class='pl-10')
                                                 div
                                                     span(class='pr-5')= player.rank
