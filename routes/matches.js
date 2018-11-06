@@ -92,7 +92,7 @@ router.get('/:id/spectate', function (req, res, next) {
 });
 
 /* Spectate the given match */
-router.get('/:id/spectate2', function (req, res, next) {
+router.get('/:id/spectate/compact', function (req, res, next) {
     axios.all([
         axios.get(req.app.locals.kcapp.api + '/player'),
         axios.get(req.app.locals.kcapp.api + '/match/' + req.params.id)
