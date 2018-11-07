@@ -66,6 +66,10 @@ body {
     padding-left: 20px;
 }
 
+.pr-20 {
+    padding-right: 20px;
+}
+
 .no-padding {
     padding: 0px !important;
 }
@@ -295,7 +299,73 @@ body {
     height: 98px;
     box-shadow: 0px 0px 0px 2000px #ffffff;
     img {
-        margin-top: -16px;
+        margin-top: -20px;
+    }
+}
+
+.preview-name-tag-left {
+    .float-left;
+    .pl-20;
+    margin-top: -200px;
+    margin-left: -250px;
+    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif !important;
+    font-style: italic;
+}
+
+.preview-name-tag-right {
+    .float-right;
+    .pr-20;
+    margin-top: -200px;
+    margin-left: 90px;
+    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif !important;
+    font-style: italic;
+}
+
+.h2-label {
+    text-transform: uppercase;
+    font-size: 20px;
+    padding: 10px;
+    background-color: white;
+    width: 350px;
+    border-radius: 10px;
+    -webkit-border-radius: 10px;
+    -o-border-radius: 10px;
+    -moz-border-radius: 10px;
+    -ms-border-radius: 10px;
+    -webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, .05);
+    box-shadow: 0 1px 1px rgba(0, 0, 0, .05);
+}
+
+
+.dark-label {
+    width: 350px;
+    border-radius: 10px;
+    -webkit-border-radius: 10px;
+    -o-border-radius: 10px;
+    -moz-border-radius: 10px;
+    -ms-border-radius: 10px;
+    -webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, .05);
+    box-shadow: 0 1px 1px rgba(0, 0, 0, .05);
+    background-color: #39393e;
+    color: #ffffff;
+    border: 1px solid #39393e;
+    -webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, .77);
+    box-shadow: 0 1px 1px rgba(0, 0, 0, .77);
+    text-transform: lowercase;
+    font-size: 20px;
+    font-weight: 100;
+    padding: 5px 0px 5px 10px;
+}
+
+
+.player-pic-cutout-preview {
+    overflow: hidden;
+    border-radius: 100%;
+    width: 200px;
+    height: 200px;
+    box-shadow: 0px 0px 0px 10px #fff;
+    img {
+        margin-top: -20px;
     }
 }
 
@@ -490,6 +560,79 @@ body {
     -ms-border-radius: 4px;
     -webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, .05);
     box-shadow: 0 1px 1px rgba(0, 0, 0, .05);
+    overflow: hidden;
+    h3,
+    p {
+        margin: 0px;
+        padding: 0px;
+    }
+    .pagination {
+        padding-top: 8px;
+    }
+}
+
+.block-container-small {
+    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif !important;
+    background-color: #fff;
+    margin-bottom: 1em;
+    border: 1px solid #ebeff6;
+    border-radius: 4px;
+    -webkit-border-radius: 4px;
+    -o-border-radius: 4px;
+    -moz-border-radius: 4px;
+    -ms-border-radius: 4px;
+    -webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, .05);
+    box-shadow: 0 1px 1px rgba(0, 0, 0, .05);
+    overflow: hidden;
+    h3,
+    p {
+        margin: 0px;
+        padding: 0px;
+    }
+    .pagination {
+        padding-top: 8px;
+    }
+}
+
+.block-container-preview-data {
+    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif !important;
+    background-color: #39393e;
+    color: #ffffff;
+    padding: 20px;
+    margin-bottom: 1em;
+    border: 1px solid #39393e;
+    border-radius: 4px;
+    -webkit-border-radius: 4px;
+    -o-border-radius: 4px;
+    -moz-border-radius: 4px;
+    -ms-border-radius: 4px;
+    -webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, .77);
+    box-shadow: 0 1px 1px rgba(0, 0, 0, .77);
+    overflow: hidden;
+    h3,
+    p {
+        margin: 0px;
+        padding: 0px;
+    }
+    .pagination {
+        padding-top: 8px;
+    }
+}
+
+
+.block-container-preview-small {
+    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif !important;
+    background-color: #39393e;
+    color: #ffffff;
+    margin-bottom: 1em;
+    border: 1px solid #39393e;
+    border-radius: 4px;
+    -webkit-border-radius: 4px;
+    -o-border-radius: 4px;
+    -moz-border-radius: 4px;
+    -ms-border-radius: 4px;
+    -webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, .77);
+    box-shadow: 0 1px 1px rgba(0, 0, 0, .77);
     overflow: hidden;
     h3,
     p {
@@ -1724,7 +1867,7 @@ a:hover {
 }
 
 .tournament-12-rank-4 {
-    background:#d0ffcb;
+    background: #d0ffcb;
 }
 
 .tournament-1-rank-4,
@@ -1743,4 +1886,11 @@ a:hover {
 .tournament-1-rank-10,
 .tournament-11-rank-10 {
     background: #efefef;
+}
+
+.preview-rank {
+    min-height: 98px; 
+    font-size: 60px;
+    font-style: italic;
+    margin-top: -10px;
 }
