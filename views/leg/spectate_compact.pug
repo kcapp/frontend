@@ -17,6 +17,11 @@ block scripts
         $(function () {
             socket = getLegsNamespace(leg);
             configureSocketEvents(socket, leg, playersMap, true);
+
+            var activeSocket = io(window.location.origin + '/active');
+            activeSocket.on('first_throw', (data) => {
+                location.href = '/matches/' + data.leg.match_id + '/spectate/compact';
+            });
         });
     script.
         $(function() {
