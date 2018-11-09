@@ -21,6 +21,18 @@ router.get('/', function (req, res, next) {
     });
 });
 
+/* Get current active tournament */
+router.get('/current', function (req, res, next) {
+    axios.get(req.app.locals.kcapp.api + '/tournament/current')
+        .then((response) => {
+            res.redirect("/tournaments/" + response.data.id);
+        }).catch(error => {
+            debug('Error when getting data for tournament ' + error);
+            next(error);
+        });
+});
+
+
 /* Get tournament with the given ID */
 router.get('/:id', function (req, res, next) {
     axios.all([
@@ -148,14 +160,14 @@ router.get('/:id', function (req, res, next) {
         for (var groupId in overview) {
             var group = overview[groupId];
             // Sort players by points earned
-            group.sort((p1, p2) => {  return p2.points - p1.points; });
-            
+            group.sort((p1, p2) => { return p2.points - p1.points; });
+
             // Calculate rank for each player
             var rank = 0;
             for (var i = 0; i < group.length; i++) {
                 var current = group[i];
                 var prev = group[i - 1];
-                
+
                 if (prev && prev.points == current.points && prev.legs_difference === current.legs_difference) {
                     current.rank = prev.rank;
                 } else {

@@ -423,7 +423,7 @@ block scripts
                 var isFinished = $(this).data('finished');
                 var isBust = $(this).data('busted');
                 if (isFinished) {
-                    var legNum = match.legs.length + ["st","nd","rd"][((match.legs.length+90)%100-10)%10-1]||"th";
+                    var legNum = match.legs.length + (["st","nd","rd"][((match.legs.length+90)%100-10)%10-1]||"th");
                     socket.emit('speak', { text: "Game shot in the " + legNum + " leg!, " + $('#player-name-' + currentPlayerId).text() + "!"} );
                     executePost(window.location.origin + '/legs/' + legId + '/finish', data, 'application/json',
                         function (response) {
@@ -518,8 +518,8 @@ block scripts
                 $('#btn-change-player-order').trigger('click');
             } else {
                 if (leg.visits.length === 0) {
-                    var legNum = match.legs.length + ["st","nd","rd"][((match.legs.length+90)%100-10)%10-1]||"th";
-                    socket.emit('speak', { text: legNum + " leg, " + $('#player-name-' + leg.current_player_id).text() + " to throw first" } );
+                    var legNum = match.legs.length + (["st","nd","rd"][((match.legs.length+90)%100-10)%10-1]||"th");
+                    socket.emit('speak', { text: legNum + " leg, " + $('#player-name-' + leg.current_player_id).text() + " to throw first. GAME ON!" } );
                 }
             }
 

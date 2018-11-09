@@ -236,9 +236,9 @@ block content
                     td first 9 PPD
                     td= player2stats501.first_nine_ppd.toFixed(2)
                 tr
-                    td= player1stats501.checkout_percentage.toFixed(2) + '%'
+                    td= player1stats501.checkout_percentage ? player1stats501.checkout_percentage.toFixed(2) + '%' : '-'
                     td checkout %
-                    td= player2stats501.checkout_percentage.toFixed(2) + '%'
+                    td= player2stats501.checkout_percentage ? player2stats501.checkout_percentage.toFixed(2) + '%'  : '-'
                 tr
                     +best_statistics_td(player1stats501.best_501, '')
                     td best leg
