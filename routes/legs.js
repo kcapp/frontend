@@ -51,6 +51,41 @@ function getLegView(req, res, next, vertical) {
     });
 }
 
+/* Render the leg view */
+router.get('/:id/obs', function (req, res, next) {
+    axios.all([
+        axios.get(req.app.locals.kcapp.api + '/player'),
+        axios.get(req.app.locals.kcapp.api + '/leg/' + req.params.id),
+        axios.get(req.app.locals.kcapp.api + '/leg/' + req.params.id + '/players')
+    ]).then(axios.spread((players, legResponse, legPlayers) => {
+        var leg = legResponse.data;
+        axios.get(req.app.locals.kcapp.api + '/match/' + leg.match_id)
+            .then(response => {
+                var match = response.data;
+
+                var pugView = 'leg/obs.pug';
+                if (match.match_type.id === 2) {
+                    pugView = 'leg/entry_shootout.pug';
+                }
+
+                // Sort players based on order
+                legPlayers = _.sortBy(legPlayers.data, (player) => player.order)
+                res.render(pugView, {
+                    leg: leg,
+                    players: players.data,
+                    match: match,
+                    leg_players: legPlayers
+                });
+            }).catch(error => {
+                debug('Error when getting match: ' + error);
+                next(error);
+            });
+    })).catch(error => {
+        debug('Error when getting data for leg ' + error);
+        next(error);
+    });
+});
+
 /* Render the leg spectate view */
 router.get('/:id/spectate', function (req, res, next) {
     axios.all([
