@@ -5,6 +5,8 @@ mixin player_order(legPlayers)
                 $('#modal-player-selector').keydown(function (e) {
                     if (e.key === 'Enter') {
                         $('#btn-set-player-order').click();
+                    } else if (e.key == '0') {
+                        $('#btn-start-warmup').click();
                     } else {
                         var player = $("#table-players-select-order").find("[data-player-order=" + e.key + "]");
                         if (player.length === 0) {
@@ -13,6 +15,9 @@ mixin player_order(legPlayers)
                         player.click();
                     }
                     e.preventDefault();
+                });
+                $('#btn-start-warmup').click(function(e) {
+                    console.log("Warmup started");
                 });
 
                 $('#table-players-select-order').on('click', 'td', function() {
@@ -72,4 +77,11 @@ mixin player_order(legPlayers)
                                 tr
 
                 div(class='modal-footer')
-                    button(id='btn-set-player-order' type='button' class='btn btn-primary') Start Match
+                    button(id='btn-start-warmup' type='button' class='btn btn-primary')
+                        div(class='text-center')
+                            label(class='key-small') 0
+                            label(class='pl-10') Warmup
+                    button(id='btn-set-player-order' type='button' class='btn btn-primary')
+                        div(class='text-center')
+                            label(class='key-small') ENTER
+                            label(class='pl-10') Start Match
