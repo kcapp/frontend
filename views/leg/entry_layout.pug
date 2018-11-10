@@ -439,8 +439,10 @@ block scripts
                     executePost(window.location.origin + '/legs/' + legId + '/finish', data, 'application/json',
                         function (response) {
                             setTimeout(function () {
+                                // Make sure we have a short delay before moving on to results,
+                                // to make sure we get announcement of leg winner
                                 location.href = window.location.origin + '/legs/' + legId + '/result';
-                            }, 1000)
+                            }, 1500)
                         },
                         function (error) {
                             console.log("Unable to proceed: " + error.responseText);

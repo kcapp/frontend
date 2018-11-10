@@ -8,11 +8,6 @@ block append head
 block scripts
     script.
         $(function() {
-            $('.btn-view-results').click(function() {
-                var id = $(this).closest('tr').find('th').text();
-                window.location.href = '/legs/' + id  + '/result';
-            });
-
             $('[data-toggle="tooltip"]').tooltip();
         });
     script.
@@ -111,7 +106,8 @@ block content
                                         i(class="fas fa-minus")
                     if leg.has_scores
                         td(class='block-container-mid')
-                            i(id='leg-' + idx class="fas fa-eye fas-option-button btn-view-results" data-toggle="tooltip" data-placement="top" title="View")
+                            a(href='/legs/' + leg.id + '/result')
+                                i(class="fas fa-eye fas-option-button" data-toggle="tooltip" data-placement="top" title="View")
                     else
                         td(class='block-container-mid') N/A
                 - idx++
