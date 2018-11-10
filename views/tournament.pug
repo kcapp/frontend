@@ -142,12 +142,9 @@ block content
                                                 div
                                                     label(class='label label-info' style='line-height: inherit;') Live
                                             else if match.is_finished
-                                                if match.winner_id == null
-                                                    div
-                                                        label(class='label label-default' style='line-height: inherit;') Finished
-                                                else
-                                                    div
-                                                        label(class='label label-success' style='line-height: inherit;') Finished
+                                                - var clazz = match.winner_id == null ? 'label label-default' : 'label label-success'
+                                                div
+                                                    label(class=clazz style='line-height: inherit;' data-toggle="tooltip" data-placement="top" title=match.updated_at) Finished
                                         td(class='col-sm-1')
                                             if match.is_finished
                                                 each id in match.players
