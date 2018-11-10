@@ -317,6 +317,8 @@ block scripts
                 return;
             }
 
+            var audioAnnouncer = new Audio();
+
             var socket = getLegsNamespace(leg);
             socket.on('spectator_connected', function (data) {
                 alertify.success(data + ' connected');
@@ -328,14 +330,23 @@ block scripts
                 console.log(data);
             });
             socket.on('say', function (data) {
+                // Check if an audio clip is currently playing, if it is we don't want to wait until
+                //  it is finished, before saying anything else
+                var isAudioAnnouncement = (audioAnnouncer.duration > 0 && !audioAnnouncer.paused);
                 if (data.type === 'score' &&  ['100', '140', '180'].includes(data.text)) {
-                    new Audio('/audio/' + data.text + '.mp3').play();
+                    audioAnnouncer = new Audio('/audio/' + data.text + '.mp3');
+                    audioAnnouncer.play();
                 } else {
                     if (responsiveVoice.isPlaying()) {
                         setTimeout(function () {
                             responsiveVoice.speak(data.text, data.voice, data.options);
                         }, 1500)
-                    } else {
+                    }  else if (isAudioAnnouncement) {
+                        audioAnnouncer.addEventListener("ended", () => {
+                            responsiveVoice.speak(data.text, data.voice, data.options);
+                        }, false);
+                    }
+                    else {
                         responsiveVoice.speak(data.text, data.voice, data.options);
                     }
                 }
