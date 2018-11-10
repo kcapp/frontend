@@ -386,7 +386,7 @@ block scripts
                         if (player.current_score < 171 && ![169,168,166,165,163,162,159].includes(player.current_score)) {
                             var name = player.player_name;
                             var score = player.current_score;
-                            socket.emit('speak', { text: name + " you require " + score });
+                            socket.emit('speak', { text: name + " you require " + score, type: 'remaining_score' });
                         }
                     }
                     else {
@@ -435,10 +435,12 @@ block scripts
                 var isBust = $(this).data('busted');
                 if (isFinished) {
                     var legNum = match.legs.length + (["st","nd","rd"][((match.legs.length+90)%100-10)%10-1]||"th");
-                    socket.emit('speak', { text: "Game shot in the " + legNum + " leg!, " + $('#player-name-' + currentPlayerId).text() + "!"} );
+                    socket.emit('speak', { text: "Game shot in the " + legNum + " leg!, " + $('#player-name-' + currentPlayerId).text() + "!", type: 'game_shot' } );
                     executePost(window.location.origin + '/legs/' + legId + '/finish', data, 'application/json',
                         function (response) {
-                            location.href = window.location.origin + '/legs/' + legId + '/result';
+                            setTimeout(function () {
+                                location.href = window.location.origin + '/legs/' + legId + '/result';
+                            }, 1000)
                         },
                         function (error) {
                             console.log("Unable to proceed: " + error.responseText);
@@ -447,7 +449,7 @@ block scripts
                 }
                 else {
                     if (isBust) {
-                        socket.emit('speak', { text: "Noscore", options: { pitch: 0.8 } } );
+                        socket.emit('speak', { text: "Noscore", type: 'score', options: { pitch: 0.8 } } );
                     }
                     else {
                         socket.emit('speak', { text: "" + total, type: 'score' } );
@@ -530,7 +532,7 @@ block scripts
             } else {
                 if (leg.visits.length === 0) {
                     var legNum = match.legs.length + (["st","nd","rd"][((match.legs.length+90)%100-10)%10-1]||"th");
-                    socket.emit('speak', { text: legNum + " leg, " + $('#player-name-' + leg.current_player_id).text() + " to throw first. GAME ON!" } );
+                    socket.emit('speak', { text: legNum + " leg, " + $('#player-name-' + leg.current_player_id).text() + " to throw first. GAME ON!", type: 'leg_start' } );
                 }
             }
 
