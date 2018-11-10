@@ -63,7 +63,7 @@ mixin player_order(legPlayers)
                                         - var playerId = player.player_id
                                         td(id='player-score-' + playerId class='block-container-blue' data-player-id=playerId data-player-order=order)
                                             div(class='text-center')
-                                                label(class='pr-10 pl-10' style='border-style: solid;')= order
+                                                label(class='key-small')= order
                                             label(id='player-name-' + playerId class='label-player-name')= players[playerId].name
                     h5 Order
                     div(class='table-responsive no-border')
