@@ -100,6 +100,10 @@ module.exports = (io, app) => {
                         nsp.emit('chat_message', message);
                     });
 
+                    client.on('warmup_started', function (data) {
+                        _this.io.of('/active').emit('warmup_started', { leg_id: data.leg_id, match_id: data.match_id });
+                    });
+
                     client.on('speak', function (data) {
                         debug("Recived voice line %s", data);
                         nsp.emit('say', {
