@@ -47,7 +47,7 @@ html
                         console.log("Unknown darts_thrown: " + data.darts_thrown);
                         return;
                     }
-                    dart.text(data.dart_text);
+                    dart.text(data.dart_text.replace('-', ''));
 
                     // Subtract from current player score
                     var score = $('#obs-player-score-' + data.current_player_id);
@@ -64,10 +64,24 @@ html
 
                 socket.on('score_update', function (data) {
                     var players = data.players;
+                    var currentPlayerId = data.leg.current_player_id;
                     for (key in players) {
                         var player = players[key];
                         // Update score for each player
                         $('#obs-player-score-' + player.player_id).text(player.current_score)
+
+                        var scorecard = $('#obs-scorecard-player-' + player.player_id);
+                        scorecard.removeClass();
+                        if (player.player_id === currentPlayerId) {
+                            scorecard.addClass('obs-visits-active');
+
+                            var clazz = '#obs-scorecard-player-' + currentPlayerId;
+                            $(clazz + ' .obs-dart-score.first').text('');
+                            $(clazz + ' .obs-dart-score.second').text('');
+                            $(clazz + ' .obs-dart-score.third').text('');
+                        } else {
+                            scorecard.addClass('obs-visits-inactive');
+                        }
                     }
                 });
             });
