@@ -92,7 +92,10 @@ module.exports = (io, app) => {
                     });
 
                     client.on('warmup_started', function (data) {
-                        _this.io.of('/active').emit('warmup_started', { leg_id: data.leg_id, match_id: data.match_id });
+                        _this.io.of('/active').emit('warmup_started', { leg: data.leg, match: data.match });
+                        if (data.match.venue) {
+                            _this.io.of('/venue/' + data.match.venue.id).emit('venue_new_match', { leg: data.leg });
+                        }
                     });
 
                     client.on('speak', function (data) {

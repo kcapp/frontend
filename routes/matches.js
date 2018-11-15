@@ -63,37 +63,37 @@ router.get('/:id', function (req, res, next) {
 /* Preview */
 router.get('/:id/preview', function (req, res, next) {
     axios.get(req.app.locals.kcapp.api + '/match/' + req.params.id)
-    .then(response => {
-        var match = response.data
-        var player1 = match.players[0];
-        var player2 = match.players[1];
-        var playerIds = [player1, player2];
-        axios.all([
-            axios.get(req.app.locals.kcapp.api + '/player'),
-            axios.get(req.app.locals.kcapp.api + '/player/' + player1 + '/vs/' + player2),
-            axios.get(req.app.locals.kcapp.api + '/player/' + player1 + '/statistics'),
-            axios.get(req.app.locals.kcapp.api + '/player/' + player2 + '/statistics'),
-        ]).then(axios.spread((response1, response2, p1stats, p2stats) => {
-            var players = response1.data;
-            p1stats = p1stats.data;
-            p2stats = p2stats.data;
+        .then(response => {
+            var match = response.data
+            var player1 = match.players[0];
+            var player2 = match.players[1];
+            var playerIds = [player1, player2];
+            axios.all([
+                axios.get(req.app.locals.kcapp.api + '/player'),
+                axios.get(req.app.locals.kcapp.api + '/player/' + player1 + '/vs/' + player2),
+                axios.get(req.app.locals.kcapp.api + '/player/' + player1 + '/statistics'),
+                axios.get(req.app.locals.kcapp.api + '/player/' + player2 + '/statistics'),
+            ]).then(axios.spread((response1, response2, p1stats, p2stats) => {
+                var players = response1.data;
+                p1stats = p1stats.data;
+                p2stats = p2stats.data;
 
-            var head2head = response2.data;
-            head2head.player_visits[player1] = _.sortBy(head2head.player_visits[player1], function (visit) { return -visit.count; })
-            head2head.player_visits[player2] = _.sortBy(head2head.player_visits[player2], function (visit) { return -visit.count; })
-    
-            head2head.player_checkouts[player1] = _.sortBy(head2head.player_checkouts[player1], function (checkout) { return -checkout.count; })
-            head2head.player_checkouts[player2] = _.sortBy(head2head.player_checkouts[player2], function (checkout) { return -checkout.count; })
-    
-            res.render('match/preview', { player1: players[player1], player2: players[player2], head2head: head2head, players: response1, p1statistics: p1stats, p2statistics: p2stats });
-        })).catch(error => {
-            debug('Error when getting data for head to head ' + error);
-            next(error);
+                var head2head = response2.data;
+                head2head.player_visits[player1] = _.sortBy(head2head.player_visits[player1], function (visit) { return -visit.count; })
+                head2head.player_visits[player2] = _.sortBy(head2head.player_visits[player2], function (visit) { return -visit.count; })
+
+                head2head.player_checkouts[player1] = _.sortBy(head2head.player_checkouts[player1], function (checkout) { return -checkout.count; })
+                head2head.player_checkouts[player2] = _.sortBy(head2head.player_checkouts[player2], function (checkout) { return -checkout.count; })
+
+                res.render('match/preview', { player1: players[player1], player2: players[player2], head2head: head2head, players: response1, p1statistics: p1stats, p2statistics: p2stats });
+            })).catch(error => {
+                debug('Error when getting data for head to head ' + error);
+                next(error);
+            });
+        }).catch(error => {
+            debug('Error when getting match: ' + error);
+            next(error)
         });
-    }).catch(error => {
-        debug('Error when getting match: ' + error);
-        next(error)
-    });
     /*
     var player1 = req.params.player1;
     var player2 = req.params.player2;
@@ -116,9 +116,10 @@ router.get('/:id/spectate', function (req, res, next) {
                 axios.get(req.app.locals.kcapp.api + '/leg/' + match.current_leg_id),
                 axios.get(req.app.locals.kcapp.api + '/leg/' + match.current_leg_id + '/players')
             ]).then(axios.spread((leg, legPlayers) => {
+                legPlayers = _.sortBy(legPlayers.data, (player) => player.order)
                 res.render('leg/spectate', {
                     leg: leg.data,
-                    leg_players: legPlayers.data,
+                    leg_players: legPlayers,
                     players: players.data,
                     match: match
                 });
@@ -147,9 +148,10 @@ router.get('/:id/spectate/compact', function (req, res, next) {
                 axios.get(req.app.locals.kcapp.api + '/leg/' + match.current_leg_id),
                 axios.get(req.app.locals.kcapp.api + '/leg/' + match.current_leg_id + '/players')
             ]).then(axios.spread((leg, legPlayers) => {
+                legPlayers = _.sortBy(legPlayers.data, (player) => player.order)
                 res.render('leg/spectate_compact', {
                     leg: leg.data,
-                    leg_players: legPlayers.data,
+                    leg_players: legPlayers,
                     players: players.data,
                     match: match
                 });
@@ -158,6 +160,34 @@ router.get('/:id/spectate/compact', function (req, res, next) {
                 next(error);
             });
         }
+    })).catch(error => {
+        debug('Error when getting data for match ' + error);
+        next(error);
+    });
+});
+
+/* Render the leg view */
+router.get('/:id/obs', function (req, res, next) {
+    axios.all([
+        axios.get(req.app.locals.kcapp.api + '/player'),
+        axios.get(req.app.locals.kcapp.api + '/match/' + req.params.id)
+    ]).then(axios.spread((players, response) => {
+        var match = response.data;
+        axios.all([
+            axios.get(req.app.locals.kcapp.api + '/leg/' + match.current_leg_id),
+            axios.get(req.app.locals.kcapp.api + '/leg/' + match.current_leg_id + '/players')
+        ]).then(axios.spread((leg, legPlayers) => {
+            legPlayers = _.sortBy(legPlayers.data, (player) => player.order)
+            res.render('leg/obs', {
+                leg: leg.data,
+                leg_players: legPlayers,
+                players: players.data,
+                match: match
+            });
+        })).catch(error => {
+            debug('Error when getting data for matches ' + error);
+            next(error);
+        });
     })).catch(error => {
         debug('Error when getting data for match ' + error);
         next(error);

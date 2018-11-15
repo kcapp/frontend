@@ -17,7 +17,8 @@ mixin player_order(legPlayers)
                     e.preventDefault();
                 });
                 $('#btn-start-warmup').click(function(e) {
-                    socket.emit('warmup_started', { leg_id: leg.id, match_id: leg.match_id });
+                    socket.emit('warmup_started', { leg: leg, match: match });
+                    $('#btn-start-warmup').prop("disabled", true);
                 });
 
                 $('#table-players-select-order').on('click', 'td', function() {

@@ -23,7 +23,15 @@ html
             var leg = !{JSON.stringify(leg)}
             var playersMap = !{JSON.stringify(players)}
             $(function () {
+                var activeSocket = io(window.location.origin + '/active');
+                activeSocket.on('warmup_started', (data) => {
+                    location.href = '/matches/' + data.match.id + '/obs';
+                });
+
                 socket = getLegsNamespace(leg);
+                if (leg.is_finished) {
+                    return;
+                }
                 socket.on('possible_throw', function (data) {
                     leg.is_finished = data.is_finished;
                     if (data.is_finished) {
@@ -83,6 +91,9 @@ html
                             scorecard.addClass('obs-visits-inactive');
                         }
                     }
+                });
+                socket.on('leg_finished', function (data) {
+                    location.reload();
                 });
             });
 
