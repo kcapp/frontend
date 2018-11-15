@@ -384,7 +384,7 @@ block scripts
                         $('#submit-score-button').data('current-player-id', player.player_id);
 
                         if (player.current_score < 171 && ![169,168,166,165,163,162,159].includes(player.current_score)) {
-                            var name = player.player_name;
+                            var name = player.player.vocal_name === null ? player.player.name : player.player.vocal_name;
                             var score = player.current_score;
                             socket.emit('speak', { text: name + " you require " + score, type: 'remaining_score' });
                         }
@@ -435,7 +435,9 @@ block scripts
                 var isBust = $(this).data('busted');
                 if (isFinished) {
                     var legNum = match.legs.length + (["st","nd","rd"][((match.legs.length+90)%100-10)%10-1]||"th");
-                    socket.emit('speak', { text: "Game shot in the " + legNum + " leg!, " + $('#player-name-' + currentPlayerId).text() + "!", type: 'game_shot' } );
+                    var currentPlayerName = $('#player-name-' + leg.current_player_id);
+                    var name = currentPlayerName.data('vocalName') ? currentPlayerName.data('vocalName') : currentPlayerName.text();
+                    socket.emit('speak', { text: "Game shot in the " + legNum + " leg!, " + name + "!", type: 'game_shot' } );
                     executePost(window.location.origin + '/legs/' + legId + '/finish', data, 'application/json',
                         function (response) {
                             setTimeout(function () {
@@ -534,7 +536,9 @@ block scripts
             } else {
                 if (leg.visits.length === 0) {
                     var legNum = match.legs.length + (["st","nd","rd"][((match.legs.length+90)%100-10)%10-1]||"th");
-                    socket.emit('speak', { text: legNum + " leg, " + $('#player-name-' + leg.current_player_id).text() + " to throw first. GAME ON!", type: 'leg_start' } );
+                    var currentPlayerName = $('#player-name-' + leg.current_player_id);
+                    var name = currentPlayerName.data('vocalName') ? currentPlayerName.data('vocalName') : currentPlayerName.text();
+                    socket.emit('speak', { text: legNum + " leg, " + name + " to throw first. GAME ON!", type: 'leg_start' } );
                 }
             }
 
@@ -633,7 +637,7 @@ block content
                             - var clazz = player.is_current_player ? 'scorecard scorecard-active' : 'scorecard scorecard-inactive'
                             td
                                 div(class=clazz id='scorecard-player-' + playerId)
-                                    div(id='player-name-' + playerId class='label-player-name')= players[playerId].name
+                                    div(id='player-name-' + playerId class='label-player-name' data-vocal-name=players[playerId].vocal_name)= players[playerId].name
                                     div(id='player-score-' + playerId class='label label-block label-player-score')= player.current_score
 
                                     div(id='player-legs-' + player.player_id class='player-legs')
