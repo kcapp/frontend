@@ -1,7 +1,6 @@
 var debug = require('debug')('kcapp:socketio-handler');
 var axios = require('axios');
 var moment = require('moment');
-var lookup = require('./dns_lookup');
 
 var _this = this;
 
@@ -60,15 +59,7 @@ module.exports = (io, app) => {
                 var nsp = this.io.of(namespace);
                 nsp.on('connection', function (client) {
                     var ip = getClientIP(client);
-                    var host = 'Unknown';
-
                     debug("Client %s connected to '%s'", ip, namespace);
-                    lookup.reverse(ip, function (err, hostname) {
-                        if (err) {
-                            return;
-                        }
-                        host = hostname.substring(0, hostname.indexOf('.'));
-                    });
 
                     client.on('join', function () {
                         client.emit('connected', 'Connected to server');
@@ -76,13 +67,13 @@ module.exports = (io, app) => {
                     });
 
                     client.on('spectator_connected', function () {
-                        debug('Spectator connected: %s [%s]', host, ip);
-                        nsp.emit('spectator_connected', host);
+                        debug('Spectator connected: %s', ip);
+                        nsp.emit('spectator_connected', 'Spectator');
                     });
 
                     client.on('disconnect', function () {
-                        debug('Client disconnected: %s [%s]', host, ip);
-                        nsp.emit('spectator_disconnected', host);
+                        debug('Client disconnected: %s', ip);
+                        nsp.emit('spectator_disconnected', 'Spectator');
                     });
 
                     client.on('possible_throw', function (data) {
@@ -94,8 +85,8 @@ module.exports = (io, app) => {
                     });
 
                     client.on('chat_message', function (data) {
-                        debug('Received chat message from %s [%s]: %s', host, ip, data)
-                        var message = '[' + moment().format('HH:mm') + '] ' + host + ': ' + data + '\r\n';
+                        debug('Received chat message from %s: %s', ip, data)
+                        var message = '[' + moment().format('HH:mm') + '] ' + ip + ': ' + data + '\r\n';
                         chatHistory.push(message);
                         nsp.emit('chat_message', message);
                     });
