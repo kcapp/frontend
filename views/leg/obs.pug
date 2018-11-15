@@ -32,26 +32,30 @@ html
                         legsWon.text(parseInt(legsWon.text()) + 1);
                         return;
                     }
+                    var scorecard = '#obs-scorecard-player-' + data.current_player_id;
                     var dart;
                     if (data.darts_thrown === 1) {
-                        dart = $('.obs-dart-score .first');
+                        dart = $(scorecard + ' .obs-dart-score.first');
                     }
                     else if (data.darts_thrown === 2) {
-                        dart = $('.obs-dart-score .second');
+                        dart = $(scorecard + ' .obs-dart-score.second');
                     }
                     else if (data.darts_thrown === 3) {
-                        dart = $('.obs-dart-score .third');
+                        dart = $(scorecard + ' .obs-dart-score.third');
                     }
                     else {
                         console.log("Unknown darts_thrown: " + data.darts_thrown);
                         return;
                     }
                     dart.text(data.dart_text);
-                    dart.removeClass('dart-score-single dart-score-double dart-score-triple');
 
-                    if (!data.is_undo) {
-                        dart.data('multiplier', data.multiplier);
-                    }
+                    // Subtract from current player score
+                    var score = $('#obs-player-score-' + data.current_player_id);
+                    score.text(parseInt(score.text() - data.score));
+
+                    // Update total
+                    var total = $(scorecard + ' .obs-total-score');
+                    total.text(parseInt(total.text() + data.score));
                 });
 
                 socket.on('undo_visit', function (data) {
