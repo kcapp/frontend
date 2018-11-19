@@ -6,6 +6,10 @@ var router = express.Router();
 var axios = require('axios');
 var _ = require('underscore');
 
+var fs = require('fs');
+var DOMParser = require('xmldom').DOMParser;
+var XMLSerializer = require('xmldom').XMLSerializer;
+
 /** Get all tournaments */
 router.get('/', function (req, res, next) {
     axios.all([
@@ -40,8 +44,9 @@ router.get('/:id', function (req, res, next) {
         axios.get(req.app.locals.kcapp.api + '/tournament/' + req.params.id),
         axios.get(req.app.locals.kcapp.api + '/tournament/' + req.params.id + '/overview'),
         axios.get(req.app.locals.kcapp.api + '/tournament/' + req.params.id + '/matches'),
-        axios.get(req.app.locals.kcapp.api + '/tournament/' + req.params.id + '/statistics')
-    ]).then(axios.spread((players, tournament, overviewData, matches, statisticsResponse) => {
+        axios.get(req.app.locals.kcapp.api + '/tournament/' + req.params.id + '/statistics'),
+        axios.get(req.app.locals.kcapp.api + '/tournament/' + req.params.id + '/metadata')
+    ]).then(axios.spread((playersResponse, tournamentResponse, overviewData, matchesData, statisticsResponse, metadataResponse) => {
         var statistics = statisticsResponse.data;
         if (!_.isEmpty(statistics)) {
             statistics.checkout_highest = _.sortBy(statistics.checkout_highest, (stats) => -stats.value);
@@ -55,112 +60,16 @@ router.get('/:id', function (req, res, next) {
             }
         }
 
-        var bracket = {
-            "eightfinals": [
-                {
-                    "home": "EF1",
-                    "away": "EF2",
-                    "home_score": 2,
-                    "away_score": 0
-                },
-                {
-                    "home": "EF3",
-                    "away": "EF4",
-                    "home_score": 1,
-                    "away_score": 2
-                },
-                {
-                    "home": "EF5",
-                    "away": "EF6",
-                    "home_score": 1,
-                    "away_score": 2
-                },
-                {
-                    "home": "EF7",
-                    "away": "EF8",
-                    "home_score": 2,
-                    "away_score": 0
-                },
-                {
-                    "home": "EF9",
-                    "away": "EF10",
-                    "home_score": 2,
-                    "away_score": 0
-                },
-                {
-                    "home": "EF11",
-                    "away": "EF12",
-                    "home_score": 1,
-                    "away_score": 2
-                },
-                {
-                    "home": "EF13",
-                    "away": "EF14",
-                    "home_score": 1,
-                    "away_score": 2
-                },
-                {
-                    "home": "EF15",
-                    "away": "EF16",
-                    "home_score": 2,
-                    "away_score": 0
-                }
-            ],
-            "quarterfinals": [
-                {
-                    "home": "QF1",
-                    "away": "QF2",
-                    "home_score": 2,
-                    "away_score": 0
-                },
-                {
-                    "home": "QF3",
-                    "away": "QF4",
-                    "home_score": 1,
-                    "away_score": 2
-                },
-                {
-                    "home": "QF5",
-                    "away": "QF6",
-                    "home_score": 1,
-                    "away_score": 2
-                },
-                {
-                    "home": "QF7",
-                    "away": "QF8",
-                    "home_score": 2,
-                    "away_score": 0
-                }
-            ],
-            "semifinals": [
-                {
-                    "home": "SF1",
-                    "away": "SF2",
-                    "home_score": 3,
-                    "away_score": 2
-                },
-                {
-                    "home": "SF3",
-                    "away": "SF4",
-                    "home_score": 0,
-                    "away_score": 3
-                }
-            ],
-            "finals": [
-                {
-                    "home": "F1",
-                    "away": "F2",
-                    "home_score": 2,
-                    "away_score": 3
-                }
-            ]
-        };
+        var matches = matchesData.data;
+        var metadata = _.sortBy(metadataResponse.data, 'order_of_play');
+        var players = playersResponse.data;
+        var tournament = tournamentResponse.data;
 
         var overview = overviewData.data;
         for (var groupId in overview) {
             var group = overview[groupId];
             // Sort players by points earned
-            group.sort((p1, p2) => { return p2.points - p1.points; });
+            group.sort((p1, p2) => p2.points - p1.points);
 
             // Calculate rank for each player
             var rank = 0;
@@ -176,10 +85,56 @@ router.get('/:id', function (req, res, next) {
                 rank++;
             }
         }
+        if (tournament.playoffs_tournament_id !== null) {
+            axios.all([
+                axios.get(req.app.locals.kcapp.api + '/tournament/' + tournament.playoffs_tournament_id + '/matches'),
+                axios.get(req.app.locals.kcapp.api + '/tournament/' + tournament.playoffs_tournament_id + '/metadata')
+            ]).then(axios.spread((matchesResponse, metadataResponse) => {
+                generateBrackets(metadataResponse.data, matchesResponse.data, players, (brackets) => {
+                    res.render('tournament/tournament', {
+                        brackets: brackets, tournament: tournament, overview: overview,
+                        players: players, matches: matches, statistics: statistics
+                    });
+                });
+            })).catch(error => {
+                debug('Error when getting data for tournament ' + error);
+                next(error);
+            });
+        } else {
+            generateBrackets(metadata, matches, players, (brackets) => {
+                res.render('tournament/tournament', {
+                    brackets: brackets, tournament: tournament, overview: overview,
+                    players: players, matches: matches, statistics: statistics
+                });
+            })
+        }
+    })).catch(error => {
+        debug('Error when getting data for tournament ' + error);
+        next(error);
+    });
+});
 
-        res.render('tournament', {
-            bracket: bracket, tournament: tournament.data, overview: overview,
-            players: players.data, matches: matches.data, statistics: statistics
+/* Get tournament with the given ID */
+router.get('/:id/schedule', function (req, res, next) {
+    axios.all([
+        axios.get(req.app.locals.kcapp.api + '/player'),
+        axios.get(req.app.locals.kcapp.api + '/tournament/' + req.params.id),
+        axios.get(req.app.locals.kcapp.api + '/tournament/' + req.params.id + '/metadata'),
+        axios.get(req.app.locals.kcapp.api + '/tournament/' + req.params.id + '/matches')
+    ]).then(axios.spread((players, tournament, metadataData, matchesData) => {
+        var matches = matchesData.data;
+        var metadata = metadataData.data;
+
+        var matchesMap = {};
+        for (var key in matches) {
+            _.extend(matchesMap, _.object(_.map(matches[key], function (match) {
+                return [match.id, match]
+            })));
+        }
+
+        metadata = _.sortBy(metadata, 'order_of_play');
+        res.render('tournament/schedule', {
+            tournament: tournament.data, players: players.data, metadata: metadata, matches: matchesMap
         });
     })).catch(error => {
         debug('Error when getting data for tournament ' + error);
@@ -187,4 +142,52 @@ router.get('/:id', function (req, res, next) {
     });
 });
 
-module.exports = router
+function generateBrackets(metadata, matches, players, callback) {
+    fs.readFile('public/images/bracket.svg', 'utf-8', function (err, data) {
+        if (err) {
+            debug('Error when reading SVG ' + err);
+            return;
+        }
+        var bracketSVG = new DOMParser().parseFromString(data, 'text/xml');
+        var doc = _.clone(bracketSVG);
+        var groupedMetadata = _.groupBy(metadata, (obj) => obj.tournament_group.id);
+
+        var matchesMap = {};
+        for (var key in matches) {
+            _.extend(matchesMap, _.object(_.map(matches[key], function (match) {
+                return [match.id, match]
+            })));
+        }
+
+        var brackets = {};
+        for (var group in groupedMetadata) {
+            var matchMetadatas = groupedMetadata[group];
+
+            for (var i = 0; i < matchMetadatas.length; i++) {
+                var matchMetadata = matchMetadatas[i];
+                var match = matchesMap[matchMetadata.match_id];
+                var wins = _.countBy(match.legs_won);
+                var prefix = matchMetadata.match_displayname.toLowerCase().replace(" ", "_");
+
+                var preliminaryFinal = doc.getElementById("prelimination_final_show");
+                if (group == 12) {
+                    preliminaryFinal.setAttribute("opacity", "1.0");
+                } else {
+                    preliminaryFinal.setAttribute("opacity", "0.0");
+                }
+                var home = matchMetadata.player_home;
+                var away = matchMetadata.player_away;
+
+                doc.getElementById(prefix + "_player_home").childNodes[0].data = players[home].name;
+                doc.getElementById(prefix + "_player_away").childNodes[0].data = players[away].name;
+                doc.getElementById(prefix + "_player_home_score").childNodes[0].data = wins[home] ? "" + wins[home] : "0";
+                doc.getElementById(prefix + "_player_away_score").childNodes[0].data = wins[away] ? "" + wins[away] : "0";
+                doc.getElementById(prefix + "_current_match").setAttribute("opacity", "0.0");
+            }
+            brackets[group] = new XMLSerializer().serializeToString(doc);
+        }
+        callback(brackets);
+    });
+}
+
+module.exports = router;

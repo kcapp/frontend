@@ -1,0 +1,41 @@
+extends ../layout.pug
+
+block scripts
+
+block content
+    div(class='pt-20')
+    div(class='block-container-orange')
+        div(class='container-info-icon')
+            i(class="fas fa-trophy")
+        div(class='float-left pl-20')
+            h3= tournament.name
+
+    div(class='block-container no-padding')
+        table(id='table-tournaments-list')
+            thead
+                tr
+                    th Division
+                    th Match
+                    th Home Player
+                    th Score
+                    th Away Player
+            tbody
+                each data in metadata
+                    tr
+                        - var match = matches[data.match_id]
+                        td= data.tournament_group.name
+                        td= data.match_displayname
+                        td= players[data.player_home].name
+                        td
+                            if match.is_finished
+                                - var result = ''
+                                each id in match.players
+                                    - var wins = 0
+                                    each player in match.legs_won
+                                        if id === player
+                                            - wins++
+                                    - result += wins + ' - '
+                                span= result.slice(0, -3)
+                            else
+                                span
+                        td= players[data.player_away].name

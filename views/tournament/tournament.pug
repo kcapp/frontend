@@ -1,7 +1,7 @@
-extends layout.pug
+extends ../layout.pug
 
-include mixins/statistics.pug
-include mixins/player.pug
+include ../mixins/statistics.pug
+include ../mixins/player.pug
 
 block append head
     link(rel='stylesheet' type='text/css' href='/stylesheets/datatables-1.10.16.min.css')
@@ -260,7 +260,8 @@ block content
                                                 - rank++
 
         div(role='tabpanel' id='playoffs' class='tab-pane')
-            include bracket.pug
+            each bracket in brackets
+                object!= bracket
         if tournament.standings
             div(role='tabpanel' id='standings' class='tab-pane')
                 div(class='block-container no-padding')
