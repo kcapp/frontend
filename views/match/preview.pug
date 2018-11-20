@@ -14,9 +14,6 @@ block scripts
                 $( ".left-container, .right-container, .middle-container" ).animate({
                     opacity: 1,
                 }, 5000, function() {
-                    // Animation complete.
-                    $('.preview-info-text').slideDown(2000, function() {
-                    });
                 });
             });
         });
@@ -112,7 +109,7 @@ block content
                                 h4(style='color: #a5a5a5;')= player2.nickname ? player2.nickname : '-'
 
     div(style='clear: both; opacity: 0;' class='middle-container')
-        div(class='block-container-preview-data preview-info-text' style='display: none;')
+        div(class='block-container-preview-data preview-info-text')
             div(style='color: #66ab00; font-size: 30px; letter-spacing: 5px; font-weight: 300;')= metadata.tournament_group.name
             div(style='font-size: 20px; font-weight: 300; letter-spacing: 3px;')= metadata.match_displayname
             div(style='font-size: 15px;margin-bottom: 20px; font-weight: 300; letter-spacing: 3px; color: #a7a7a7;')= match.match_mode.name
