@@ -91,7 +91,7 @@ block content
                                         tr(class='tournament-' + id + '-rank-' + rowNum)
                                             td(class='pl-10')
                                                 div
-                                                    span(class='pr-5')= player.rank
+                                                    span(class='pr-5')= player.manual_order ? player.manual_order : player.rank
                                                     if player.is_winner
                                                         i(class="fas fa-star")
                                                     else if player.is_promoted
