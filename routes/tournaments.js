@@ -178,8 +178,8 @@ function generateBrackets(metadata, matches, players, callback) {
                 var home = matchMetadata.player_home;
                 var away = matchMetadata.player_away;
 
-                doc.getElementById(prefix + "_player_home").childNodes[0].data = players[home].name;
-                doc.getElementById(prefix + "_player_away").childNodes[0].data = players[away].name;
+                doc.getElementById(prefix + "_player_home").childNodes[0].data = players[home].first_name;
+                doc.getElementById(prefix + "_player_away").childNodes[0].data = players[away].first_name;
                 doc.getElementById(prefix + "_player_home_score").childNodes[0].data = wins[home] ? "" + wins[home] : "0";
                 doc.getElementById(prefix + "_player_away_score").childNodes[0].data = wins[away] ? "" + wins[away] : "0";
                 doc.getElementById(prefix + "_current_match").setAttribute("opacity", "0.0");

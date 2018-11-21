@@ -31,9 +31,10 @@ block content
                                 - var result = ''
                                 each id in match.players
                                     - var wins = 0
-                                    each player in match.legs_won
-                                        if id === player
-                                            - wins++
+                                    if match.legs_won
+                                        each player in match.legs_won
+                                            if id === player
+                                                - wins++
                                     - result += wins + ' - '
                                 span= result.slice(0, -3)
                             else

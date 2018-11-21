@@ -120,7 +120,8 @@ block content
                     each player in players
                         tr
                             th(hidden='true' scope='row')= player.id
-                            td(class='text-left'): a(href='/players/' + player.id + '/statistics')= player.name + (player.nickname !== null ? (" '" + player.nickname + "'") : '')
+                            - var name = player.first_name + (player.nickname ? ' "' + player.nickname + '"' : '') + (player.last_name ? ' ' + player.last_name : '')
+                            td(class='text-left'): a(href='/players/' + player.id + '/statistics')= name
                             td= player.matches_played
                             td= player.matches_won
                             td
