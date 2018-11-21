@@ -384,7 +384,7 @@ block scripts
                         $('#submit-score-button').data('current-player-id', player.player_id);
 
                         if (player.current_score < 171 && ![169,168,166,165,163,162,159].includes(player.current_score)) {
-                            var name = player.player.vocal_name === null ? player.player.name : player.player.vocal_name;
+                            var name = player.player.vocal_name === null ? player.player.first_name : player.player.vocal_name;
                             var score = player.current_score;
                             socket.emit('speak', { text: name + " you require " + score, type: 'remaining_score' });
                         }

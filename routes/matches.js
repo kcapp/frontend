@@ -72,8 +72,9 @@ router.get('/:id/preview', function (req, res, next) {
                 axios.get(req.app.locals.kcapp.api + '/player/' + player1 + '/vs/' + player2),
                 axios.get(req.app.locals.kcapp.api + '/player/' + player1 + '/statistics'),
                 axios.get(req.app.locals.kcapp.api + '/player/' + player2 + '/statistics'),
-                axios.get(req.app.locals.kcapp.api + '/match/' + match.id + '/metadata')
-            ]).then(axios.spread((response1, response2, p1stats, p2stats, metadata) => {
+                axios.get(req.app.locals.kcapp.api + '/match/' + match.id + '/metadata'),
+                axios.get(req.app.locals.kcapp.api + '/tournament/standings')
+            ]).then(axios.spread((response1, response2, p1stats, p2stats, metadata, standingsresponse) => {
                 var players = response1.data;
                 p1stats = p1stats.data;
                 p2stats = p2stats.data;
@@ -84,6 +85,10 @@ router.get('/:id/preview', function (req, res, next) {
 
                 head2head.player_checkouts[player1] = _.sortBy(head2head.player_checkouts[player1], function (checkout) { return -checkout.count; })
                 head2head.player_checkouts[player2] = _.sortBy(head2head.player_checkouts[player2], function (checkout) { return -checkout.count; })
+
+                var standings = standingsresponse.data;
+                players[player1].rank = _.findWhere(standings, { player_id: p1stats.player_id }).rank;
+                players[player2].rank = _.findWhere(standings, { player_id: p2stats.player_id }).rank;
 
                 res.render('match/preview', {
                     player1: players[player1], player2: players[player2], match: match,
