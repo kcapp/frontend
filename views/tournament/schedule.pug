@@ -3,40 +3,31 @@ extends ../layout.pug
 block scripts
 
 block content
-    div(class='pt-20')
-    div(class='block-container-orange')
-        div(class='container-info-icon')
-            i(class="fas fa-trophy")
-        div(class='float-left pl-20')
-            h3= tournament.name
 
-    div(class='block-container no-padding')
-        table(id='table-tournaments-list')
-            thead
-                tr
-                    th Division
-                    th Match
-                    th Home Player
-                    th Score
-                    th Away Player
-            tbody
-                each data in metadata
-                    tr
-                        - var match = matches[data.match_id]
-                        td= data.tournament_group.name
-                        td= data.match_displayname
-                        td= players[data.player_home].name
-                        td
-                            if match.is_finished
-                                - var result = ''
-                                each id in match.players
-                                    - var wins = 0
-                                    if match.legs_won
-                                        each player in match.legs_won
-                                            if id === player
-                                                - wins++
-                                    - result += wins + ' - '
-                                span= result.slice(0, -3)
-                            else
-                                span
-                        td= players[data.player_away].name
+    div(class='block-container-orange' style='margin-top: 50px; box-shadow: 0px 0px 12px 0px black; height: 65px; margin-left: 20px;')
+        span(class='tournament-name')= tournament.name
+        span(class="fa-stack" style='position: absolute; left: 0; margin-left: 60px; margin-top: -50px;')
+            i(class="fa fa-circle fa-stack-2x col-single" style='color: #05770f; font-size: 140px; text-shadow: 0px 0px 6px #000;')
+            i(class="fa fa-trophy fa-stack-2x col-single" style='color: white; font-size: 80px; margin-left: 25px; margin-top: 30px;')
+
+    div(style='margin-top: 50px;')
+        each data in metadata
+            - var match = matches[data.match_id]
+            div(class='block-container' style='height: 80px; margin-top: 40px;')
+                span(class='tournament-division-info')= data.tournament_group.name + ' . ' + data.match_displayname
+                div(style='padding-top: 18px;')
+                    div(style='width: 40%; float: left; text-align: right;' class='pname')= players[data.player_home].name
+                    div(style='width: 20%; float: left; text-align: center;' class='pscore')
+                        if match.is_finished
+                            - var result = ''
+                            each id in match.players
+                                - var wins = 0
+                                if match.legs_won
+                                    each player in match.legs_won
+                                        if id === player
+                                            - wins++
+                                - result += wins + ' - '
+                            span= result.slice(0, -3)
+                        else
+                            span
+                    div(style='width: 40%; float: right; text-align: left;' class='pname')= players[data.player_away].name
