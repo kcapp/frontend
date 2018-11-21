@@ -65,7 +65,7 @@ block content
         div(style='position: absolute; left: 50%; margin-left: -60px; font-size: 60px; margin-top: 45px;')
             span(class="fa-stack")
                 i(class="fa fa-circle fa-stack-2x col-single" style='color: red;')
-                strong(class="fa-stack-1x text-primary col-white" style='font-size: 40px;')= 'VS'
+                strong(class="fa-stack-1x text-primary col-white" style='font-size: 40px;') VS
 
     div(style='margin-top: 20px;')
         div(style='float: left; width: 48%; opacity: 0;' class='left-container')
@@ -76,16 +76,16 @@ block content
                             div(class='player-pic-cutout float-left')
                                 +get_player_profile_pic(player1)
                             div(class='float-left pl-20' style='margin-top: -5px;')
-                                h2= player1.name
+                                h2= player1.first_name
                                 h4(style='color: #a5a5a5;')= player1.nickname ? player1.nickname : '-'
                     td(style='width: 140px;')
                         div(class='block-container-preview-data' style='text-align: center; height: 140px;')
                             div(style='text-align: center;')
                                 div(style='float: left; font-size: 50px; font-style: italic; line-height: 1; font-weight: 300;')
-                                    span(style='color: #6f6f6f;')= '#'
-                                    span= '47'
+                                    span(style='color: #6f6f6f;') #
+                                    span= player1.rank
                                 div(style='clear: both;')
-                            div(style='margin-top: 10px; font-size: 10px;')= 'TOURNAMENT ELO'
+                            div(style='margin-top: 10px; font-size: 10px;') TOURNAMENT ELO
                             div(style='font-size: 25px; font-style: italic; font-weight: 300;')= head2head.player_elo[player1.id].tournament_elo
 
         div(style='float: right; width: 48%; opacity: 0' class='right-container')
@@ -95,17 +95,17 @@ block content
                         div(class='block-container-preview-data' style='text-align: center; height: 140px;')
                             div(style='text-align: center;')
                                 div(style='float: left; font-size: 50px; font-style: italic; line-height: 1; font-weight: 300;')
-                                    span(style='color: #6f6f6f;')= '#'
-                                    span= '22'
+                                    span(style='color: #6f6f6f;') #
+                                    span= player2.rank
                                 div(style='clear: both;')
-                            div(style='margin-top: 10px; font-size: 10px;')= 'TOURNAMENT ELO'
+                            div(style='margin-top: 10px; font-size: 10px;') TOURNAMENT ELO
                             div(style='font-size: 25px; font-style: italic; font-weight: 300;')= head2head.player_elo[player2.id].tournament_elo
                     td(style='padding-right: 10px;')
                         div(class='block-container' style='height: 140px;')
                             div(class='player-pic-cutout float-right')
                                 +get_player_profile_pic(player2)
                             div(class='float-right pr-20' style='margin-top: -5px;')
-                                h2= player2.name
+                                h2= player2.first_name
                                 h4(style='color: #a5a5a5;')= player2.nickname ? player2.nickname : '-'
 
     div(style='clear: both; opacity: 0;' class='middle-container')
@@ -114,10 +114,10 @@ block content
             div(style='font-size: 20px; font-weight: 300; letter-spacing: 3px;')= metadata.match_displayname
             div(style='font-size: 15px;margin-bottom: 20px; font-weight: 300; letter-spacing: 3px; color: #a7a7a7;')= match.match_mode.name
             div(style='font-size: 20px; letter-spacing: 3px; font-weight: 300;')
-                span(style='color: #a7a7a7;')= 'WINNER: '
+                span(style='color: #a7a7a7;') WINNER:
                 span= metadata.winner_outcome
             div(style='font-size: 20px; letter-spacing: 3px; font-weight: 300;')
-                span(style='color: #a7a7a7;')= 'LOSER: ' 
+                span(style='color: #a7a7a7;') LOSER:
                 span= metadata.looser_outcome
 
     div(style='margin-top: 20px;')
