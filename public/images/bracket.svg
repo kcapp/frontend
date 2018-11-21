@@ -1,7 +1,8 @@
 <!DOCTYPE svg
   PUBLIC '-//W3C//DTD SVG 1.1//EN'
   'http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd'>
-<svg font-family="Verdana" font-size="14px" height="473px" version="1.1" viewBox="-0.5 -0.5 1244 473" width="1244px" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<svg font-family="Helvetica Neue,Helvetica,Arial,sans-serif;" text-transform="uppercase" letter-spacing="3px"
+    font-weight="200" font-size="16px" height="500px" version="1.1" viewBox="-0.5 -0.5 1344 500" width="1144px" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
 	<defs>
 		<linearGradient id="id1" x1="0%" x2="0%" y1="0%" y2="100%">
 			<stop offset="0%" style="stop-color:#D4E1F5"/>
@@ -11,18 +12,15 @@
 			<stop offset="0%" style="stop-color:#4C0099"/>
 			<stop offset="100%" style="stop-color:#4D4D4D"/>
 		</linearGradient>
-		<linearGradient id="id3" x1="0%" x2="0%" y1="0%" y2="100%">
-			<stop offset="0%" style="stop-color:#FF9933"/>
-			<stop offset="100%" style="stop-color:#FFFF66"/>
-		</linearGradient>
+
 	</defs>
 
 	<g id="prelimination_final_show" opacity="1.0">
 		<path d="M 181 410.71 L 220.59 410.71 Q 230.59 410.71 230.59 400.71 L 230.59 358.71 Q 230.59 348.71 240.59 348.71 L 274.63 348.71" fill="none" stroke="#000000" stroke-miterlimit="10"/>
 		<path d="M 279.88 348.71 L 272.88 352.21 L 274.63 348.71 L 272.88 345.21 Z" fill="#000000" stroke="#000000" stroke-miterlimit="10"/>
-		<rect fill="url(#id2)" height="20" stroke="#000000" width="110" x="31" y="348.71"/>
+		<rect fill="#000" height="20" stroke="#000000" width="180" x="31" y="348.71"/>
 		<g transform="translate(33.5,352.5)">
-			<text fill="#FFFFFF" font-size="11px" font-style="italic" text-anchor="middle" x="51" y="11">Prelimination final</text>
+			<text fill="#FFFFFF" font-size="11px" text-anchor="middle" x="51" y="11">Prelimination final</text>
 		</g>
 		<rect fill="url(#id1)" height="35" stroke="#000000" width="150" x="31" y="403.71"/>
 		<g transform="translate(79.5,413.5)">
@@ -44,15 +42,15 @@
 	</g>
 
 
-	<rect fill="url(#id2)" height="20" stroke="#000000" width="110" x="281" y="111.71"/>
+	<rect fill="#000" height="20" stroke="#000000" width="180" x="281" y="111.71"/>
 	<g transform="translate(292.5,115.5)">
-		<text fill="#FFFFFF" font-size="11px" font-style="italic" text-anchor="middle" x="43" y="11">Qualifying final</text>
+		<text fill="#FFFFFF" font-size="11px" text-anchor="middle" x="55" y="11">Qualifying final</text>
 	</g>
-	<rect fill="url(#id1)" height="35" stroke="#000000" width="150" x="281" y="166.71"/>
+	<rect fill="#fff" height="35" stroke="#000000" width="150" x="281" y="166.71"/>
 	<g transform="translate(329.5,176.5)">
 		<text id="qualifying_final_player_away" fill="#000000" text-anchor="middle" x="25" y="14">PlayerE</text>
 	</g>
-	<rect fill="url(#id1)" height="35" stroke="#000000" width="150" x="281" y="131.71"/>
+	<rect fill="#fff" height="35" stroke="#000000" width="150" x="281" y="131.71"/>
 	<g transform="translate(330.5,141.5)">
 		<text id="qualifying_final_player_home" fill="#000000" text-anchor="middle" x="25" y="14">PlayerF</text>
 	</g>
@@ -71,9 +69,9 @@
 	<path d="M 529.88 229.71 L 522.88 233.21 L 524.63 229.71 L 522.88 226.21 Z" fill="#000000" stroke="#000000" stroke-miterlimit="10"/>
 
 
-	<rect fill="url(#id2)" height="20" stroke="#000000" width="110" x="281" y="271.71"/>
+	<rect fill="url(#id2)" height="20" stroke="#000000" width="180" x="281" y="271.71"/>
 	<g transform="translate(289.5,275.5)">
-		<text fill="#FFFFFF" font-size="11px" font-style="italic" text-anchor="middle" x="45" y="11">Elimination final</text>
+		<text fill="#FFFFFF" font-size="11px" text-anchor="middle" x="55" y="11">Elimination final</text>
 	</g>
 	<rect fill="url(#id1)" height="35" stroke="#000000" width="150" x="281" y="291.71"/>
 	<g transform="translate(328.5,301.5)">
@@ -96,9 +94,9 @@
 	<path d="M 529.88 264.71 L 522.88 268.21 L 524.63 264.71 L 522.88 261.21 Z" fill="#000000" stroke="#000000" stroke-miterlimit="10"/>
 
 
-	<rect fill="url(#id2)" height="20" stroke="#000000" width="110" x="531" y="29.71"/>
+	<rect fill="url(#id2)" height="20" stroke="#000000" width="180" x="531" y="29.71"/>
 	<g transform="translate(541.5,33.5)">
-		<text fill="#FFFFFF" font-size="11px" font-style="italic" text-anchor="middle" x="44" y="11">Major semifinal</text>
+		<text fill="#FFFFFF" font-size="11px" text-anchor="middle" x="55" y="11">Major semifinal</text>
 	</g>
 	<rect fill="url(#id1)" height="35" stroke="#000000" width="150" x="531" y="49.71"/>
 	<g transform="translate(581.5,59.5)">
@@ -123,9 +121,9 @@
 	<path d="M 1029.47 87.82 L 1022.47 91.32 L 1024.22 87.82 L 1022.47 84.32 Z" fill="#000000" stroke="#000000" stroke-miterlimit="10"/>
 
 
-	<rect fill="url(#id2)" height="20" stroke="#000000" width="110" x="531" y="189.71"/>
+	<rect fill="url(#id2)" height="20" stroke="#000000" width="180" x="531" y="189.71"/>
 	<g transform="translate(541.5,193.5)">
-		<text fill="#FFFFFF" font-size="11px" font-style="italic" text-anchor="middle" x="43" y="11">Minor semifinal</text>
+		<text fill="#FFFFFF" font-size="11px" text-anchor="middle" x="55" y="11">Minor semifinal</text>
 	</g>
 	<rect fill="url(#id1)" height="35" stroke="#000000" width="150" x="531" y="209.71"/>
 	<g transform="translate(579.5,219.5)">
@@ -148,9 +146,9 @@
 	<path d="M 779.88 182.71 L 772.88 186.21 L 774.63 182.71 L 772.88 179.21 Z" fill="#000000" stroke="#000000" stroke-miterlimit="10"/>
 
 
-	<rect fill="url(#id2)" height="20" stroke="#000000" width="110" x="781" y="106.71"/>
+	<rect fill="url(#id2)" height="20" stroke="#000000" width="180" x="781" y="106.71"/>
 	<g transform="translate(788.5,110.5)">
-		<text fill="#FFFFFF" font-size="11px" font-style="italic" text-anchor="middle" x="47" y="11">Preliminary final</text>
+		<text fill="#FFFFFF" font-size="11px" text-anchor="middle" x="55" y="11">Preliminary final</text>
 	</g>
 	<rect fill="url(#id1)" height="35" stroke="#000000" width="150" x="781" y="126.71"/>
 	<g transform="translate(830.5,136.5)">
@@ -173,9 +171,9 @@
 	<path d="M 1029.88 121.71 L 1022.88 125.21 L 1024.63 121.71 L 1022.88 118.21 Z" fill="#000000" stroke="#000000" stroke-miterlimit="10"/>
 
 
-	<rect fill="url(#id2)" height="20" stroke="#000000" width="110" x="1032" y="44.71"/>
+	<rect fill="url(#id2)" height="20" stroke="#000000" width="180" x="1032" y="44.71"/>
 	<g transform="translate(1054.5,48.5)">
-		<text fill="#FFFFFF" font-size="11px" font-style="italic" text-anchor="middle" x="32" y="11">Grand final</text>
+		<text fill="#FFFFFF" font-size="11px" text-anchor="middle" x="55" y="11">Grand final</text>
 	</g>
 	<rect fill="url(#id1)" height="35" stroke="#000000" width="150" x="1032" y="64.71"/>
 	<g transform="translate(1080.5,74.5)">
