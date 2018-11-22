@@ -31,7 +31,7 @@ block scripts
             $('#button-edit-player').click(function() {
                 var player = $(':checkbox:checked').data('player');
                 if (player) {
-                    $('#player-name-input').val(player.name);
+                    $('#player-name-input').val(player.first_name);
                     $('#player-nickname-input').val(player.nickname);
                     $('#player-color-input').val(player.color);
                     $('#player-profile-pic-input').val(player.profile_pic_url);
@@ -47,7 +47,7 @@ block scripts
                 var nickname = $('#player-nickname-input').val();
                 var profilePic = $('#player-profile-pic-input').val();
                 var player = {
-                    name: $('#player-name-input').val(),
+                    first_name: $('#player-name-input').val(),
                     nickname: nickname === '' ? null : nickname,
                     color: $('#player-color-input').val(),
                     profile_pic_url: profilePic === '' ? null : profilePic
