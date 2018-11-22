@@ -20,7 +20,7 @@ block content
                     div(style='width: 20%; float: left; text-align: center;' class='pscore')
                         if match.is_finished
                             - var result = ''
-                            each id in match.players
+                            each id in [data.player_home, data.player_away]
                                 - var wins = 0
                                 if match.legs_won
                                     each player in match.legs_won
