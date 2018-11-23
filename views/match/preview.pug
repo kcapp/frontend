@@ -11,7 +11,7 @@ block scripts
                 marginTop: 100
             }, 3000, function() {
             }).delay(5000).fadeOut(function() {
-                $( ".left-container, .right-container, .middle-container" ).animate({
+                $( ".left-container, .right-container, .middle-container, .bracket-container" ).animate({
                     opacity: 1,
                 }, 5000, function() {
                 });
@@ -132,3 +132,6 @@ block content
                 +right_row('CHECKOUT PERCENTAGE', p2statistics.checkout_percentage.toFixed(2) + '%')
                 +right_row('PPD', p2statistics.ppd.toFixed(2))
                 +right_row('OVERALL ACCURACY', p2statistics.accuracy_overall.toFixed(2))
+
+        div(class='bracket-container' style='opacity: 0;')
+            obj!= bracket
