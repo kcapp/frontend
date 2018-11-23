@@ -87,8 +87,10 @@ html
                             $(clazz + ' .obs-dart-score.first').text('');
                             $(clazz + ' .obs-dart-score.second').text('');
                             $(clazz + ' .obs-dart-score.third').text('');
+                            $('#active-player-' + player.player_id).css("opacity", "1.0");
                         } else {
                             scorecard.addClass('obs-visits-inactive');
+                            $('#active-player-' + player.player_id).css("opacity", "0.0");
                         }
                     }
                 });
@@ -108,10 +110,7 @@ html
                             // Do not remove
                             td(style='display: none;' class='obs-total-score')= 0
                             td(style='width: 30px; text-align: center; color: white;')
-                                if player.is_current_player
-                                    i(class="fas fa-caret-right")
-                                else
-                                    span
+                                i(id='active-player-' + playerId class="fas fa-caret-right" style="opacity: " + (player.is_current_player ? "1.0" : "0.0"))
                             td(class='obs-table-player-name')= players[playerId].name
                             td(class='obs-dart-score first' data-multiplier='1') &nbsp;
                             td(class='obs-dart-score second' data-multiplier='1') &nbsp;
