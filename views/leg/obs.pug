@@ -107,6 +107,11 @@ html
                         tr(class=activeClass id='obs-scorecard-player-' + playerId style='height: 30px; line-height: 30px;')
                             // Do not remove
                             td(style='display: none;' class='obs-total-score')= 0
+                            td(style='width: 30px; text-align: center; color: white;')
+                                if player.is_current_player
+                                    i(class="fas fa-caret-right")
+                                else
+                                    span
                             td(class='obs-table-player-name')= players[playerId].name
                             td(class='obs-dart-score first' data-multiplier='1') &nbsp;
                             td(class='obs-dart-score second' data-multiplier='1') &nbsp;
