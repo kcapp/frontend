@@ -77,6 +77,10 @@ module.exports = (io, app) => {
                     });
 
                     client.on('possible_throw', function (data) {
+                        if (typeof data === "string") {
+                            data = JSON.parse(data);
+                        }
+                        debug('possible_throw %s', JSON.stringify(data))
                         nsp.emit('possible_throw', data);
                     });
 
@@ -99,7 +103,7 @@ module.exports = (io, app) => {
                     });
 
                     client.on('speak', function (data) {
-                        debug("Recived voice line %s", data);
+                        debug("Recived voice line %s", JSON.stringify(data));
                         nsp.emit('say', {
                             voice: "US English Female",
                             text: data.text,
