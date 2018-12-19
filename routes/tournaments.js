@@ -5,6 +5,7 @@ var router = express.Router();
 
 var axios = require('axios');
 var _ = require('underscore');
+var bracket = require('./lib/bracket_generator');
 
 /** Get all tournaments */
 router.get('/', function (req, res, next) {
@@ -21,6 +22,18 @@ router.get('/', function (req, res, next) {
     });
 });
 
+/* Get current active tournament */
+router.get('/current', function (req, res, next) {
+    axios.get(req.app.locals.kcapp.api + '/tournament/current')
+        .then((response) => {
+            res.redirect("/tournaments/" + response.data.id);
+        }).catch(error => {
+            debug('Error when getting data for tournament ' + error);
+            next(error);
+        });
+});
+
+
 /* Get tournament with the given ID */
 router.get('/:id', function (req, res, next) {
     axios.all([
@@ -28,8 +41,9 @@ router.get('/:id', function (req, res, next) {
         axios.get(req.app.locals.kcapp.api + '/tournament/' + req.params.id),
         axios.get(req.app.locals.kcapp.api + '/tournament/' + req.params.id + '/overview'),
         axios.get(req.app.locals.kcapp.api + '/tournament/' + req.params.id + '/matches'),
-        axios.get(req.app.locals.kcapp.api + '/tournament/' + req.params.id + '/statistics')
-    ]).then(axios.spread((players, tournament, overview, matches, statisticsResponse) => {
+        axios.get(req.app.locals.kcapp.api + '/tournament/' + req.params.id + '/statistics'),
+        axios.get(req.app.locals.kcapp.api + '/tournament/' + req.params.id + '/metadata')
+    ]).then(axios.spread((playersResponse, tournamentResponse, overviewData, matchesData, statisticsResponse, metadataResponse) => {
         var statistics = statisticsResponse.data;
         if (!_.isEmpty(statistics)) {
             statistics.checkout_highest = _.sortBy(statistics.checkout_highest, (stats) => -stats.value);
@@ -43,110 +57,81 @@ router.get('/:id', function (req, res, next) {
             }
         }
 
-        var bracket = {
-            "eightfinals": [
-                {
-                    "home": "EF1",
-                    "away": "EF2",
-                    "home_score": 2,
-                    "away_score": 0
-                },
-                {
-                    "home": "EF3",
-                    "away": "EF4",
-                    "home_score": 1,
-                    "away_score": 2
-                },
-                {
-                    "home": "EF5",
-                    "away": "EF6",
-                    "home_score": 1,
-                    "away_score": 2
-                },
-                {
-                    "home": "EF7",
-                    "away": "EF8",
-                    "home_score": 2,
-                    "away_score": 0
-                },
-                {
-                    "home": "EF9",
-                    "away": "EF10",
-                    "home_score": 2,
-                    "away_score": 0
-                },
-                {
-                    "home": "EF11",
-                    "away": "EF12",
-                    "home_score": 1,
-                    "away_score": 2
-                },
-                {
-                    "home": "EF13",
-                    "away": "EF14",
-                    "home_score": 1,
-                    "away_score": 2
-                },
-                {
-                    "home": "EF15",
-                    "away": "EF16",
-                    "home_score": 2,
-                    "away_score": 0
-                }
-            ],
-            "quarterfinals": [
-                {
-                    "home": "QF1",
-                    "away": "QF2",
-                    "home_score": 2,
-                    "away_score": 0
-                },
-                {
-                    "home": "QF3",
-                    "away": "QF4",
-                    "home_score": 1,
-                    "away_score": 2
-                },
-                {
-                    "home": "QF5",
-                    "away": "QF6",
-                    "home_score": 1,
-                    "away_score": 2
-                },
-                {
-                    "home": "QF7",
-                    "away": "QF8",
-                    "home_score": 2,
-                    "away_score": 0
-                }
-            ],
-            "semifinals": [
-                {
-                    "home": "SF1",
-                    "away": "SF2",
-                    "home_score": 3,
-                    "away_score": 2
-                },
-                {
-                    "home": "SF3",
-                    "away": "SF4",
-                    "home_score": 0,
-                    "away_score": 3
-                }
-            ],
-            "finals": [
-                {
-                    "home": "F1",
-                    "away": "F2",
-                    "home_score": 2,
-                    "away_score": 3
-                }
-            ]
-        };
+        var matches = matchesData.data;
+        var metadata = _.sortBy(metadataResponse.data, 'order_of_play');
+        var players = playersResponse.data;
+        var tournament = tournamentResponse.data;
 
-        res.render('tournament', {
-            bracket: bracket, tournament: tournament.data, overview: overview.data,
-            players: players.data, matches: matches.data, statistics: statistics
+        var overview = overviewData.data;
+        for (var groupId in overview) {
+            var group = overview[groupId];
+            // Sort players by points earned
+            group.sort((p1, p2) => p2.points - p1.points);
+
+            // Calculate rank for each player
+            var rank = 0;
+            for (var i = 0; i < group.length; i++) {
+                var current = group[i];
+                var prev = group[i - 1];
+
+                if (prev && prev.points == current.points && prev.legs_difference === current.legs_difference) {
+                    current.rank = prev.rank;
+                } else {
+                    current.rank = rank + 1;
+                }
+                rank++;
+            }
+        }
+        if (tournament.playoffs_tournament_id !== null) {
+            axios.all([
+                axios.get(req.app.locals.kcapp.api + '/tournament/' + tournament.playoffs_tournament_id + '/matches'),
+                axios.get(req.app.locals.kcapp.api + '/tournament/' + tournament.playoffs_tournament_id + '/metadata')
+            ]).then(axios.spread((matchesResponse, metadataResponse) => {
+                bracket.generate(metadataResponse.data, matchesResponse.data, players, '', (brackets) => {
+                    res.render('tournament/tournament', {
+                        brackets: brackets, tournament: tournament, overview: overview,
+                        players: players, matches: matches, statistics: statistics
+                    });
+                });
+            })).catch(error => {
+                debug('Error when getting data for tournament ' + error);
+                next(error);
+            });
+        } else {
+            bracket.generate(metadata, matches, players, '', (brackets) => {
+                res.render('tournament/tournament', {
+                    brackets: brackets, tournament: tournament, overview: overview,
+                    players: players, matches: matches, statistics: statistics
+                });
+            })
+        }
+    })).catch(error => {
+        debug('Error when getting data for tournament ' + error);
+        next(error);
+    });
+});
+
+/* Get tournament with the given ID */
+router.get('/:id/schedule', function (req, res, next) {
+    axios.all([
+        axios.get(req.app.locals.kcapp.api + '/player'),
+        axios.get(req.app.locals.kcapp.api + '/tournament/' + req.params.id),
+        axios.get(req.app.locals.kcapp.api + '/tournament/' + req.params.id + '/metadata'),
+        axios.get(req.app.locals.kcapp.api + '/tournament/' + req.params.id + '/matches')
+    ]).then(axios.spread((players, tournament, metadataData, matchesData) => {
+        var matches = matchesData.data;
+        var metadata = metadataData.data;
+
+        var matchesMap = {};
+        for (var key in matches) {
+            _.extend(matchesMap, _.object(_.map(matches[key], function (match) {
+                return [match.id, match]
+            })));
+        }
+
+        metadata = _.sortBy(metadata, 'order_of_play');
+        res.render('tournament/schedule', {
+            tournament: tournament.data, players: players.data, metadata: metadata, matches: matchesMap
         });
     })).catch(error => {
         debug('Error when getting data for tournament ' + error);
@@ -154,4 +139,4 @@ router.get('/:id', function (req, res, next) {
     });
 });
 
-module.exports = router
+module.exports = router;

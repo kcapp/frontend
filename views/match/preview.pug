@@ -1,0 +1,137 @@
+extends ../layout.pug
+
+include ../mixins/dart.pug
+include ../mixins/statistics.pug
+include ../mixins/player.pug
+
+block scripts
+    script.
+        $(function () {
+            $( "#preview-vs" ).animate({
+                marginTop: 100
+            }, 3000, function() {
+            }).delay(5000).fadeOut(function() {
+                $( ".left-container, .right-container, .middle-container, .bracket-container" ).animate({
+                    opacity: 1,
+                }, 5000, function() {
+                });
+            });
+        });
+
+block content
+    - var player1stats301 = head2head.player_301_statistics[player1.id]
+    - var player2stats301 = head2head.player_301_statistics[player2.id]
+    - var p1winsOverall = p1statistics.matches_played == 0 ? '0.00' : (p1statistics.matches_won * 100 / p1statistics.matches_played).toFixed(2);
+    - var p2winsOverall = p2statistics.matches_played == 0 ? '0.00' : (p2statistics.matches_won * 100 / p2statistics.matches_played).toFixed(2);
+    - var player1Wins = head2head.head_to_head_wins[player1.id] ? head2head.head_to_head_wins[player1.id] : 0
+    - var player2Wins = head2head.head_to_head_wins[player2.id] ? head2head.head_to_head_wins[player2.id] : 0
+    - var draws = head2head.head_to_head_wins[0] ? head2head.head_to_head_wins[0] : 0
+    - var total_matches = player1Wins + player2Wins + draws
+
+    mixin left_row(name, value)
+        tr
+            td(style='padding-right: 10px;')
+                div(class='block-container-small')
+                    div(style='font-size: 15px;font-style: italic;font-weight: 400;padding: 10px;height: 40px;overflow: hidden;')= name
+            td(style='text-align: right;')
+                div(class='block-container-preview-small' style='height: 40px;')
+                    div(style='font-size: 25px;font-style: italic;font-weight: 300; padding-right: 10px;')= value
+    mixin right_row(name, value)
+        tr
+            td(style='text-align: left;')
+                div(class='block-container-preview-small' style='height: 40px;')
+                    div(style='font-size: 25px;font-style: italic;font-weight: 300; padding-left: 10px;')= value
+            td(style='padding-right: 10px;')
+                div(class='block-container-small' style='text-align: right')
+                    div(style='font-size: 15px;font-style: italic;font-weight: 400;padding: 10px;height: 40px;overflow: hidden;')= name
+
+    div(id='preview-vs' style='margin-top: -500px;')
+        div(style='width: 100%;')
+                div(style='width: 47%; float: left;')
+                    div(class='float-right')
+                        div(class='player-pic-cutout-preview' style='background-color: black;')
+                            +get_player_profile_pic(player1, 200, 240)
+                        div(class='preview-name-tag-left')
+                            h2(class='h2-label')= player1.name
+                            h2(class='dark-label' style='letter-spacing: 3px;')= player1.nickname ? player1.nickname : '-'
+                div(style='width: 6%; float: left;')= ' '
+                div(style='width: 47%; float: right;')
+                    div(class='float-left')
+                        div(class='player-pic-cutout-preview' style='background-color: black;')
+                            +get_player_profile_pic(player2, 200, 240)
+                        div(class='preview-name-tag-right')
+                            h2(class='h2-label' style='text-align: right;')= player2.name
+                            h2(class='dark-label' style='text-align: right; padding-right: 10px; letter-spacing: 3px;')= player2.nickname ? player2.nickname : '-'
+        div(style='position: absolute; left: 50%; margin-left: -60px; font-size: 60px; margin-top: 45px;')
+            span(class="fa-stack")
+                i(class="fa fa-circle fa-stack-2x col-single" style='color: red;')
+                strong(class="fa-stack-1x text-primary col-white" style='font-size: 40px;') VS
+
+    div(style='margin-top: 20px;')
+        div(style='float: left; width: 48%; opacity: 0;' class='left-container')
+            table(style='width: 100%;')
+                tr
+                    td(style='padding-right: 10px;')
+                        div(class='block-container' style='height: 140px;')
+                            div(class='player-pic-cutout float-left')
+                                +get_player_profile_pic(player1)
+                            div(class='float-left pl-20' style='margin-top: -5px;')
+                                h2= player1.first_name
+                                h4(style='color: #a5a5a5;')= player1.nickname ? player1.nickname : '-'
+                    td(style='width: 140px;')
+                        div(class='block-container-preview-data' style='text-align: center; height: 140px;')
+                            div(style='text-align: center;')
+                                div(style='float: left; font-size: 50px; font-style: italic; line-height: 1; font-weight: 300;')
+                                    span(style='color: #6f6f6f;') #
+                                    span= player1.rank
+                                div(style='clear: both;')
+                            div(style='margin-top: 10px; font-size: 10px;') TOURNAMENT ELO
+                            div(style='font-size: 25px; font-style: italic; font-weight: 300;')= head2head.player_elo[player1.id].tournament_elo
+
+        div(style='float: right; width: 48%; opacity: 0' class='right-container')
+            table(style='width: 100%;')
+                tr
+                    td(style='width: 140px;')
+                        div(class='block-container-preview-data' style='text-align: center; height: 140px;')
+                            div(style='text-align: center;')
+                                div(style='float: left; font-size: 50px; font-style: italic; line-height: 1; font-weight: 300;')
+                                    span(style='color: #6f6f6f;') #
+                                    span= player2.rank
+                                div(style='clear: both;')
+                            div(style='margin-top: 10px; font-size: 10px;') TOURNAMENT ELO
+                            div(style='font-size: 25px; font-style: italic; font-weight: 300;')= head2head.player_elo[player2.id].tournament_elo
+                    td(style='padding-right: 10px;')
+                        div(class='block-container' style='height: 140px;')
+                            div(class='player-pic-cutout float-right')
+                                +get_player_profile_pic(player2)
+                            div(class='float-right pr-20' style='margin-top: -5px;')
+                                h2= player2.first_name
+                                h4(style='color: #a5a5a5;')= player2.nickname ? player2.nickname : '-'
+
+    div(style='clear: both; opacity: 0;' class='middle-container')
+        div(class='block-container-preview-data preview-info-text')
+            div(style='color: #66ab00; font-size: 30px; letter-spacing: 5px; font-weight: 300;')= metadata.tournament_group.name
+            div(style='font-size: 20px; font-weight: 300; letter-spacing: 3px;')= metadata.match_displayname
+            div(style='font-size: 15px;margin-bottom: 20px; font-weight: 300; letter-spacing: 3px; color: #a7a7a7;')= match.match_mode.name
+            div(style='font-size: 20px; letter-spacing: 3px; font-weight: 300;')
+                span(style='color: #a7a7a7;') WINNER:
+                span= metadata.winner_outcome
+            div(style='font-size: 20px; letter-spacing: 3px; font-weight: 300;')
+                span(style='color: #a7a7a7;') LOSER:
+                span= metadata.looser_outcome
+
+    div(style='margin-top: 20px;')
+        div(style='float: left; width: 48%; opacity: 0;' class='left-container')
+            table(style='width: 100%;')
+                +left_row('CHECKOUT PERCENTAGE', p1statistics.checkout_percentage.toFixed(2) + '%')
+                +left_row('PPD', p1statistics.ppd.toFixed(2))
+                +left_row('OVERALL ACCURACY', p1statistics.accuracy_overall.toFixed(2))
+
+        div(style='float: right; width: 48%; opacity: 0' class='right-container')
+            table(style='width: 100%;')
+                +right_row('CHECKOUT PERCENTAGE', p2statistics.checkout_percentage.toFixed(2) + '%')
+                +right_row('PPD', p2statistics.ppd.toFixed(2))
+                +right_row('OVERALL ACCURACY', p2statistics.accuracy_overall.toFixed(2))
+
+        div(class='bracket-container' style='opacity: 0;')
+            obj!= bracket

@@ -50,6 +50,11 @@ block scripts
 
             $('#create-leg-button').click(function() { $(this).blur(); });
 
+            $('#play-official-button').click(function(e) {
+                location.href = '/tournaments/current#unplayed';
+                e.preventDefault();
+            });
+
             $('#start-leg-button').click(function(e) {
                 var stake = parseInt($('#match-stake-select').val());
                 var venue = parseInt($('#venue-select').val());
@@ -151,13 +156,13 @@ block content
             else
                 form(style='padding-top: 20px;')
                     div(style='width: 50%; float: left;')
-                        div(class='block-container-header') 
-                            i(class="fas fa-users") 
+                        div(class='block-container-header')
+                            i(class="fas fa-users")
                             span(class='ml-10') Players
                         div(class='block-container-with-header')
                             div(class='form-group form-check' id='sortable-player-list')
-                        div(class='block-container-header') 
-                            i(class="fas fa-mouse-pointer") 
+                        div(class='block-container-header')
+                            i(class="fas fa-mouse-pointer")
                             span(class='ml-10') Select players
                         div(class='block-container-with-header')
                             div(class='form-group form-check' id='all-players-list')
@@ -169,7 +174,7 @@ block content
                                         div(class='clearfix')
                     div(style='padding-left: 20px; width: 50%; float: right;')
                         div(class='block-container-header')
-                            i(class="fas fa-cogs") 
+                            i(class="fas fa-cogs")
                             span(class='ml-10') Game settings
                         div(class='block-container-with-header')
                             div(class='form-group' style='clear: both')
@@ -207,3 +212,9 @@ block content
                                         option(value=venue.id)= venue.name
 
                             button(type='submit' class='btn btn-primary' id='start-leg-button' ) Start
+
+                        div(class='block-container-with-header')
+                            div(class='block-container-header')
+                                i(class="fas fa-trophy")
+                                span(class='ml-10') Tournaments
+                            button(type='submit' class='btn btn-warning mt-10' id='play-official-button' ) Play Official Match

@@ -3,16 +3,13 @@ extends layout.pug
 block scripts
     script.
         $(function() {
-            $('.button-tournament-view').on('click', function (e) {
-                location.href = '/tournaments/' + $(this).data('tournament');
-            });
             $('[data-toggle="tooltip"]').tooltip();
         });
 
 block content
 
     div(class='pt-20')
-    div(class='block-container-orange') 
+    div(class='block-container-orange')
         div(class='container-info-icon')
             i(class="fas fa-trophy")
         div(class='float-left pl-20')
@@ -40,4 +37,5 @@ block content
                         td(class='text-center')
                             div(style='display: inline-block; padding-right: 6px')= moment(tournament.end_Time).format('YYYY-MM-DD HH:mm:ss')
                         td(class='text-center')
-                            i(class="fas fa-eye fas-option-button button-tournament-view" data-tournament=tournament.id data-toggle="tooltip" data-placement="top" title="View")
+                            a(href='/tournaments/' + tournament.id)
+                                i(class="fas fa-eye fas-option-button" data-toggle="tooltip" data-placement="top" title="View")

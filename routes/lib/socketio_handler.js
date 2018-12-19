@@ -1,7 +1,8 @@
 var debug = require('debug')('kcapp:socketio-handler');
 var axios = require('axios');
 var moment = require('moment');
-var lookup = require('./dns_lookup');
+
+var _this = this;
 
 function getClientIP(client) {
     var realIP = client.handshake.headers["x-real-ip"]
@@ -22,6 +23,16 @@ module.exports = (io, app) => {
             var namespace = '/legs/' + legId;
             delete this.io.nsps[namespace];
             debug("Removed socket.io namespace '%s'", namespace)
+        },
+        addNamespace: (namespace) => {
+            if (this.io.nsps[namespace] === undefined) {
+                var nsp = this.io.of(namespace);
+                nsp.on('connection', function (client) {
+                    var ip = getClientIP(client);
+                    debug("Client %s connected to '%s'", ip, namespace);
+                });
+                debug("Created socket.io namespace '%s'", namespace);
+            }
         },
         setupVenueNamespace: (venueId) => {
             var namespace = '/venue/' + venueId;
@@ -48,15 +59,7 @@ module.exports = (io, app) => {
                 var nsp = this.io.of(namespace);
                 nsp.on('connection', function (client) {
                     var ip = getClientIP(client);
-                    var host = 'Unknown';
-
                     debug("Client %s connected to '%s'", ip, namespace);
-                    lookup.reverse(ip, function (err, hostname) {
-                        if (err) {
-                            return;
-                        }
-                        host = hostname.substring(0, hostname.indexOf('.'));
-                    });
 
                     client.on('join', function () {
                         client.emit('connected', 'Connected to server');
@@ -64,16 +67,20 @@ module.exports = (io, app) => {
                     });
 
                     client.on('spectator_connected', function () {
-                        debug('Spectator connected: %s [%s]', host, ip);
-                        nsp.emit('spectator_connected', host);
+                        debug('Spectator connected: %s', ip);
+                        nsp.emit('spectator_connected', 'Spectator');
                     });
 
                     client.on('disconnect', function () {
-                        debug('Client disconnected: %s [%s]', host, ip);
-                        nsp.emit('spectator_disconnected', host);
+                        debug('Client disconnected: %s', ip);
+                        nsp.emit('spectator_disconnected', 'Spectator');
                     });
 
                     client.on('possible_throw', function (data) {
+                        if (typeof data === "string") {
+                            data = JSON.parse(data);
+                        }
+                        debug('possible_throw %s', JSON.stringify(data))
                         nsp.emit('possible_throw', data);
                     });
 
@@ -82,10 +89,27 @@ module.exports = (io, app) => {
                     });
 
                     client.on('chat_message', function (data) {
-                        debug('Received chat message from %s [%s]: %s', host, ip, data)
-                        var message = '[' + moment().format('HH:mm') + '] ' + host + ': ' + data + '\r\n';
+                        debug('Received chat message from %s: %s', ip, data)
+                        var message = '[' + moment().format('HH:mm') + '] ' + ip + ': ' + data + '\r\n';
                         chatHistory.push(message);
                         nsp.emit('chat_message', message);
+                    });
+
+                    client.on('warmup_started', function (data) {
+                        _this.io.of('/active').emit('warmup_started', { leg: data.leg, match: data.match });
+                        if (data.match.venue) {
+                            _this.io.of('/venue/' + data.match.venue.id).emit('venue_new_match', { leg: data.leg });
+                        }
+                    });
+
+                    client.on('speak', function (data) {
+                        debug("Recived voice line %s", JSON.stringify(data));
+                        nsp.emit('say', {
+                            voice: "US English Female",
+                            text: data.text,
+                            type: data.type,
+                            options: data.options
+                        });
                     });
 
                     client.on('throw', function (data) {
@@ -96,8 +120,13 @@ module.exports = (io, app) => {
                                 axios.all([
                                     axios.get(app.locals.kcapp.api + '/leg/' + body.leg_id),
                                     axios.get(app.locals.kcapp.api + '/leg/' + body.leg_id + '/players')
-                                ]).then(axios.spread((leg, players) => {
-                                    nsp.emit('score_update', { leg: leg.data, players: players.data });
+                                ]).then(axios.spread((legData, playersData) => {
+                                    var leg = legData.data;
+                                    var players = playersData.data;
+                                    if (leg.visits.length === 1) {
+                                        _this.io.of('/active').emit('first_throw', { leg: leg, players: players });
+                                    }
+                                    nsp.emit('score_update', { leg: leg, players: players });
                                 })).catch(error => {
                                     var message = error.message + ' (' + error.response.data.trim() + ')'
                                     debug('Error when getting leg: ' + message);

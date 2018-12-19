@@ -44,7 +44,6 @@ block scripts
 
         $(function () {
             // Functions to be loaded after document load
-
             var disableEnter = false;
 
             $(document).keydown(function (e) {
@@ -317,6 +316,9 @@ block scripts
             if (leg.is_finished) {
                 return;
             }
+
+            var audioAnnouncer = new Audio();
+
             var socket = getLegsNamespace(leg);
             socket.on('spectator_connected', function (data) {
                 alertify.success(data + ' connected');
@@ -326,6 +328,28 @@ block scripts
             });
             socket.on('connected', function (data) {
                 console.log(data);
+            });
+            socket.on('say', function (data) {
+                // Check if an audio clip is currently playing, if it is we don't want to wait until
+                //  it is finished, before saying anything else
+                var isAudioAnnouncement = (audioAnnouncer.duration > 0 && !audioAnnouncer.paused);
+                if (data.type === 'score' &&  ['100', '140', '180'].includes(data.text)) {
+                    audioAnnouncer = new Audio('/audio/' + data.text + '.mp3');
+                    audioAnnouncer.play();
+                } else {
+                    if (responsiveVoice.isPlaying()) {
+                        setTimeout(function () {
+                            responsiveVoice.speak(data.text, data.voice, data.options);
+                        }, 1500)
+                    }  else if (isAudioAnnouncement) {
+                        audioAnnouncer.addEventListener("ended", () => {
+                            responsiveVoice.speak(data.text, data.voice, data.options);
+                        }, false);
+                    }
+                    else {
+                        responsiveVoice.speak(data.text, data.voice, data.options);
+                    }
+                }
             });
 
             socket.on('score_update', function (data) {
@@ -358,6 +382,12 @@ block scripts
                         isLastVisitFishNChips = players[i === 0 ?  players.length - 1 : i - 1].modifiers.is_fish_and_chips;
 
                         $('#submit-score-button').data('current-player-id', player.player_id);
+
+                        if (player.current_score < 171 && ![169,168,166,165,163,162,159].includes(player.current_score)) {
+                            var name = player.player.vocal_name === null ? player.player.first_name : player.player.vocal_name;
+                            var score = player.current_score;
+                            socket.emit('speak', { text: name + " you require " + score, type: 'remaining_score' });
+                        }
                     }
                     else {
                         playerScoreCard.removeClass().addClass('scorecard-inactive');
@@ -376,8 +406,6 @@ block scripts
                 $('.visits-active .total-score').html(0);
                 resetElements();
             });
-
-            var socket = getLegsNamespace(leg);
 
             $('#submit-score-button').click(function (event) {
                 $(this).attr('disabled', true);
@@ -406,10 +434,17 @@ block scripts
                 var isFinished = $(this).data('finished');
                 var isBust = $(this).data('busted');
                 if (isFinished) {
-                    responsiveVoice.speak("Game shot!", VOICE);
+                    var legNum = match.legs.length + (["st","nd","rd"][((match.legs.length+90)%100-10)%10-1]||"th");
+                    var currentPlayerName = $('#player-name-' + leg.current_player_id);
+                    var name = currentPlayerName.data('vocalName') ? currentPlayerName.data('vocalName') : currentPlayerName.text();
+                    socket.emit('speak', { text: "Game shot in the " + legNum + " leg!, " + name + "!", type: 'game_shot' } );
                     executePost(window.location.origin + '/legs/' + legId + '/finish', data, 'application/json',
                         function (response) {
-                            location.href = window.location.origin + '/legs/' + legId + '/result';
+                            setTimeout(function () {
+                                // Make sure we have a short delay before moving on to results,
+                                // to make sure we get announcement of leg winner
+                                location.href = window.location.origin + '/legs/' + legId + '/result';
+                            }, 1500)
                         },
                         function (error) {
                             console.log("Unable to proceed: " + error.responseText);
@@ -418,10 +453,10 @@ block scripts
                 }
                 else {
                     if (isBust) {
-                        responsiveVoice.speak("Noscore", VOICE, { pitch: 0.8 });
+                        socket.emit('speak', { text: "Noscore", type: 'score', options: { pitch: 0.8 } } );
                     }
                     else {
-                        responsiveVoice.speak("" + total, VOICE);
+                        socket.emit('speak', { text: "" + total, type: 'score' } );
                     }
                     socket.emit('throw', data);
                 }
@@ -498,6 +533,13 @@ block scripts
             var lastUpdated = moment.duration(moment().diff(moment(leg.updated_at))).asMinutes().toFixed();
             if (match.tournament_id && leg.visits.length === 0 && lastUpdated > 2) {
                 $('#btn-change-player-order').trigger('click');
+            } else {
+                if (leg.visits.length === 0) {
+                    var legNum = match.legs.length + (["st","nd","rd"][((match.legs.length+90)%100-10)%10-1]||"th");
+                    var currentPlayerName = $('#player-name-' + leg.current_player_id);
+                    var name = currentPlayerName.data('vocalName') ? currentPlayerName.data('vocalName') : currentPlayerName.text();
+                    socket.emit('speak', { text: legNum + " leg, " + name + " to throw first. GAME ON!", type: 'leg_start' } );
+                }
             }
 
             $('#edit-scores-button').click(function () {
@@ -565,7 +607,7 @@ block content
     div(class='block-container-blue' style='overflow: visible;')
         div(class='float-left font-24')= 'Leg (X01) '
         div(class='float-left font-24 pl-10')= match.match_mode.short_name + '/'
-        div(class='float-left font-24')= 'R' + round_number
+        div(id='round-number' class='float-left font-24')= 'R' + round_number
         div(class='float-right')
             div(class='btn-group')
                 button(type='button' class='btn btn-primary dropdown-toggle' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false') Options&nbsp;&nbsp;
@@ -595,7 +637,7 @@ block content
                             - var clazz = player.is_current_player ? 'scorecard scorecard-active' : 'scorecard scorecard-inactive'
                             td
                                 div(class=clazz id='scorecard-player-' + playerId)
-                                    div(id='player-name-' + playerId class='label-player-name')= players[playerId].name
+                                    div(id='player-name-' + playerId class='label-player-name' data-vocal-name=players[playerId].vocal_name)= players[playerId].name
                                     div(id='player-score-' + playerId class='label label-block label-player-score')= player.current_score
 
                                     div(id='player-legs-' + player.player_id class='player-legs')

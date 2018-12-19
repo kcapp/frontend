@@ -1,6 +1,7 @@
 extends ../layout.pug
 
 block append head
+    script(src='/javascripts/responsivevoice.1.5.8..js')
     script(src='/javascripts/socket.io-2.0.3.min.js')
 
 include ../mixins/dart.pug
@@ -17,11 +18,25 @@ block scripts
             socket = getLegsNamespace(leg);
             configureSocketEvents(socket, leg, playersMap, true);
         });
+    script.
+        $(function() {
+            var announceVoice = JSON.parse(localStorage.getItem('kcapp_spectate_announce'));
+            if (announceVoice) {
+               $('#btn-enable-announcements').text("Disable Voice Announcements");
+            }
+            $('#btn-enable-announcements').click(function(event) {
+                var value = JSON.parse(localStorage.getItem('kcapp_spectate_announce'));
+                console.log("value is: " + value + " - " + !value);
+                localStorage.setItem('kcapp_spectate_announce', !value);
+                $('#btn-enable-announcements').text((value ? "Enable" : "Disable") + " Voice Announcements");
+            });
+        });
 
 block content
     div(class='pt-20')
     div(class='block-container' style='overflow: visible;')
-        div(class='float-left font-24')= 'Spectate match'
+        block header
+            div(class='float-left font-24') Spectate match
         div(class='float-right')
             div(class='btn-group')
                 button(type='button' class='btn btn-primary dropdown-toggle' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false') Options&nbsp;&nbsp;
@@ -29,8 +44,10 @@ block content
                     span(class='sr-only')
                 ul(class='dropdown-menu')
                     block advanced_options
+                        li: a(id='btn-enable-announcements') Enable Announcements
                         li: a(id='btn-open-chat') Open chat
                         li: a(id='btn-change-player-order' data-toggle="collapse" data-target="#toggle-visits-container" aria-expanded="false") Toggle visits
+                        li: a(href='spectate/compact') Open Compact
 
             div(class='btn-group')
                 ul(class='dropdown-menu')

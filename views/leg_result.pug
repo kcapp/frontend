@@ -34,6 +34,9 @@ block append scripts
                     default: // NOOP
                 }
             });
+            if (window.location.hash != "") {
+                $('a[href="' + window.location.hash + '"]').click();
+            }
         });
 
     script.

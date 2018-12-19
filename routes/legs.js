@@ -280,6 +280,7 @@ router.post('/:id/finish', function (req, res, next) {
                     if (match.is_finished && match.venue) {
                         this.socketHandler.emitMessage('/venue/' + match.venue.id, 'venue_match_finished', { match_id: match.id });
                     }
+                    this.socketHandler.emitMessage('/active', 'leg_finished', { leg: leg, match: match });
                     res.status(200).end();
                 }).catch(error => {
                     debug('Error when getting match match: ' + error);
@@ -295,6 +296,7 @@ router.post('/:id/finish', function (req, res, next) {
 router.put('/:id/order', function (req, res, next) {
     axios.put(req.app.locals.kcapp.api + '/leg/' + req.params.id + '/order', req.body)
         .then(() => {
+            this.socketHandler.emitMessage('/active', 'order_changed', { leg_id: req.params.id });
             res.status(200).end();
         }).catch(error => {
             debug('Unable to change order: %s', error);

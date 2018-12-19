@@ -52,6 +52,7 @@ var statistics = require('./routes/statistics');
 var tournaments = require('./routes/tournaments');
 var elo = require('./routes/elo');
 var venues = require('./routes/venues')(app, socketHandler);
+socketHandler.addNamespace('/active');
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));

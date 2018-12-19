@@ -16,10 +16,6 @@ block scripts
                 location.href = '/players/compare' + comparePlayers;
             });
 
-            $('.view-player-btn').click(function() {
-                location.href = '/players/' + $(this).data('player-id') + '/statistics'
-            });
-
             $('#add-player-modal').on('shown.bs.modal', function () {
                 $('#player-name-input').focus();
             });
@@ -35,7 +31,7 @@ block scripts
             $('#button-edit-player').click(function() {
                 var player = $(':checkbox:checked').data('player');
                 if (player) {
-                    $('#player-name-input').val(player.name);
+                    $('#player-name-input').val(player.first_name);
                     $('#player-nickname-input').val(player.nickname);
                     $('#player-color-input').val(player.color);
                     $('#player-profile-pic-input').val(player.profile_pic_url);
@@ -51,7 +47,7 @@ block scripts
                 var nickname = $('#player-nickname-input').val();
                 var profilePic = $('#player-profile-pic-input').val();
                 var player = {
-                    name: $('#player-name-input').val(),
+                    first_name: $('#player-name-input').val(),
                     nickname: nickname === '' ? null : nickname,
                     color: $('#player-color-input').val(),
                     profile_pic_url: profilePic === '' ? null : profilePic
@@ -124,7 +120,8 @@ block content
                     each player in players
                         tr
                             th(hidden='true' scope='row')= player.id
-                            td(class='text-left'): a(href='/players/' + player.id + '/statistics')= player.name + (player.nickname !== null ? (" '" + player.nickname + "'") : '')
+                            - var name = player.first_name + (player.nickname ? ' "' + player.nickname + '"' : '') + (player.last_name ? ' ' + player.last_name : '')
+                            td(class='text-left'): a(href='/players/' + player.id + '/statistics')= name
                             td= player.matches_played
                             td= player.matches_won
                             td
@@ -134,7 +131,8 @@ block content
                             td
                                 span(class="badge badge-pill badge-success")= player.legs_played == 0 ? '0.00%' : (player.legs_won * 100 / player.legs_played).toFixed(2) + '%'
                             td
-                                i(class="fas fa-eye fas-option-button view-player-btn" id='view-match-button' data-player-id=player.id)
+                                a(href='/players/' + player.id + '/statistics')
+                                    i(class="fas fa-eye fas-option-button")
                             td
                                 input(type='checkbox' data-player=player value=player.id)
 

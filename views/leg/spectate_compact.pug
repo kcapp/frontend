@@ -1,0 +1,69 @@
+extends ../layout.pug
+
+block append head
+    script(src='/javascripts/responsivevoice.1.5.8..js')
+    script(src='/javascripts/socket.io-2.0.3.min.js')
+
+include ../mixins/dart.pug
+include ../mixins/score_header.pug
+
+block scripts
+    script
+        include socketio_helper.js
+        include spectator_scripts.js
+    script.
+        var leg = !{JSON.stringify(leg)}
+        var playersMap = !{JSON.stringify(players)}
+        $(function () {
+            socket = getLegsNamespace(leg);
+            configureSocketEvents(socket, leg, playersMap, true);
+
+            var activeSocket = io(window.location.origin + '/active');
+            activeSocket.on('warmup_started', (data) => {
+                location.href = '/matches/' + data.leg.match_id + '/spectate/compact';
+            });
+        });
+    script.
+        $(function() {
+            var announceVoice = JSON.parse(localStorage.getItem('kcapp_spectate_announce'));
+            if (announceVoice) {
+               $('#btn-enable-announcements').text("Disable Voice Announcements");
+            }
+            $('#btn-enable-announcements').click(function(event) {
+                var value = JSON.parse(localStorage.getItem('kcapp_spectate_announce'));
+                console.log("value is: " + value + " - " + !value);
+                localStorage.setItem('kcapp_spectate_announce', !value);
+                $('#btn-enable-announcements').text((value ? "Enable" : "Disable") + " Voice Announcements");
+            });
+        });
+
+block content
+    - var round_number = Math.floor(leg.visits.length / leg.players.length) + 1;
+    div
+        table(id='scores-table')
+            tbody
+                each player in leg_players
+                    tr
+                        - var playerId = player.player_id;
+                        - var clazz = player.is_current_player ? 'scorecard scorecard-active' : 'scorecard scorecard-inactive'
+                        td
+                            div(class=clazz id='scorecard-player-' + playerId)
+                                div(id='player-name-' + playerId class='label-player-name')= players[playerId].name
+                                div(id='player-score-' + playerId class='label label-block label-player-score')= player.current_score
+                                div(id='player-legs-' + player.player_id class='player-legs')
+                                    label= (player.wins ? player.wins : '0')
+                            - var clazz = player.is_current_player ? 'visits-active' : 'visits-inactive'
+                    tr
+                        td(id='player-visit-' + player.player_id class=clazz)
+                            table(style='width: 100%; table-layout: fixed;')
+                                tbody
+                                    tr
+                                        td
+                                            div(class='dart-score')
+                                                div(class='first' data-multiplier='1') &nbsp;
+                                        td
+                                            div(class='dart-score')
+                                                div(class='second' data-multiplier='1') &nbsp;
+                                        td
+                                            div(class='dart-score')
+                                                div(class='third' data-multiplier='1') &nbsp;
