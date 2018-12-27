@@ -24,7 +24,7 @@ module.exports = {
         } else {
             var player = this.input.players[parseInt(e.key) - 1]
             if (player) {
-                var exist = _.where(this.state.old, { player_id: player.player_id })[0];
+                var exist = _.findWhere(this.state.old, { player_id: player.player_id });
                 if (exist) {
                     this.addPlayer(player);
                 } else {
@@ -37,13 +37,13 @@ module.exports = {
 
     playerSelected(event, selected) {
         var playerId = parseInt(selected.getAttribute('data-player-id'));
-        var player = _.where(this.state.old, { player_id: playerId })[0];
+        var player = _.findWhere(this.state.old, { player_id: playerId });
         this.addPlayer(player);
     },
 
     playerReset(event, selected) {
         var playerId = parseInt(selected.getAttribute('data-player-id'));
-        var player = _.where(this.state.new, { player_id: playerId })[0];
+        var player = _.findWhere(this.state.new, { player_id: playerId });
         this.removePlayer(player);
     },
 

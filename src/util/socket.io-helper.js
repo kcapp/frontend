@@ -53,9 +53,10 @@ exports.onScoreUpdate = (data, thiz) => {
 exports.say = (data) => {
     // TODO add mp3 clips
     if (responsiveVoice.isPlaying()) {
-        setTimeout(function () { responsiveVoice.speak(data.text, data.voice, data.options); }, 1500)
-    }
-    else {
+        setTimeout(() => {
+            responsiveVoice.speak(data.text, data.voice, data.options);
+        }, 1500)
+    } else {
         responsiveVoice.speak(data.text, data.voice, data.options);
     }
 }

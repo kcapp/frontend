@@ -1,6 +1,7 @@
 var debug = require('debug')('kcapp:socketio-handler');
 var axios = require('axios');
 var moment = require('moment');
+const _ = require('underscore');
 
 var _this = this;
 
@@ -116,7 +117,9 @@ module.exports = (io, app) => {
                         var body = JSON.parse(data);
                         debug('Received throw from %s (%o)', ip, body);
                         axios.post(app.locals.kcapp.api + '/visit', body)
-                            .then(() => {
+                            .then((response) => {
+                                var visit = response.data;
+                                announceScore(visit);
                                 axios.all([
                                     axios.get(app.locals.kcapp.api + '/leg/' + body.leg_id),
                                     axios.get(app.locals.kcapp.api + '/leg/' + body.leg_id + '/players')
@@ -126,14 +129,17 @@ module.exports = (io, app) => {
                                     if (leg.visits.length === 1) {
                                         _this.io.of('/active').emit('first_throw', { leg: leg, players: players });
                                     }
+                                    var current = _.findWhere(players, { is_current_player: true });
+                                    announceRemainingScore(current);
+
                                     nsp.emit('score_update', { leg: leg, players: players });
                                 })).catch(error => {
-                                    var message = error.message + ' (' + error.response.data.trim() + ')'
+                                    var message = error.message + ' (' + error + ')'
                                     debug('Error when getting leg: ' + message);
                                     nsp.emit('error', { message: error.message, code: error.code });
                                 });
                             }).catch(error => {
-                                var message = error.message + ' (' + error.response.data.trim() + ')'
+                                var message = error.message + ' (' + error + ')'
                                 debug('Error when adding visit: ' + message);
                                 nsp.emit('error', { message: message, code: error.code });
                             });
@@ -162,6 +168,32 @@ module.exports = (io, app) => {
                             });
                     });
                 });
+
+                function announceScore(visit) {
+                    var score = visit.first_dart.value * visit.first_dart.multiplier +
+                            visit.second_dart.value * visit.second_dart.multiplier +
+                            visit.third_dart.value * visit.third_dart.multiplier;
+                    var text = '' + score;
+                    var options = {};
+                    if (visit.is_bust) {
+                        text = 'Noscore';
+                        options = { pitch: 0.8 };
+                    }
+                    announce(text, 'score', options);
+                }
+
+                function announceRemainingScore(player) {
+                    var score = player.current_score;
+                    if (score < 171 && ![169,168,166,165,163,162,159].includes(score)) {
+                        var name = player.player.vocal_name === null ? player.player.first_name : player.player.vocal_name;
+                        announce(name + " you require " + score, 'remaining_score', {});
+                    }
+                }
+
+                function announce(text, type, options) {
+                    var voice = "US English Female";
+                    nsp.emit('say', { voice: voice, text: text, type: type, options: options });
+                }
                 debug("Created socket.io namespace '%s'", namespace);
             }
         }
