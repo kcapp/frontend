@@ -1,4 +1,12 @@
 const io = require('socket.io-client');
+var voice;
+
+function bootstrap() {
+    if (!this.voice) {
+        this.voice = require('../../public/javascripts/responsivevoice.1.5.8..js')
+    }
+    return this.voice;
+}
 
 exports.connect = (url) => {
     const socket = io(url);
@@ -39,5 +47,15 @@ exports.onScoreUpdate = (data, thiz) => {
         scoreHeaderComponent.state.player = player;
         scoreHeaderComponent.state.currentScore = player.current_score;
         scoreHeaderComponent.state.isCurrentPlayer = player.player_id === leg.current_player_id;
+    }
+}
+
+exports.say = (data) => {
+    // TODO add mp3 clips
+    if (responsiveVoice.isPlaying()) {
+        setTimeout(function () { responsiveVoice.speak(data.text, data.voice, data.options); }, 1500)
+    }
+    else {
+        responsiveVoice.speak(data.text, data.voice, data.options);
     }
 }

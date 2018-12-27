@@ -73,3 +73,7 @@ static/
 
 # Geneated MarkoJS files
 *.marko.js
+
+
+
+.DS_Store

@@ -15,14 +15,17 @@ module.exports = {
             matchName: matchName,
             submitting: false
         }
-
     },
 
     onMount() {
+        document.write('<script type="text/javascript" src="/javascripts/responsivevoice.1.5.8..js"><\/script>');
+
         document.addEventListener("keydown", this.onKeyDown.bind(this), false);
         document.addEventListener("keypress", this.onKeyPress.bind(this), false);
 
+        // Setup socket endpoints
         this.state.socket.on('score_update', this.onScoreUpdate.bind(this));
+        this.state.socket.on('say', io.say);
     },
 
     onScoreUpdate(data) {
@@ -42,6 +45,7 @@ module.exports = {
             this.state.submitting = false;
         }
     },
+
     onPossibleThrow(isCheckout, isBust, dartsThrown, score, multiplier, isUndo) {
         var component = this.findActive(this.getComponents('players'));
         this.state.socket.emit('possible_throw', {
@@ -74,6 +78,7 @@ module.exports = {
         }
         return;
     },
+
     onKeyPress(e) {
         if (this.state.submitting) {
             // Don't allow input while score is being submitted
@@ -134,11 +139,16 @@ module.exports = {
         }
         component.setDart(text, currentMultiplier);
     },
+
     findActive(components) {
         return _.filter(components, function (component) {
             if (component.state.isCurrentPlayer) {
                 return component;
             }
         })[0];
+    },
+
+    onWarmupStarted() {
+        this.state.socket.emit('warmup_started', { leg: this.input.leg, match: this.input.match });
     }
 };
