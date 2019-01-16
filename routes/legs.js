@@ -11,7 +11,7 @@ var x01InputTemplate = require('../src/pages/leg/leg-template.marko');
 var spectateTemplate = require('../src/pages/spectate/spectate-template.marko');
 
 /* Render the leg view */
-router.get('/:id', function (req, res, next) {
+router.get('/:id/old', function (req, res, next) {
     getLegView(req, res, next, false)
 });
 
@@ -55,7 +55,7 @@ function getLegView(req, res, next, vertical) {
 }
 
 /* Render the leg view */
-router.get('/:id/markojs', function (req, res, next) {
+router.get('/:id', function (req, res, next) {
     axios.all([
         axios.get(req.app.locals.kcapp.api + '/player'),
         axios.get(req.app.locals.kcapp.api + '/leg/' + req.params.id),
@@ -85,7 +85,7 @@ router.get('/:id/markojs', function (req, res, next) {
 
 
 /* Render the leg spectate view */
-router.get('/:id/spectate', function (req, res, next) {
+router.get('/:id/spectate/old', function (req, res, next) {
     axios.all([
         axios.get(req.app.locals.kcapp.api + '/player'),
         axios.get(req.app.locals.kcapp.api + '/leg/' + req.params.id),
@@ -112,7 +112,7 @@ router.get('/:id/spectate', function (req, res, next) {
     });
 });
 
-router.get('/:id/spectate/markojs', function (req, res, next) {
+router.get('/:id/spectate', function (req, res, next) {
     axios.all([
         axios.get(req.app.locals.kcapp.api + '/player'),
         axios.get(req.app.locals.kcapp.api + '/leg/' + req.params.id),

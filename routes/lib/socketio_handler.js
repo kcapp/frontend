@@ -146,7 +146,6 @@ module.exports = (io, app) => {
                     });
 
                     client.on('undo_visit', function (data) {
-                        //var body = JSON.parse(data);
                         debug('Received undo_visit from %s', ip);
                         axios.delete(app.locals.kcapp.api + '/visit/' + legId + '/last')
                             .then(() => {
