@@ -95,8 +95,11 @@ router.get('/:id/preview', function (req, res, next) {
                     head2head.player_checkouts[player2] = _.sortBy(head2head.player_checkouts[player2], function (checkout) { return -checkout.count; })
 
                     var standings = standingsresponse.data;
-                    players[player1].rank = _.findWhere(standings, { player_id: p1stats.player_id }).rank;
-                    players[player2].rank = _.findWhere(standings, { player_id: p2stats.player_id }).rank;
+                    var p1Standing = _.findWhere(standings, { player_id: p1stats.player_id });
+                    var p2Standing = _.findWhere(standings, { player_id: p2stats.player_id })
+
+                    players[player1].rank = p1Standing ? p1Standing.rank : "n/a";
+                    players[player2].rank = p2Standing ? p2Standing.rank : "n/a";
 
                     res.render('match/preview', {
                         player1: players[player1], player2: players[player2], match: match, bracket: brackets[match.tournament.tournament_group_id],
