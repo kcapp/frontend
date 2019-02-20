@@ -3,7 +3,7 @@ const io = require('../../../../util/socket.io-helper.js');
 
 module.exports = {
     onCreate(input) {
-        const socket = io.connect('http://localhost:3000/legs/' + input.leg.id);
+        const socket = io.connect(input.options.socketio_url + '/legs/' + input.leg.id);
 
         var roundNumber = Math.floor(input.leg.visits.length / input.leg.players.length) + 1;
         var matchName = input.match.match_mode.short_name;

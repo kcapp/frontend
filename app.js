@@ -40,6 +40,7 @@ app.io = io;
 // Set application variables
 app.locals.kcapp = {};
 app.locals.kcapp.api = 'http://localhost:8001';
+app.locals.socketio_url = 'http://10.12.100.67:3000';
 
 // Create all routes
 var socketHandler = require('./routes/lib/socketio_handler')(io, app);

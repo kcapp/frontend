@@ -1,6 +1,6 @@
 const _ = require("underscore");
 const axios = require('axios');
-const localStorageUtil = require("../../../../util/localStorage");
+const localStorageUtil = require("../../../../util/localstorage");
 
 const NINE_DART_SHOOTOUT = 2;
 

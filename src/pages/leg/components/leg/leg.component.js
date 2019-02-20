@@ -1,10 +1,11 @@
 const _ = require("underscore");
 const io = require('../../../../util/socket.io-helper.js');
 const axios = require('axios');
+const alertify = require("../../../../util/alertify");
 
 module.exports = {
     onCreate(input) {
-        const socket = io.connect('http://localhost:3000/legs/' + input.leg.id);
+        const socket = io.connect(input.options.socketio_url + '/legs/' + input.leg.id);
 
         var roundNumber = Math.floor(input.leg.visits.length / input.leg.players.length) + 1;
         var matchName = input.match.match_mode.short_name;
@@ -44,6 +45,11 @@ module.exports = {
         } else {
             this.state.submitting = false;
         }
+    },
+
+    onUndoThrow() {
+        this.state.submitting = true;
+        alertify.confirm('Delete last Visit', () => { this.state.socket.emit('undo_visit', { }); }, () => { this.state.submitting = false; });
     },
 
     onPossibleThrow(isCheckout, isBust, dartsThrown, score, multiplier, isUndo) {

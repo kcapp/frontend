@@ -1,9 +1,5 @@
 const alertify = require("../../util/alertify");
 
-const CLASS_DART_SINGLE = 'dart-score-single';
-const CLASS_DART_DOUBLE = 'dart-score-double';
-const CLASS_DART_TRIPLE = 'dart-score-triple';
-
 const DART_CONTAINER_MAP = { 1: 'first', 2: 'second', 3: 'third' };
 
 module.exports = {
@@ -50,6 +46,7 @@ module.exports = {
     },
     removeLast() {
         if (this.state.currentDart <= 1 && this.state.isSubmitted) {
+            this.emit('undo-throw');
             return;
         }
         if (this.state.isSubmitted) {

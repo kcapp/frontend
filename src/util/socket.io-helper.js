@@ -1,12 +1,5 @@
+const _ = require("underscore");
 const io = require('socket.io-client');
-var voice;
-
-function bootstrap() {
-    if (!this.voice) {
-        this.voice = require('../../public/javascripts/responsivevoice.1.5.8..js')
-    }
-    return this.voice;
-}
 
 exports.connect = (url) => {
     const socket = io(url);
@@ -26,27 +19,27 @@ exports.onScoreUpdate = (data, thiz) => {
     thiz.state.submitting = false;
 
     var leg = data.leg;
-    // Update round number
     thiz.state.roundNumber = Math.floor(leg.visits.length / leg.players.length) + 1;
+
+    var players = data.players;
+    var playersMap = _.indexBy(players, 'player_id');
 
     var scorecardComponents = thiz.getComponents('players');
     for (var i = 0; i < scorecardComponents.length; i++) {
         var component = scorecardComponents[i];
+        var player = playersMap[component.state.playerId]
+
         var isCurrentPlayer = component.state.playerId === leg.current_player_id;
         if (isCurrentPlayer) {
             component.reset();
         }
         component.state.isCurrentPlayer = isCurrentPlayer;
-    }
+        component.state.player = player;
 
-    // Set updated score per player
-    var players = data.players;
-    for (var i = 0; i < players.length; i++) {
-        var player = players[i];
-        var scoreHeaderComponent = thiz.getComponent('player-' + player.player_id);
-        scoreHeaderComponent.state.player = player;
-        scoreHeaderComponent.state.currentScore = player.current_score;
-        scoreHeaderComponent.state.isCurrentPlayer = player.player_id === leg.current_player_id;
+        var headerComponent = thiz.getComponent('player-' + player.player_id);
+        headerComponent.state.player = player;
+        headerComponent.state.currentScore = player.current_score;
+        headerComponent.state.isCurrentPlayer = player.player_id === leg.current_player_id;
     }
 }
 

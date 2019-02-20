@@ -71,7 +71,8 @@ router.get('/:id', function (req, res, next) {
                     leg: leg,
                     players: players.data,
                     match: match,
-                    leg_players: legPlayers
+                    leg_players: legPlayers,
+                    options: { socketio_url: req.app.locals.socketio_url }
                 });
             }).catch(error => {
                 debug('Error when getting match: ' + error);
@@ -129,7 +130,8 @@ router.get('/:id/spectate', function (req, res, next) {
                     leg: leg,
                     players: players.data,
                     match: match,
-                    leg_players: legPlayers
+                    leg_players: legPlayers,
+                    options: { socketio_url: req.app.locals.socketio_url }
                 });
             }).catch(error => {
                 debug('Error when getting match: ' + error);
