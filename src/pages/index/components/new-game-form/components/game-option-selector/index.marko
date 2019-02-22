@@ -1,12 +1,12 @@
-$ var defaultAttrId = input.defaultAttrId || 'id';
-$ var defaultAttrName = input.defaultAttrName || 'name';
+$ var defaultAttrId = input.defaultAttrId || "id";
+$ var defaultAttrName = input.defaultAttrName || "name";
 <div class="form-group">
   <label>${input.label}</label>
-  <select class="form-control" onChange('handleStateChange') disabled=(!state.enabled)>
+  <select class="form-control" onChange("handleStateChange") disabled=!state.enabled>
     <if(input.addNull)>
       <option value=-1 selected=(state.index === null)>-</option>
     </if>
-    <for(value in input.values)>
+    <for|value| of=input.values>
       <option value=value[defaultAttrId] hidden=value.hidden selected=(state.index === value[defaultAttrId])>${value[defaultAttrName]}</option>
     </for>
   </select>

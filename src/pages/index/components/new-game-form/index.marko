@@ -6,8 +6,8 @@
     </div>
     <div class="block-container-with-header">
       <div class="form-group form-check players-selected">
-        <for(player in state.selected)>
-          <player-selector player=player on-add-player('removePlayer')/>
+        <for|player| of=state.selected>
+          <player-selector player=player on-add-player("removePlayer")/>
         </for>
       </div>
     </div>
@@ -17,8 +17,8 @@
     </div>
     <div class="block-container-with-header">
       <div class="form-group form-check players-all">
-        <for(player in state.players)>
-          <player-selector player=player on-add-player('addPlayer')/>
+        <for|player| of=state.players>
+          <player-selector player=player on-add-player("addPlayer")/>
         </for>
       </div>
     </div>
@@ -34,7 +34,7 @@
       <game-option-selector values=input.modes options=state.options key="game-mode" label="Match Mode" attribute="game_mode" defaultValue=state.options.game_mode/>
       <game-option-selector values=input.stakes options=state.options key="stake" label="Match Stake" attribute="stake" addNull=true defaultAttrName="item"/>
       <game-option-selector values=input.venues options=state.options key="venue" label="Venue" attribute="venue" addNull=true/>
-      <button class="btn btn-primary" type="submit" on-click('newGame')>Start</button>
+      <button class="btn btn-primary" type="submit" on-click("newGame")>Start</button>
     </div>
   </div>
 </form>

@@ -10,7 +10,7 @@ $ var statistics = input.statistics;
     </div>
   </td>
   <td class="valign-mid">
-    <a href="/players/${statistics[idx].player_id}/statistics">${input.players[statistics[idx].player_id].name}</a>
+    <a href=`/players/${statistics[idx].player_id}/statistics`>${input.players[statistics[idx].player_id].name}</a>
   </td>
   <best-statistics statistic=statistics[idx] clazz="valign-mid"/>
 </if>

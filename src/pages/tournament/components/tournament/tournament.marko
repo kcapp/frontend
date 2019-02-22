@@ -75,9 +75,10 @@
                   </if>
                 </tr>
               </thead>
+              f
               <tbody>
                 <for|player, index| of=group>
-                  <tr class="tournament-${id}-rank-${index + 1}">
+                  <tr class=`tournament-${id}-rank-${index + 1}`>
                     <td class="pl-10">
                       <div>
                         <span class="pr-5">${player.manual_order ? player.manual_order : player.rank}</span>
@@ -93,7 +94,7 @@
                       </div>
                     </td>
                     <td>
-                      <a href="/players/${player.player_id}/statistics#tournament">${input.players[player.player_id].name}</a>
+                      <a href=`/players/${player.player_id}/statistics#tournament`>${input.players[player.player_id].name}</a>
                     </td>
                     <td class="text-right">${player.played}</td>
                     <td class="text-right pl-20">${player.matches_won}</td>
@@ -224,7 +225,7 @@
               <tr>
                 <td>${standing.rank}</td>
                 <td>
-                  <a href="/players/${standing.player_id}/statistics">${standing.player_name}</a>
+                  <a href=`/players/${standing.player_id}/statistics`>${standing.player_name}</a>
                 </td>
               </tr>
             </for>
