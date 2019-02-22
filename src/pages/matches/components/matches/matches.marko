@@ -1,0 +1,50 @@
+<div class="pt-20"/>
+<div class="block-container">
+  <div class="container-info-icon">
+    <i class="fas fa-trophy"/>
+  </div>
+  <div class="float-left pl-20">
+    <h3>Matches</h3>
+    <p>Overview over all played matches</p>
+  </div>
+  <div class="float-right">
+    <ul class="sync-pagination"/>
+  </div>
+</div>
+<div class="block-container no-padding">
+  <table id="table-matches-list">
+    <thead>
+      <tr>
+        <th hidden="hidden"/>
+        <th class="text-left">
+          <span class="ml-10">Start Time</span>
+        </th>
+        <th class="text-left">
+          <span>Status</span>
+        </th>
+        <th>
+          <span class="ml-10">Venue</span>
+        </th>
+        <th>
+          <span class="ml-10">Type</span>
+        </th>
+        <th>Mode</th>
+        <th class="text-left">
+          <span class="ml-10">Players</span>
+        </th>
+        <th class="text-center">Results</th>
+        <th class="text-center"/>
+      </tr>
+    </thead>
+    <tbody>
+      <for|match| of=input.matches>
+        <tr>
+          <match-row players=input.players match=match/>
+        </tr>
+      </for>
+    </tbody>
+  </table>
+</div>
+<div class="block-container">
+  <ul id="pagination-matches" class="sync-pagination pagination-md float-right"/>
+</div>
