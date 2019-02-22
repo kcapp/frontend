@@ -35,20 +35,20 @@
         <div class="float-left" style="font-size: 30px;">${group[0].tournament_group.name}</div>
         <div style="float: right; padding-top: 4px;">
           <ul class="nav nav-pills">
-            <li class="active" role="presentation">
-              <a href="#standings-" data-toggle="tab">Standings</a>
+            <li role="presentation" class="active">
+              <a href=`#standings-${group[0].tournament_group.id}` data-toggle="tab">Standings</a>
             </li>
             <li role="presentation">
-              <a class="tournament-group-matches" href="#matches-" data-toggle="tab">Matches</a>
+              <a href=`#matches-${group[0].tournament_group.id}` data-toggle="tab" class="tournament-group-matches">Matches</a>
             </li>
             <li role="presentation">
-              <a class="tournament-group-unplayed-matches" href="#unplayed-matches-" data-toggle="tab">Unplayed</a>
+              <a href=`#unplayed-matches-${group[0].tournament_group.id}` data-toggle="tab" class="tournament-group-unplayed-matches">Unplayed</a>
             </li>
           </ul>
         </div>
       </div>
       <div class="tab-content">
-        <div class="tab-pane active" role="tabpanel" id="standings-">
+        <div role="tabpanel" id=`standings-${group[0].tournament_group.id}` class="tab-pane active">
           <div class="block-container no-padding">
             <table class="table-tournament-overview">
               <thead>
@@ -118,6 +118,20 @@
               </tbody>
             </table>
           </div>
+        </div>
+        <div role="tabpanel" id=`matches-${group[0].tournament_group.id}` class="tab-pane">
+          <matches-table players=input.players matches=input.matches[id] columns=["start_time", "status", "players", "results", "options"]/>
+        </div>
+        <div role="tabpanel" id=`unplayed-matches-${group[0].tournament_group.id}` class="tab-pane">
+          $ var unplayed = [];
+          $ for (var i = 0; i < input.matches[id].length; i++) {
+            var match = input.matches[id][i];
+            if (match.is_finished) {
+              continue;
+            }
+            unplayed.push(match);
+          }
+          <matches-table players=input.players matches=unplayed columns=["start_time", "status", "players", "results", "options"]/>
         </div>
       </div>
     </for>
