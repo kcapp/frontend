@@ -25,28 +25,6 @@ router.get('/page/:page', function (req, res, next) {
         axios.get(req.app.locals.kcapp.api + '/match'),
         axios.get(req.app.locals.kcapp.api + '/match/' + start + '/' + limit)
     ]).then(axios.spread((players, matches, matchPage) => {
-        res.render('matches', {
-            matches: matchPage.data,
-            players: players.data,
-            total_pages: Math.ceil(matches.data.length / limit),
-            page_num: req.params.page
-        });
-    })).catch(error => {
-        debug('Error when getting data for matches ' + error);
-        next(error);
-    });
-});
-
-/* Get the given page of matches */
-router.get('/page/:page/marko', function (req, res, next) {
-    var limit = 25;
-    var start = (req.params.page - 1) * limit;
-
-    axios.all([
-        axios.get(req.app.locals.kcapp.api + '/player'),
-        axios.get(req.app.locals.kcapp.api + '/match'),
-        axios.get(req.app.locals.kcapp.api + '/match/' + start + '/' + limit)
-    ]).then(axios.spread((players, matches, matchPage) => {
         res.marko(matchesTemplate, {
             matches: matchPage.data,
             players: players.data,
@@ -59,6 +37,27 @@ router.get('/page/:page/marko', function (req, res, next) {
     });
 });
 
+/* Get the given page of matches */
+router.get('/page/:page/old', function (req, res, next) {
+    var limit = 25;
+    var start = (req.params.page - 1) * limit;
+
+    axios.all([
+        axios.get(req.app.locals.kcapp.api + '/player'),
+        axios.get(req.app.locals.kcapp.api + '/match'),
+        axios.get(req.app.locals.kcapp.api + '/match/' + start + '/' + limit)
+    ]).then(axios.spread((players, matches, matchPage) => {
+        res.render('matches', {
+            matches: matchPage.data,
+            players: players.data,
+            total_pages: Math.ceil(matches.data.length / limit),
+            page_num: req.params.page
+        });
+    })).catch(error => {
+        debug('Error when getting data for matches ' + error);
+        next(error);
+    });
+});
 
 /** Continue the given match */
 router.get('/:id', function (req, res, next) {
