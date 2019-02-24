@@ -23,4 +23,7 @@ $ var icon = input.icon || "fa-trophy";
   <if(input.right)>
     <div class="content-right">$!{input.right}</div>
   </if>
+  <if(input.navigation)>
+    <arrow-navigation next="Next week" on-next("navigateNext") previous="Previous week" on-previous("navigatePrevious")/>
+  </if>
 </div>

@@ -1,0 +1,108 @@
+<page-header heading="Statistics" subheading=`${state.from} to ${state.to}` style="block-container" icon="fa-signal" navigation=true on-next("navigateNext") on-previous("navigatePrevious")/>
+<if(state.x01.length === 0)>
+  <div class="block-container-red">X01 - no legs played</div>
+</if>
+<else>
+  <div class="block-container-red">X01</div>
+  <div class="block-container no-padding">
+    <div class="table">
+      <table id="table-x01-statistics">
+        <thead>
+          <tr>
+            <th colspan="7"/>
+            <th class="text-center" colspan="4">Per Match</th>
+            <th class="text-center" colspan="3">Accuracy</th>
+          </tr>
+          <tr>
+            <th class="text-right">Rank</th>
+            <th>Player</th>
+            <th class="text-center">Played</th>
+            <th class="text-center">Won</th>
+            <th class="text-right">Win %</th>
+            <th class="text-center">Three Dart Avg.</th>
+            <th class="text-right">Checkout</th>
+            <th class="text-right">60s+</th>
+            <th class="text-right">100s+</th>
+            <th class="text-right">140s+</th>
+            <th class="text-right">180</th>
+            <th class="text-right">Overall</th>
+            <th class="text-right">20s</th>
+            <th class="text-right">19s</th>
+          </tr>
+        </thead>
+        <tbody>
+          <for|stats, idx| of=state.x01>
+            $ var player = input.players[stats.player_id];
+            <tr>
+              <td class="text-right">${idx + 1}</td>
+              <td style="width: 12%">
+                <a href=`/players/${player.id}/statistics`>${player.name}</a>
+              </td>
+              <td class="text-center">${stats.matches_played}</td>
+              <td class="text-center">${stats.matches_won ? stats.matches_won : 0}</td>
+              <td class="text-right">${stats.matches_won ? ((stats.matches_won / stats.matches_played) * 100).toFixed(2) + "" : "0.00"}%</td>
+              <td class="text-center">${stats.three_dart_avg.toFixed(2) + " / " + stats.first_nine_three_dart_avg.toFixed(2)}</td>
+              <td class="text-right">${stats.checkout_percentage === null ? "-" : stats.checkout_percentage.toFixed(2) + " %"}</td>
+              <td class="text-right">${stats.scores_60s_plus === 0 ? "0.00" : (stats.scores_60s_plus / stats.matches_played).toFixed(2)}</td>
+              <td class="text-right">${stats.scores_100s_plus === 0 ? "0.00" : (stats.scores_100s_plus / stats.matches_played).toFixed(2)}</td>
+              <td class="text-right">${stats.scores_140s_plus === 0 ? "0.00" : (stats.scores_140s_plus / stats.matches_played).toFixed(2)}</td>
+              <td class="text-right">${stats.scores_180s === 0 ? "0.00" : (stats.scores_180s / stats.matches_played).toFixed(2)}</td>
+              <td class="text-right">${stats.accuracy_overall === null ? "-" : stats.accuracy_overall.toFixed(2)}</td>
+              <td class="text-right">${stats.accuracy_20 === null ? "-" : stats.accuracy_20.toFixed(2)}</td>
+              <td class="text-right">${stats.accuracy_19 === null ? "-" : stats.accuracy_19.toFixed(2)}</td>
+            </tr>
+          </for>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</else>
+<if(state.shootout.length === 0)>
+  <div class="block-container-red">Shootout - no matches played</div>
+</if>
+<else>
+  <div class="block-container-red">Shootout</div>
+  <div class="block-container no-padding">
+    <div class="table">
+      <table id="table-shootout-statistics">
+        <thead>
+          <tr>
+            <th colspan="6"/>
+            <th class="text-center" colspan="4">Per Match</th>
+          </tr>
+          <tr>
+            <th class="text-right">Rank</th>
+            <th>Player</th>
+            <th class="text-center">Played</th>
+            <th class="text-center">Won</th>
+            <th class="text-right">Win %</th>
+            <th class="text-center">PPD</th>
+            <th class="text-right">60s+</th>
+            <th class="text-right">100s+</th>
+            <th class="text-right">140s+</th>
+            <th class="text-right">180</th>
+          </tr>
+        </thead>
+        <tbody>
+          <for|stats, idx| of=state.shootout>
+            $ var player = input.players[stats.player_id];
+            <tr>
+              <td class="text-right">${idx + 1}</td>
+              <td style="width: 12%">
+                <a href=`/players/${player.id}/statistics`>${player.name}</a>
+              </td>
+              <td class="text-center">${stats.matches_played}</td>
+              <td class="text-center">${stats.matches_won ? stats.matches_won : 0}</td>
+              <td class="text-right">${stats.matches_won ? ((stats.matches_won / stats.matches_played) * 100).toFixed(2) + "" : "0.00"}%</td>
+              <td class="text-center">${stats.ppd.toFixed(2)}</td>
+              <td class="text-right">${stats.scores_60s_plus === 0 ? "0.00" : (stats.scores_60s_plus / stats.matches_played).toFixed(2)}</td>
+              <td class="text-right">${stats.scores_100s_plus === 0 ? "0.00" : (stats.scores_100s_plus / stats.matches_played).toFixed(2)}</td>
+              <td class="text-right">${stats.scores_140s_plus === 0 ? "0.00" : (stats.scores_140s_plus / stats.matches_played).toFixed(2)}</td>
+              <td class="text-right">${stats.scores_180s === 0 ? "0.00" : (stats.scores_180s / stats.matches_played).toFixed(2)}</td>
+            </tr>
+          </for>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</else>
