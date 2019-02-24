@@ -1,12 +1,4 @@
 const io = require('socket.io-client');
-var voice;
-
-function bootstrap() {
-    if (!this.voice) {
-        this.voice = require('../../public/javascripts/responsivevoice.1.5.8..js')
-    }
-    return this.voice;
-}
 
 exports.connect = (url) => {
     const socket = io(url);

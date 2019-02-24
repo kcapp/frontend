@@ -1,9 +1,4 @@
-const _ = require("underscore");
 module.exports = {
-    onCreate() {
-
-    },
-
     onInput(input) {
         this.state = {
             selected: input.selected

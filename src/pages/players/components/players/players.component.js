@@ -1,9 +1,7 @@
 const _ = require("underscore");
 
 module.exports = {
-    onCreate() {
-    },
-    onInput(input) {
+    onCreate(input) {
         this.state = {
             players: input.players,
             player: {},
