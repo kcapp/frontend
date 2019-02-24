@@ -168,5 +168,9 @@ module.exports = {
         if (event) {
             event.preventDefault();
         }
+    },
+    playOfficial(event) {
+        location.href = '/tournaments/current#unplayed';
+        event.preventDefault();
     }
 }

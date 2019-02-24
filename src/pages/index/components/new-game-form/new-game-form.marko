@@ -36,5 +36,12 @@
       <game-option-selector values=input.venues options=state.options key="venue" label="Venue" attribute="venue" addNull=true/>
       <button class="btn btn-primary" type="submit" on-click("newGame")>Start</button>
     </div>
+    <div class="block-container-with-header">
+      <div class="block-container-header">
+        <i class="fas fa-trophy"/>
+        <span class="ml-10">Tournaments</span>
+      </div>
+      <button type="submit" class="btn btn-warning mt-10" on-click("playOfficial")>Play Official Match</button>
+    </div>
   </div>
 </form>
