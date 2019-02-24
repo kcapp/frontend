@@ -1,23 +1,13 @@
-<div class="pt-20"/>
-<div class="block-container-orange">
-  <div class="container-info-icon">
-    <i class="fas fa-trophy"/>
-  </div>
-  <div class="float-left pl-20">
-    <h3>Elo</h3>
-    <p>Current elo standings for all players</p>
-  </div>
-  <div style="float: right; padding-top: 4px;">
-    <ul class="nav nav-pills">
-      <li class="active" role="presentation">
-        <a href="#tournament-elo" data-toggle="tab">Tournament Elo</a>
-      </li>
-      <li role="presentation">
-        <a href="#current-elo" data-toggle="tab">Current Elo</a>
-      </li>
-    </ul>
-  </div>
-</div>
+<page-header heading="Elo" subheading="Current Elo standings for all players" tabs=[
+  {
+    name: "Tournament Elo",
+    href: "tournament-elo"
+  },
+  {
+    name: "Current Elo",
+    href: "current-elo"
+  }
+]/>
 <div class="tab-content">
   <div class="tab-pane active" role="tabpanel" id="tournament-elo">
     <div class="block-container no-padding">

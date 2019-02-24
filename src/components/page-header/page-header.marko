@@ -1,0 +1,23 @@
+$ var style = input.style || "block-container-orange";
+$ var icon = input.icon || "fa-trophy";
+<div class="pt-20"/>
+<div class=`${style}`>
+  <div class="container-info-icon">
+    <i class=`fas ${icon}`/>
+  </div>
+  <div class="float-left pl-20">
+    <h3>${input.heading}</h3>
+    <p>${input.subheading || ""}</p>
+  </div>
+  <if(input.tabs)>
+    <div class="tab-buttons">
+      <ul class="nav nav-pills">
+        <for|tab, idx| of=input.tabs>
+          <li class=`${idx == 0 ? "active" : ""}` role="presentation">
+            <a href=`#${tab.href}` data-toggle="tab">${tab.name}</a>
+          </li>
+        </for>
+      </ul>
+    </div>
+  </if>
+</div>

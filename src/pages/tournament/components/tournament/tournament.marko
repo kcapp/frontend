@@ -1,33 +1,14 @@
-<div class="pt-20"/>
-<div class="block-container-orange">
-  <div class="container-info-icon">
-    <i class="fas fa-trophy"/>
-  </div>
-  <div class="float-left pl-20">
-    <h3>${input.tournament.name}</h3>
-    <p>Tournament</p>
-  </div>
-  <div style="float: right; padding-top: 4px;">
-    <ul class="nav nav-pills">
-      <li class="active" role="presentation">
-        <a href="#season" data-toggle="tab">Season</a>
-      </li>
-      <if(state.hasStatistics)>
-        <li role="presentation">
-          <a href="#statistics" data-toggle="tab">Statistics</a>
-        </li>
-      </if>
-      <li role="presentation">
-        <a href="#playoffs" data-toggle="tab">Playoffs</a>
-      </li>
-      <if(input.tournament.standings)>
-        <li role="presentation">
-          <a href="#standings" data-toggle="tab">Final Standings</a>
-        </li>
-      </if>
-    </ul>
-  </div>
-</div>
+$ {
+  var tabs = [{ name: "Season", href: "season" }];
+  if (state.hasStatistics) {
+    tabs.push({ name: "Statistics", href: "statistics" });
+  }
+  tabs.push({ name: "Playoffs", href: "playoffs" });
+  if (input.tournament.standings) {
+    tabs.push({ name: "Final Standings", href: "standings" });
+  }
+}
+<page-header heading=`${input.tournament.name}` subheading="Tournament" tabs=tabs/>
 <div class="tab-content">
   <div role="tabpanel" id="season" class="tab-pane active">
     <for|id, group| in=input.overview>
