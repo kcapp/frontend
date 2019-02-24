@@ -9,7 +9,7 @@ var axios = require('axios');
 var _ = require('underscore');
 
 /* GET home page. */
-router.get('/', function (req, res, next) {
+router.get('/old', function (req, res, next) {
     axios.all([
         axios.get(req.app.locals.kcapp.api + '/player/active'),
         axios.get(req.app.locals.kcapp.api + '/match/modes'),
@@ -30,7 +30,7 @@ router.get('/', function (req, res, next) {
     });
 });
 
-router.get('/markojs', function (req, res, next) {
+router.get('/', function (req, res, next) {
     axios.all([
         axios.get(req.app.locals.kcapp.api + '/player/active'),
         axios.get(req.app.locals.kcapp.api + '/match/modes'),
