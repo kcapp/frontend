@@ -10,7 +10,7 @@ $ var icon = input.icon || "fa-trophy";
     <p>${input.subheading || ""}</p>
   </div>
   <if(input.tabs)>
-    <div class="tab-buttons">
+    <div class="content-right">
       <ul class="nav nav-pills">
         <for|tab, idx| of=input.tabs>
           <li class=`${idx == 0 ? "active" : ""}` role="presentation">
@@ -19,5 +19,8 @@ $ var icon = input.icon || "fa-trophy";
         </for>
       </ul>
     </div>
+  </if>
+  <if(input.right)>
+    <div class="content-right">$!{input.right}</div>
   </if>
 </div>

@@ -1,16 +1,4 @@
-<div class="pt-20"/>
-<div class="block-container">
-  <div class="container-info-icon">
-    <i class="fas fa-trophy"/>
-  </div>
-  <div class="float-left pl-20">
-    <h3>Matches</h3>
-    <p>Overview over all played matches</p>
-  </div>
-  <div class="float-right">
-    <ul class="sync-pagination"/>
-  </div>
-</div>
+<page-header style="block-container" heading="Matches" subheading="Overview over all matches" right='<ul class="sync-pagination"/>'/>
 <matches-table players=input.players matches=input.matches/>
 <div class="block-container">
   <ul id="pagination-matches" class="sync-pagination pagination-md float-right"/>
