@@ -8,9 +8,25 @@ var _ = require('underscore');
 var bracket = require('./lib/bracket_generator');
 
 var tournamentTemplate = require('../src/pages/tournament/tournament-template.marko');
+var tournamentsTemplate = require('../src/pages/tournaments/tournaments-template.marko');
 
 /** Get all tournaments */
 router.get('/', function (req, res, next) {
+    axios.all([
+        axios.get(req.app.locals.kcapp.api + '/tournament'),
+        axios.get(req.app.locals.kcapp.api + '/tournament/standings')
+    ]).then(axios.spread((tournaments, standings) => {
+        res.marko(tournamentsTemplate, {
+            tournaments: tournaments.data, standings: standings.data
+        });
+    })).catch(error => {
+        debug('Error when getting data for tournament ' + error);
+        next(error);
+    });
+});
+
+/** Get all tournaments */
+router.get('/old', function (req, res, next) {
     axios.all([
         axios.get(req.app.locals.kcapp.api + '/tournament'),
         axios.get(req.app.locals.kcapp.api + '/tournament/standings')

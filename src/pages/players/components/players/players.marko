@@ -1,9 +1,9 @@
 <page-header heading="Players" icon="fa-user"/>
 <div>
-  <options-panel key="options-panel" selected=state.selected on-add-player("addPlayer")/>
+  <options-panel key="options-panel"/>
   <div class="pt-20"/>
   <div class="block-container no-padding">
-    <players-table key="players-table" players=input.players selected=state.selected on-player-checked("playerChecked")/>
+    <players-table key="players-table" players=input.players/>
   </div>
-  <new-player-form player=state.player/>
+  <new-player-form isAdd=true/>
 </div>

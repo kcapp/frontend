@@ -14,5 +14,8 @@ module.exports = {
     },
     addPlayer(event) {
         this.emit('add-player');
+    },
+    editPlayer(event) {
+        this.emit('edit-player');
     }
 }

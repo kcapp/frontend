@@ -9,6 +9,7 @@ var _ = require('underscore');
 var bracket = require('./lib/bracket_generator');
 
 var matchesTemplate = require('../src/pages/matches/matches-template.marko');
+var matchResultTemplate = require('../src/pages/match-result/match-result-template.marko');
 
 /* Redirect requests to /matches to /matches/page/1 */
 router.get('/', function (req, res) {
@@ -230,7 +231,7 @@ router.get('/:id/obs', function (req, res, next) {
 });
 
 /* Render the results view */
-router.get('/:id/result', function (req, res, next) {
+router.get('/:id/result/old', function (req, res, next) {
     var id = req.params.id;
 
     axios.all([
@@ -247,6 +248,31 @@ router.get('/:id/result', function (req, res, next) {
             match: match.data,
             players: players,
             stats: statistics
+        });
+    })).catch(error => {
+        debug('Error when getting data for match result ' + error);
+        next(error);
+    });
+});
+
+/* Render the results view */
+router.get('/:id/result', function (req, res, next) {
+    var id = req.params.id;
+
+    axios.all([
+        axios.get(req.app.locals.kcapp.api + '/player'),
+        axios.get(req.app.locals.kcapp.api + '/match/' + id),
+        axios.get(req.app.locals.kcapp.api + '/match/' + id + '/statistics')
+    ]).then(axios.spread((playerResponse, match, statisticsResponse) => {
+        var players = playerResponse.data;
+        var statistics = statisticsResponse.data;
+        _.each(statistics, stats => {
+            stats.player_name = players[stats.player_id].name;
+        });
+        res.marko(matchResultTemplate, {
+            match: match.data,
+            players: players,
+            statistics: statistics
         });
     })).catch(error => {
         debug('Error when getting data for match result ' + error);

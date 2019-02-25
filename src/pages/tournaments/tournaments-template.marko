@@ -1,5 +1,7 @@
-<include('../layout.marko')>
+import Layout from "../layout.marko"
+
+<${Layout}>
   <@body>
-    <tournament tournaments=input.tournaments/>
+    <tournaments tournaments=input.tournaments/>
   </@body>
-</include>
+</>

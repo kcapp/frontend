@@ -3,16 +3,26 @@ const axios = require('axios');
 module.exports = {
     onInput(input) {
         this.state = {
-            first_name: input.player.first_name,
-            last_name: input.player.last_name,
-            vocal_name: input.player.vocal_name,
-            nickname: input.player.nickname,
-            color: input.player.color,
-            profile_pic_url: input.player.profile_pic_url
+            first_name: '',
+            last_name: '',
+            vocal_name: '',
+            nickname: '',
+            color: '',
+            profile_pic_url: '',
+            isAdd: input.isAdd
         }
-    },
-    onMount() {
-        document.write('<script type="text/javascript" src="/javascripts/responsivevoice.1.5.8..js"><\/script>');
+        if (input.player) {
+            this.state = {
+                id: input.player.id,
+                first_name: input.player.first_name,
+                last_name: input.player.last_name,
+                vocal_name: input.player.vocal_name,
+                nickname: input.player.nickname,
+                color: input.player.color,
+                profile_pic_url: input.player.profile_pic_url,
+                isAdd: input.isAdd
+            }
+        }
     },
     playVoice() {
         if (this.state.vocal_name) {
@@ -33,14 +43,12 @@ module.exports = {
         this.state.vocal_name = event.target.value;
     },
     colorChange(event) {
-        console.log(event);
         this.state.color = event.target.value;
     },
     profilePicChange(event) {
         this.state.profile_pic_url = event.target.value;
     },
     addPlayer(event) {
-        var player = this.state.player;
         var body = {
             first_name: this.state.first_name,
             last_name: this.state.last_name,
@@ -49,14 +57,21 @@ module.exports = {
             color: this.state.color,
             profile_pic_url: this.state.profile_pic_url
         };
-        console.log(body);
-        /*axios.post(window.location.origin + '/players', body)
-            .then(response => {
-                location.href = 'players';
-            }).catch(error => {
-                console.log(error);
-            });
-        */
+        if (this.state.isAdd) {
+            axios.post(window.location.origin + '/players', body)
+                .then(response => {
+                    location.href = 'players';
+                }).catch(error => {
+                    console.log(error);
+                });
+        } else {
+            axios.put(window.location.origin + '/players/' + this.state.id, body)
+                .then(response => {
+                    location.href = 'players';
+                }).catch(error => {
+                    console.log(error);
+                });
+        }
         event.preventDefault();
     }
 }

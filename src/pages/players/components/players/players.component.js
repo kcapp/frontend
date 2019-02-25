@@ -1,18 +1,5 @@
-const _ = require("underscore");
-
 module.exports = {
-    onCreate(input) {
-        this.state = {
-            players: input.players,
-            player: {},
-            selected: []
-        }
-    },
-    playerChecked(playerId) {
-        this.state.player = _.findWhere(this.state.players, { id: playerId });
-    },
-    addPlayer() {
-        // When add player button is clicked, clear the selected player
-        this.state.player = {};
+    onMount() {
+        document.write('<script type="text/javascript" src="/javascripts/responsivevoice.1.5.8..js"><\/script>');
     }
 };
