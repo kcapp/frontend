@@ -9,7 +9,7 @@ var _ = require('underscore');
 var playersTemplate = require('../src/pages/players/players-template.marko');
 
 /* Get a list of all players */
-router.get('/', function (req, res, next) {
+router.get('/old', function (req, res, next) {
     axios.get(req.app.locals.kcapp.api + '/player/active')
         .then(response => {
             var players = response.data;
@@ -21,7 +21,7 @@ router.get('/', function (req, res, next) {
         });
 });
 
-router.get('/markojs', function (req, res, next) {
+router.get('/', function (req, res, next) {
     axios.get(req.app.locals.kcapp.api + '/player/active')
         .then(response => {
             var players = response.data;

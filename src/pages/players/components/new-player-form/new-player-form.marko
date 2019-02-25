@@ -1,0 +1,47 @@
+<div class="modal fade" id="add-player-modal" tabindex="-1" role="dialog" aria-labelledby="add-player-modal-label">
+  <div class="modal-dialog" role="document">
+    <div class="block-container-header">
+      <i class="fas fa-user-plus"/>
+      <span class="ml-10">Add player</span>
+      <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="block-container-with-header">
+      <form>
+        <div class="form-group">
+          <label class="control-label" for="player-firstname-input">First Name</label>
+          <input class="form-control" type="text" value=state.first_name on-input("firstNameChange")/>
+        </div>
+        <div class="form-group">
+          <label class="control-label" for="player-lastname-input">Last Name</label>
+          <input class="form-control" type="text" value=state.last_name on-input("lastNameChange")/>
+        </div>
+        <div class="form-group">
+          <label class="control-label" for="player-nickname-input">Nickname</label>
+          <input class="form-control" type="text" value=state.nickname on-input("nicknameChange")/>
+        </div>
+        <div class="form-group">
+          <label class="control-label" for="player-nickname-input">Vocal Name</label>
+          <span class="ml-10 play-button" on-click("playVoice")>
+            <i class="fas fa-play"/>
+          </span>
+          <input class="form-control" type="text" value=state.vocal_name on-input("vocalNameChange")/>
+        </div>
+        <div class="form-group">
+          <label class="control-label" for="player-color-input">Color</label>
+          <input class="form-control" type="color" value=state.color on-input("colorChange")/>
+        </div>
+        <div class="form-group">
+          <label class="control-label" for="player-profile-pic-input">Profile Picture URL</label>
+          <input class="form-control" type="text" value=state.profile_pic_url on-input("profilePicChange")/>
+        </div>
+        <button class="btn btn-default btn-close" type="button" data-dismiss="modal">Close</button>
+        <button class="btn btn-primary btn-submit" type="submit" on-click("addPlayer")>
+          <i class="fas fa-user-plus"/>
+          <span class="ml-10">Add player</span>
+        </button>
+      </form>
+    </div>
+  </div>
+</div>

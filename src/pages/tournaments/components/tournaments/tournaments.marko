@@ -1,0 +1,40 @@
+<div class="pt-20"></div>
+<div class="block-container-orange">
+    <div class="container-info-icon"><i class="fas fa-trophy"></i></div>
+    <div class="float-left pl-20">
+        <h3>Tournaments</h3>
+        <p>List of tournaments</p>
+    </div>
+</div>
+<div class="block-container no-padding">
+    <table id="table-tournaments-list">
+        <thead>
+            <tr>
+                <th hidden="hidden"></th>
+                <th class="pl-10">Name</th>
+                <th class="text-center">Short Name</th>
+                <th class="text-center">Start Time</th>
+                <th class="text-center">End Time</th>
+                <th class="text-center">Overview</th>
+            </tr>
+        </thead>
+        <tbody>
+        <for (tournament in input.tournamnets)>
+            <tr>
+                <td class='pl-10'>tournament.name</td>
+                <td class='text-center'>
+                    <div style='display: inline-block; padding-right: 6px'>tournament.short_name</div>
+                </td>
+                <td class='text-center'>
+                    <div style='display: inline-block; padding-right: 6px'>tournament.end_time</div>
+                </td>
+                <td class='text-center'>tournament.end_time</td>
+                <td>
+                    <a href='/tournaments/' + tournament.id/>
+                        <i class="fas fa-eye fas-option-button" data-toggle="tooltip" data-placement="top" title="View"/>
+                </td>
+            </tr>
+        </for>>
+        </tbody>
+    </table>
+</div>

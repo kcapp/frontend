@@ -1,0 +1,48 @@
+$ var columns = state.columns;
+<div class="block-container no-padding">
+  <table class="table-matches-list">
+    <thead>
+      <tr>
+        <if(columns["start_time"])>
+          <th class="text-left">
+            <span class="ml-10">Start Time</span>
+          </th>
+        </if>
+        <if(columns["status"])>
+          <th class="text-left">
+            <span>Status</span>
+          </th>
+        </if>
+        <if(columns["venue"])>
+          <th>
+            <span class="ml-10">Venue</span>
+          </th>
+        </if>
+        <if(columns["type"])>
+          <th>
+            <span class="ml-10">Type</span>
+          </th>
+        </if>
+        <if(columns["mode"])>
+          <th>Mode</th>
+        </if>
+        <if(columns["players"])>
+          <th class="text-left">
+            <span class="ml-10">Players</span>
+          </th>
+        </if>
+        <if(columns["results"])>
+          <th class="text-center">Results</th>
+        </if>
+        <if(columns["options"])>
+          <th class="text-center"/>
+        </if>
+      </tr>
+    </thead>
+    <tbody>
+      <for|match| of=input.matches>
+        <match-row players=input.players match=match columns=state.columns/>
+      </for>
+    </tbody>
+  </table>
+</div>

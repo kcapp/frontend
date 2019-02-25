@@ -8,6 +8,8 @@ var _ = require('underscore');
 
 var bracket = require('./lib/bracket_generator');
 
+var matchesTemplate = require('../src/pages/matches/matches-template.marko');
+
 /* Redirect requests to /matches to /matches/page/1 */
 router.get('/', function (req, res) {
     res.redirect('/matches/page/1');
@@ -15,6 +17,28 @@ router.get('/', function (req, res) {
 
 /* Get the given page of matches */
 router.get('/page/:page', function (req, res, next) {
+    var limit = 25;
+    var start = (req.params.page - 1) * limit;
+
+    axios.all([
+        axios.get(req.app.locals.kcapp.api + '/player'),
+        axios.get(req.app.locals.kcapp.api + '/match'),
+        axios.get(req.app.locals.kcapp.api + '/match/' + start + '/' + limit)
+    ]).then(axios.spread((players, matches, matchPage) => {
+        res.marko(matchesTemplate, {
+            matches: matchPage.data,
+            players: players.data,
+            total_pages: Math.ceil(matches.data.length / limit),
+            page_num: req.params.page
+        });
+    })).catch(error => {
+        debug('Error when getting data for matches ' + error);
+        next(error);
+    });
+});
+
+/* Get the given page of matches */
+router.get('/page/:page/old', function (req, res, next) {
     var limit = 25;
     var start = (req.params.page - 1) * limit;
 

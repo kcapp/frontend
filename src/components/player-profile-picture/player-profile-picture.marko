@@ -1,0 +1,9 @@
+$ var width = input.width ? input.width : 98;
+$ var height = input.height ? input.height : 130;
+$ var player = input.player;
+<if(player.profile_pic_url)>
+  <img class="glyphicon glyphicon-user" height=height width=width src=`${player.profile_pic_url}` data-player=`${player.id}`/>
+</if>
+<else>
+  <span class="fa fa-user-circle"/>
+</else>

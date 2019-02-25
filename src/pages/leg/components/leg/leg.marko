@@ -5,20 +5,16 @@
   <table>
     <tbody>
       <tr>
-        <for(player in input.leg_players)>
-          <scorecard-header key="player-${player.player_id}" player=player name=input.players[player.player_id].name/>
+        <for|player| of=input.leg_players>
+          <scorecard-header key=`player-${player.player_id}` player=player name=input.players[player.player_id].name/>
         </for>
       </tr>
       <tr>
-        <for(player in input.leg_players)>
-          <scorecard key="players[]" legId=state.legId player=player on-possible-throw('onPossibleThrow') 
-            on-score-change('onScoreChange')
-            on-player-busted('onPlayerBusted')
-            on-leg-finished('onLegFinished')
-            on-undo-throw('onUndoThrow')/>
+        <for|player| of=input.leg_players>
+          <scorecard key="players[]" legId=state.legId player=player on-possible-throw("onPossibleThrow") on-score-change("onScoreChange") on-player-busted("onPlayerBusted") on-leg-finished("onLegFinished")/>
         </for>
       </tr>
     </tbody>
   </table>
-  <player-order players=input.leg_players legId=state.legId on-warmup-started('onWarmupStarted')/>
+  <player-order players=input.leg_players legId=state.legId on-warmup-started("onWarmupStarted")/>
 </div>

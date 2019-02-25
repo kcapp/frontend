@@ -1,0 +1,27 @@
+$ var idx = input.idx;
+$ var statistics = input.statistics;
+<if(statistics[idx])>
+  <td class="cutout-with-rank">
+    <div class="float-left">
+      <div class="player-pic-cutout-small">
+        <player-profile-picture player=input.players[statistics[idx].player_id] width=49 height=65/>
+      </div>
+      <rank-circle rank=input.rank/>
+    </div>
+  </td>
+  <td class="valign-mid">
+    <a href=`/players/${statistics[idx].player_id}/statistics`>${input.players[statistics[idx].player_id].name}</a>
+  </td>
+  <best-statistics statistic=statistics[idx] clazz="valign-mid"/>
+</if>
+<else>
+  <td class="cutout-with-rank">
+    <div class="float-left">
+      <div class="player-pic-cutout-small">
+        <rank-circle rank=input.rank/>
+      </div>
+    </div>
+  </td>
+  <td class="valign-mid">-</td>
+  <td class="valign-mid">-</td>
+</else>
