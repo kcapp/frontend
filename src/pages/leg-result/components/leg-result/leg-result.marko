@@ -120,4 +120,94 @@ $ var isFinished = leg.winner_player_id !== null;
       </table>
     </div>
   </div>
+  <div role="tabpanel" id="stats" class="tab-pane">
+    <div style="float: left; width: 61%;">
+      <div class="block-container-header">Checkout attempts</div>
+      <div class="block-container">
+        $ var checkouts = leg.checkout_statistics;
+        <if(checkouts.checkout_attempts)>
+          <div>
+            <div class="table-responsive">
+              <table id="table-leg-checkouts" class="table">
+                <thead>
+                  <tr>
+                    <th>Dart</th>
+                    <th class="text-center">Count</th>
+                    <th class="text-center">Attempt %</th>
+                    <th class="text-center">Actual</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <for|value, count| in=checkouts.checkout_attempts>
+                    <tr>
+                      <td class="dart-score-container no-border">
+                        <dart-container dart={
+                          value: value / 2,
+                          multiplier: 2
+                        }/>
+                      </td>
+                      <td class="no-border text-center">${count}</td>
+                      $ var percent = ((count * 100) / checkouts.count).toFixed(2);
+                      <td class="no-border text-center">${percent}%</td>
+                      <if(value == checkouts.checkout)>
+                        <td class="no-border text-center">
+                          <span class="glyphicon glyphicon-ok" aria-hidden="true"/>
+                        </td>
+                      </if>
+                      <else>
+                        <td class="no-border text-center"/>
+                      </else>
+                    </tr>
+                  </for>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </if>
+      </div>
+    </div>
+    <div style="float: right; width: 37%;">
+      <div class="block-container-header">Hits</div>
+      <div class="block-container-with-header">
+        <div id="hits-div">
+          <div class="table-responsive">
+            <table id="leg-hits-table" class="table">
+              <thead>
+                <tr>
+                  <th>Dart</th>
+                  <th>Count</th>
+                  <th>Hit %</th>
+                </tr>
+              </thead>
+              <tbody>
+                <for|key, score| in=leg.hits>
+                  <for|multiplier, count| in=leg.hits[key]>
+                    <if(count !== 0)>
+                      <tr>
+                        <td class="dart-score-container no-border">
+                          <dart-container dart={
+                            value: key,
+                            multiplier: multiplier
+                          }/>
+                        </td>
+                        <td class="no-border text-center">${count}</td>
+                        $ var percent = ((count * 100) / leg.darts_thrown).toFixed(2);
+                        <td class="no-border text-center">${percent}%</td>
+                      </tr>
+                    </if>
+                  </for>
+                </for>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div style="float: left; width: 61%;">
+      <div class="block-container-header">Scores</div>
+      <div class="block-container">
+        <canvas id="canvas-scores"/>
+      </div>
+    </div>
+  </div>
 </div>
