@@ -1,37 +1,30 @@
 $ var match = state.match;
-<div class="pt-20"/>
-<div class="block-container">
-  <div class="container-info-icon">
-    <i class="fas fa-trophy"/>
-  </div>
-  <div class="float-left pl-20">
-    <h3>Match Result (${match.id})</h3>
-    <div class="float-left" style="width: 250px;">
-      <p style="padding-top: 5px;">
-        <i class="fas fa-clock"/>
-        <span class="ml-5">Started ${match.started}</span>
-      </p>
-      <p style="padding-top: 3px;">
-        <i class="fas fa-clock"/>
-        <span class="ml-5">Finished ${match.finished}</span>
-      </p>
-      <p style="padding-top: 3px;">
-        <i class="fas fa-stopwatch"/>
-        <span class="ml-5">Duration ${match.duration} minutes</span>
-      </p>
-    </div>
-    <div class="float-left" style="width: 250px;">
-      <p style="padding-top: 3px;">
-        <i class="fas fa-bullseye"/>
-        <span class="ml-5">${match.match_mode.name}</span>
-      </p>
-      <p style="padding-top: 3px;">
-        <i class="fas fa-trophy"/>
-        <span class="ml-5">Stakes ${match.owe_type_id === null ? "None" : match.owe_type.item}</span>
-      </p>
-    </div>
-  </div>
-</div>
+<page-header heading=`Match Result (${match.id})` style="block-container" subheadings=[
+  [
+    {
+      heading: `Started ${match.started}`,
+      icon: "fa-clock"
+    },
+    {
+      heading: `Finished ${match.finished}`,
+      icon: "fa-clock"
+    },
+    {
+      heading: `Duration ${match.duration} minutes`,
+      icon: "fa-stopwatch"
+    }
+  ],
+  [
+    {
+      heading: `${match.match_mode.name}`,
+      icon: "fa-bullseye"
+    },
+    {
+      heading: `Stakes ${match.owe_type_id === null ? "None" : match.owe_type.item}`,
+      icon: "fa-trophy"
+    }
+  ]
+]/>
 <if(match.tournament_id)>
   <div class="block-container-orange">${match.tournament.tournament_name} / ${match.tournament.tournament_group_name}</div>
 </if>
@@ -109,7 +102,7 @@ $ var match = state.match;
       <for|statistic| of=input.statistics>
         $ var player = input.players[statistic.player_id];
         <td>
-          <player-statistics-card match=match statistic=statistic player=player isWinner=`${statistic.player_id === match.winner_id}`/>
+          <player-statistics-card match=match statistic=statistic player=player/>
         </td>
       </for>
       <td/>

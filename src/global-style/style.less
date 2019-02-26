@@ -1,9 +1,4 @@
-// Variables
-@dart-inactive: #dddddd;
-@dart-single: #000000;
-@dart-double: orange;
-@dart-triple: #d9534f;
-
+@import "dart-style.less";
 @import "margins.less";
 @import "paddings.less";
 
@@ -139,6 +134,27 @@ a:hover {
     }
     .nav-pills li a {
         color: white;
+    }
+}
+
+.block-container-options {
+    .block-container;
+    padding: 8px;
+    .icon {
+        width: 80px;
+        font-size: 18px;
+        color: #c7c7c7;
+        text-align: center;
+        .undertext {
+            font-size: 10pt;
+        }
+        a,
+        a:active {
+            color: #c7c7c7;
+        }
+        a:hover {
+            color: #000;
+        }
     }
 }
 

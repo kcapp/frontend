@@ -1,0 +1,123 @@
+$ var leg = state.leg;
+$ var isFinished = leg.winner_player_id !== null;
+<page-header heading=`Leg Result (${leg.id})` style="block-container" icon="fa-crosshairs" subheadings=[
+  [
+    {
+      heading: `Started ${leg.started}`,
+      icon: "fa-clock"
+    },
+    {
+      heading: `Finished ${leg.finished}`,
+      icon: "fa-clock"
+    }
+  ],
+  [
+    {
+      heading: `Duration ${leg.duration} minutes`,
+      icon: "fa-stopwatch"
+    },
+    {
+      heading: `Rounds: ${Math.ceil(leg.visits.length / leg.players.length)}`,
+      icon: "fa-play"
+    }
+  ]
+]/>
+<div class="block-container-options" style="overflow: visible;">
+  <div class="float-left">
+    <ul class="nav nav-pills">
+      <li class="active" role="presentation">
+        <a href="#summary" data-toggle="tab">Summary</a>
+      </li>
+      <li role="presentation">
+        <a href="#visits" data-toggle="tab">Visits</a>
+      </li>
+      <li role="presentation">
+        <a href="#stats" data-toggle="tab">Statistics</a>
+      </li>
+    </ul>
+  </div>
+  <div style="float: right; padding-top: 4px;">
+    <ul class="nav nav-pills">
+      <li role="presentation">
+        <a>Rematch</a>
+      </li>
+      <li role="presentation">
+        <a>Undo leg finish</a>
+      </li>
+      <li role="presentation">
+        <a>Match results</a>
+      </li>
+      <if(!input.match.is_finished)>
+        <li class="active" role="presentation">
+          <a>Continue match</a>
+        </li>
+      </if>
+    </ul>
+  </div>
+  <div style="clear: both;"/>
+</div>
+<div class="tab-content">
+  <div class="tab-pane active" role="tabpanel" id="summary">
+    <if(isFinished)>
+      <table style="width: 100%; table-layout: fixed;">
+        <tbody>
+          <tr>
+            <for|statistic| of=input.statistics>
+              $ var player = input.players[statistic.player_id];
+              <td class="text-center" style="padding: 10px;">
+                <div>
+                  <player-statistics-card header=true match=input.match statistic=statistic player=player leg=leg/>
+                </div>
+              </td>
+            </for>
+          </tr>
+        </tbody>
+      </table>
+    </if>
+  </div>
+  <div class="tab-pane" role="tabpanel" id="visits">
+    <div class="block-container no-padding">
+      <!-- TODO Merge with spectate visits table-->
+      <table class="table" id="table-leg-visits">
+        <thead>
+          <tr>
+            <th>Player</th>
+            <th class="text-center">First Dart</th>
+            <th class="text-center">Second Dart</th>
+            <th class="text-center">Third Dart</th>
+            <th class="text-center">Total</th>
+            <th class="text-center">Remaining</th>
+            <th class="text-center">Thrown</th>
+            <th class="text-center">PPD</th>
+          </tr>
+        </thead>
+        <tbody>
+          <for|visit| of=leg.visits>
+            $ var visit_score = visit.first_dart.value * visit.first_dart.multiplier + visit.second_dart.value * visit.second_dart.multiplier + visit.third_dart.value * visit.third_dart.multiplier;
+            <tr>
+              <td>${input.players[visit.player_id].name}</td>
+              <td class="dart-score-container no-border">
+                <dart-container dart=visit.first_dart/>
+              </td>
+              <td class="dart-score-container no-border">
+                <dart-container dart=visit.second_dart/>
+              </td>
+              <td class="dart-score-container no-border">
+                <dart-container dart=visit.third_dart/>
+              </td>
+              <td class="text-center">
+                <label>${visit_score}</label>
+              </td>
+              <td class="text-center">
+                <label>${visit.scores}</label>
+              </td>
+              <td class="text-center">${visit.darts_thrown}</td>
+              $ var ppd = visit_score / 3;
+              <td class="text-center">${ppd.toFixed(2)}</td>
+            </tr>
+          </for>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

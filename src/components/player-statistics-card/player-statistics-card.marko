@@ -1,8 +1,14 @@
 $ var match = input.match;
+$ var leg = input.leg;
 $ var statistic = input.statistic;
+$ var dartsThrown = input.statistic.darts_thrown || 0;
 $ var player = input.player;
-$ var isWinner = input.isWinner;
-$ var dartsThrown = input.dartsThrown || 0;
+$ var startingScore = input.player.starting_score || 0;
+<if(input.header)>
+  <div class="block-container-header-center">
+    <a href=`/players/${player.id}/statistics`>${player.name}</a>
+  </div>
+</if>
 <div class="block-container-with-header">
   <div class="player-card-match">
     <div style="padding-bottom: 20px;">
@@ -12,14 +18,14 @@ $ var dartsThrown = input.dartsThrown || 0;
     </div>
     <if(match.match_type.id == 2)>
       <statistics-row heading="PPD" value=statistic.ppd.toFixed(2)/>
-      <statistics-row heading="Score" value=statistic.remaining_score/>
+      <statistics-row heading="Score" value=player.remaining_score/>
     </if>
     <else>
       <statistics-row heading="Three Dart Avg." value=`${statistic.three_dart_avg.toFixed(2)} / ${statistic.first_nine_three_dart_avg.toFixed(2)}`/>
       $ var accuracy_20 = statistic.accuracy_20 === null ? "-" : statistic.accuracy_20.toFixed(2);
       $ var accuracy_19 = statistic.accuracy_19 === null ? "-" : statistic.accuracy_19.toFixed(2);
       <statistics-row heading="Accuracy Overall / 20 / 19" value=`${statistic.accuracy_overall.toFixed(2)} / ${accuracy_20} / ${accuracy_19}`/>
-      $ var checkout = (statistic.checkout_percentage == 0 ? "-" : statistic.checkout_percentage.toFixed(2) + "%") + " / " + statistic.checkout_attempts;
+      $ var checkout = (statistic.checkout_percentage == 0 ? "-" : statistic.checkout_percentage.toFixed(2) + "%") + " / " + (statistic.checkout_attempts ? statistic.checkout_attempts : 0);
       <statistics-row heading="Checkout % / Attempts" value=checkout/>
       <if(match.elo_change)>
         <div class="info">Elo</div>
@@ -48,10 +54,8 @@ $ var dartsThrown = input.dartsThrown || 0;
       <statistics-row heading="Starting Score" value=startingScore/>
     </if>
     <if(match.match_type.id == 2)>
-      <statistics-row heading="Scored Score" value=player.remaining_score/>
-    </if>
-    <if(match.match_type.id == 2)>
-      <if(isWinner)>
+      <statistics-row heading="Points Score" value=player.remaining_score/>
+      <if(state.isWinner)>
         <div class="label-winner">WINNER</div>
       </if>
       <else>
@@ -59,7 +63,7 @@ $ var dartsThrown = input.dartsThrown || 0;
       </else>
     </if>
     <else-if(match.match_type.id == 3)>
-      <if(isWinner)>
+      <if(state.isWinner)>
         <div class="label-winner">WINNER</div>
       </if>
       <else>
@@ -72,7 +76,7 @@ $ var dartsThrown = input.dartsThrown || 0;
       </else>
     </else-if>
     <else>
-      <if(isWinner)>
+      <if(state.isWinner)>
         <div class="label-winner">WINNER</div>
       </if>
       <else>

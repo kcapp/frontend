@@ -5,9 +5,6 @@ const localStorageUtil = require("../../../../util/localstorage");
 const NINE_DART_SHOOTOUT = 2;
 
 module.exports = {
-    onCreate() {
-
-    },
     onInput(input) {
         this.state = {
             selected: [],

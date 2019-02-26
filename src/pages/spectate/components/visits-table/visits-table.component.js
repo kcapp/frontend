@@ -7,6 +7,5 @@ module.exports = {
     setVisits(visits) {
         this.state.visits = visits;
         this.setStateDirty('visits');
-        console.log(this.state.visits);
     }
 }
