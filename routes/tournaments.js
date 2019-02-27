@@ -9,6 +9,7 @@ var bracket = require('./lib/bracket_generator');
 
 var tournamentTemplate = require('../src/pages/tournament/tournament-template.marko');
 var tournamentsTemplate = require('../src/pages/tournaments/tournaments-template.marko');
+var tournamentAdminTemplate = require('../src/pages/tournament-admin/tournament-admin-template.marko');
 
 /** Get all tournaments */
 router.get('/', function (req, res, next) {
@@ -49,6 +50,23 @@ router.get('/current', function (req, res, next) {
             debug('Error when getting data for tournament ' + error);
             next(error);
         });
+});
+
+/* Get current active tournament */
+router.get('/admin', function (req, res, next) {
+    axios.all([
+        axios.get(req.app.locals.kcapp.api + '/tournament/groups'),
+        axios.get(req.app.locals.kcapp.api + '/player')
+    ]).then(axios.spread((groups, players) => {
+        res.marko(tournamentAdminTemplate, {
+            groups: groups.data,
+            players: players.data
+
+        });
+    })).catch(error => {
+        debug('Error when getting data for tournament ' + error);
+        next(error);
+    });
 });
 
 

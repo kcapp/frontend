@@ -1,0 +1,44 @@
+<page-header heading="Tournament" subheading="Administrate tournaments"/>
+<table>
+  <thead>
+    <tr>
+      <th>Date</th>
+      <th>Time</th>
+      <th>Group</th>
+      <th>Home Player</th>
+      <th>Away Player</th>
+    </tr>
+  </thead>
+  <tbody>
+    <for|row| of=state.rows>
+      <tr>
+        <td>
+          <input on-paste("onPaste") class=`${row[0].valid ? "" : "invalid"}` type="text" placeholder="yyyy-mm-dd" value=`${row[0].value}`/>
+        </td>
+        <td>
+          <input type="text" class=`${row[1].valid ? "" : "invalid"}` placeholder="HH:MM" value=`${row[1].value}`/>
+        </td>
+        <td>
+          <if(row[2])>
+            <input type="text" class=`${row[2].valid ? "" : "invalid"}` value=`${row[2].value}` disabled/>
+          </if>
+          <else>
+            <select>
+              <for|id, group| in=input.groups>
+                <option value=`${group.name}`>${group.name}</option>
+              </for>
+            </select>
+          </else>
+        </td>
+        <td>
+          <input type="text" class=`${row[3].valid ? "" : "invalid"}` placeholder="Home Player" value=`${row[3].value}`/>
+        </td>
+        <td>
+          <input type="text" class=`${row[4].valid ? "" : "invalid"}` placeholder="Away Player" value=`${row[4].value}`/>
+        </td>
+      </tr>
+    </for>
+  </tbody>
+</table>
+<button class="btn btn-primary" type="button" on-click("validate")>Validate</button>
+<button class="btn btn-primary" type="button">Create</button>
