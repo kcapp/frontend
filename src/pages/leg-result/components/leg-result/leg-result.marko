@@ -39,17 +39,17 @@ $ var isFinished = leg.winner_player_id !== null;
   <div style="float: right; padding-top: 4px;">
     <ul class="nav nav-pills">
       <li role="presentation">
-        <a>Rematch</a>
+        <a on-click("rematch")>Rematch</a>
       </li>
       <li role="presentation">
-        <a>Undo leg finish</a>
+        <a on-click("undoLegFinish")>Undo leg finish</a>
       </li>
       <li role="presentation">
-        <a>Match results</a>
+        <a on-click("viewMatchResult")>Match results</a>
       </li>
       <if(!input.match.is_finished)>
         <li class="active" role="presentation">
-          <a>Continue match</a>
+          <a on-click("continueMatch")>Continue match</a>
         </li>
       </if>
     </ul>
@@ -96,15 +96,9 @@ $ var isFinished = leg.winner_player_id !== null;
             $ var visit_score = visit.first_dart.value * visit.first_dart.multiplier + visit.second_dart.value * visit.second_dart.multiplier + visit.third_dart.value * visit.third_dart.multiplier;
             <tr>
               <td>${input.players[visit.player_id].name}</td>
-              <td class="dart-score-container no-border">
-                <dart-container dart=visit.first_dart/>
-              </td>
-              <td class="dart-score-container no-border">
-                <dart-container dart=visit.second_dart/>
-              </td>
-              <td class="dart-score-container no-border">
-                <dart-container dart=visit.third_dart/>
-              </td>
+              <dart-label dart=visit.first_dart/>
+              <dart-label dart=visit.second_dart/>
+              <dart-label dart=visit.third_dart/>
               <td class="text-center">
                 <label>${visit_score}</label>
               </td>
@@ -140,12 +134,10 @@ $ var isFinished = leg.winner_player_id !== null;
                 <tbody>
                   <for|value, count| in=checkouts.checkout_attempts>
                     <tr>
-                      <td class="dart-score-container no-border">
-                        <dart-container dart={
-                          value: value / 2,
-                          multiplier: 2
-                        }/>
-                      </td>
+                      <dart-label dart={
+                        value: value / 2,
+                        multiplier: 2
+                      }/>
                       <td class="no-border text-center">${count}</td>
                       $ var percent = ((count * 100) / checkouts.count).toFixed(2);
                       <td class="no-border text-center">${percent}%</td>
@@ -184,12 +176,10 @@ $ var isFinished = leg.winner_player_id !== null;
                   <for|multiplier, count| in=leg.hits[key]>
                     <if(count !== 0)>
                       <tr>
-                        <td class="dart-score-container no-border">
-                          <dart-container dart={
-                            value: key,
-                            multiplier: multiplier
-                          }/>
-                        </td>
+                        <dart-label dart={
+                          value: key,
+                          multiplier: multiplier
+                        }/>
                         <td class="no-border text-center">${count}</td>
                         $ var percent = ((count * 100) / leg.darts_thrown).toFixed(2);
                         <td class="no-border text-center">${percent}%</td>
