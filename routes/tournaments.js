@@ -69,6 +69,14 @@ router.get('/admin', function (req, res, next) {
     });
 });
 
+/* Create new tournament  */
+router.post('/admin', function (req, res, next) {
+    var body = req.body;
+    console.log(body);
+
+
+    res.end();
+});
 
 /* Get tournament with the given ID */
 router.get('/:id', function (req, res, next) {
