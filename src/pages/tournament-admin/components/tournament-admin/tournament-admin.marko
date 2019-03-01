@@ -1,4 +1,18 @@
 <page-header heading="Tournament" subheading="Administrate tournaments"/>
+<div class="game-options">
+  <div class="block-container-header">
+    <i class="fas fa-cogs"/>
+    <span class="ml-10">Settings</span>
+  </div>
+  <div class="block-container-with-header">
+    <p>Name</p>
+    <input type="text" placeholder="Name" on-input("tournamentNameChange") value=`${state.tournamentName}`/>
+    <p>Start</p>
+    <input type="datetime-local" placeholder="Start" on-input("startDateChange") value=`${state.startDateTime}`/>
+    <p>End</p>
+    <input type="datetime-local" placeholder="End" on-input("endDateChange") value=`${state.endDateTime}`/>
+  </div>
+</div>
 <table>
   <thead>
     <tr>
@@ -41,4 +55,4 @@
   </tbody>
 </table>
 <button class="btn btn-primary" type="button" on-click("validate")>Validate</button>
-<button class="btn btn-primary" type="button">Create</button>
+<button class="btn btn-primary" type="button" on-click("createTournament")>Create</button>

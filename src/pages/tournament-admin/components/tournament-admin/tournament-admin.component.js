@@ -1,5 +1,6 @@
 var _ = require("underscore");
 var moment = require('moment');
+var axios = require('axios');
 
 module.exports = {
     onCreate(input) {
@@ -13,10 +14,22 @@ module.exports = {
         }
 
         this.state = {
+            tournamentName: "",
+            start: "",
+            end: "",
             groups: input.groups,
             players: input.players,
             rows: rows
         }
+    },
+    tournamentNameChange(event) {
+        this.state.tournamentName = event.target.value;
+    },
+    startDateChange(event) {
+        this.state.start = event.target.value;
+    },
+    endDateChange(event) {
+        this.state.end = event.target.value;
     },
     onPaste(e) {
         var clipboardData;
@@ -58,21 +71,49 @@ module.exports = {
             var row = rows[i];
 
             var date = moment(row[0].value);
-            row[0].valid = date.isValid();
+            if (date.isValid()) {
+                row[0].valid = true;
+            }
 
             var time = /[0-9][0-9]:[0-9][0-9]/.test(row[1].value);
-            row[1].valid = time;
+            if (time) {
+                row[1].valid = true;
+            }
 
             var group = _.filter(this.state.groups, (group) => { return group.name == row[2].value; });
-            row[2].valid = group.length === 1;
+            if (group.length === 1) {
+                row[2].id = group[0].id;
+                row[2].valid = true;
+            }
 
             var home = _.filter(this.state.players, (player) => { return player.name == row[3].value; });
-            row[3].valid = home.length === 1;
+            if (home.length === 1) {
+                row[3].id = home[0].id;
+                row[3].valid = true;
+            }
 
             var away = _.filter(this.state.players, (player) => { return player.name == row[4].value.trim(); });
-            row[4].valid = away.length === 1;
+            if (away.length === 1) {
+                row[4].id = away[0].id;
+                row[4].valid = true;
+            }
         }
         console.log(rows);
         this.setStateDirty("rows");
+    },
+    createTournament() {
+        var body = {
+            name: this.state.tournamentName,
+            start: this.state.start,
+            end: this.state.end,
+            matches: this.state.rows
+        }
+        console.log(body);
+        axios.post(window.location.origin + '/tournaments/admin', body)
+            .then(response => {
+                location.href = window.location.origin + '/tournaments';
+            }).catch(error => {
+                console.log(error);
+            });
     }
 }
