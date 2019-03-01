@@ -3,21 +3,21 @@ const io = require('../../../../util/socket.io-helper.js');
 
 module.exports = {
     onCreate(input) {
-        const socket = io.connect(input.options.socketio_url + '/legs/' + input.leg.id);
-
         var roundNumber = Math.floor(input.leg.visits.length / input.leg.players.length) + 1;
         var matchName = input.match.match_mode.short_name;
         this.state = {
-            socket: socket,
             legId: input.leg.id,
             roundNumber: roundNumber,
             matchName: matchName,
-            submitting: false
+            submitting: false,
+            socket: {}
         }
     },
     onMount() {
-        this.state.socket.on('score_update', this.onScoreUpdate.bind(this));
-        this.state.socket.on('possible_throw', this.onPossibleThrow.bind(this));
+        var socket = io.connect(window.location.origin + '/legs/' + this.state.legId);
+        socket.on('score_update', this.onScoreUpdate.bind(this));
+        socket.on('possible_throw', this.onPossibleThrow.bind(this));
+        this.state.socket = socket;
     },
     onScoreUpdate(data) {
         io.onScoreUpdate(data, this);

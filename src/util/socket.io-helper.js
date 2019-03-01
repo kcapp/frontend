@@ -1,8 +1,8 @@
-const _ = require("underscore");
-const io = require('socket.io-client');
+var _ = require("underscore");
+var io = require('socket.io-client');
 
 exports.connect = (url) => {
-    const socket = io(url);
+    var socket = io(url);
 
     socket.on('connect', (data) => {
         socket.emit('join', 'Client Connecting');

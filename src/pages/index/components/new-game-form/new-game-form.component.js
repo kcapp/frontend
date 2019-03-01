@@ -1,8 +1,8 @@
-const _ = require("underscore");
-const axios = require('axios');
-const localStorageUtil = require("../../../../util/localstorage");
+var _ = require("underscore");
+var axios = require('axios');
+var localStorageUtil = require("../../../../util/localstorage");
 
-const NINE_DART_SHOOTOUT = 2;
+var NINE_DART_SHOOTOUT = 2;
 
 module.exports = {
     onInput(input) {

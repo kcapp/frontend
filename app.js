@@ -1,5 +1,4 @@
 var debug = require('debug')('kcapp:app');
-var ip = require('ip');
 
 require('marko/node-require').install();
 require('marko/express'); //enable res.marko
@@ -39,11 +38,8 @@ var io = socket_io();
 app.io = io;
 
 // Set application variables
-var ipAddress = process.env.SOCKET_IO_IP || ip.address();
 app.locals.kcapp = {};
 app.locals.kcapp.api = 'http://localhost:8001';
-app.locals.socketio_url = 'http://' + ipAddress + ':3000';
-console.log(app.locals);
 
 // Create all routes
 var socketHandler = require('./routes/lib/socketio_handler')(io, app);
