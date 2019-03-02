@@ -22,15 +22,17 @@ router.get('/old', function (req, res, next) {
 });
 
 router.get('/', function (req, res, next) {
-    axios.get(req.app.locals.kcapp.api + '/player/active')
-        .then(response => {
-            var players = response.data;
-            players = _.sortBy(players, (player) => player.name)
-            res.marko(playersTemplate, { players: players });
-        }).catch(error => {
-            debug('Error when getting players: ' + error);
-            next(error);
-        });
+    axios.all([
+        axios.get(req.app.locals.kcapp.api + '/player/active'),
+        axios.get(req.app.locals.kcapp.api + '/office')
+    ]).then(axios.spread((playersResponse, officesResponse) => {
+        var players = playersResponse.data;
+        players = _.sortBy(players, (player) => player.name)
+        res.marko(playersTemplate, { players: players, offices: officesResponse.data });
+    })).catch(error => {
+        debug('Error when getting players: ' + error);
+        next(error);
+    });
 });
 
 /* Add a new player */
