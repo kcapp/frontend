@@ -150,6 +150,13 @@ module.exports = {
         this.setStateDirty('players');
     },
     newGame(event) {
+        var officeId = this.state.officeId;
+        if (officeId == 0 && this.state.options.venue !== -1) {
+            officeId = this.input.venues[this.state.options.venue].office_id;
+        } else {
+            officeId = null;
+        }
+
         var body = {
             starting_score: this.state.options.starting_score,
             match_type: this.state.options.game_type,
@@ -157,6 +164,7 @@ module.exports = {
             match_stake: this.state.options.stake,
             venue: this.state.options.venue,
             players: this.state.selected.map(player => player.id),
+            office_id: officeId,
             // TODO need to add support for handicaps
             player_handicaps: {}
         }

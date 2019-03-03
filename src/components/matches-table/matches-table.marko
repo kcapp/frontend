@@ -13,14 +13,19 @@ $ var columns = state.columns;
             <span>Status</span>
           </th>
         </if>
+        <if(columns["office"])>
+          <th>
+            <span>Office</span>
+          </th>
+        </if>
         <if(columns["venue"])>
           <th>
-            <span class="ml-10">Venue</span>
+            <span class="text-center">Venue</span>
           </th>
         </if>
         <if(columns["type"])>
           <th>
-            <span class="ml-10">Type</span>
+            <span>Type</span>
           </th>
         </if>
         <if(columns["mode"])>
@@ -41,7 +46,7 @@ $ var columns = state.columns;
     </thead>
     <tbody>
       <for|match| of=input.matches>
-        <match-row players=input.players match=match columns=state.columns/>
+        <match-row players=input.players match=match columns=state.columns offices=input.offices/>
       </for>
     </tbody>
   </table>
