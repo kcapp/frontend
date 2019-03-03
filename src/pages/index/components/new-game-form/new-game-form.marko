@@ -25,6 +25,18 @@
   </div>
   <div class="game-options">
     <div class="block-container-header">
+      <i class="fas fa-building"/>
+      <span class="ml-10">Offices</span>
+    </div>
+    <div class="block-container-with-header">
+      <button class=`btn btn-${state.officeId == 0 ? "primary" : "secondary"}` on-click("changeOfficeEvent") value=0>All</button>
+      <for|id, office| in=input.offices>
+        <button class=`btn btn-${state.officeId == id ? "primary" : "secondary"}` on-click("changeOfficeEvent") value=id>${office.name}</button>
+      </for>
+    </div>
+  </div>
+  <div class="game-options">
+    <div class="block-container-header">
       <i class="fas fa-cogs"/>
       <span class="ml-10">Game settings</span>
     </div>
@@ -33,7 +45,7 @@
       <game-option-selector values=input.scores options=state.options key="starting-score" label="Starting Score" attribute="starting_score" defaultValue=state.options.starting_score/>
       <game-option-selector values=input.modes options=state.options key="game-mode" label="Match Mode" attribute="game_mode" defaultValue=state.options.game_mode/>
       <game-option-selector values=input.stakes options=state.options key="stake" label="Match Stake" attribute="stake" addNull=true defaultAttrName="item"/>
-      <game-option-selector values=input.venues options=state.options key="venue" label="Venue" attribute="venue" addNull=true/>
+      <game-option-selector values=state.venues options=state.options key="venue" label="Venue" attribute="venue" addNull=true/>
       <button class="btn btn-primary" type="submit" on-click("newGame")>Start</button>
     </div>
     <div class="block-container-with-header">

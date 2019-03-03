@@ -5,11 +5,13 @@ var localStorageUtil = require("../../../../util/localstorage");
 var NINE_DART_SHOOTOUT = 2;
 
 module.exports = {
-    onInput(input) {
+    onCreate(input) {
         this.state = {
             selected: [],
             players: input.players,
             input: input,
+            officeId: 0,
+            venues: input.venues,
             options: {
                 starting_score: 501,
                 game_type: 1,
@@ -21,6 +23,10 @@ module.exports = {
         }
     },
     onMount() {
+        var officeId = localStorageUtil.getInt("office_id");
+        if (officeId) {
+            this.changeOffice(officeId);
+        }
         document.addEventListener("keydown", this.onKeyDown.bind(this), false);
         document.addEventListener("keypress", this.onKeyPress.bind(this), false);
     },
@@ -169,5 +175,24 @@ module.exports = {
     playOfficial(event) {
         location.href = '/tournaments/current#unplayed';
         event.preventDefault();
+    },
+
+    changeOfficeEvent(event) {
+        this.changeOffice(event.target.value);
+        event.preventDefault();
+    },
+    changeOffice(officeId) {
+        this.state.officeId = officeId;
+
+        if (officeId == 0) {
+            this.state.players = this.input.players;
+            this.state.venues = this.input.venues;
+        } else {
+            this.state.players = _.reject(this.input.players, (player) => { return player.office_id != officeId; });
+            this.state.venues = _.reject(this.input.venues, (venue) => { return venue.office_id != officeId; });
+        }
+        this.setStateDirty('players');
+        this.setStateDirty('venues');
+        localStorageUtil.set('office_id', this.state.officeId);
     }
 }
