@@ -69,7 +69,6 @@ module.exports = {
             profile_pic_url: this.state.profile_pic_url,
             office_id: this.state.office_id
         };
-        console.log(body);
         if (this.state.isAdd) {
             axios.post(window.location.origin + '/players', body)
                 .then(response => {

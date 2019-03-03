@@ -15,10 +15,10 @@ var tournamentAdminTemplate = require('../src/pages/tournament-admin/tournament-
 router.get('/', function (req, res, next) {
     axios.all([
         axios.get(req.app.locals.kcapp.api + '/tournament'),
-        axios.get(req.app.locals.kcapp.api + '/tournament/standings')
-    ]).then(axios.spread((tournaments, standings) => {
+        axios.get(req.app.locals.kcapp.api + '/office')
+    ]).then(axios.spread((tournaments, offices) => {
         res.marko(tournamentsTemplate, {
-            tournaments: tournaments.data, standings: standings.data
+            tournaments: tournaments.data, offices: offices.data
         });
     })).catch(error => {
         debug('Error when getting data for tournament ' + error);
@@ -56,12 +56,17 @@ router.get('/current', function (req, res, next) {
 router.get('/admin', function (req, res, next) {
     axios.all([
         axios.get(req.app.locals.kcapp.api + '/tournament/groups'),
-        axios.get(req.app.locals.kcapp.api + '/player')
-    ]).then(axios.spread((groups, players) => {
+        axios.get(req.app.locals.kcapp.api + '/player'),
+        axios.get(req.app.locals.kcapp.api + '/office'),
+        axios.get(req.app.locals.kcapp.api + '/match/modes'),
+        axios.get(req.app.locals.kcapp.api + '/match/types'),
+    ]).then(axios.spread((groups, players, offices, modes, types) => {
         res.marko(tournamentAdminTemplate, {
             groups: groups.data,
-            players: players.data
-
+            players: players.data,
+            offices: offices.data,
+            modes: modes.data,
+            types: types.data
         });
     })).catch(error => {
         debug('Error when getting data for tournament ' + error);
@@ -72,10 +77,72 @@ router.get('/admin', function (req, res, next) {
 /* Create new tournament  */
 router.post('/admin', function (req, res, next) {
     var body = req.body;
-    console.log(body);
 
+    var groups = {};
+    var playersByGroup = {};
+    for (var i = 0; i < body.groups.length; i++) {
+        var group = body.groups[i];
 
-    res.end();
+        groups[group.id] = group;
+        playersByGroup[group.id] = new Set();
+    }
+    var matches = body.matches;
+    for (var i = 0; i < matches.length; i++) {
+        var match = matches[i];
+        var players = playersByGroup[match[2].id]
+        players.add(match[3].id);
+        players.add(match[4].id);
+    }
+    var tournamentPlayers = [];
+    for (var groupId in playersByGroup) {
+        var players = playersByGroup[groupId];
+        players.forEach(playerId => {
+            tournamentPlayers.push({ player_id: playerId, tournament_group_id: parseInt(groupId) })
+        });
+    }
+
+    var tournamentBody = {
+        name: req.body.name,
+        short_name: req.body.short_name,
+        is_playoffs: false, // TODO
+        playoffs_tournament_id: null,
+        start_time: req.body.start,
+        end_time: req.body.end,
+        players: tournamentPlayers,
+        office_id: req.body.office_id
+    };
+    axios.post(req.app.locals.kcapp.api + '/tournament', tournamentBody)
+        .then(response => {
+            var tournament = response.data;
+
+            for (var i = 0; i < matches.length; i++) {
+                var match = matches[i];
+
+                var startDatetime = match[0].value + " " + match[1].value;
+                var group = groups[match[2].id];
+
+                var matchBody = {
+                    created_at: startDatetime,
+                    match_type: { id: group.type },
+                    match_mode: { id: group.mode },
+                    players: [match[3].id, match[4].id],
+                    legs: [{ starting_score: group.score }],
+                    tournament_id: tournament.id
+                }
+                axios.post(req.app.locals.kcapp.api + '/match', matchBody)
+                    .then(response => {
+                        var match = response.data;
+                        this.socketHandler.setupLegsNamespace(match.current_leg_id);
+                    }).catch(error => {
+                        debug('Error when starting new match: ' + error);
+                        next(error);
+                    });
+            }
+            res.end();
+        }).catch(error => {
+            debug('Error when starting new match: ' + error);
+            next(error);
+        });
 });
 
 /* Get tournament with the given ID */
