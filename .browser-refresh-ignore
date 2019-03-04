@@ -4,3 +4,4 @@ static/
 .cache/
 .*
 *.marko.js
+log/
