@@ -151,10 +151,12 @@ module.exports = {
     },
     newGame(event) {
         var officeId = this.state.officeId;
-        if (officeId == 0 && this.state.options.venue !== -1) {
-            officeId = this.input.venues[this.state.options.venue].office_id;
-        } else {
-            officeId = null;
+        if (officeId <= 0) {
+            if (officeId == 0 && this.state.options.venue !== -1) {
+                officeId = this.input.venues[this.state.options.venue].office_id;
+            } else {
+                officeId = null;
+            }
         }
 
         var body = {
@@ -174,6 +176,7 @@ module.exports = {
                 localStorageUtil.set('venue', this.state.options.venue);
                 location.href = 'legs/' + response.data.current_leg_id
             }).catch(error => {
+                alert("Error starting match. See log for details");
                 console.log(error);
             });
         if (event) {
