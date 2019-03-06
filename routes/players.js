@@ -6,8 +6,10 @@ var router = express.Router();
 var axios = require('axios');
 var _ = require('underscore');
 
+var playersTemplate = require('../src/pages/players/players-template.marko');
+
 /* Get a list of all players */
-router.get('/', function (req, res, next) {
+router.get('/old', function (req, res, next) {
     axios.get(req.app.locals.kcapp.api + '/player/active')
         .then(response => {
             var players = response.data;
@@ -17,6 +19,20 @@ router.get('/', function (req, res, next) {
             debug('Error when getting players: ' + error);
             next(error);
         });
+});
+
+router.get('/', function (req, res, next) {
+    axios.all([
+        axios.get(req.app.locals.kcapp.api + '/player/active'),
+        axios.get(req.app.locals.kcapp.api + '/office')
+    ]).then(axios.spread((playersResponse, officesResponse) => {
+        var players = playersResponse.data;
+        players = _.sortBy(players, (player) => player.name)
+        res.marko(playersTemplate, { players: players, offices: officesResponse.data });
+    })).catch(error => {
+        debug('Error when getting players: ' + error);
+        next(error);
+    });
 });
 
 /* Add a new player */

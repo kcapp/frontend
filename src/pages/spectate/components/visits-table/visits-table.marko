@@ -1,0 +1,45 @@
+static function reverseIterator(list, callback) {
+  for (var i = list.length - 1; i >= 0; i--) {
+    callback(list[i]);
+  }
+}
+
+<div class="collapse in" id="toggle-visits-container">
+  <h3>Visits</h3>
+  <table class="table" id="table-leg-visits" style="table-layout: fixed;">
+    <thead>
+      <tr>
+        <th>Player</th>
+        <th class="text-center">First Dart</th>
+        <th class="text-center">Second Dart</th>
+        <th class="text-center">Third Dart</th>
+        <th class="text-center">Total</th>
+      </tr>
+    </thead>
+    <tbody>
+      <for(visit in state.visits | iterator=reverseIterator)>
+        <tr class="block-container-mid">
+          <td>${input.players[visit.player_id].name}</td>
+          <td class="dart-score-container no-border">
+            <dart-container dart=visit.first_dart/>
+          </td>
+          <td class="dart-score-container no-border">
+            <dart-container dart=visit.second_dart/>
+          </td>
+          <td class="dart-score-container no-border">
+            <dart-container dart=visit.third_dart/>
+          </td>
+          <td>
+            <if(visit.is_bust)>
+              <label>BUST</label>
+            </if>
+            <else>
+              $ var total = visit.first_dart.multiplier * visit.first_dart.value + visit.second_dart.multiplier * visit.second_dart.value + visit.third_dart.multiplier * visit.third_dart.value;
+              <label>${total}</label>
+            </else>
+          </td>
+        </tr>
+      </for>
+    </tbody>
+  </table>
+</div>

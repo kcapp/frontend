@@ -1,6 +1,24 @@
 var debug = require('debug')('kcapp:app');
 
+require('marko/node-require').install();
+require('marko/express'); //enable res.marko
+
 var express = require('express');
+
+var isProduction = process.env.NODE_ENV === 'production';
+
+// Configure lasso to control how JS/CSS/etc. is delivered to the browser
+require('lasso').configure({
+    plugins: [
+        'lasso-marko', // Allow Marko templates to be compiled and transported to the browser
+        'lasso-less'
+    ],
+    outputDir: __dirname + '/static', // Place all generated JS/CSS/etc. files into the "static" dir
+    bundlingEnabled: isProduction, // Only enable bundling in production
+    minify: isProduction, // Only minify JS and CSS code in production
+    fingerprintsEnabled: isProduction, // Only add fingerprints to URLs in production
+});
+
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
@@ -9,6 +27,8 @@ var logger = require('morgan');
 var rfs = require('rotating-file-stream')
 
 var app = express();
+
+app.use(require('lasso/middleware').serveStatic());
 
 // Make sure we get correct user IP when running behind a reverse proxy
 app.enable('trust proxy');

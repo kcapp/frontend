@@ -1,0 +1,111 @@
+$ var match = state.match;
+<page-header heading=`Match Result (${match.id})` style="block-container" subheadings=[
+  [
+    {
+      heading: `Started ${match.started}`,
+      icon: "fa-clock"
+    },
+    {
+      heading: `Finished ${match.finished}`,
+      icon: "fa-clock"
+    },
+    {
+      heading: `Duration ${match.duration} minutes`,
+      icon: "fa-stopwatch"
+    }
+  ],
+  [
+    {
+      heading: `${match.match_mode.name}`,
+      icon: "fa-bullseye"
+    },
+    {
+      heading: `Stakes ${match.owe_type_id === null ? "None" : match.owe_type.item}`,
+      icon: "fa-trophy"
+    }
+  ]
+]/>
+<if(match.tournament_id)>
+  <div class="block-container-orange">${match.tournament.tournament_name} / ${match.tournament.tournament_group_name}</div>
+</if>
+<table id="match-results-table">
+  <thead>
+    <tr>
+      <th class="block-container-header-red" style="width: 100px;">Legs</th>
+      <if(input.statistics.length)>
+        <for|statistic| of=input.statistics>
+          <th>
+            <div class="block-container-header">
+              <a href=`/players/${statistic.player_id}/statistics`>${statistic.player_name}</a>
+            </div>
+          </th>
+        </for>
+      </if>
+      <else>
+        <for|id| of=match.players>
+          <th>
+            <div class="block-container-header">
+              <a href=("/players/" + id + "/statistics")>${input.players[id].name}</a>
+            </div>
+          </th>
+        </for>
+      </else>
+      <th class="block-container-header-red" style="width: 100px;">Results</th>
+    </tr>
+  </thead>
+  <tbody>
+    <for|leg, idx| of=match.legs>
+      <tr>
+        <td class="block-container-mid">#${idx + 1}</td>
+        <if(input.statistics.length)>
+          <for|statistic| of=input.statistics>
+            <td>
+              <div class="block-container-mid">
+                <if(leg.winner_player_id === statistic.player_id)>
+                  <i class="fas fa-trophy"/>
+                </if>
+                <else>
+                  <i class="fas fa-minus"/>
+                </else>
+              </div>
+            </td>
+          </for>
+        </if>
+        <else>
+          <for|id| of=match.players>
+            <td>
+              <div class="block-container-mid">
+                <if(leg.winner_player_id === id)>
+                  <i class="fas fa-trophy"/>
+                </if>
+                <else>
+                  <i class="fas fa-minus"/>
+                </else>
+              </div>
+            </td>
+          </for>
+        </else>
+        <if(leg.has_scores)>
+          <td class="block-container-mid">
+            <a href=`/legs/${leg.id}/result`>
+              <i class="fas fa-eye fas-option-button" data-toggle="tooltip" data-placement="top" title="View"/>
+            </a>
+          </td>
+        </if>
+        <else>
+          <td class="block-container-mid">N/A</td>
+        </else>
+      </tr>
+    </for>
+    <tr>
+      <td/>
+      <for|statistic| of=input.statistics>
+        $ var player = input.players[statistic.player_id];
+        <td>
+          <player-statistics-card match=match statistic=statistic player=player/>
+        </td>
+      </for>
+      <td/>
+    </tr>
+  </tbody>
+</table>

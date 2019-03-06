@@ -47,8 +47,7 @@ block content
                         span Status
                     th
                         span(class='ml-10') Venue
-                    th
-                        span(class='ml-10') Type
+                    th Type
                     th Mode
                     th(class='text-left')
                         span(class='ml-10') Players
@@ -63,7 +62,9 @@ block content
                             if match.tournament_id
                                 div(class='float-left' style='margin-right: 1px;')
                                     label(class='label label-warning') Official
-                            div= moment(match.created_at).format('YYYY-MM-DD HH:mm')
+                                div= moment(match.created_at).format('YYYY-MM-DD')
+                            else
+                                div= moment(match.created_at).format('YYYY-MM-DD HH:mm')
                         td(class='text-left')
                             if match.is_abandoned
                                 div
@@ -79,9 +80,9 @@ block content
                             if match.venue
                                 div= match.venue.name
                         td= match.match_type.name
-                        td= match.match_mode.name
-                        if match.is_finished
-                            td
+                        td= match.match_mode.short_name
+                        td
+                            if match.is_finished
                                 each id in match.players
                                     if id != match.winner_id
                                         div(class='float-left')
@@ -89,12 +90,11 @@ block content
                                     else
                                         div(class='float-left')
                                             span(class='label label-success')= players[match.winner_id].name
-                        else
-                            td
+                            else
                                 each id in match.players
                                     div(class='float-left')
                                         span(class='label label-secondary')= players[id].name
-                        td(class='col-sm-1 text-center')
+                        td(class='col-2 text-center')
                             if match.is_finished
                                 - var result = ''
                                 each id in match.players

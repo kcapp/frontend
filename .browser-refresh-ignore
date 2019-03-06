@@ -1,0 +1,7 @@
+.git/
+node_modules/
+static/
+.cache/
+.*
+*.marko.js
+log/

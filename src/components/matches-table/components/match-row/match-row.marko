@@ -1,0 +1,88 @@
+$ var match = state.match;
+$ var columns = input.columns;
+<tr>
+  <if(columns["start_time"])>
+    <td class="text-left">
+      <if(match.tournament)>
+        <status-label type="label-warning" text="Official"/>
+      </if>
+      <div>${match.start_time}</div>
+    </td>
+  </if>
+  <if(columns["status"])>
+    <td class="text-center">
+      <if(match.is_abandoned)>
+        <status-label type="label-warning" text="Abandoned"/>
+      </if>
+      <else-if(match.is_live)>
+        <status-label type="label-warning" text="Live"/>
+      </else-if>
+      <else-if(match.is_finished)>
+        <status-label type=`${match.winner_id == null ? "label-default" : "label-success"}` title=`${match.updated_at}` text="Finished"/>
+      </else-if>
+    </td>
+  </if>
+  <if(columns["office"])>
+    <td class="text-center hidden-xs">
+      <if(match.office_id)>
+        <div>${input.offices[match.office_id].name}</div>
+      </if>
+    </td>
+  </if>
+  <if(columns["venue"])>
+    <td class="text-center hidden-xs">
+      <if(match.venue)>
+        <div>${match.venue.name}</div>
+      </if>
+    </td>
+  </if>
+  <if(columns["type"])>
+    <td class="text-center">${match.match_type.name}</td>
+  </if>
+  <if(columns["mode"])>
+    <td class="text-center">${match.match_mode.short_name}</td>
+  </if>
+  <if(columns["players"])>
+    <td class="text-center">
+      <for|id| of=match.players>
+        $ var isWinner = match.is_finished && id == match.winner_id;
+        <div class="float-left">
+          <span class=`label ${isWinner ? "label-success" : "label-secondary"}`>${input.players[id].name}</span>
+        </div>
+      </for>
+    </td>
+  </if>
+  <if(columns["results"])>
+    <td class="col-1 hidden-xs text-center">
+      <if(match.is_finished)>
+        $ var result = "";
+        <for|id| of=match.players>
+          $ var wins = 0;
+          <if(match.legs_won)>
+            <for|player| of=match.legs_won>
+              <if(id === player)>
+                $ wins++;
+              </if>
+            </for>
+          </if>
+          $ result += wins + " - ";
+        </for>
+        <span>${result.slice(0, -3)}</span>
+      </if>
+      <else>
+        <span/>
+      </else>
+    </td>
+  </if>
+  <if(columns["options"])>
+    <td class="text-center icon-options">
+      <if(!match.is_finished)>
+        <match-button title="Continue" icon="fa-play-circle" location=`/matches/${match.id}`/>
+        <match-button title="Spectate" icon="fa-eye" location=`/matches/${match.id}/spectate`/>
+      </if>
+      <else>
+        <match-button title="View" icon="fa-eye" location=`/matches/${match.id}/result`/>
+      </else>
+    </td>
+  </if>
+</tr>

@@ -1,0 +1,29 @@
+<div class="block-container-blue">
+  <div class="float-left font-24">Leg (X01)</div>
+  <div class="float-left font-24 pl-10">${input.name}/</div>
+  <div class="float-left font-24">R${state.round}</div>
+  <div class="float-right">
+    <div class="btn-group">
+      <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        Options&nbsp;&nbsp;<span class="caret"/>
+        <span class="sr-only"/>
+      </button>
+      <ul class="dropdown-menu">
+        <li>
+          <a on-click('editScores')>Edit scores</a>
+        </li>
+        <li>
+          <a id="change-player-order" data-toggle="modal" data-target="#modal-player-order"  on-click('changeOrder')>Change Order</a>
+        </li>
+        <li class="divider" role="separator"/>
+        <li>
+          <a on-click('cancelLeg')>Cancel Leg</a>
+        </li>
+      </ul>
+    </div>
+    <div class="btn-group">
+      <ul class="dropdown-menu"/>
+    </div>
+  </div>
+  <div style="clear: both;"/>
+</div>

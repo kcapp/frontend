@@ -1,0 +1,11 @@
+$ var statistic = input.statistic;
+$ var clazz = input.clazz;
+<if(statistic)>
+  $ var isFloat = parseInt(statistic.value) !== statistic.value;
+  <td class=clazz>
+    <a href=`/legs/${statistic.leg_id}/result`>${isFloat ? statistic.value.toFixed(2) : statistic.value}</a>
+  </td>
+</if>
+<else>
+  <td class=clazz>-</td>
+</else>

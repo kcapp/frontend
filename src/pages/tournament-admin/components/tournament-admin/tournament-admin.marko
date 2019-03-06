@@ -1,0 +1,100 @@
+<page-header heading="Tournament" subheading="Administrate tournaments"/>
+<div class="game-options">
+  <div class="block-container-header">
+    <i class="fas fa-cogs"/>
+    <span class="ml-10">Settings</span>
+  </div>
+  <div class="block-container-with-header">
+    <p>Name</p>
+    <input type="text" placeholder="Name" on-input("tournamentNameChange") value=`${state.tournamentName}`/>
+    <p>Short Name</p>
+    <input type="text" placeholder="Short Name" on-input("shortNameChange") value=`${state.shortName}`/>
+    <p>Start</p>
+    <input type="datetime-local" placeholder="Start" on-input("startDateChange") value=`${state.start}`/>
+    <p>End</p>
+    <input type="datetime-local" placeholder="End" on-input("endDateChange") value=`${state.end}`/>
+    <p>Office</p>
+    <select on-change("officeChange")>
+      <for|id, office| in=input.offices>
+        <option value=`${id}` selected=(office.id == state.office)>${office.name}</option>
+      </for>
+    </select>
+  </div>
+</div>
+<h3>Groups</h3>
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Starting Score</th>
+      <th>Type</th>
+      <th>Mode</th>
+    </tr>
+  </thead>
+  <tbody>
+    <for|group, idx| of=state.groups>
+      <tr>
+        <td>
+          <select idx=idx on-change("groupChange")>
+            <for|id, inputGroup| in=input.groups>
+              <option value=`${id}` selected=(inputGroup.id == group.id)>${inputGroup.name}</option>
+            </for>
+          </select>
+        </td>
+        <td>
+          <input type="number" idx=idx placeholder="301" on-input("scoreChange") value=`${group.score}`/>
+        </td>
+        <td>
+          <select idx=idx on-change("typeChange")>
+            <for|type| of=input.types>
+              <option value=`${type.id}` selected=(type.id == group.type)>${type.name}</option>
+            </for>
+          </select>
+        </td>
+        <select idx=idx on-change("modeChange")>
+          <for|mode| of=input.modes>
+            <option value=`${mode.id}` selected=(mode.id == group.mode)>${mode.name}</option>
+          </for>
+        </select>
+        <td/>
+      </tr>
+    </for>
+  </tbody>
+</table>
+<button class="btn btn-primary" type="button" on-click("addGroup")>Add</button>
+<button class="btn btn-primary" type="button" on-click("removeGroup")>Remove</button>
+<h3>Matches</h3>
+<table>
+  <thead>
+    <tr>
+      <th>Date</th>
+      <th>Time</th>
+      <th>Group</th>
+      <th>Home Player</th>
+      <th>Away Player</th>
+    </tr>
+  </thead>
+  <tbody>
+    <for|match| of=state.matches>
+      <tr>
+        <td>
+          <input on-paste("onPaste") class=`${match[0].valid ? "" : "invalid"}` type="text" placeholder="yyyy-mm-dd" value=`${match[0].value}`/>
+        </td>
+        <td>
+          <input type="text" class=`${match[1].valid ? "" : "invalid"}` placeholder="HH:MM" value=`${match[1].value}`/>
+        </td>
+        <td>
+          <input type="text" class=`${match[2].valid ? "" : "invalid"}` value=`${match[2].value}` disabled/>
+        </td>
+        <td>
+          <input type="text" class=`${match[3].valid ? "" : "invalid"}` placeholder="Home Player" value=`${match[3].value}`/>
+        </td>
+        <td>
+          <input type="text" class=`${match[4].valid ? "" : "invalid"}` placeholder="Away Player" value=`${match[4].value}`/>
+        </td>
+      </tr>
+    </for>
+  </tbody>
+</table>
+<button class="btn btn-primary" type="button" on-click("validate")>Validate</button>
+<button class="btn btn-primary" type="button" on-click("createTournament")>Create</button>
