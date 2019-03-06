@@ -1,35 +1,37 @@
 <page-header heading="Tournaments" subheading="List of tournaments"/>
 <div class="block-container no-padding">
-  <table id="table-tournaments-list">
-    <thead>
-      <tr>
-        <th class="pl-10">Name</th>
-        <th class="text-center">Short Name</th>
-        <th class="text-center">Office</th>
-        <th class="text-center">Start Time</th>
-        <th class="text-center">End Time</th>
-        <th class="text-center">Overview</th>
-      </tr>
-    </thead>
-    <tbody>
-      <for|tournament| of=input.tournaments>
+  <div class="table table-responsive">
+    <table id="table-tournaments-list">
+      <thead>
         <tr>
-          <td class="pl-10">${tournament.name}</td>
-          <td class="text-center">
-            <div style="display: inline-block; padding-right: 6px">${tournament.short_name}</div>
-          </td>
-          <td class="pl-10">${input.offices[tournament.office_id].name}</td>
-          <td class="text-center">
-            <div style="display: inline-block; padding-right: 6px">${tournament.start_time}</div>
-          </td>
-          <td class="text-center">${tournament.end_time}</td>
-          <td class="text-center">
-            <a href=`/tournaments/${tournament.id}`>
-              <i class="fas fa-eye fas-option-button" data-toggle="tooltip" data-placement="top" title="View"/>
-            </a>
-          </td>
+          <th class="pl-10">Name</th>
+          <th class="text-center">Short Name</th>
+          <th class="text-center">Office</th>
+          <th class="text-center">Start Time</th>
+          <th class="text-center">End Time</th>
+          <th class="text-center">Overview</th>
         </tr>
-      </for>
-    </tbody>
-  </table>
+      </thead>
+      <tbody>
+        <for|tournament| of=input.tournaments>
+          <tr>
+            <td class="pl-10">${tournament.name}</td>
+            <td class="text-center">
+              <div style="display: inline-block; padding-right: 6px">${tournament.short_name}</div>
+            </td>
+            <td class="pl-10">${input.offices[tournament.office_id].name}</td>
+            <td class="text-center">
+              <div style="display: inline-block; padding-right: 6px">${tournament.start_time}</div>
+            </td>
+            <td class="text-center">${tournament.end_time}</td>
+            <td class="text-center">
+              <a href=`/tournaments/${tournament.id}`>
+                <i class="fas fa-eye fas-option-button" data-toggle="tooltip" data-placement="top" title="View"/>
+              </a>
+            </td>
+          </tr>
+        </for>
+      </tbody>
+    </table>
+  </div>
 </div>
