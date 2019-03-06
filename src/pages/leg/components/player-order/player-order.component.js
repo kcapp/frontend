@@ -1,5 +1,5 @@
-const _ = require("underscore");
-const axios = require('axios');
+var _ = require("underscore");
+var axios = require('axios');
 
 module.exports = {
     onCreate(input) {

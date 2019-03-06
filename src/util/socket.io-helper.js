@@ -41,6 +41,7 @@ exports.onScoreUpdate = (data, thiz) => {
         headerComponent.state.currentScore = player.current_score;
         headerComponent.state.isCurrentPlayer = player.player_id === leg.current_player_id;
     }
+    thiz.state.leg = leg;
 }
 
 exports.say = (data) => {

@@ -1,7 +1,8 @@
-const _ = require("underscore");
-const io = require('../../../../util/socket.io-helper.js');
-const axios = require('axios');
-const alertify = require("../../../../util/alertify");
+var _ = require("underscore");
+var moment = require('moment');
+var axios = require('axios');
+var io = require('../../../../util/socket.io-helper.js');
+var alertify = require("../../../../util/alertify");
 
 module.exports = {
     onCreate(input) {
@@ -9,10 +10,12 @@ module.exports = {
         var matchName = input.match.match_mode.short_name;
         this.state = {
             legId: input.leg.id,
+            leg: input.leg,
             roundNumber: roundNumber,
             matchName: matchName,
             submitting: false,
-            socket: {}
+            socket: {},
+            legNum: input.match.legs.length + (["st","nd","rd"][((input.match.legs.length+90)%100-10)%10-1]||"th")
         }
     },
 
@@ -27,6 +30,20 @@ module.exports = {
         socket.on('score_update', this.onScoreUpdate.bind(this));
         socket.on('say', io.say);
         this.state.socket = socket;
+
+        // If this is an official match, which has not had any darts thrown, and was not updated in the last two minutes
+        // show the dialog to set player order
+        var lastUpdated = moment.duration(moment().diff(moment(this.input.leg.updated_at))).asMinutes().toFixed();
+        if (this.input.match.tournament_id && this.input.leg.visits.length === 0 && lastUpdated > 2) {
+            document.getElementById('change-player-order').click();
+        } else {
+            if (this.input.leg.visits.length === 0) {
+                var currentPlayer = this.input.players[this.input.leg.current_player_id];
+                var name = currentPlayer.vocal_name ? currentPlayer.vocal_name : currentPlayer.first_name;
+                socket.emit('speak', { text: this.state.legNum + " leg, " + name + " to throw first. Gameon!", type: 'leg_start' } );
+            }
+        }
+
     },
 
     onScoreUpdate(data) {
@@ -64,8 +81,13 @@ module.exports = {
             is_undo: isUndo
         });
     },
+
     onLegFinished(finished, component) {
         if (finished) {
+            var currentPlayer = this.input.players[this.state.leg.current_player_id];
+            var name = currentPlayer.vocal_name ? currentPlayer.vocal_name : currentPlayer.first_name;
+            this.state.socket.emit('speak', { text: "Game shot in the " + this.state.legNum + " leg!, " + name + "!", type: 'game_shot' } );
+
             axios.post(window.location.origin + '/legs/' + this.state.legId + '/finish', component.getPayload())
                 .then(response => {
                     location.href = window.location.origin + '/legs/' + this.state.legId + '/result';
@@ -76,6 +98,7 @@ module.exports = {
             this.state.submitting = false;
         }
     },
+
     onKeyDown(e) {
         if (e.key === 'Backspace') {
             var component = this.findActive(this.getComponents('players'));
@@ -158,3 +181,4 @@ module.exports = {
         this.state.socket.emit('warmup_started', { leg: this.input.leg, match: this.input.match });
     }
 };
+

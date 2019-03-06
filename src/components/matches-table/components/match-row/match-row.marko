@@ -10,7 +10,7 @@ $ var columns = input.columns;
     </td>
   </if>
   <if(columns["status"])>
-    <td class="text-left">
+    <td class="text-center">
       <if(match.is_abandoned)>
         <status-label type="label-warning" text="Abandoned"/>
       </if>
@@ -23,27 +23,27 @@ $ var columns = input.columns;
     </td>
   </if>
   <if(columns["office"])>
-    <td>
+    <td class="text-center hidden-xs">
       <if(match.office_id)>
         <div>${input.offices[match.office_id].name}</div>
       </if>
     </td>
   </if>
   <if(columns["venue"])>
-    <td>
+    <td class="text-center hidden-xs">
       <if(match.venue)>
         <div>${match.venue.name}</div>
       </if>
     </td>
   </if>
   <if(columns["type"])>
-    <td>${match.match_type.name}</td>
+    <td class="text-center">${match.match_type.name}</td>
   </if>
   <if(columns["mode"])>
-    <td>${match.match_mode.short_name}</td>
+    <td class="text-center">${match.match_mode.short_name}</td>
   </if>
   <if(columns["players"])>
-    <td>
+    <td class="text-center">
       <for|id| of=match.players>
         $ var isWinner = match.is_finished && id == match.winner_id;
         <div class="float-left">
@@ -53,7 +53,7 @@ $ var columns = input.columns;
     </td>
   </if>
   <if(columns["results"])>
-    <td class="col-1 text-center">
+    <td class="col-1 hidden-xs text-center">
       <if(match.is_finished)>
         $ var result = "";
         <for|id| of=match.players>

@@ -5,40 +5,42 @@ $ var columns = state.columns;
     <thead>
       <tr>
         <if(columns["start_time"])>
-          <th class="text-left">
-            <span class="ml-10">Start Time</span>
+          <th class="text-center">
+            <span>Start Time</span>
           </th>
         </if>
         <if(columns["status"])>
-          <th class="text-left">
+          <th class="text-center">
             <span>Status</span>
           </th>
         </if>
         <if(columns["office"])>
-          <th>
+          <th class="text-center hidden-xs">
             <span>Office</span>
           </th>
         </if>
         <if(columns["venue"])>
-          <th>
+          <th class="hidden-xs">
             <span class="text-center">Venue</span>
           </th>
         </if>
         <if(columns["type"])>
-          <th>
+          <th class="text-center">
             <span>Type</span>
           </th>
         </if>
         <if(columns["mode"])>
-          <th>Mode</th>
+          <th class="text-center">
+            <span>Mode</span>
+          </th>
         </if>
         <if(columns["players"])>
-          <th class="text-left">
+          <th class="text-center">
             <span class="ml-10">Players</span>
           </th>
         </if>
         <if(columns["results"])>
-          <th class="text-center">Results</th>
+          <th class="hidden-xs text-center">Results</th>
         </if>
         <if(columns["options"])>
           <th class="text-center"/>

@@ -8,7 +8,7 @@ module.exports = {
         $(function () {
             $('.sync-pagination').twbsPagination({
                 totalPages: total,
-                visiblePages: 7,
+                visiblePages: 5,
                 initiateStartPageClick: false,
                 startPage: currentPage,
                 cssStyle: '',
