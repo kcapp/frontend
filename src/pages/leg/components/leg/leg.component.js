@@ -33,7 +33,7 @@ module.exports = {
 
         // If this is an official match, which has not had any darts thrown, and was not updated in the last two minutes
         // show the dialog to set player order
-        var lastUpdated = moment().valueOf() - moment(this.input.leg.updated_at).valueOf()/(1000*60);
+        var lastUpdated = moment().valueOf() - moment.utc(this.input.leg.updated_at).valueOf()/(1000*60);
         if (this.input.match.tournament_id && this.input.leg.visits.length === 0 && lastUpdated > 2) {
             document.getElementById('change-player-order').click();
         } else {
