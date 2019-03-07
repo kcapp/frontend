@@ -52,7 +52,7 @@ module.exports = {
     profilePicChange(event) {
         this.state.profile_pic_url = event.target.value;
     },
-    slack_handleChange(event) {
+    slackHandleChange(event) {
         this.state.slack_handle = event.target.value;
     },
     officeChanged(event) {
