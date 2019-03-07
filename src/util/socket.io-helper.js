@@ -44,13 +44,33 @@ exports.onScoreUpdate = (data, thiz) => {
     thiz.state.leg = leg;
 }
 
-exports.say = (data) => {
-    // TODO add mp3 clips
-    if (responsiveVoice.isPlaying()) {
-        setTimeout(() => {
-            responsiveVoice.speak(data.text, data.voice, data.options);
-        }, 1500)
+exports.say = (data, thiz) => {
+    // Check if an audio clip is currently playing, if it is we don't want to wait until
+    // it is finished, before saying anything else
+    var oldPlayer = thiz.state.audioAnnouncer;
+    var isAudioAnnouncement = (oldPlayer.duration > 0 && !oldPlayer.paused);
+    if (data.type === 'score' &&  ['100', '140', '180'].includes(data.text)) {
+        var newPlayer = new Audio('/audio/' + data.text + '.mp3');
+        if (isAudioAnnouncement) {
+            oldPlayer.addEventListener("ended", () => {
+                newPlayer.play();
+            }, false);
+        } else {
+            newPlayer.play();
+        }        
+        thiz.state.audioAnnouncer = newPlayer;
     } else {
-        responsiveVoice.speak(data.text, data.voice, data.options);
+        if (responsiveVoice.isPlaying()) {
+            setTimeout(function () {
+                responsiveVoice.speak(data.text, data.voice, data.options);
+            }, 1500)
+        }  else if (isAudioAnnouncement) {
+            oldPlayer.addEventListener("ended", () => {
+                responsiveVoice.speak(data.text, data.voice, data.options);
+            }, false);
+        }
+        else {
+            responsiveVoice.speak(data.text, data.voice, data.options);
+        }
     }
 }

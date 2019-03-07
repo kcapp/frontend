@@ -13,6 +13,7 @@ module.exports = {
     onMount() {
         // Read option from localStorage and set it if it exists
         this.state.index = localStorageUtil.getInt(this.state.attribute) || this.state.index;
+        this.state.options[this.state.attribute] = this.state.index;
     },
     handleStateChange(event, selected) {
         this.state.index = selected.value === -1 ? null : parseInt(selected.value);

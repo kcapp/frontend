@@ -15,7 +15,7 @@ module.exports = {
             $('.table-matches-list').DataTable({
                 searching: false, bInfo: false, bLengthChange: false,
                 pageLength: 15,
-                order: [[1, 'asc']],
+                order: [[0, 'asc']],
                 bAutoWidth: false,
                 oLanguage: {
                     sEmptyTable: "No unplayed matches!"

@@ -15,6 +15,7 @@ module.exports = {
             matchName: matchName,
             submitting: false,
             socket: {},
+            audioAnnouncer: undefined,
             legNum: input.match.legs.length + (["st","nd","rd"][((input.match.legs.length+90)%100-10)%10-1]||"th")
         }
     },
@@ -28,8 +29,9 @@ module.exports = {
         // Setup socket endpoints
         var socket = io.connect(window.location.origin + '/legs/' + this.state.legId);
         socket.on('score_update', this.onScoreUpdate.bind(this));
-        socket.on('say', io.say);
+        socket.on('say', this.onSay.bind(this));
         this.state.socket = socket;
+        this.state.audioAnnouncer = new Audio();
 
         // If this is an official match, which has not had any darts thrown, and was not updated in the last two minutes
         // show the dialog to set player order
@@ -44,6 +46,10 @@ module.exports = {
             }
         }
 
+    },
+
+    onSay(data) {
+        io.say(data, this);
     },
 
     onScoreUpdate(data) {

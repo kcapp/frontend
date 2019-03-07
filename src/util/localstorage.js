@@ -1,5 +1,5 @@
 function getKey(key) {
-    return `kcapp:${key}`;
+    return "kcapp:" + key;
 }
 
 exports.get = key => localStorage.getItem(getKey(key));
