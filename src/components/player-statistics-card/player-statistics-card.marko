@@ -25,7 +25,7 @@ $ var startingScore = input.player.starting_score || 0;
       $ var accuracy_20 = statistic.accuracy_20 === null ? "-" : statistic.accuracy_20.toFixed(2);
       $ var accuracy_19 = statistic.accuracy_19 === null ? "-" : statistic.accuracy_19.toFixed(2);
       <statistics-row heading="Accuracy Overall / 20 / 19" value=`${statistic.accuracy_overall.toFixed(2)} / ${accuracy_20} / ${accuracy_19}`/>
-      $ var checkout = (statistic.checkout_percentage == 0 ? "-" : statistic.checkout_percentage.toFixed(2) + "%") + " / " + (statistic.checkout_attempts ? statistic.checkout_attempts : 0);
+      $ var checkout = (statistic.checkout_percentage === null || statistic.checkout_percentage == 0 ? "-" : statistic.checkout_percentage.toFixed(2) + "%") + " / " + (statistic.checkout_attempts ? statistic.checkout_attempts : 0);
       <statistics-row heading="Checkout % / Attempts" value=checkout/>
       <if(match.elo_change)>
         $ var elo = match.elo_change[player.id];

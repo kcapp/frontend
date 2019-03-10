@@ -10,6 +10,7 @@ var bracket = require('./lib/bracket_generator');
 
 var matchesTemplate = require('../src/pages/matches/matches-template.marko');
 var matchResultTemplate = require('../src/pages/match-result/match-result-template.marko');
+var spectateTemplate = require('../src/pages/spectate/spectate-template.marko');
 
 /* Redirect requests to /matches to /matches/page/1 */
 router.get('/', function (req, res) {
@@ -81,7 +82,7 @@ router.get('/:id', function (req, res, next) {
                     res.redirect('/legs/' + leg.id);
                 }).catch(error => {
                     debug('Unable to continue leg: ' + error);
-                    res.redirect('/match/' + req.params.id + '/result');
+                    res.redirect('/matches/' + req.params.id + '/result');
                 });
         }).catch(error => {
             debug('Error when getting match: ' + error);
@@ -144,7 +145,7 @@ router.get('/:id/preview', function (req, res, next) {
 });
 
 /* Spectate the given match */
-router.get('/:id/spectate', function (req, res, next) {
+router.get('/:id/spectate/old', function (req, res, next) {
     axios.all([
         axios.get(req.app.locals.kcapp.api + '/player'),
         axios.get(req.app.locals.kcapp.api + '/match/' + req.params.id)
@@ -159,6 +160,38 @@ router.get('/:id/spectate', function (req, res, next) {
             ]).then(axios.spread((leg, legPlayers) => {
                 legPlayers = _.sortBy(legPlayers.data, (player) => player.order)
                 res.render('leg/spectate', {
+                    leg: leg.data,
+                    leg_players: legPlayers,
+                    players: players.data,
+                    match: match
+                });
+            })).catch(error => {
+                debug('Error when getting data for matches ' + error);
+                next(error);
+            });
+        }
+    })).catch(error => {
+        debug('Error when getting data for match ' + error);
+        next(error);
+    });
+});
+
+/* Spectate the given match */
+router.get('/:id/spectate', function (req, res, next) {
+    axios.all([
+        axios.get(req.app.locals.kcapp.api + '/player'),
+        axios.get(req.app.locals.kcapp.api + '/match/' + req.params.id)
+    ]).then(axios.spread((players, response) => {
+        var match = response.data;
+        if (match.is_finished) {
+            return res.redirect('/matches/' + req.params.id + "/result");
+        } else {
+            axios.all([
+                axios.get(req.app.locals.kcapp.api + '/leg/' + match.current_leg_id),
+                axios.get(req.app.locals.kcapp.api + '/leg/' + match.current_leg_id + '/players')
+            ]).then(axios.spread((leg, legPlayers) => {
+                legPlayers = _.sortBy(legPlayers.data, (player) => player.order)
+                res.marko(spectateTemplate, {
                     leg: leg.data,
                     leg_players: legPlayers,
                     players: players.data,

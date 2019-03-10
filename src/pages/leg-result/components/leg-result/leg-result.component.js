@@ -39,6 +39,9 @@ module.exports = {
         e.preventDefault();
     },
     continueMatch(event) {
+        if (this.input.match.is_finished) {
+            return;
+        }
         location.href = '/matches/' + this.state.matchId;
     },
     viewMatchResult(event) {

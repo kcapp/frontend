@@ -309,7 +309,7 @@ router.get('/:id/result', function (req, res, next) {
 router.delete('/:id/visit/:visitid', function (req, res, next) {
     axios.delete(req.app.locals.kcapp.api + '/visit/' + req.params.visitid)
         .then(() => {
-            res.status(200).send().end();
+            res.status(200).end();
         }).catch(error => {
             debug('Unable to dlete visit: ' + error);
             next(error);
@@ -351,7 +351,7 @@ router.post('/:id/finish', function (req, res, next) {
                         this.socketHandler.emitMessage('/venue/' + match.venue.id, 'venue_match_finished', { match_id: match.id });
                     }
                     this.socketHandler.emitMessage('/active', 'leg_finished', { leg: leg, match: match });
-                    res.status(200).end();
+                    res.status(200).send(match).end();
                 }).catch(error => {
                     debug('Error when getting match match: ' + error);
                     next(error);
