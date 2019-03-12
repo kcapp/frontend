@@ -15,6 +15,7 @@ module.exports = {
             matchName: matchName,
             submitting: false,
             socket: {},
+            responsiveVoice: {},
             audioAnnouncer: undefined,
             legNum: input.match.legs.length + (["st", "nd", "rd"][((input.match.legs.length + 90) % 100 - 10) % 10 - 1] || "th")
         }
@@ -22,7 +23,8 @@ module.exports = {
 
     onMount() {
         document.write('<script type="text/javascript" src="/javascripts/responsivevoice.1.5.8..js"><\/script>');
-
+        setTimeout(() => { this.state.responsiveVoice = responsiveVoice; }, 100);
+        
         document.addEventListener("keydown", this.onKeyDown.bind(this), false);
         document.addEventListener("keypress", this.onKeyPress.bind(this), false);
 
@@ -97,11 +99,15 @@ module.exports = {
             axios.post(window.location.origin + '/legs/' + this.state.legId + '/finish', component.getPayload())
                 .then(response => {
                     var match = response.data;
-                    if (match.is_finished) {
-                        location.href = window.location.origin + "/matches/" + this.input.leg.match_id + "/result";
-                    } else {
-                        location.href = window.location.origin + "/matches/" + this.input.leg.match_id;
-                    }
+                    setTimeout(() => {
+                        // We want to make sure we finish talking before redirecting
+                        // TODO Improve this by checking responsiveVoice.isPlaying etc.
+                        if (match.is_finished) {
+                            location.href = window.location.origin + "/matches/" + this.input.leg.match_id + "/result";
+                        } else {
+                            location.href = window.location.origin + "/matches/" + this.input.leg.match_id;
+                        }
+                    }, 1500);
                 }).catch(error => {
                     console.log(error);
                 });

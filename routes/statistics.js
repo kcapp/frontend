@@ -66,15 +66,17 @@ router.get('/weekly', function (req, res, next) {
 function getStatisticsMarko(from, to, req, res, next) {
     axios.all([
         axios.get(req.app.locals.kcapp.api + '/player'),
+        axios.get(req.app.locals.kcapp.api + '/office'),
         axios.get(req.app.locals.kcapp.api + '/statistics/x01/' + from + '/' + to),
         axios.get(req.app.locals.kcapp.api + '/statistics/shootout/' + from + '/' + to)
-    ]).then(axios.spread((players, x01, shootout) => {
+    ]).then(axios.spread((players, offices, x01, shootout) => {
         x01 = x01.data;
         shootout = shootout.data;
         shootout = sort(shootout);
 
         res.marko(statisticsTemplate, {
             players: players.data,
+            offices: offices.data,
             statistics_x01: x01,
             statistics_shootout: shootout,
             from: from, to: to

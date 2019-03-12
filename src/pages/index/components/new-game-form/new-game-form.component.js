@@ -187,11 +187,6 @@ module.exports = {
         location.href = '/tournaments/current#unplayed';
         event.preventDefault();
     },
-
-    changeOfficeEvent(event) {
-        this.changeOffice(event.target.value);
-        event.preventDefault();
-    },
     changeOffice(officeId) {
         this.state.officeId = officeId;
 
