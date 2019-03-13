@@ -103,6 +103,8 @@ html
         body
             div(id='obs')
                 table(style='width: 600px; font-size: 20px; background-color: #2877ca;')
+                    tr
+                        td(colspan='8' class='obs-table-header')= match.match_mode.name
                     each player in leg_players
                         - var playerId = player.player_id;
                         - var activeClass = player.is_current_player ? 'obs-visits-active' : 'obs-visits-inactive'
