@@ -37,3 +37,7 @@ exports.confirm = (text, okFnc, cancelFnc) => {
 exports.success = (text) => {
     bootstrap().success(text);
 }
+
+exports.notify = (text, clazz, wait, callback) => {
+    return bootstrap().notify(text, clazz, wait, callback);
+};

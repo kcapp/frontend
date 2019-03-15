@@ -32,9 +32,6 @@ module.exports = {
                     location.href = '/legs/' + leg.id + '/result';
                 }
                 break;
-            case 'Home':
-                location.href = '/';
-                break;
             default: // NOOP
         }
     }

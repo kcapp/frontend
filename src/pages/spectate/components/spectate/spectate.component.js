@@ -13,18 +13,25 @@ module.exports = {
             socket: {}
         }
     },
+
     onMount() {
         var socket = io.connect(window.location.origin + '/legs/' + this.state.legId);
         socket.on('score_update', this.onScoreUpdate.bind(this));
         socket.on('possible_throw', this.onPossibleThrow.bind(this));
+        socket.on('leg_finished', this.onLegFinished.bind(this));
         this.state.socket = socket;
     },
+
+    onLegFinished(data) {
+        location.reload();
+    },
+
     onScoreUpdate(data) {
         io.onScoreUpdate(data, this);
         this.getComponent('visits').setVisits(data.leg.visits);
     },
+
     onPossibleThrow(data) {
-        console.log(data);
         var component = this.findActive(this.getComponents('players'));
 
         // Set current dart
@@ -40,6 +47,7 @@ module.exports = {
         var header = this.getComponent('player-' + data.current_player_id);
         header.state.currentScore -= (data.score * data.multiplier)
     },
+
     findActive(components) {
         return _.filter(components, function (component) {
             if (component.state.isCurrentPlayer) {

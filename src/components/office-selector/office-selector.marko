@@ -1,9 +1,11 @@
 $ var clazz = input.clazz || "";
 <div class="block-container-with-header">
-    <button class=`${clazz} btn btn-${state.officeId == 0 ? "primary" : "secondary"}` on-click("changeOfficeEvent") value=0>All</button>
-    <for|id, office| in=input.offices>
-        <if(office.is_active)>
-            <button class=`${clazz} btn btn-${state.officeId == id ? "primary" : "secondary"}` on-click("changeOfficeEvent") value=id>${office.name}</button>
-        </if>
-    </for>
+    <div class=`${clazz}`>
+        <button class=`btn btn-${state.officeId == 0 ? "primary" : "secondary"}` on-click("changeOfficeEvent") value=0>All</button>
+        <for|id, office| in=input.offices>
+            <if(office.is_active)>
+                <button class=`btn btn-${state.officeId == id ? "primary" : "secondary"}` on-click("changeOfficeEvent") value=id>${office.name}</button>
+            </if>
+        </for>
+    </div>
 </div>

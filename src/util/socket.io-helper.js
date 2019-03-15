@@ -1,5 +1,6 @@
 var _ = require("underscore");
 var io = require('socket.io-client');
+var alertify = require('./alertify');
 
 exports.connect = (url) => {
     var socket = io(url);
@@ -25,12 +26,16 @@ exports.onScoreUpdate = (data, thiz) => {
     var playersMap = _.indexBy(players, 'player_id');
 
     var scorecardComponents = thiz.getComponents('players');
+
+    var isLastVisitFishNChips = false;
+    var totalFishNChips = 0;
     for (var i = 0; i < scorecardComponents.length; i++) {
         var component = scorecardComponents[i];
         var player = playersMap[component.state.playerId]
 
         var isCurrentPlayer = component.state.playerId === leg.current_player_id;
         if (isCurrentPlayer) {
+            isLastVisitFishNChips = players[i === 0 ? players.length - 1 : i - 1].modifiers.is_fish_and_chips; 
             component.reset();
         }
         component.state.isCurrentPlayer = isCurrentPlayer;
@@ -40,6 +45,13 @@ exports.onScoreUpdate = (data, thiz) => {
         headerComponent.state.player = player;
         headerComponent.state.currentScore = player.current_score;
         headerComponent.state.isCurrentPlayer = player.player_id === leg.current_player_id;
+
+        totalFishNChips += player.visit_statistics.fish_and_chips_counter;
+    }
+    if (isLastVisitFishNChips) {
+        thiz.state.globalStatistics.fish_n_chips += 1;
+        var msg = alertify.notify(getFishNChipsHTML(totalFishNChips - 1, thiz.state.globalStatistics.fish_n_chips - 1), 'fish-n-chips', 5, () => {});
+        setInterval(() => {  msg.setContent(getFishNChipsHTML(totalFishNChips, thiz.state.globalStatistics.fish_n_chips)); }, 1000);
     }
     thiz.state.leg = leg;
 }
@@ -73,4 +85,14 @@ exports.say = (data, thiz) => {
             responsiveVoice.speak(data.text, data.voice, data.options);
         }
     }
+}
+
+
+function getFishNChipsHTML(countLeg, countGlobal) {
+    return `
+        <h4>Fish & Chips Count<h4>
+        <h5>Leg</h5>
+        <h1>${countLeg}</h1>
+        <h5>Globally</h5>
+        <h2>${countGlobal}</h2>`;
 }

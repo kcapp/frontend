@@ -26,9 +26,6 @@ module.exports = {
                 this.continueMatch();
                 e.preventDefault();
                 break;
-            case 'Home':
-                location.href = '/';
-                break;
             case '.':
             case 'Backspace':
             case 'PageUp': // Intentional fall-through

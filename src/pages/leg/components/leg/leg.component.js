@@ -14,10 +14,11 @@ module.exports = {
             roundNumber: roundNumber,
             matchName: matchName,
             submitting: false,
+            globalStatistics: input.global_statistics,
             socket: {},
             responsiveVoice: {},
             audioAnnouncer: undefined,
-            legNum: input.match.legs.length + (["st", "nd", "rd"][((input.match.legs.length + 90) % 100 - 10) % 10 - 1] || "th")
+            legNum: input.match.legs.length + (["st", "nd", "rd"][((input.match.legs.length + 90) % 100 - 10) % 10 - 1] || "th"),
         }
     },
 
@@ -47,7 +48,6 @@ module.exports = {
                 socket.emit('speak', { text: this.state.legNum + " leg, " + name + " to throw first. Gameon!", type: 'leg_start' });
             }
         }
-
     },
 
     onSay(data) {

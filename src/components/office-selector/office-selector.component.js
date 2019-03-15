@@ -7,9 +7,11 @@ module.exports = {
         }
     },
     onMount() {
-        var officeId = localStorageUtil.getInt("office_id");
-        if (officeId) {
-            this.changeOffice(officeId);
+        if (this.input.localstorage) {
+            var officeId = localStorageUtil.getInt("office_id");
+            if (officeId) {
+                this.changeOffice(officeId);
+            }
         }
     },
     changeOfficeEvent(event) {

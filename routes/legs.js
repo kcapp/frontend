@@ -60,8 +60,9 @@ router.get('/:id', function (req, res, next) {
     axios.all([
         axios.get(req.app.locals.kcapp.api + '/player'),
         axios.get(req.app.locals.kcapp.api + '/leg/' + req.params.id),
-        axios.get(req.app.locals.kcapp.api + '/leg/' + req.params.id + '/players')
-    ]).then(axios.spread((players, legResponse, legPlayers) => {
+        axios.get(req.app.locals.kcapp.api + '/leg/' + req.params.id + '/players'),
+        axios.get(req.app.locals.kcapp.api + '/statistics/global')
+    ]).then(axios.spread((players, legResponse, legPlayers, globalStatistics) => {
         var leg = legResponse.data;
         axios.get(req.app.locals.kcapp.api + '/match/' + leg.match_id)
             .then(response => {
@@ -73,7 +74,7 @@ router.get('/:id', function (req, res, next) {
                     players: players.data,
                     match: match,
                     leg_players: legPlayers,
-                    options: { socketio_url: req.app.locals.socketio_url }
+                    global_statistics: globalStatistics.data
                 });
             }).catch(error => {
                 debug('Error when getting match: ' + error);
