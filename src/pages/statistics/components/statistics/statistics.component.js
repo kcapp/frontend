@@ -16,7 +16,6 @@ module.exports = {
         window.location.href = '/statistics/' + from + '/' + to;
     },
     navigateNext() {
-        
         var from = this.state.to;
         var to = moment(this.state.to).isoWeekday(8).format('YYYY-MM-DD');
         var nextMonday = moment().isoWeekday(8).format('YYYY-MM-DD');

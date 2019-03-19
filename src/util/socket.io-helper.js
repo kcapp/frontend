@@ -50,7 +50,7 @@ exports.onScoreUpdate = (data, thiz) => {
 
         totalFishNChips += player.visit_statistics.fish_and_chips_counter;
     }
-    if (isLastVisitFishNChips) {
+    if (isLastVisitFishNChips && !data.is_undo) {
         var msg = alertify.notify(getFishNChipsHTML(totalFishNChips - 1, globalFish - 1), 'fish-n-chips', 5, () => {});
         setInterval(() => {  msg.setContent(getFishNChipsHTML(totalFishNChips, globalFish)); }, 1000);
     }
