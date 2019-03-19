@@ -122,17 +122,19 @@ module.exports = (io, app) => {
                                 announceScore(visit);
                                 axios.all([
                                     axios.get(app.locals.kcapp.api + '/leg/' + body.leg_id),
-                                    axios.get(app.locals.kcapp.api + '/leg/' + body.leg_id + '/players')
-                                ]).then(axios.spread((legData, playersData) => {
+                                    axios.get(app.locals.kcapp.api + '/leg/' + body.leg_id + '/players'),
+                                    axios.get(app.locals.kcapp.api + '/statistics/global')
+                                ]).then(axios.spread((legData, playersData, globalData) => {
                                     var leg = legData.data;
                                     var players = playersData.data;
+                                    var globalstat = globalData.data;
                                     if (leg.visits.length === 1) {
-                                        _this.io.of('/active').emit('first_throw', { leg: leg, players: players });
+                                        _this.io.of('/active').emit('first_throw', { leg: leg, players: players, globalstat: globalstat });
                                     }
                                     var current = _.findWhere(players, { is_current_player: true });
                                     announceRemainingScore(current);
 
-                                    nsp.emit('score_update', { leg: leg, players: players });
+                                    nsp.emit('score_update', { leg: leg, players: players, globalstat: globalstat });
                                 })).catch(error => {
                                     var message = error.message + ' (' + error + ')'
                                     debug('Error when getting leg: ' + message);
@@ -151,10 +153,11 @@ module.exports = (io, app) => {
                             .then(() => {
                                 axios.all([
                                     axios.get(app.locals.kcapp.api + '/leg/' + legId),
-                                    axios.get(app.locals.kcapp.api + '/leg/' + legId + '/players')
-                                ]).then(axios.spread((leg, players) => {
+                                    axios.get(app.locals.kcapp.api + '/leg/' + legId + '/players'),
+                                    axios.get(app.locals.kcapp.api + '/statistics/global')
+                                ]).then(axios.spread((leg, players, globalstat) => {
                                     nsp.emit('undo_visit', {});
-                                    nsp.emit('score_update', { leg: leg.data, players: players.data, is_undo: true });
+                                    nsp.emit('score_update', { leg: leg.data, players: players.data, globalstat: globalstat.data, is_undo: true });
                                 })).catch(error => {
                                     var message = error.message + ' (' + error.response.data.trim() + ')'
                                     debug('Error when getting leg: ' + message);

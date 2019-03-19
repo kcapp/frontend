@@ -20,6 +20,7 @@ exports.onScoreUpdate = (data, thiz) => {
     thiz.state.submitting = false;
 
     var leg = data.leg;
+    var globalstat = data.globalstat;
     thiz.state.roundNumber = Math.floor(leg.visits.length / leg.players.length) + 1;
 
     var players = data.players;
@@ -29,6 +30,7 @@ exports.onScoreUpdate = (data, thiz) => {
 
     var isLastVisitFishNChips = false;
     var totalFishNChips = 0;
+    var globalFish = globalstat.fish_n_chips;
     for (var i = 0; i < scorecardComponents.length; i++) {
         var component = scorecardComponents[i];
         var player = playersMap[component.state.playerId]
@@ -49,9 +51,8 @@ exports.onScoreUpdate = (data, thiz) => {
         totalFishNChips += player.visit_statistics.fish_and_chips_counter;
     }
     if (isLastVisitFishNChips) {
-        thiz.state.globalStatistics.fish_n_chips += 1;
-        var msg = alertify.notify(getFishNChipsHTML(totalFishNChips - 1, thiz.state.globalStatistics.fish_n_chips - 1), 'fish-n-chips', 5, () => {});
-        setInterval(() => {  msg.setContent(getFishNChipsHTML(totalFishNChips, thiz.state.globalStatistics.fish_n_chips)); }, 1000);
+        var msg = alertify.notify(getFishNChipsHTML(totalFishNChips - 1, globalFish - 1), 'fish-n-chips', 5, () => {});
+        setInterval(() => {  msg.setContent(getFishNChipsHTML(totalFishNChips, globalFish)); }, 1000);
     }
     thiz.state.leg = leg;
 }
