@@ -9,6 +9,7 @@
       </tr>
       <tr>
         <th class="text-left">Name</th>
+        <th>Office</th>
         <th>Played</th>
         <th>Won</th>
         <th>Win %</th>
@@ -26,6 +27,7 @@
             $ var displayName = player.first_name + (player.nickname ? ' "' + player.nickname + '"' : "") + (player.last_name ? " " + player.last_name : "");
             <a href=`/players/${player.id}/statistics`>${displayName}</a>
           </td>
+          <td>${input.offices[player.office_id].name}</td>
           <td>${player.matches_played}</td>
           <td>${player.matches_won}</td>
           <td>

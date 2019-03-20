@@ -66,7 +66,7 @@ $ var isFinished = leg.winner_player_id !== null;
               $ var player = input.players[statistic.player_id];
               <td class="text-center" style="padding: 10px;">
                 <div>
-                  <player-statistics-card header=true match=input.match statistic=statistic player=player leg=leg/>
+                  <player-statistics-card header=true elo=false match=input.match statistic=statistic player=player leg=leg/>
                 </div>
               </td>
             </for>

@@ -69,13 +69,23 @@ router.get('/:id', function (req, res, next) {
                 var match = response.data;
                 // Sort players based on order
                 legPlayers = _.sortBy(legPlayers.data, (player) => player.order)
-                res.marko(x01InputTemplate, {
-                    leg: leg,
-                    players: players.data,
-                    match: match,
-                    leg_players: legPlayers,
-                    global_statistics: globalStatistics.data
-                });
+                if (match.match_type.id === 2) {
+                    // TODO Move this view to marko
+                    res.render('leg/entry_shootout.pug', {
+                        leg: leg,
+                        players: players.data,
+                        match: match,
+                        leg_players: legPlayers
+                    });
+                } else {
+                    res.marko(x01InputTemplate, {
+                        leg: leg,
+                        players: players.data,
+                        match: match,
+                        leg_players: legPlayers,
+                        global_statistics: globalStatistics.data
+                    });
+                }
             }).catch(error => {
                 debug('Error when getting match: ' + error);
                 next(error);

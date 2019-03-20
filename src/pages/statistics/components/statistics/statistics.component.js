@@ -26,12 +26,17 @@ module.exports = {
     officeChanged(officeId) {
         if (officeId == 0) {
             this.state.x01 = this.input.x01;
+            this.state.shootout = this.input.shootout;
         } else {
             var players = this.input.players;
-            this.state.x01 = _.reject(this.input.x01, function (stats) { 
+            this.state.x01 = _.reject(this.input.x01, (stats) => { 
                 return players[stats.player_id].office_id != officeId ; 
+            });
+            this.state.shootout = _.reject(this.input.shootout, (stats) => {
+                return players[stats.player_id].office_id != officeId;
             });
         }
         this.setStateDirty("x01");
+        this.setStateDirty("shootout");
     }
 }

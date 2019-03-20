@@ -27,7 +27,7 @@ $ var startingScore = input.player.starting_score || 0;
       <statistics-row heading="Accuracy Overall / 20 / 19" value=`${statistic.accuracy_overall.toFixed(2)} / ${accuracy_20} / ${accuracy_19}`/>
       $ var checkout = (statistic.checkout_percentage === null || statistic.checkout_percentage == 0 ? "-" : statistic.checkout_percentage.toFixed(2) + "%") + " / " + (statistic.checkout_attempts ? statistic.checkout_attempts : 0);
       <statistics-row heading="Checkout % / Attempts" value=checkout/>
-      <if(match.elo_change)>
+      <if(match.elo_change && input.elo)>
         $ var elo = match.elo_change[player.id];
         <if(match.tournament)>
           $ var change = elo.tournament_elo_new - elo.tournament_elo;

@@ -5,7 +5,7 @@
       <thead>
         <tr>
           <th class="pl-10">Name</th>
-          <th class="text-center">Short Name</th>
+          <th class="text-center hidden-xs">Short Name</th>
           <th class="text-center">Office</th>
           <th class="text-center">Start Time</th>
           <th class="text-center">End Time</th>
@@ -16,8 +16,8 @@
         <for|tournament| of=input.tournaments>
           <tr>
             <td class="pl-10">${tournament.name}</td>
-            <td class="text-center">
-              <div style="display: inline-block; padding-right: 6px">${tournament.short_name}</div>
+            <td class="text-center hidden-xs">
+             <div style="display: inline-block; padding-right: 6px">${tournament.short_name}</div>
             </td>
             <td class="pl-10">${input.offices[tournament.office_id].name}</td>
             <td class="text-center">
