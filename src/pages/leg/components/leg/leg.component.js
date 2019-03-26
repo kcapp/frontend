@@ -25,13 +25,14 @@ module.exports = {
     onMount() {
         document.write('<script type="text/javascript" src="/javascripts/responsivevoice.1.5.8..js"><\/script>');
         setTimeout(() => { this.state.responsiveVoice = responsiveVoice; }, 100);
-        
+
         document.addEventListener("keydown", this.onKeyDown.bind(this), false);
         document.addEventListener("keypress", this.onKeyPress.bind(this), false);
 
         // Setup socket endpoints
         var socket = io.connect(window.location.origin + '/legs/' + this.state.legId);
         socket.on('score_update', this.onScoreUpdate.bind(this));
+        socket.on('possible_throw', this.onPossibleThrowEvent.bind(this));
         socket.on('say', this.onSay.bind(this));
         this.state.socket = socket;
         this.state.audioAnnouncer = new Audio();
@@ -54,8 +55,21 @@ module.exports = {
         io.say(data, this);
     },
 
+    onPossibleThrowEvent(data) {
+        io.onPossibleThrow(data, this);
+    },
+
     onScoreUpdate(data) {
         io.onScoreUpdate(data, this);
+        if (data.is_finished) {
+            console.log("Match is finished!");
+            var match = data.match;
+            if (match.is_finished) {
+                location.href = window.location.origin + "/matches/" + this.input.leg.match_id + "/result";
+            } else {
+                location.href = window.location.origin + "/matches/" + this.input.leg.match_id;
+            }
+        }
     },
 
     onScoreChange(scored, component) {
@@ -86,7 +100,8 @@ module.exports = {
             is_bust: isBust,
             is_finished: isCheckout,
             darts_thrown: dartsThrown,
-            is_undo: isUndo
+            is_undo: isUndo,
+            origin: 'web'
         });
     },
 

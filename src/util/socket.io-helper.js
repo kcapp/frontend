@@ -30,14 +30,14 @@ exports.onScoreUpdate = (data, thiz) => {
 
     var isLastVisitFishNChips = false;
     var totalFishNChips = 0;
-    var globalFish = globalstat.fish_n_chips;
+    var globalFish = globalstat ? globalstat.fish_n_chips : 0;
     for (var i = 0; i < scorecardComponents.length; i++) {
         var component = scorecardComponents[i];
         var player = playersMap[component.state.playerId]
 
         var isCurrentPlayer = component.state.playerId === leg.current_player_id;
         if (isCurrentPlayer) {
-            isLastVisitFishNChips = players[i === 0 ? players.length - 1 : i - 1].modifiers.is_fish_and_chips; 
+            isLastVisitFishNChips = players[i === 0 ? players.length - 1 : i - 1].modifiers.is_fish_and_chips;
             component.reset();
         }
         component.state.isCurrentPlayer = isCurrentPlayer;
@@ -70,7 +70,7 @@ exports.say = (data, thiz) => {
             }, false);
         } else {
             newPlayer.play();
-        }        
+        }
         thiz.state.audioAnnouncer = newPlayer;
     } else {
         if (responsiveVoice.isPlaying()) {
@@ -86,6 +86,27 @@ exports.say = (data, thiz) => {
             responsiveVoice.speak(data.text, data.voice, data.options);
         }
     }
+}
+
+exports.onPossibleThrow = (data, thiz) => {
+    if (data.origin === 'web') {
+        // No need to update possible throw if we just sent the throw
+        return;
+    }
+    var component = thiz.findActive(thiz.getComponents('players'));
+
+    // Set current dart
+    if (data.is_undo) {
+        component.getDart(data.darts_thrown).reset();
+    } else {
+        component.setDart(data.score, data.multiplier, data.darts_thrown);
+    }
+    // Set total score
+    component.state.totalScore += data.score * data.multiplier;
+
+    // Update player score
+    var header = thiz.getComponent('player-' + data.current_player_id);
+    header.state.currentScore -= (data.score * data.multiplier)
 }
 
 

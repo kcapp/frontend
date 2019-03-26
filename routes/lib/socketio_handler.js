@@ -63,8 +63,18 @@ module.exports = (io, app) => {
                     debug("Client %s connected to '%s'", ip, namespace);
 
                     client.on('join', function () {
-                        client.emit('connected', 'Connected to server');
-                        client.emit('chat_message', chatHistory.join(''));
+                        axios.all([
+                            axios.get(app.locals.kcapp.api + '/leg/' + legId),
+                            axios.get(app.locals.kcapp.api + '/leg/' + legId + '/players')
+                        ]).then(axios.spread((legData, playersData) => {
+                            var leg = legData.data;
+                            var players = playersData.data;
+                            client.emit('connected', { leg: leg, players: players });
+                        })).catch(error => {
+                            var message = error.message + ' (' + error + ')'
+                            debug('Error when getting leg: ' + message);
+                            nsp.emit('error', { message: error.message, code: error.code });
+                        });
                     });
 
                     client.on('spectator_connected', function () {
@@ -128,13 +138,28 @@ module.exports = (io, app) => {
                                     var leg = legData.data;
                                     var players = playersData.data;
                                     var globalstat = globalData.data;
-                                    if (leg.visits.length === 1) {
-                                        _this.io.of('/active').emit('first_throw', { leg: leg, players: players, globalstat: globalstat });
-                                    }
-                                    var current = _.findWhere(players, { is_current_player: true });
-                                    announceRemainingScore(current);
 
-                                    nsp.emit('score_update', { leg: leg, players: players, globalstat: globalstat });
+                                    if (leg.is_finished) {
+                                        axios.get(app.locals.kcapp.api + '/match/' + leg.match_id)
+                                            .then((response) => {
+                                                var match = response.data;
+
+                                                _this.io.of('/active').emit('leg_finished', { leg: leg, match: match });
+                                                nsp.emit('score_update', { leg: leg, players: players, match: match, is_finished: true });
+                                            }).catch(error => {
+                                                var message = error.message + ' (' + error + ')'
+                                                debug('Error when getting match: ' + message);
+                                                nsp.emit('error', { message: error.message, code: error.code });
+                                            });
+                                    } else {
+                                        if (leg.visits.length === 1) {
+                                            _this.io.of('/active').emit('first_throw', { leg: leg, players: players, globalstat: globalstat });
+                                        }
+                                        var current = _.findWhere(players, { is_current_player: true });
+                                        announceRemainingScore(current);
+
+                                        nsp.emit('score_update', { leg: leg, players: players, globalstat: globalstat });
+                                    }
                                 })).catch(error => {
                                     var message = error.message + ' (' + error + ')'
                                     debug('Error when getting leg: ' + message);
