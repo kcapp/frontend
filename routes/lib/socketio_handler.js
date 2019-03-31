@@ -129,7 +129,6 @@ module.exports = (io, app) => {
                         axios.post(app.locals.kcapp.api + '/visit', body)
                             .then((response) => {
                                 var visit = response.data;
-                                announceScore(visit);
                                 axios.all([
                                     axios.get(app.locals.kcapp.api + '/leg/' + body.leg_id),
                                     axios.get(app.locals.kcapp.api + '/leg/' + body.leg_id + '/players'),
@@ -158,7 +157,8 @@ module.exports = (io, app) => {
                                         if (leg.visits.length === 1) {
                                             _this.io.of('/active').emit('first_throw', { leg: leg, players: players, globalstat: globalstat });
                                         }
-                                        announceRemainingScore(currentPlayer);
+                                        announceScored(visit);
+                                        announceScoreRemaining(currentPlayer);
 
                                         nsp.emit('score_update', { leg: leg, players: players, globalstat: globalstat });
                                     }
@@ -198,7 +198,7 @@ module.exports = (io, app) => {
                     });
                 });
 
-                function announceScore(visit) {
+                function announceScored(visit) {
                     var score = visit.first_dart.value * visit.first_dart.multiplier +
                         visit.second_dart.value * visit.second_dart.multiplier +
                         visit.third_dart.value * visit.third_dart.multiplier;
@@ -211,7 +211,7 @@ module.exports = (io, app) => {
                     announce(text, 'score', options);
                 }
 
-                function announceRemainingScore(player) {
+                function announceScoreRemaining(player) {
                     var score = player.current_score;
                     if (score < 171 && ![169, 168, 166, 165, 163, 162, 159].includes(score)) {
                         var name = player.player.vocal_name === null ? player.player.first_name : player.player.vocal_name;
