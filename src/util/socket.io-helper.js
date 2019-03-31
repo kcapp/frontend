@@ -51,8 +51,8 @@ exports.onScoreUpdate = (data, thiz) => {
         totalFishNChips += player.visit_statistics.fish_and_chips_counter;
     }
     if (isLastVisitFishNChips && !data.is_undo) {
-        var msg = alertify.notify(getFishNChipsHTML(totalFishNChips - 1, globalFish - 1), 'fish-n-chips', 5, () => {});
-        setInterval(() => {  msg.setContent(getFishNChipsHTML(totalFishNChips, globalFish)); }, 1000);
+        var msg = alertify.notify(getFishNChipsHTML(totalFishNChips - 1, globalFish - 1), 'fish-n-chips', 5, () => { });
+        setInterval(() => { msg.setContent(getFishNChipsHTML(totalFishNChips, globalFish)); }, 1000);
     }
     thiz.state.leg = leg;
 }
@@ -62,7 +62,7 @@ exports.say = (data, thiz) => {
     // it is finished, before saying anything else
     var oldPlayer = thiz.state.audioAnnouncer;
     var isAudioAnnouncement = (oldPlayer.duration > 0 && !oldPlayer.paused);
-    if (data.type === 'score' &&  ['100', '140', '180'].includes(data.text)) {
+    if (data.type === 'score' && ['100', '140', '180'].includes(data.text)) {
         var newPlayer = new Audio('/audio/' + data.text + '.mp3');
         if (isAudioAnnouncement) {
             oldPlayer.addEventListener("ended", () => {
@@ -77,7 +77,7 @@ exports.say = (data, thiz) => {
             setTimeout(function () {
                 responsiveVoice.speak(data.text, data.voice, data.options);
             }, 1500)
-        }  else if (isAudioAnnouncement) {
+        } else if (isAudioAnnouncement) {
             oldPlayer.addEventListener("ended", () => {
                 responsiveVoice.speak(data.text, data.voice, data.options);
             }, false);
@@ -108,7 +108,6 @@ exports.onPossibleThrow = (data, thiz) => {
     var header = thiz.getComponent('player-' + data.current_player_id);
     header.state.currentScore -= (data.score * data.multiplier)
 }
-
 
 function getFishNChipsHTML(countLeg, countGlobal) {
     return `

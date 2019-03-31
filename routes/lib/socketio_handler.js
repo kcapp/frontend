@@ -137,15 +137,18 @@ module.exports = (io, app) => {
                                 ]).then(axios.spread((legData, playersData, globalData) => {
                                     var leg = legData.data;
                                     var players = playersData.data;
+                                    var currentPlayer = _.findWhere(players, { is_current_player: true });
                                     var globalstat = globalData.data;
 
                                     if (leg.is_finished) {
                                         axios.get(app.locals.kcapp.api + '/match/' + leg.match_id)
                                             .then((response) => {
                                                 var match = response.data;
+                                                announceLegFinished(currentPlayer, match)
 
                                                 _this.io.of('/active').emit('leg_finished', { leg: leg, match: match });
-                                                nsp.emit('score_update', { leg: leg, players: players, match: match, is_finished: true });
+                                                nsp.emit('score_update', { leg: leg, players: players, match: match });
+                                                nsp.emit('leg_finished', { leg: leg, match: match });
                                             }).catch(error => {
                                                 var message = error.message + ' (' + error + ')'
                                                 debug('Error when getting match: ' + message);
@@ -155,8 +158,7 @@ module.exports = (io, app) => {
                                         if (leg.visits.length === 1) {
                                             _this.io.of('/active').emit('first_throw', { leg: leg, players: players, globalstat: globalstat });
                                         }
-                                        var current = _.findWhere(players, { is_current_player: true });
-                                        announceRemainingScore(current);
+                                        announceRemainingScore(currentPlayer);
 
                                         nsp.emit('score_update', { leg: leg, players: players, globalstat: globalstat });
                                     }
@@ -198,8 +200,8 @@ module.exports = (io, app) => {
 
                 function announceScore(visit) {
                     var score = visit.first_dart.value * visit.first_dart.multiplier +
-                            visit.second_dart.value * visit.second_dart.multiplier +
-                            visit.third_dart.value * visit.third_dart.multiplier;
+                        visit.second_dart.value * visit.second_dart.multiplier +
+                        visit.third_dart.value * visit.third_dart.multiplier;
                     var text = '' + score;
                     var options = {};
                     if (visit.is_bust) {
@@ -211,9 +213,19 @@ module.exports = (io, app) => {
 
                 function announceRemainingScore(player) {
                     var score = player.current_score;
-                    if (score < 171 && ![169,168,166,165,163,162,159].includes(score)) {
+                    if (score < 171 && ![169, 168, 166, 165, 163, 162, 159].includes(score)) {
                         var name = player.player.vocal_name === null ? player.player.first_name : player.player.vocal_name;
                         announce(name + " you require " + score, 'remaining_score', {});
+                    }
+                }
+
+                function announceLegFinished(player, match) {
+                    var legNum = match.legs.length + (["st", "nd", "rd"][((match.legs.length + 90) % 100 - 10) % 10 - 1] || "th");
+                    var name = player.player.vocal_name === null ? player.player.first_name : player.player.vocal_name;
+                    if (match.is_finished) {
+                        announce(`Game shot, AND THE MATCH!!!, ${name}!`, 'game_shot', {});
+                    } else {
+                        announce(`Game shot in the ${legNum} leg!, ${name}!`, 'game_shot', {});
                     }
                 }
 

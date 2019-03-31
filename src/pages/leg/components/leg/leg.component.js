@@ -18,7 +18,7 @@ module.exports = {
             socket: {},
             responsiveVoice: {},
             audioAnnouncer: undefined,
-            legNum: input.match.legs.length + (["st", "nd", "rd"][((input.match.legs.length + 90) % 100 - 10) % 10 - 1] || "th"),
+            legNum: input.match.legs.length + (["st", "nd", "rd"][((input.match.legs.length + 90) % 100 - 10) % 10 - 1] || "th")
         }
     },
 
@@ -34,6 +34,17 @@ module.exports = {
         socket.on('score_update', this.onScoreUpdate.bind(this));
         socket.on('possible_throw', this.onPossibleThrowEvent.bind(this));
         socket.on('say', this.onSay.bind(this));
+        socket.on('leg_finished', (data) => {
+            setTimeout(() => {
+                // Wait until moving forward so we get leg finished announcement
+                var match = data.match;
+                if (match.is_finished) {
+                    location.href = `${window.location.origin}/matches/${match.id}/result`;
+                } else {
+                    location.href = `${window.location.origin}/matches/${match.id}`;
+                }
+            }, 2000);
+        });
         this.state.socket = socket;
         this.state.audioAnnouncer = new Audio();
 
@@ -61,15 +72,6 @@ module.exports = {
 
     onScoreUpdate(data) {
         io.onScoreUpdate(data, this);
-        if (data.is_finished) {
-            console.log("Match is finished!");
-            var match = data.match;
-            if (match.is_finished) {
-                location.href = window.location.origin + "/matches/" + this.input.leg.match_id + "/result";
-            } else {
-                location.href = window.location.origin + "/matches/" + this.input.leg.match_id;
-            }
-        }
     },
 
     onScoreChange(scored, component) {
@@ -107,25 +109,8 @@ module.exports = {
 
     onLegFinished(finished, component) {
         if (finished) {
-            var currentPlayer = this.input.players[this.state.leg.current_player_id];
-            var name = currentPlayer.vocal_name ? currentPlayer.vocal_name : currentPlayer.first_name;
-            this.state.socket.emit('speak', { text: "Game shot in the " + this.state.legNum + " leg!, " + name + "!", type: 'game_shot' });
-
-            axios.post(window.location.origin + '/legs/' + this.state.legId + '/finish', component.getPayload())
-                .then(response => {
-                    var match = response.data;
-                    setTimeout(() => {
-                        // We want to make sure we finish talking before redirecting
-                        // TODO Improve this by checking responsiveVoice.isPlaying etc.
-                        if (match.is_finished) {
-                            location.href = window.location.origin + "/matches/" + this.input.leg.match_id + "/result";
-                        } else {
-                            location.href = window.location.origin + "/matches/" + this.input.leg.match_id;
-                        }
-                    }, 1500);
-                }).catch(error => {
-                    console.log(error);
-                });
+            var component = this.findActive(this.getComponents('players'));
+            this.state.socket.emit('throw', JSON.stringify(component.getPayload()));
         } else {
             this.state.submitting = false;
         }

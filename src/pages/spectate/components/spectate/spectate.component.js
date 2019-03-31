@@ -18,12 +18,15 @@ module.exports = {
         var socket = io.connect(window.location.origin + '/legs/' + this.state.legId);
         socket.on('score_update', this.onScoreUpdate.bind(this));
         socket.on('possible_throw', this.onPossibleThrow.bind(this));
-        socket.on('leg_finished', this.onLegFinished.bind(this));
+        socket.on('leg_finished', (data) => {
+            var match = data.match;
+            if (match.is_finished) {
+                location.href = `${window.location.origin}/matches/${match.id}/result`;
+            } else {
+                location.href = `${window.location.origin}/matches/${match.id}/spectate`;
+            }
+        });
         this.state.socket = socket;
-    },
-
-    onLegFinished(data) {
-        location.reload();
     },
 
     onScoreUpdate(data) {
