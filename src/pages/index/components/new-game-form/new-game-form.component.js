@@ -152,7 +152,7 @@ module.exports = {
     newGame(event) {
         var officeId = this.state.officeId;
         if (officeId <= 0) {
-            if (officeId == 0 && this.state.options.venue !== -1) {
+            if (officeId == 0 && this.state.options.venue && this.state.options.venue !== -1) {
                 officeId = this.input.venues[this.state.options.venue].office_id;
             } else {
                 officeId = null;
