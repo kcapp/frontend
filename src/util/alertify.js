@@ -38,6 +38,10 @@ exports.success = (text) => {
     bootstrap().success(text);
 }
 
+exports.error = (text) => {
+    bootstrap().error(text);
+}
+
 exports.notify = (text, clazz, wait, callback) => {
     return bootstrap().notify(text, clazz, wait, callback);
 };

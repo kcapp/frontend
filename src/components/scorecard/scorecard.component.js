@@ -16,6 +16,7 @@ module.exports = {
             isBusted: false
         }
     },
+    
     reset() {
         this.state.totalScore = 0;
         this.state.currentDart = 1;
@@ -27,23 +28,29 @@ module.exports = {
         this.getComponent(DART_CONTAINER_MAP[2]).reset();
         this.getComponent(DART_CONTAINER_MAP[3]).reset();
     },
+
     getDart(idx) {
         return this.getComponent(DART_CONTAINER_MAP[idx]);
     },
+
     getCurrentDart() {
         return this.getComponent(DART_CONTAINER_MAP[this.state.currentDart]);
     },
+
     getCurrentValue() {
         var dart = this.getCurrentDart();
         return dart ? dart.state.value : 0;
     },
+
     getCurrentMultiplier() {
         var dart = this.getCurrentDart()
         return dart ? dart.state.multiplier : 1;
     },
+
     getDartsThrown() {
         return this.state.currentDart;
     },
+
     removeLast() {
         if (this.state.currentDart <= 1 && this.state.isSubmitted) {
             this.emit('undo-throw');
@@ -65,6 +72,7 @@ module.exports = {
         }
         this.state.isSubmitted = true;
     },
+
     confirmThrow() {
         var submitting = false;
         if (this.state.currentDart <= 3 && !this.state.isBusted) {
@@ -108,18 +116,21 @@ module.exports = {
         }
         return submitting;
     },
+
     isBust(currentScore, thrown) {
         if (currentScore - thrown < 2) {
             return true;
         }
         return false;
     },
+
     isCheckout(currentScore, dart) {
         if (currentScore - dart.getValue() === 0 && dart.getMultiplier() === 2) {
             return true;
         }
         return false;
     },
+
     setDart(value, multiplier, idx) {
         var dart;
         if (idx) {
@@ -135,6 +146,7 @@ module.exports = {
         dart.setDart(newValue, multiplier);
         this.state.isSubmitted = false;
     },
+
     getPayload() {
         var first = this.getComponent(DART_CONTAINER_MAP[1]);
         var second = this.getComponent(DART_CONTAINER_MAP[2]);

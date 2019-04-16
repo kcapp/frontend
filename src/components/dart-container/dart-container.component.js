@@ -21,7 +21,8 @@ module.exports = {
             text: '',
             class: '',
             value: 0,
-            multiplier: 1
+            multiplier: 1,
+            initial: true
         }
     },
     getValue() {
@@ -57,6 +58,7 @@ module.exports = {
                 dart.text = dart.value;
             }
         }
+        this.state.initial = false;
     },
     toJSON() {
         return {

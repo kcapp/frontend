@@ -98,8 +98,10 @@ exports.onPossibleThrow = (data, thiz) => {
     // Set current dart
     if (data.is_undo) {
         component.getDart(data.darts_thrown).reset();
+        component.state.currentDart--;
     } else {
         component.setDart(data.score, data.multiplier, data.darts_thrown);
+        component.state.currentDart++;
     }
     // Set total score
     component.state.totalScore += data.score * data.multiplier;
@@ -107,6 +109,20 @@ exports.onPossibleThrow = (data, thiz) => {
     // Update player score
     var header = thiz.getComponent('player-' + data.current_player_id);
     header.state.currentScore -= (data.score * data.multiplier)
+}
+
+exports.onAnnounce = function (data) {
+    if (data.type == 'success') {
+        alertify.success(data.message);
+    } else if (data.type == 'notify') {
+        alertify.notify(data.message);
+    } else if (data.type == 'error') {
+        alertify.error(data.message);
+    } else if (data.type == 'confirm_checkout') {
+        $("#modal-confirm-checkout").modal();
+    } else {
+        alertify.notify(data.message);
+    }
 }
 
 function getFishNChipsHTML(countLeg, countGlobal) {

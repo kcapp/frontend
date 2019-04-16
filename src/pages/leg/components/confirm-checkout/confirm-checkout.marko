@@ -1,0 +1,35 @@
+<div id="modal-confirm-checkout" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modal-confirm-checkout-title" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Confirm Checkout</h4>
+      </div>
+      <div class="modal-body">
+        <h4>Darts used for Checkout</h4>
+        <button class="btn btn-primary" type="button" data-checkout-darts=1 on-click("onConfirmCheckout")>
+          <div class="text-center">
+            <label class="key-small">1</label>
+            <label class="pl-10">1</label>
+          </div>
+        </button>
+        <button class="btn btn-primary" type="button" data-checkout-darts=2 on-click("onConfirmCheckout")>
+          <div class="text-center">
+            <label class="key-small">2</label>
+            <label class="pl-10">2</label>
+          </div>
+        </button>
+        <button class="btn btn-primary" type="button" data-checkout-darts=3 on-click("onConfirmCheckout")>
+          <div class="text-center">
+            <label class="key-small">3</label>
+            <label class="pl-10">3</label>
+          </div>                    
+        </button>      
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-primary" type="button" data-dismiss="modal">
+          <label>Cancel</label>              
+        </button>        
+      </div>
+    </div>
+  </div>
+</div>

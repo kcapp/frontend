@@ -77,6 +77,11 @@ module.exports = (io, app) => {
                         });
                     });
 
+                    client.on('announce', function(data) {
+                        debug(`Got announcement: ${JSON.stringify(data)}`);
+                        nsp.emit('announce', data);
+                    });
+
                     client.on('spectator_connected', function () {
                         debug('Spectator connected: %s', ip);
                         nsp.emit('spectator_connected', 'Spectator');
@@ -88,9 +93,6 @@ module.exports = (io, app) => {
                     });
 
                     client.on('possible_throw', function (data) {
-                        if (typeof data === "string") {
-                            data = JSON.parse(data);
-                        }
                         debug('possible_throw %s', JSON.stringify(data))
                         nsp.emit('possible_throw', data);
                     });

@@ -33,7 +33,9 @@ module.exports = {
         var socket = io.connect(window.location.origin + '/legs/' + this.state.legId);
         socket.on('score_update', this.onScoreUpdate.bind(this));
         socket.on('possible_throw', this.onPossibleThrowEvent.bind(this));
-        socket.on('say', this.onSay.bind(this));
+        //socket.on('say', this.onSay.bind(this));
+        //socket.on('announce', this.onAnnounce.bind(this));
+        socket.on('announce', io.onAnnounce.bind(this));
         socket.on('leg_finished', (data) => {
             setTimeout(() => {
                 // Wait until moving forward so we get leg finished announcement
@@ -61,7 +63,9 @@ module.exports = {
             }
         }
     },
-
+    onAnnounce(data) {
+        io.announce(data, this);
+    },
     onSay(data) {
         io.say(data, this);
     },
@@ -105,6 +109,38 @@ module.exports = {
             is_undo: isUndo,
             origin: 'web'
         });
+    },
+
+    onConfirmCheckout(actualThrown) {
+        var component = this.findActive(this.getComponents('players'));
+        var thrown = component.getDartsThrown() - 1;
+
+        if (actualThrown < thrown ) {
+            alertify.alert('Thrown cannot be less than actually thrown', () => { });
+            return;
+        }
+
+        if (thrown === 3 || actualThrown == thrown) {
+            // We don't need to do anything...
+        } else if (thrown === 1) {
+            // Shift the final dart to correct position,
+            component.setDart(component.getCurrentValue(), component.getCurrentMultiplier(), actualThrown);
+            // then add misses for remaining darts
+            for (var i = 1; i < actualThrown; i++) {
+                component.getDart(i).setDart(0, 1);
+            }
+        } else if (thrown == 2) {
+            // Shift dart two to three,
+            var second = component.getDart(2);
+            component.getDart(3).setDart(second.getScore(), second.getMultiplier());
+            // dart one to two,
+            var first = component.getDart(1);
+            component.getDart(2).setDart(first.getScore(), first.getMultiplier());
+            // and add a miss
+            component.getDart(1).setDart(0, 1);
+        }
+        $("#modal-confirm-checkout").hide();
+        this.onLegFinished(true);
     },
 
     onLegFinished(finished, component) {
