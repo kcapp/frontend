@@ -33,8 +33,7 @@ module.exports = {
         var socket = io.connect(window.location.origin + '/legs/' + this.state.legId);
         socket.on('score_update', this.onScoreUpdate.bind(this));
         socket.on('possible_throw', this.onPossibleThrowEvent.bind(this));
-        //socket.on('say', this.onSay.bind(this));
-        //socket.on('announce', this.onAnnounce.bind(this));
+        socket.on('say', this.onSay.bind(this));
         socket.on('announce', io.onAnnounce.bind(this));
         socket.on('leg_finished', (data) => {
             setTimeout(() => {
