@@ -65,14 +65,27 @@ router.get('/page/:page/old', function (req, res, next) {
 
 /** Continue the given match */
 router.get('/:id', function (req, res, next) {
-    axios.put(req.app.locals.kcapp.api + '/match/' + req.params.id + '/continue')
+    axios.get(req.app.locals.kcapp.api + '/match/' + req.params.id)
         .then(response => {
-            var leg = response.data;
-            this.socketHandler.setupLegsNamespace(leg.id);
-            res.redirect('/legs/' + leg.id);
+            var match = response.data
+            axios.put(req.app.locals.kcapp.api + '/match/' + req.params.id + '/continue')
+                .then(response => {
+                    var leg = response.data;
+                    this.socketHandler.setupLegsNamespace(leg.id);
+
+                    // Forward all spectating clients to next leg
+                    this.socketHandler.emitMessage('/legs/' + match.current_leg_id, 'new_leg', {
+                        match: match,
+                        leg: leg
+                    });
+                    res.redirect('/legs/' + leg.id);
+                }).catch(error => {
+                    debug('Unable to continue leg: ' + error);
+                    res.redirect('/matches/' + req.params.id + '/result');
+                });
         }).catch(error => {
-            debug('Unable to continue leg: ' + error);
-            res.redirect('/matches/' + req.params.id + '/result');
+            debug('Error when getting match: ' + error);
+            next(error)
         });
 });
 
