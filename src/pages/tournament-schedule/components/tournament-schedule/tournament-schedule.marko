@@ -1,0 +1,31 @@
+<div class="block-container-orange" style="margin-top: 50px; box-shadow: 0px 0px 12px 0px black; height: 65px; margin-left: 20px; overflow: initial;">
+    <span class="tournament-name">${input.tournament.name}</span>
+    <span class="fa-stack" style="position: relative; left: 0; margin-left: 60px; margin-top: -120px; left: -640px;">
+        <i class="fa fa-circle fa-stack-2x col-single" style="color: #05770f; font-size: 140px; text-shadow: 0px 0px 6px #000;"></i>
+        <i class="fa fa-trophy fa-stack-2x col-single" style="color: white; font-size: 80px; margin-left: 25px; margin-top: 30px;"></i>
+    </span>
+</div>
+<div style="margin-top: 50px;">
+    <for|data| of=input.metadata>
+        $ var match = state.matches[data.match_id]
+        <div class="block-container" style="height: 80px; margin-top: 40px;">
+           <span class="tournament-division-info">${data.tournament_group.name} - ${data.match_displayname}</span>
+            <div style="padding-top: 18px;">
+                <div class="pname" style="40%; float: left; text-align: right;">${input.players[data.player_home].name}</div>
+                <div class="pscore">
+                    <if(match.is_finished)>
+                        <span>${match.result}</span>
+                    </if>
+                    <else>
+                        <span/>
+                    </else>
+                </div>
+                <div class="pname" style="float: right; text-align: left;">${input.players[data.player_away].name}
+                  <if(match.is_walkover)>
+                      <div class="walkover-title">walkover</div>
+                  </if>
+                </div>
+            </div>
+        </div>
+    </for>
+</div>

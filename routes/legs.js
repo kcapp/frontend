@@ -12,8 +12,44 @@ var spectateTemplate = require('../src/pages/spectate/spectate-template.marko');
 var legResultTemplate = require('../src/pages/leg-result/leg-result-template.marko');
 
 /* Render the leg view */
-router.get('/:id/old', function (req, res, next) {
-    getLegView(req, res, next, false)
+router.get('/:id', function (req, res, next) {
+    axios.all([
+        axios.get(req.app.locals.kcapp.api + '/player'),
+        axios.get(req.app.locals.kcapp.api + '/leg/' + req.params.id),
+        axios.get(req.app.locals.kcapp.api + '/leg/' + req.params.id + '/players'),
+        axios.get(req.app.locals.kcapp.api + '/statistics/global')
+    ]).then(axios.spread((players, legResponse, legPlayers, globalStatistics) => {
+        var leg = legResponse.data;
+        axios.get(req.app.locals.kcapp.api + '/match/' + leg.match_id)
+            .then(response => {
+                var match = response.data;
+                // Sort players based on order
+                legPlayers = _.sortBy(legPlayers.data, (player) => player.order)
+                if (match.match_type.id === 2) {
+                    // TODO Move this view to marko
+                    res.render('leg/entry_shootout.pug', {
+                        leg: leg,
+                        players: players.data,
+                        match: match,
+                        leg_players: legPlayers
+                    });
+                } else {
+                    res.marko(x01InputTemplate, {
+                        leg: leg,
+                        players: players.data,
+                        match: match,
+                        leg_players: legPlayers,
+                        global_statistics: globalStatistics.data
+                    });
+                }
+            }).catch(error => {
+                debug('Error when getting match: ' + error);
+                next(error);
+            });
+    })).catch(error => {
+        debug('Error when getting data for leg ' + error);
+        next(error);
+    });
 });
 
 /* Render the vertical leg view */
@@ -55,76 +91,7 @@ function getLegView(req, res, next, vertical) {
     });
 }
 
-/* Render the leg view */
-router.get('/:id', function (req, res, next) {
-    axios.all([
-        axios.get(req.app.locals.kcapp.api + '/player'),
-        axios.get(req.app.locals.kcapp.api + '/leg/' + req.params.id),
-        axios.get(req.app.locals.kcapp.api + '/leg/' + req.params.id + '/players'),
-        axios.get(req.app.locals.kcapp.api + '/statistics/global')
-    ]).then(axios.spread((players, legResponse, legPlayers, globalStatistics) => {
-        var leg = legResponse.data;
-        axios.get(req.app.locals.kcapp.api + '/match/' + leg.match_id)
-            .then(response => {
-                var match = response.data;
-                // Sort players based on order
-                legPlayers = _.sortBy(legPlayers.data, (player) => player.order)
-                if (match.match_type.id === 2) {
-                    // TODO Move this view to marko
-                    res.render('leg/entry_shootout.pug', {
-                        leg: leg,
-                        players: players.data,
-                        match: match,
-                        leg_players: legPlayers
-                    });
-                } else {
-                    res.marko(x01InputTemplate, {
-                        leg: leg,
-                        players: players.data,
-                        match: match,
-                        leg_players: legPlayers,
-                        global_statistics: globalStatistics.data
-                    });
-                }
-            }).catch(error => {
-                debug('Error when getting match: ' + error);
-                next(error);
-            });
-    })).catch(error => {
-        debug('Error when getting data for leg ' + error);
-        next(error);
-    });
-});
-
-
 /* Render the leg spectate view */
-router.get('/:id/spectate/old', function (req, res, next) {
-    axios.all([
-        axios.get(req.app.locals.kcapp.api + '/player'),
-        axios.get(req.app.locals.kcapp.api + '/leg/' + req.params.id),
-        axios.get(req.app.locals.kcapp.api + '/leg/' + req.params.id + '/players')
-    ]).then(axios.spread((players, legResponse, legPlayers) => {
-        var leg = legResponse.data;
-        axios.get(req.app.locals.kcapp.api + '/match/' + leg.match_id)
-            .then(response => {
-                var match = response.data;
-
-                res.render('leg/spectate', {
-                    leg: leg,
-                    players: players.data,
-                    match: match,
-                    leg_players: legPlayers.data
-                });
-            }).catch(error => {
-                debug('Error when getting match: ' + error);
-                next(error);
-            });
-    })).catch(error => {
-        debug('Error when getting data for leg spectate ' + error);
-        next(error);
-    });
-});
-
 router.get('/:id/spectate', function (req, res, next) {
     axios.all([
         axios.get(req.app.locals.kcapp.api + '/player'),
@@ -179,72 +146,6 @@ router.get('/:id/umpire', function (req, res, next) {
             });
     })).catch(error => {
         debug('Error when getting data for umpire ' + error);
-        next(error);
-    });
-});
-
-/* Method for getting results for a given leg */
-router.get('/:id/result/old', function (req, res, next) {
-    axios.all([
-        axios.get(req.app.locals.kcapp.api + '/player'),
-        axios.get(req.app.locals.kcapp.api + '/leg/' + req.params.id),
-        axios.get(req.app.locals.kcapp.api + '/leg/' + req.params.id + '/players'),
-        axios.get(req.app.locals.kcapp.api + '/leg/' + req.params.id + '/statistics')
-    ]).then(axios.spread((playerResponse, legResponse, legPlayersResponse, statistics) => {
-        var leg = legResponse.data;
-        axios.get(req.app.locals.kcapp.api + '/match/' + leg.match_id)
-            .then(response => {
-                var match = response.data;
-
-                var players = playerResponse.data;
-                var legPlayers = legPlayersResponse.data;
-                _.each(legPlayers, (player) => {
-                    players[player.player_id].starting_score = leg.starting_score + player.handicap;
-                    players[player.player_id].remaining_score = leg.starting_score + player.handicap;
-                });
-
-                _.each(leg.visits, (visit, index) => {
-                    var player = players[visit.player_id]
-                    var visitScore = (visit.first_dart.value * visit.first_dart.multiplier) +
-                        (visit.second_dart.value * visit.second_dart.multiplier) +
-                        (visit.third_dart.value * visit.third_dart.multiplier);
-                    if (!visit.is_bust) {
-                        if (match.match_type.id == 2) {
-                            player.remaining_score += visitScore;
-                        }
-                        else {
-                            player.remaining_score -= visitScore;
-                        }
-                    }
-
-                    var scores = player.remaining_score;
-                    for (var i = 1; i < leg.players.length; i++) {
-                        var nextVisit = leg.visits[index + i];
-                        if (!nextVisit) {
-                            // There is no next visit, so look at previous instead
-                            // Need to look in reverese order to keep the order of scores the same
-                            nextVisit = leg.visits[index - (leg.players.length - i)]
-                        }
-                        if (nextVisit) {
-                            scores += ' : ' + players[nextVisit.player_id].remaining_score;
-                        }
-                    }
-                    visit.scores = scores;
-                });
-
-                res.render('leg_result', {
-                    leg: leg,
-                    players: players,
-                    stats: statistics.data,
-                    match: match,
-                    leg_players: legPlayers
-                });
-            }).catch(error => {
-                debug('Error when getting match: ' + error);
-                next(error);
-            });
-    })).catch(error => {
-        debug('Error when getting data for leg ' + error);
         next(error);
     });
 });
@@ -314,7 +215,6 @@ router.get('/:id/result', function (req, res, next) {
         next(error);
     });
 });
-
 
 /* Delete the given visit */
 router.delete('/:id/visit/:visitid', function (req, res, next) {
