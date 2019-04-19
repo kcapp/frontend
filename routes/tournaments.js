@@ -228,7 +228,7 @@ router.get('/:id/schedule', function (req, res, next) {
 
         metadata = _.sortBy(metadata, 'order_of_play');
         res.marko(tournamentScheduleTemplate, {
-            tournament: tournament.data, players: players.data, metadata: metadata, matches: matchesMap
+            tournament: tournament.data, players: players.data, metadata: metadata, matches: matchesMap, locals: req.app.locals
         });
     })).catch(error => {
         debug('Error when getting data for tournament ' + error);
