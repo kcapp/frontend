@@ -160,8 +160,10 @@ module.exports = (io, app) => {
                                             _this.io.of('/active').emit('first_throw', { leg: leg, players: players, globalstat: globalstat });
                                         }
                                         announceScored(visit);
-                                        announceScoreRemaining(currentPlayer);
-
+                                        setTimeout(() => {
+                                            // There is a race between these two announcements, so delay the one slightly
+                                            announceScoreRemaining(currentPlayer);
+                                        }, 300);
                                         nsp.emit('score_update', { leg: leg, players: players, globalstat: globalstat });
                                     }
                                 })).catch(error => {
@@ -233,6 +235,7 @@ module.exports = (io, app) => {
 
                 function announce(text, type, options) {
                     var voice = "US English Female";
+                    debug("Sending voice line '%s'", text);
                     nsp.emit('say', { voice: voice, text: text, type: type, options: options });
                 }
                 debug("Created socket.io namespace '%s'", namespace);

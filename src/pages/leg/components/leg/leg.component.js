@@ -58,7 +58,9 @@ module.exports = {
             if (this.input.leg.visits.length === 0) {
                 var currentPlayer = this.input.players[this.input.leg.current_player_id];
                 var name = currentPlayer.vocal_name ? currentPlayer.vocal_name : currentPlayer.first_name;
-                socket.emit('speak', { text: this.state.legNum + " leg, " + name + " to throw first. Gameon!", type: 'leg_start' });
+                setTimeout(() => {
+                    socket.emit('speak', { text: this.state.legNum + " leg, " + name + " to throw first. Gameon!", type: 'leg_start' });
+                }, 500);
             }
         }
     },
@@ -122,8 +124,9 @@ module.exports = {
         if (thrown === 3 || actualThrown == thrown) {
             // We don't need to do anything...
         } else if (thrown === 1) {
+            var first = component.getDart(1);
             // Shift the final dart to correct position,
-            component.setDart(component.getCurrentValue(), component.getCurrentMultiplier(), actualThrown);
+            component.getDart(actualThrown).setDart(first.getScore(), first.getMultiplier());
             // then add misses for remaining darts
             for (var i = 1; i < actualThrown; i++) {
                 component.getDart(i).setDart(0, 1);
@@ -138,7 +141,7 @@ module.exports = {
             // and add a miss
             component.getDart(1).setDart(0, 1);
         }
-        $("#modal-confirm-checkout").hide();
+        document.getElementById('btn-dismiss-confirm-checkout').click();
         this.onLegFinished(true);
     },
 

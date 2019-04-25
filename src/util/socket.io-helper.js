@@ -60,6 +60,7 @@ exports.onScoreUpdate = (data, thiz) => {
 exports.say = (data, thiz) => {
     // Check if an audio clip is currently playing, if it is we don't want to wait until
     // it is finished, before saying anything else
+    console.log(data);
     var oldPlayer = thiz.state.audioAnnouncer;
     var isAudioAnnouncement = (oldPlayer.duration > 0 && !oldPlayer.paused);
     if (data.type === 'score' && ['100', '140', '180'].includes(data.text)) {
