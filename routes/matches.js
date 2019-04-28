@@ -245,35 +245,55 @@ router.post('/new', function (req, res, next) {
         debug('No players specified, unable to start leg');
         return res.redirect('/');
     }
-    var body = {
-        owe_type_id: req.body.match_stake == 0 ? null : req.body.match_stake,
-        venue_id: req.body.venue,
-        match_type: { id: req.body.match_type },
-        match_mode: { id: req.body.match_mode },
-        players: players.map(Number),
-        player_handicaps: req.body.player_handicaps,
-        legs: [{ starting_score: req.body.starting_score }],
-        office_id: req.body.office_id
-    }
-    axios.post(req.app.locals.kcapp.api + '/match', body)
-        .then(response => {
-            var match = response.data;
-            this.socketHandler.setupLegsNamespace(match.current_leg_id);
 
-            // Forward all spectating clients to next leg
-            if (match.venue) {
-                this.socketHandler.emitMessage('/venue/' + match.venue.id, 'venue_new_match', {
-                    match_id: match.id, leg_id: match.current_leg_id
-                });
-                this.socketHandler.emitMessage('/active', 'new_match', {
-                    match: match
-                });
+    axios.get(req.app.locals.kcapp.api + '/player')
+        .then(response => {
+            var playerMap = response.data;
+
+            var isPractice = players.length == 1;
+            for (var i = 0; i < players.length; i++) {
+                if (isPractice) {
+                    break;
+                }
+                var player = playerMap[players[i]];
+                isPractice = player.is_bot;
             }
-            res.status(200).send(match).end();
+
+            var body = {
+                owe_type_id: req.body.match_stake == 0 ? null : req.body.match_stake,
+                venue_id: req.body.venue,
+                match_type: { id: req.body.match_type },
+                match_mode: { id: req.body.match_mode },
+                players: players.map(Number),
+                player_handicaps: req.body.player_handicaps,
+                legs: [{ starting_score: req.body.starting_score }],
+                office_id: req.body.office_id,
+                is_practice: isPractice
+            }
+            axios.post(req.app.locals.kcapp.api + '/match', body)
+                .then(response => {
+                    var match = response.data;
+                    this.socketHandler.setupLegsNamespace(match.current_leg_id);
+
+                    // Forward all spectating clients to next leg
+                    if (match.venue) {
+                        this.socketHandler.emitMessage('/venue/' + match.venue.id, 'venue_new_match', {
+                            match_id: match.id, leg_id: match.current_leg_id
+                        });
+                        this.socketHandler.emitMessage('/active', 'new_match', {
+                            match: match
+                        });
+                    }
+                    res.status(200).send(match).end();
+                }).catch(error => {
+                    debug('Error when starting new match: ' + error);
+                    next(error);
+                });
         }).catch(error => {
             debug('Error when starting new match: ' + error);
             next(error);
         });
+
 });
 
 /* Method for starting a new match */
