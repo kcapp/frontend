@@ -18,6 +18,7 @@
         "cookie-parser": "^1.4.4",
         "debug": "^4.1.1",
         "express": "~5.0.0-alpha.7",
+        "kcapp-bot": "git+https://github.com/kcapp/bot.git",
         "lasso": "^3.2.9",
         "lasso-less": "^3.0.1",
         "lasso-marko": "^2.4.6",

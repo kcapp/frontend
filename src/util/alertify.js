@@ -1,4 +1,3 @@
-
 const TITLE = 'kcapp';
 var alertify;
 
@@ -44,4 +43,4 @@ exports.error = (text) => {
 
 exports.notify = (text, clazz, wait, callback) => {
     return bootstrap().notify(text, clazz, wait, callback);
-};
+}

@@ -1,7 +1,7 @@
 var debug = require('debug')('kcapp:socketio-handler');
+var _ = require('underscore');
 var axios = require('axios');
 var moment = require('moment');
-const _ = require('underscore');
 
 var _this = this;
 
@@ -58,10 +58,28 @@ module.exports = (io, app) => {
             var chatHistory = [];
             if (this.io.nsps[namespace] === undefined) {
                 var nsp = this.io.of(namespace);
+
+                axios.get(app.locals.kcapp.api + '/leg/' + legId + '/players')
+                    .then((response) => {
+                        var legPlayers = response.data;
+                        for (var id in legPlayers) {
+                            var player = legPlayers[id].player;
+                            if (player.is_bot) {
+                                // TODO Make sure this works correctly
+                                //debug(`[${legId}] Adding bot ${player.id}/${player.name}`);
+                                //var bot = require('kcapp-bot/kcapp-bot')(player.id, "localhost", 3000);
+                                //bot.playLeg(legId);
+                            }
+                        }
+                    }).catch(error => {
+                        var message = error.message + ' (' + error + ')'
+                        debug('Error when getting leg: ' + message);
+                        nsp.emit('error', { message: error.message, code: error.code });
+                    });
+
                 nsp.on('connection', function (client) {
                     var ip = getClientIP(client);
-                    debug("Client %s connected to '%s'", ip, namespace);
-
+                    debug(`[${legId}] Client ${ip} connected to '${namespace}'`);
                     client.on('join', function () {
                         axios.all([
                             axios.get(app.locals.kcapp.api + '/leg/' + legId),
@@ -78,22 +96,22 @@ module.exports = (io, app) => {
                     });
 
                     client.on('announce', function(data) {
-                        debug(`Got announcement: ${JSON.stringify(data)}`);
+                        debug(`[${legId}] Got announcement: ${JSON.stringify(data)}`);
                         nsp.emit('announce', data);
                     });
 
                     client.on('spectator_connected', function () {
-                        debug('Spectator connected: %s', ip);
+                        debug(`[${legId}] Spectator connected: ${ip}`);
                         nsp.emit('spectator_connected', 'Spectator');
                     });
 
                     client.on('disconnect', function () {
-                        debug('Client disconnected: %s', ip);
+                        debug(`[${legId}] Client disconnected: ${ip}`);
                         nsp.emit('spectator_disconnected', 'Spectator');
                     });
 
                     client.on('possible_throw', function (data) {
-                        debug('possible_throw %s', JSON.stringify(data))
+                        debug(`[${legId}] possible_throw ${JSON.stringify(data)}`)
                         nsp.emit('possible_throw', data);
                     });
 
@@ -116,7 +134,7 @@ module.exports = (io, app) => {
                     });
 
                     client.on('speak', function (data) {
-                        debug("Recived voice line %s", JSON.stringify(data));
+                        debug(`[${legId}]  Recived voice line ${JSON.stringify(data)}`);
                         nsp.emit('say', {
                             voice: "US English Female",
                             text: data.text,
@@ -127,7 +145,7 @@ module.exports = (io, app) => {
 
                     client.on('throw', function (data) {
                         var body = JSON.parse(data);
-                        debug('Received throw from %s (%o)', ip, body);
+                        debug(`[${legId}] throw from ${ip} (${data})`);
                         axios.post(app.locals.kcapp.api + '/visit', body)
                             .then((response) => {
                                 var visit = response.data;
@@ -179,7 +197,7 @@ module.exports = (io, app) => {
                     });
 
                     client.on('undo_visit', function (data) {
-                        debug('Received undo_visit from %s', ip);
+                        debug(`[${legId}] Received undo_visit from ${ip}`);
                         axios.delete(app.locals.kcapp.api + '/visit/' + legId + '/last')
                             .then(() => {
                                 axios.all([
@@ -235,7 +253,6 @@ module.exports = (io, app) => {
 
                 function announce(text, type, options) {
                     var voice = "US English Female";
-                    debug("Sending voice line '%s'", text);
                     nsp.emit('say', { voice: voice, text: text, type: type, options: options });
                 }
                 debug("Created socket.io namespace '%s'", namespace);
