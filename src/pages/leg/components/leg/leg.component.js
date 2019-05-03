@@ -155,6 +155,10 @@ module.exports = {
     },
 
     onKeyDown(e) {
+        if (this.state.submitting) {
+            // Don't allow input while score is being submitted
+            return;
+        }
         if (e.key === 'Backspace') {
             var component = this.findActive(this.getComponents('players'));
             component.removeLast();
