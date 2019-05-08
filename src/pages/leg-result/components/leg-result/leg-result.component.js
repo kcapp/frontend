@@ -30,10 +30,10 @@ module.exports = {
             case 'Backspace':
             case 'PageUp': // Intentional fall-through
                 this.viewMatchResult();
+                e.preventDefault();
                 break;
             default: // NOOP
         }
-        e.preventDefault();
     },
     continueMatch(event) {
         if (this.input.match.is_finished) {
