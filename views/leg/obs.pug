@@ -55,21 +55,14 @@ html
                         console.log("Unknown darts_thrown: " + data.darts_thrown);
                         return;
                     }
-                    dart.text(data.dart_text.replace('-', ''));
-
-                    // Subtract from current player score
+                    if (data.is_undo) {
+                        dart.text('');
+                    } else {
+                        dart.text(getDartText(data.score, data.multiplier));
+                    }
                     var score = $('#obs-player-score-' + data.current_player_id);
-                    score.text(parseInt(score.text() - data.score));
-
-                    // Update total
-                    var total = $(scorecard + ' .obs-total-score');
-                    total.text(parseInt(total.text() + data.score));
+                    score.text(parseInt(score.text() - (data.score * data.multiplier)));
                 });
-
-                socket.on('undo_visit', function (data) {
-                    // TODO
-                });
-
                 socket.on('score_update', function (data) {
                     var players = data.players;
                     var currentPlayerId = data.leg.current_player_id;
@@ -94,9 +87,30 @@ html
                         }
                     }
                 });
-                socket.on('leg_finished', function (data) {
+                socket.on('new_leg', function (data) {
                     location.reload();
                 });
+
+                function getDartText(score, multiplier) {
+                    var scoreInt = parseInt(score);
+                    if (scoreInt === 0 ) {
+                        multiplier = 1;
+                        score = 0;
+                    }
+                    // Triple
+                    if (score == 25) {
+                        dartText = multiplier == 1 ? 'Bull' : 'DBull';
+                    } else if (multiplier == 3) {
+                        dartText = 'T-' + score;
+                    } else if (multiplier == 2) {
+                        dartText = 'D-' + score ;
+                    } else if (score === 0) {
+                        dartText = 'Miss';
+                    } else {
+                        dartText = score;
+                    }
+                    return dartText;
+                }
             });
 
     block body

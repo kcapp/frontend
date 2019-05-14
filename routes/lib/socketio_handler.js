@@ -2,6 +2,7 @@ var debug = require('debug')('kcapp:socketio-handler');
 var _ = require('underscore');
 var axios = require('axios');
 var moment = require('moment');
+var bottleneck = require("bottleneck/es5");
 
 var _this = this;
 
@@ -9,6 +10,8 @@ function getClientIP(client) {
     var realIP = client.handshake.headers["x-real-ip"]
     return realIP ? realIP : client.handshake.address;
 }
+
+const limiter = new bottleneck({ minTime: 51 });
 
 module.exports = (io, app) => {
     this.io = io;
@@ -59,22 +62,25 @@ module.exports = (io, app) => {
             if (this.io.nsps[namespace] === undefined) {
                 var nsp = this.io.of(namespace);
 
-                axios.get(app.locals.kcapp.api + '/leg/' + legId + '/players')
-                    .then((response) => {
-                        var legPlayers = response.data;
-                        for (var id in legPlayers) {
-                            var player = legPlayers[id].player;
-                            if (player.is_bot) {
-                                // TODO Make sure this works correctly
-                                //debug(`[${legId}] Adding bot ${player.id}/${player.name}`);
-                                //var bot = require('kcapp-bot/kcapp-bot')(player.id, "localhost", 3000);
-                                //bot.playLeg(legId);
+                // To not spam the API with too many requests, we add a short limit to the requests here
+                limiter.schedule(() => {
+                    axios.get(app.locals.kcapp.api + '/leg/' + legId + '/players')
+                        .then((response) => {
+                            var legPlayers = response.data;
+                            for (var id in legPlayers) {
+                                var player = legPlayers[id].player;
+                                if (player.is_bot) {
+                                    // TODO Make sure this works correctly
+                                    debug(`[${legId}] Adding bot ${player.id}/${player.name}`);
+                                    var bot = require('kcapp-bot/kcapp-bot')(player.id, "localhost", 3000);
+                                    bot.playLeg(legId);
+                                }
                             }
-                        }
-                    }).catch(error => {
-                        var message = error.message + ' (' + error + ')'
-                        debug(`[${legId}] Error when getting players for leg: ${message}`);
-                    });
+                        }).catch(error => {
+                            var message = error.message + ' (' + error + ')'
+                            debug(`[${legId}] Error when getting players for leg: ${message}`);
+                        });
+                });
 
                 nsp.on('connection', function (client) {
                     var ip = getClientIP(client);
@@ -133,7 +139,7 @@ module.exports = (io, app) => {
                     });
 
                     client.on('speak', function (data) {
-                        debug(`[${legId}]  Recived voice line ${JSON.stringify(data)}`);
+                        debug(`[${legId}] Recived voice line ${JSON.stringify(data)}`);
                         nsp.emit('say', {
                             voice: "US English Female",
                             text: data.text,
@@ -253,6 +259,7 @@ module.exports = (io, app) => {
                 function announce(text, type, options) {
                     var voice = "US English Female";
                     nsp.emit('say', { voice: voice, text: text, type: type, options: options });
+                    debug(`[${legId}] Sending announcement: ${text}`);
                 }
                 debug("Created socket.io namespace '%s'", namespace);
             }

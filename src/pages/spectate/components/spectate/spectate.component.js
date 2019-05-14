@@ -22,10 +22,12 @@ module.exports = {
             var match = data.match;
             if (match.is_finished) {
                 location.href = `${window.location.origin}/matches/${match.id}/result`;
-            } else {
-                location.href = `${window.location.origin}/matches/${match.id}/spectate`;
             }
         });
+        socket.on('new_leg', (data) => {
+            var match = data.match;
+            location.href = `${window.location.origin}/matches/${match.id}/spectate`;
+        })
         this.state.socket = socket;
     },
 
