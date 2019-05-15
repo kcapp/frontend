@@ -18,5 +18,6 @@ module.exports = {
     handleStateChange(event, selected) {
         this.state.index = selected.value === -1 ? null : parseInt(selected.value);
         this.state.options[this.state.attribute] = this.state.index;
+        this.emit('value-changed', this.state.attribute, this.state.index);
     }
 }

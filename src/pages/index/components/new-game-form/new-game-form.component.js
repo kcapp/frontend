@@ -129,6 +129,20 @@ module.exports = {
         var index = _.findIndex(values, (value) => { return value.id === current });
         return values[(index + 1) % values.length].id;
     },
+    onGameTypeChanged(attribute, value) {
+        if (attribute == 'game_type') {
+            // If this is 9 Dart Shootout, make sure to set score to 0 and disable the selector
+            var scoreComponent = this.getComponent('starting-score')
+            if (this.state.options.game_type === NINE_DART_SHOOTOUT) {
+                scoreComponent.state.index = 0;
+                scoreComponent.state.enabled = false;
+            } else if (this.state.options.starting_score === 0) {
+                scoreComponent.state.index = scoreComponent.state.defaultValue;
+                scoreComponent.state.enabled = true;
+            }
+            this.state.options.starting_score = scoreComponent.state.index
+        }
+    },
     addPlayer(event, selected) {
         var player = selected.input.player;
 
