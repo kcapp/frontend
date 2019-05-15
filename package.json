@@ -15,6 +15,7 @@
         "bottleneck": "^2.18.0",
         "browser-refresh": "^1.7.3",
         "browser-refresh-taglib": "^1.1.0",
+        "chart.js": "^2.8.0",
         "compression": "^1.7.3",
         "cookie-parser": "^1.4.4",
         "debug": "^4.1.1",
