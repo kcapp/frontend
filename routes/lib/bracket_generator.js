@@ -47,8 +47,8 @@ exports.generate = function (metadata, matches, players, current, callback) {
 
                 doc.getElementById(prefix + "_player_home").childNodes[0].data = players[home].first_name;
                 doc.getElementById(prefix + "_player_away").childNodes[0].data = players[away].first_name;
-                doc.getElementById(prefix + "_player_home_score").childNodes[0].data = wins[home] ? "" + wins[home] : "0";
-                doc.getElementById(prefix + "_player_away_score").childNodes[0].data = wins[away] ? "" + wins[away] : "0";
+                doc.getElementById(prefix + "_player_home_score").childNodes[0].data = wins[home] ? "" + wins[home] : "";
+                doc.getElementById(prefix + "_player_away_score").childNodes[0].data = wins[away] ? "" + wins[away] : "";
 
                 var currentMatch = doc.getElementById(prefix + "_current_match");
                 if (current === matchMetadata.match_displayname) {
