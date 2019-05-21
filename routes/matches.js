@@ -49,13 +49,15 @@ router.get('/:id', function (req, res, next) {
             axios.put(req.app.locals.kcapp.api + '/match/' + req.params.id + '/continue')
                 .then(response => {
                     var leg = response.data;
-                    this.socketHandler.setupLegsNamespace(leg.id);
+                    if (leg.visits.length === 0) {
+                        this.socketHandler.setupLegsNamespace(leg.id);
 
-                    // Forward all spectating clients to next leg
-                    this.socketHandler.emitMessage('/legs/' + match.current_leg_id, 'new_leg', {
-                        match: match,
-                        leg: leg
-                    });
+                        // Forward all spectating clients to next leg
+                        this.socketHandler.emitMessage('/legs/' + match.current_leg_id, 'new_leg', {
+                            match: match,
+                            leg: leg
+                        });
+                    }
                     res.redirect('/legs/' + leg.id);
                 }).catch(error => {
                     debug('Unable to continue leg: ' + error);
@@ -91,7 +93,7 @@ router.get('/:id/preview', function (req, res, next) {
                 var tournamentMetadata = tournamentMetadataResponse.data;
                 var metadata = metadataResponse.data;
 
-                bracket.generate(tournamentMetadata, tournamentMatches, players, metadata.match_displayname, (brackets => {
+                bracket.generateNew(tournamentMetadata, tournamentMatches, players, metadata.match_displayname, (brackets => {
                     var head2head = response2.data;
                     head2head.player_visits[player1] = _.sortBy(head2head.player_visits[player1], function (visit) { return -visit.count; })
                     head2head.player_visits[player2] = _.sortBy(head2head.player_visits[player2], function (visit) { return -visit.count; })

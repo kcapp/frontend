@@ -3,18 +3,6 @@
   'http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd'>
 <svg font-family="Helvetica Neue,Helvetica,Arial,sans-serif;" text-transform="uppercase" letter-spacing="3px"
     font-weight="200" font-size="16px" height="500px" version="1.1" viewBox="-0.5 -0.5 1344 500" width="1144px" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-	<defs>
-		<linearGradient id="id1" x1="0%" x2="0%" y1="0%" y2="100%">
-			<stop offset="0%" style="stop-color:#D4E1F5"/>
-			<stop offset="100%" style="stop-color:#CCFFFF"/>
-		</linearGradient>
-		<linearGradient id="id2" x1="0%" x2="0%" y1="100%" y2="0%">
-			<stop offset="0%" style="stop-color:#4C0099"/>
-			<stop offset="100%" style="stop-color:#4D4D4D"/>
-		</linearGradient>
-
-	</defs>
-
 	<g id="prelimination_final_show" opacity="1.0">
 		<path d="M 181 410.71 L 220.59 410.71 Q 230.59 410.71 230.59 400.71 L 230.59 358.71 Q 230.59 348.71 240.59 348.71 L 274.63 348.71" fill="none" stroke="#000000" stroke-miterlimit="10"/>
 		<path d="M 279.88 348.71 L 272.88 352.21 L 274.63 348.71 L 272.88 345.21 Z" fill="#000000" stroke="#000000" stroke-miterlimit="10"/>

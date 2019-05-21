@@ -184,7 +184,7 @@ router.get('/:id', function (req, res, next) {
                 axios.get(req.app.locals.kcapp.api + '/tournament/' + tournament.playoffs_tournament_id + '/matches'),
                 axios.get(req.app.locals.kcapp.api + '/tournament/' + tournament.playoffs_tournament_id + '/metadata')
             ]).then(axios.spread((matchesResponse, metadataResponse) => {
-                bracket.generate(metadataResponse.data, matchesResponse.data, players, '', (brackets) => {
+                bracket.generateNew(metadataResponse.data, matchesResponse.data, players, '', (brackets) => {
                     res.marko(tournamentTemplate, {
                         brackets: brackets, tournament: tournament, overview: overview,
                         players: players, matches: matches, statistics: statistics
@@ -195,7 +195,7 @@ router.get('/:id', function (req, res, next) {
                 next(error);
             });
         } else {
-            bracket.generate(metadata, matches, players, '', (brackets) => {
+            bracket.generateNew(metadata, matches, players, '', (brackets) => {
                 res.marko(tournamentTemplate, {
                     brackets: brackets, tournament: tournament, overview: overview,
                     players: players, matches: matches, statistics: statistics

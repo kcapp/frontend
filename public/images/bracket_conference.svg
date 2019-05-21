@@ -1,0 +1,219 @@
+<!DOCTYPE svg
+  PUBLIC '-//W3C//DTD SVG 1.1//EN'
+  'http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd'>
+
+<svg font-family="Helvetica Neue,Helvetica,Arial,sans-serif;" text-transform="uppercase" letter-spacing="3px"
+    font-weight="200" font-size="16px" height="500px" version="1.1" viewBox="-0.5 -0.5 1344 500" width="1144px" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+	<defs>
+		<linearGradient id="names-bg-color" x1="0%" x2="0%" y1="0%" y2="100%">
+			<stop offset="0%" style="stop-color:#FFF"/>
+			<stop offset="100%" style="stop-color:#FFF"/>
+		</linearGradient>
+		<linearGradient id="heading-bg-color" x1="0%" x2="0%" y1="100%" y2="0%">
+			<stop offset="0%" style="stop-color:#000"/>
+			<stop offset="100%" style="stop-color:#000"/>
+		</linearGradient>
+	</defs>
+	<g>
+		<g>
+			<rect fill="url(#heading-bg-color)" height="20" stroke="#000000" width="110" x="31" y="31"/>
+			<g transform="translate(35.5,35.5)">
+				<text fill="#FFFFFF" font-size="11px" text-anchor="middle" x="50" y="11">Elim. final A</text>
+			</g>
+			<rect id="elimination_final_a_current_match" opacity="0.0" fill="none" height="150" rx="22.5" ry="22.5" stroke="#009900" stroke-width="3" width="240" x="1" y="1"/>
+			<rect fill="url(#names-bg-color)" height="35" stroke="#000000" width="150" x="31" y="51"/>
+			<g transform="translate(78.5,61.5)">
+				<text id="elimination_final_a_player_home" fill="#000000" text-anchor="middle" x="27" y="14">PlayerD</text>
+			</g>
+			<rect fill="none" height="35" stroke="#000000" width="30" x="181" y="51"/>
+			<g transform="translate(190.5,61.5)">
+				<text id="elimination_final_a_player_home_score" fill="#000000" font-weight="bold" text-anchor="middle" x="5" y="14">0</text>
+			</g>
+			<rect fill="url(#names-bg-color)" height="35" stroke="#000000" width="150" x="31" y="86"/>
+			<g transform="translate(79.5,96.5)">
+				<text id="elimination_final_a_player_away" fill="#000000" text-anchor="middle" x="26" y="14">PlayerC</text>
+			</g>
+			<rect fill="none" height="35" stroke="#000000" width="30" x="181" y="86"/>
+			<g transform="translate(190.5,96.5)">
+				<text id="elimination_final_a_player_away_score" fill="#000000" font-weight="bold" text-anchor="middle" x="5" y="14">0</text>
+			</g>
+		</g>
+		<g>
+			<rect fill="url(#heading-bg-color)" height="20" stroke="#000000" width="110" x="31" y="231"/>
+			<g transform="translate(35.5,235.5)">
+				<text fill="#FFFFFF" font-size="11px" text-anchor="middle" x="50" y="11">Elim. final B</text>
+			</g>
+			<rect id="elimination_final_b_current_match" opacity="0.0" fill="none" height="150" rx="22.5" ry="22.5" stroke="#009900" stroke-width="3" width="240" x="1" y="201"/>
+			<rect fill="url(#names-bg-color)" height="35" stroke="#000000" width="150" x="31" y="251"/>
+			<g transform="translate(79.5,261.5)">
+				<text id="elimination_final_b_player_home" fill="#000000" text-anchor="middle" x="26" y="14">PlayerB</text>
+			</g>
+			<rect fill="none" height="35" stroke="#000000" width="30" x="181" y="251"/>
+			<g transform="translate(190.5,261.5)">
+				<text id="elimination_final_b_player_home_score" fill="#000000" font-weight="bold" text-anchor="middle" x="5" y="14">0</text>
+			</g>
+			<rect fill="url(#names-bg-color)" height="35" stroke="#000000" width="150" x="31" y="286"/>
+			<g transform="translate(79.5,296.5)">
+				<text id="elimination_final_b_player_away" fill="#000000" text-anchor="middle" x="26" y="14">PlayerA</text>
+			</g>
+			<rect fill="none" height="35" stroke="#000000" width="30" x="181" y="286"/>
+			<g transform="translate(190.5,296.5)">
+				<text id="elimination_final_b_player_away_score" fill="#000000" font-weight="bold" text-anchor="middle" x="5" y="14">0</text>
+			</g>
+		</g>
+		<g>
+			<rect fill="url(#heading-bg-color)" height="20" stroke="#000000" width="110" x="331" y="31"/>
+			<g transform="translate(344.5,35.5)">
+				<text fill="#FFFFFF" font-size="11px" text-anchor="middle" x="41" y="11">Quart. final A</text>
+			</g>
+			<rect id="quarterfinal_a_current_match" opacity="0.0" fill="none" height="150" rx="22.5" ry="22.5" stroke="#009900" stroke-width="3" width="240" x="301" y="1"/>
+			<rect fill="url(#names-bg-color)" height="35" stroke="#000000" width="150" x="331" y="51"/>
+			<g transform="translate(378.5,61.5)">
+				<text id="quarterfinal_a_player_home" fill="#000000" text-anchor="middle" x="27" y="14">PlayerH</text>
+			</g>
+			<rect fill="none" height="35" stroke="#000000" width="30" x="481" y="51"/>
+			<g transform="translate(490.5,61.5)">
+				<text id="quarterfinal_a_player_home_score" fill="#000000" font-weight="bold" text-anchor="middle" x="5" y="14">0</text>
+			</g>
+			<rect fill="url(#names-bg-color)" height="35" stroke="#000000" width="150" x="331" y="86"/>
+			<g transform="translate(378.5,96.5)">
+				<text id="quarterfinal_a_player_away" fill="#000000" text-anchor="middle" x="27" y="14">PlayerG</text>
+			</g>
+			<rect fill="none" height="35" stroke="#000000" width="30" x="481" y="86"/>
+			<g transform="translate(490.5,96.5)">
+				<text id="quarterfinal_a_player_away_score" fill="#000000" font-weight="bold" text-anchor="middle" x="5" y="14">0</text>
+			</g>
+		</g>
+		<g>
+			<rect fill="url(#heading-bg-color)" height="20" stroke="#000000" width="110" x="331" y="231"/>
+			<g transform="translate(344.5,235.5)">
+				<text fill="#FFFFFF" font-size="11px" text-anchor="middle" x="41" y="11">Quart. final B</text>
+			</g>
+			<rect id="quarterfinal_b_current_match" opacity="0.0" fill="none" height="150" rx="22.5" ry="22.5" stroke="#009900" stroke-width="3" width="240" x="301" y="201"/>
+			<rect fill="url(#names-bg-color)" height="35" stroke="#000000" width="150" x="331" y="251"/>
+			<g transform="translate(379.5,261.5)">
+				<text id="quarterfinal_b_player_home" fill="#000000" text-anchor="middle" x="26" y="14">PlayerF</text>
+			</g>
+			<rect fill="none" height="35" stroke="#000000" width="30" x="481" y="251"/>
+			<g transform="translate(490.5,261.5)">
+				<text id="quarterfinal_b_player_home_score" fill="#000000" font-weight="bold" text-anchor="middle" x="5" y="14">0</text>
+			</g>
+			<rect fill="url(#names-bg-color)" height="35" stroke="#000000" width="150" x="331" y="286"/>
+			<g transform="translate(379.5,296.5)">
+				<text id="quarterfinal_b_player_away" fill="#000000" text-anchor="middle" x="26" y="14">PlayerE</text>
+			</g>
+			<rect fill="none" height="35" stroke="#000000" width="30" x="481" y="286"/>
+			<g transform="translate(490.5,296.5)">
+				<text id="quarterfinal_b_player_away_score" fill="#000000" font-weight="bold" text-anchor="middle" x="5" y="14">0</text>
+			</g>
+		</g>
+		<g>
+			<rect fill="url(#heading-bg-color)" height="20" stroke="#000000" width="110" x="631" y="31"/>
+			<g transform="translate(652.5,35.5)">
+				<text fill="#FFFFFF" font-size="11px" text-anchor="middle" x="33" y="11">Semi final A</text>
+			</g>
+			<rect id="semifinal_a_current_match" opacity="0.0" fill="none" height="150" rx="22.5" ry="22.5" stroke="#009900" stroke-width="3" width="240" x="601" y="1"/>
+			<rect fill="url(#names-bg-color)" height="35" stroke="#000000" width="150" x="631" y="51"/>
+			<g transform="translate(680.5,61.5)">
+				<text id="semifinal_a_player_home" fill="#000000" text-anchor="middle" x="25" y="14">PlayerL</text>
+			</g>
+			<rect fill="none" height="35" stroke="#000000" width="30" x="781" y="51"/>
+			<g transform="translate(790.5,61.5)">
+				<text id="semifinal_a_player_home_score" fill="#000000" font-weight="bold" text-anchor="middle" x="5" y="14">0</text>
+			</g>
+			<rect fill="url(#names-bg-color)" height="35" stroke="#000000" width="150" x="631" y="86"/>
+			<g transform="translate(679.5,96.5)">
+				<text id="semifinal_a_player_away" fill="#000000" text-anchor="middle" x="26" y="14">PlayerK</text>
+			</g>
+			<rect fill="none" height="35" stroke="#000000" width="30" x="781" y="86"/>
+			<g transform="translate(790.5,96.5)">
+				<text id="semifinal_a_player_away_score" fill="#000000" font-weight="bold" text-anchor="middle" x="5" y="14">0</text>
+			</g>
+		</g>
+		<g>
+			<rect fill="url(#heading-bg-color)" height="20" stroke="#000000" width="110" x="631" y="231"/>
+			<g transform="translate(652.5,235.5)">
+				<text fill="#FFFFFF" font-size="11px" text-anchor="middle" x="33" y="11">Semi final B</text>
+			</g>
+			<rect id="semifinal_b_current_match" opacity="0.0" fill="none" height="150" rx="22.5" ry="22.5" stroke="#009900" stroke-width="3" width="240" x="601" y="201"/>
+			<rect fill="url(#names-bg-color)" height="35" stroke="#000000" width="150" x="631" y="251"/>
+			<g transform="translate(680.5,261.5)">
+				<text id="semifinal_b_player_home" fill="#000000" text-anchor="middle" x="25" y="14">PlayerJ</text>
+			</g>
+			<rect fill="none" height="35" stroke="#000000" width="30" x="781" y="251"/>
+			<g transform="translate(790.5,261.5)">
+				<text id="semifinal_b_player_home_score" fill="#000000" font-weight="bold" text-anchor="middle" x="5" y="14">0</text>
+			</g>
+			<rect fill="url(#names-bg-color)" height="35" stroke="#000000" width="150" x="631" y="286"/>
+			<g transform="translate(681.5,296.5)">
+				<text id="semifinal_b_player_away" fill="#000000" text-anchor="middle" x="24" y="14">PlayerI</text>
+			</g>
+			<rect fill="none" height="35" stroke="#000000" width="30" x="781" y="286"/>
+			<g transform="translate(790.5,296.5)">
+				<text id="semifinal_b_player_away_score" fill="#000000" font-weight="bold" text-anchor="middle" x="5" y="14">0</text>
+			</g>
+		</g>
+		<g>
+			<rect fill="url(#heading-bg-color)" height="20" stroke="#000000" width="110" x="931" y="31"/>
+			<g transform="translate(955.5,35.5)">
+				<text fill="#FFFFFF" font-size="11px" text-anchor="middle" x="30" y="11">Grand final</text>
+			</g>
+			<rect id="grand_final_current_match" opacity="0.0" fill="none" height="150" rx="22.5" ry="22.5" stroke="#009900" stroke-width="3" width="240" x="901" y="1"/>
+			<rect fill="url(#names-bg-color)" height="35" stroke="#000000" width="150" x="931" y="51"/>
+			<g transform="translate(979.5,61.5)">
+				<text id="grand_final_player_home" fill="#000000" text-anchor="middle" x="26" y="14">PlayerP</text>
+			</g>
+			<rect fill="none" height="35" stroke="#000000" width="30" x="1081" y="51"/>
+			<g transform="translate(1090.5,61.5)">
+				<text id="grand_final_player_home_score" fill="#000000" font-weight="bold" text-anchor="middle" x="5" y="14">0</text>
+			</g>
+			<rect fill="url(#names-bg-color)" height="35" stroke="#000000" width="150" x="931" y="86"/>
+			<g transform="translate(978.5,96.5)">
+				<text id="grand_final_player_away" fill="#000000" text-anchor="middle" x="27" y="14">PlayerO</text>
+			</g>
+			<rect fill="none" height="35" stroke="#000000" width="30" x="1081" y="86"/>
+			<g transform="translate(1090.5,96.5)">
+				<text id="grand_final_player_away_score" fill="#000000" font-weight="bold" text-anchor="middle" x="5" y="14">0</text>
+			</g>
+		</g>
+		<g>
+			<rect fill="url(#heading-bg-color)" height="20" stroke="#000000" width="110" x="932" y="231"/>
+			<g transform="translate(944.5,235.5)">
+				<text fill="#FFFFFF" font-size="11px" text-anchor="middle" x="42" y="11">Promotion final</text>
+			</g>
+			<rect id="promotion_final_current_match" opacity="0.0" fill="none" height="150" rx="22.5" ry="22.5" stroke="#009900" stroke-width="3" width="240" x="901" y="201"/>
+			<rect fill="url(#names-bg-color)" height="35" stroke="#000000" width="148" x="933" y="251"/>
+			<g transform="translate(979.5,261.5)">
+				<text id="promotion_final_player_home" fill="#000000" text-anchor="middle" x="27" y="14">PlayerN</text>
+			</g>
+			<rect fill="none" height="35" stroke="#000000" width="30" x="1081" y="251"/>
+			<g transform="translate(1090.5,261.5)">
+				<text id="promotion_final_player_home_score" fill="#000000" font-weight="bold" text-anchor="middle" x="5" y="14">0</text>
+			</g>
+			<rect fill="url(#names-bg-color)" height="35" stroke="#000000" width="150" x="932" y="286"/>
+			<g transform="translate(979.5,296.5)">
+				<text id="promotion_final_player_away" fill="#000000" text-anchor="middle" x="27" y="14">PlayerM</text>
+			</g>
+			<rect fill="none" height="35" stroke="#000000" width="30" x="1081" y="286"/>
+			<g transform="translate(1090.5,296.5)">
+				<text id="promotion_final_player_away_score" fill="#000000" font-weight="bold" text-anchor="middle" x="5" y="14">0</text>
+			</g>
+		</g>
+		<path d="M 811 86 L 841 86 Q 851 86 851 77.5 L 851 73.25 Q 851 69 861 69 L 924.63 69" fill="none" stroke="#000000" stroke-miterlimit="10"/>
+		<path d="M 929.88 69 L 922.88 72.5 L 924.63 69 L 922.88 65.5 Z" fill="#000000" stroke="#000000" stroke-miterlimit="10"/>
+		<path d="M 804 86 L 841 86 Q 851 86 851 96 L 851 259 Q 851 269 861 269 L 926.63 269" fill="none" stroke="#000000" stroke-miterlimit="10"/>
+		<path d="M 931.88 269 L 924.88 272.5 L 926.63 269 L 924.88 265.5 Z" fill="#000000" stroke="#000000" stroke-miterlimit="10"/>
+		<path d="M 813 286 L 881 286 Q 891 286 891 295.5 L 891 300.25 Q 891 305 901 305 L 925.63 305" fill="none" stroke="#000000" stroke-miterlimit="10"/>
+		<path d="M 930.88 305 L 923.88 308.5 L 925.63 305 L 923.88 301.5 Z" fill="#000000" stroke="#000000" stroke-miterlimit="10"/>
+		<path d="M 812 286 L 881 286 Q 891 286 891 276 L 891 113 Q 891 103 901 103 L 924.63 103" fill="none" stroke="#000000" stroke-miterlimit="10"/>
+		<path d="M 929.88 103 L 922.88 106.5 L 924.63 103 L 922.88 99.5 Z" fill="#000000" stroke="#000000" stroke-miterlimit="10"/>
+		<path d="M 511 286 L 561 286 Q 571 286 571 293.5 L 571 297.25 Q 571 301 581 301 L 623.63 301" fill="none" stroke="#000000" stroke-miterlimit="10"/>
+		<path d="M 628.88 301 L 621.88 304.5 L 623.63 301 L 621.88 297.5 Z" fill="#000000" stroke="#000000" stroke-miterlimit="10"/>
+		<path d="M 212 86 L 262 86 Q 272 86 272 93.5 L 272 97.25 Q 272 101 282 101 L 324.63 101" fill="none" stroke="#000000" stroke-miterlimit="10"/>
+		<path d="M 329.88 101 L 322.88 104.5 L 324.63 101 L 322.88 97.5 Z" fill="#000000" stroke="#000000" stroke-miterlimit="10"/>
+		<path d="M 211 286 L 261 286 Q 271 286 271 293.5 L 271 297.25 Q 271 301 281 301 L 324.63 301" fill="none" stroke="#000000" stroke-miterlimit="10"/>
+		<path d="M 329.88 301 L 322.88 304.5 L 324.63 301 L 322.88 297.5 Z" fill="#000000" stroke="#000000" stroke-miterlimit="10"/>
+		<path d="M 511 86 L 561 86 Q 571 86 571 93.5 L 571 97.25 Q 571 101 581 101 L 623.63 101" fill="none" stroke="#000000" stroke-miterlimit="10"/>
+		<path d="M 628.88 101 L 621.88 104.5 L 623.63 101 L 621.88 97.5 Z" fill="#000000" stroke="#000000" stroke-miterlimit="10"/>
+	</g>
+</svg>
