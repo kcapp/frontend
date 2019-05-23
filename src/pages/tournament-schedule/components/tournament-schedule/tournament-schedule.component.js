@@ -23,8 +23,8 @@ module.exports = {
     onMount() {
         setInterval(() => {
             axios.all([
-                axios.get(this.input.locals.kcapp.api + '/tournament/' + this.state.tournamentId + '/metadata'),
-                axios.get(this.input.locals.kcapp.api + '/tournament/' + this.state.tournamentId + '/matches')
+                axios.get(this.input.locals.kcapp.api_external + '/tournament/' + this.state.tournamentId + '/metadata'),
+                axios.get(this.input.locals.kcapp.api_external + '/tournament/' + this.state.tournamentId + '/matches')
             ]).then(axios.spread((metadataData, matchesData) => {
                 var matches = matchesData.data;
                 var metadata = metadataData.data;
