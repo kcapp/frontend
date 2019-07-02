@@ -243,6 +243,7 @@ router.delete('/:id/cancel', function (req, res, next) {
     var legId = req.params.id;
     axios.delete(req.app.locals.kcapp.api + '/leg/' + legId)
         .then(() => {
+            this.socketHandler.emitMessage('/legs/' + legId, 'cancelled', { });
             res.status(204).end();
         }).catch(error => {
             debug('Error when modifying scores: ' + error);
