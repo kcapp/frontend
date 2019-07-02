@@ -1,6 +1,5 @@
 var _ = require("underscore");
 var moment = require('moment');
-var axios = require('axios');
 var io = require('../../../../util/socket.io-helper.js');
 var alertify = require("../../../../util/alertify");
 
@@ -8,11 +7,14 @@ module.exports = {
     onCreate(input) {
         var roundNumber = Math.floor(input.leg.visits.length / input.leg.players.length) + 1;
         var matchName = input.match.match_mode.short_name;
+        var venue = input.match.venue;
+
         this.state = {
             legId: input.leg.id,
             leg: input.leg,
             roundNumber: roundNumber,
             matchName: matchName,
+            venueConfig: venue ? venue.config ? venue.config : {} : {},
             submitting: false,
             globalStatistics: input.global_statistics,
             socket: {},
@@ -64,9 +66,11 @@ module.exports = {
             }
         }
     },
+
     onAnnounce(data) {
         io.announce(data, this);
     },
+
     onSay(data) {
         io.say(data, this);
     },

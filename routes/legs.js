@@ -1,11 +1,11 @@
 var debug = require('debug')('kcapp:legs');
 
-const express = require('express');
-const router = express.Router();
-const _ = require('underscore');
-const request = require('request');
+var express = require('express');
+var router = express.Router();
+var _ = require('underscore');
+var request = require('request');
 
-const axios = require('axios');
+var axios = require('axios');
 
 var x01InputTemplate = require('../src/pages/leg/leg-template.marko');
 var spectateTemplate = require('../src/pages/spectate/spectate-template.marko');

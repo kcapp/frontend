@@ -4,8 +4,5 @@ block append scripts
     script
         include keyboard_scripts.js
 
-block title
-    h2 Leg (X01)
-
 block score_header
     +get_score_header_vertical(match.match_mode, round_number, leg_players, match.tournament_id != null, true)

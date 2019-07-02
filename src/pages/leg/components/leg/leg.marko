@@ -4,16 +4,26 @@
 <div>
   <table>
     <tbody>
-      <tr>
+      <if(input.leg.players.length % 2 != 0 && state.venueConfig.has_dual_monitor)>
         <for|player| of=input.leg_players>
-          <scorecard-header key=`player-${player.player_id}` player=player name=input.players[player.player_id].name/>
+          <tr>
+            <scorecard-header key=`player-${player.player_id}` player=player name=input.players[player.player_id].name/>
+            <scorecard key="players[]" legId=state.legId player=player on-possible-throw("onPossibleThrow") on-score-change("onScoreChange") on-player-busted("onPlayerBusted") on-leg-finished("onLegFinished") on-undo-throw("onUndoThrow")/>
+            </tr>
         </for>
-      </tr>
-      <tr>
-        <for|player| of=input.leg_players>
-          <scorecard key="players[]" legId=state.legId player=player on-possible-throw("onPossibleThrow") on-score-change("onScoreChange") on-player-busted("onPlayerBusted") on-leg-finished("onLegFinished") on-undo-throw("onUndoThrow")/>
-        </for>
-      </tr>
+      </if>
+      <else>
+        <tr>
+          <for|player| of=input.leg_players>
+            <scorecard-header key=`player-${player.player_id}` player=player name=input.players[player.player_id].name/>
+          </for>
+        </tr>
+        <tr>
+          <for|player| of=input.leg_players>
+            <scorecard key="players[]" legId=state.legId player=player on-possible-throw("onPossibleThrow") on-score-change("onScoreChange") on-player-busted("onPlayerBusted") on-leg-finished("onLegFinished") on-undo-throw("onUndoThrow")/>
+          </for>
+        </tr>
+      </else>
     </tbody>
   </table>
   <player-order players=input.leg_players legId=state.legId on-warmup-started("onWarmupStarted")/>
