@@ -1,4 +1,4 @@
-![img](https://github.com/richardbmx/frontend/blob/master/github.png?raw=true)
+![img](https://raw.githubusercontent.com/kcapp/frontend/master/public/images/logo.png)
 # kcapp-frontend
 kcapp (pronounced [keɪk æp](https://en.wikipedia.org/wiki/Help:IPA/English)) is an application used for scoring Darts matches, with multiple input methods, statistics tracking, and more. See [Wiki](https://github.com/kcapp/frontend/wiki) for more information
 
