@@ -3,6 +3,10 @@
 kcapp (pronounced [keɪk æp](https://en.wikipedia.org/wiki/Help:IPA/English)) is an application used for scoring Darts matches, with multiple input methods, statistics tracking, and more. See [Wiki](https://github.com/kcapp/frontend/wiki) for more information
 
 ## Install
+### Quick & Easy
+To get started with development quickly, the following [installer script](https://github.com/kcapp/services/blob/master/installer.sh) can be used. More details can be found on the [Wiki](https://github.com/kcapp/frontend/wiki/Technical-Setup/_edit)
+
+### Manual
 1. Clone repository `git clone https://github.com/kcapp/frontend.git`
 2. Install all `nodejs` dependencies `npm install`
 3. Start the frontend by running the following command
