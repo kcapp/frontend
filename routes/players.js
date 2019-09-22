@@ -6,6 +6,7 @@ var router = express.Router();
 var axios = require('axios');
 var _ = require('underscore');
 
+var playerTemplate = require('../src/pages/player/player-template.marko');
 var playersTemplate = require('../src/pages/players/players-template.marko');
 
 /* Get a list of all players */
@@ -56,14 +57,13 @@ router.get('/:id/statistics', function (req, res, next) {
         axios.get(req.app.locals.kcapp.api + '/player/' + playerId + '/checkouts'),
         axios.get(req.app.locals.kcapp.api + '/player/' + playerId + '/tournament')
     ]).then(axios.spread((player, statistics, previous_statistics, progression, checkouts, tournament) => {
-        res.render('player/player', {
+        res.marko(playerTemplate, {
             player: player.data,
             statistics: statistics.data,
             previous_statistics: previous_statistics.data,
             progression: progression.data,
             checkouts: checkouts.data,
             tournament_standings: tournament.data
-
         });
     })).catch(error => {
         debug('Error when getting data for player ' + error);

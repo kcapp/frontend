@@ -9,6 +9,8 @@ module.exports = {
         this.state = this.initialState();
         if (input.dart) {
             this.setDart(input.dart.value, input.dart.multiplier);
+        } else if (input.value && input.multiplier) {
+            this.setDart(input.value, input.multiplier);
         }
     },
     onInput(input) {
@@ -44,13 +46,13 @@ module.exports = {
             dart.value = value;
             dart.multiplier = multiplier;
 
-            if (dart.value === 0) {
+            if (dart.value == 0) {
                 dart.text = 'Miss';
                 dart.class = CLASS_DART_SINGLE;
-            } else if (dart.multiplier === 3) {
+            } else if (dart.multiplier == 3) {
                 dart.class = CLASS_DART_TRIPLE;
                 dart.text = 'T-' + dart.value;
-            } else if (dart.multiplier === 2) {
+            } else if (dart.multiplier == 2) {
                 dart.class = CLASS_DART_DOUBLE;
                 dart.text = 'D-' + dart.value;
             } else {
