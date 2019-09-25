@@ -26,16 +26,16 @@ module.exports = (io, app) => {
             }
             var namespace = '/legs/' + legId;
             delete this.io.nsps[namespace];
-            debug("Removed socket.io namespace '%s'", namespace)
+            debug(`[${namespace}] removed`);
         },
         addNamespace: (namespace) => {
             if (this.io.nsps[namespace] === undefined) {
                 var nsp = this.io.of(namespace);
                 nsp.on('connection', function (client) {
                     var ip = getClientIP(client);
-                    debug("Client %s connected to '%s'", ip, namespace);
+                    debug(`[${namespace}] connection from ${ip}`);
                 });
-                debug("Created socket.io namespace '%s'", namespace);
+                debug(`[${namespace}] created`);
             }
         },
         setupVenueNamespace: (venueId) => {
@@ -84,7 +84,7 @@ module.exports = (io, app) => {
 
                 nsp.on('connection', function (client) {
                     var ip = getClientIP(client);
-                    debug(`[${legId}] Client ${ip} connected to '${namespace}'`);
+                    log('connection', namespace);
                     client.on('join', function () {
                         axios.all([
                             axios.get(app.locals.kcapp.api + '/leg/' + legId),
@@ -101,37 +101,39 @@ module.exports = (io, app) => {
                     });
 
                     client.on('announce', function(data) {
-                        debug(`[${legId}] Got announcement: ${JSON.stringify(data)}`);
+                        log('announce', JSON.stringify(data));
                         nsp.emit('announce', data);
                     });
 
                     client.on('spectator_connected', function () {
-                        debug(`[${legId}] Spectator connected: ${ip}`);
+                        log('spectator_connected', namespace);
                         nsp.emit('spectator_connected', 'Spectator');
                     });
 
                     client.on('disconnect', function () {
-                        debug(`[${legId}] Client disconnected: ${ip}`);
+                        log('disconnect', namespace);
                         nsp.emit('spectator_disconnected', 'Spectator');
                     });
 
                     client.on('possible_throw', function (data) {
-                        debug(`[${legId}] possible_throw ${JSON.stringify(data)}`)
+                        log('possible_throw', JSON.stringify(data));
                         nsp.emit('possible_throw', data);
                     });
 
                     client.on('undo_throw', function (data) {
+                        log('undo_throw', data);
                         nsp.emit('possible_throw', data);
                     });
 
                     client.on('chat_message', function (data) {
-                        debug('Received chat message from %s: %s', ip, data)
+                        log('chat_message', data);
                         var message = '[' + moment().format('HH:mm') + '] ' + ip + ': ' + data + '\r\n';
                         chatHistory.push(message);
                         nsp.emit('chat_message', message);
                     });
 
                     client.on('warmup_started', function (data) {
+                        log('warmup_started');
                         _this.io.of('/active').emit('warmup_started', { leg: data.leg, match: data.match });
                         if (data.match.venue) {
                             _this.io.of('/venue/' + data.match.venue.id).emit('venue_new_match', { leg: data.leg });
@@ -139,7 +141,7 @@ module.exports = (io, app) => {
                     });
 
                     client.on('speak', function (data) {
-                        debug(`[${legId}] Recived voice line ${JSON.stringify(data)}`);
+                        log('speak', JSON.stringify(data));
                         nsp.emit('say', {
                             voice: "US English Female",
                             text: data.text,
@@ -150,7 +152,7 @@ module.exports = (io, app) => {
 
                     client.on('throw', function (data) {
                         var body = JSON.parse(data);
-                        debug(`[${legId}] throw from ${ip} (${data})`);
+                        log('throw', data);
                         axios.post(app.locals.kcapp.api + '/visit', body)
                             .then((response) => {
                                 var visit = response.data;
@@ -202,7 +204,7 @@ module.exports = (io, app) => {
                     });
 
                     client.on('undo_visit', function (data) {
-                        debug(`[${legId}] Received undo_visit from ${ip}`);
+                        log('undo_visit');
                         axios.delete(app.locals.kcapp.api + '/visit/' + legId + '/last')
                             .then(() => {
                                 axios.all([
@@ -223,6 +225,10 @@ module.exports = (io, app) => {
                                 nsp.emit('error', { message: message, code: error.code });
                             });
                     });
+
+                    function log(event, data = '') {
+                        debug(`[${legId}] ${event} ${data} from ${ip}`);
+                    }
                 });
 
                 function announceScored(visit) {
@@ -230,19 +236,17 @@ module.exports = (io, app) => {
                         visit.second_dart.value * visit.second_dart.multiplier +
                         visit.third_dart.value * visit.third_dart.multiplier;
                     var text = '' + score;
-                    var options = {};
                     if (visit.is_bust) {
                         text = 'Noscore';
-                        options = { pitch: 0.8 };
                     }
-                    announce(text, 'score', options);
+                    announce(text, 'score');
                 }
 
                 function announceScoreRemaining(player) {
                     var score = player.current_score;
                     if (score < 171 && ![169, 168, 166, 165, 163, 162, 159].includes(score)) {
                         var name = player.player.vocal_name === null ? player.player.first_name : player.player.vocal_name;
-                        announce(name + " you require " + score, 'remaining_score', {});
+                        announce(name + " you require " + score, 'remaining_score');
                     }
                 }
 
@@ -250,18 +254,22 @@ module.exports = (io, app) => {
                     var legNum = match.legs.length + (["st", "nd", "rd"][((match.legs.length + 90) % 100 - 10) % 10 - 1] || "th");
                     var name = player.player.vocal_name === null ? player.player.first_name : player.player.vocal_name;
                     if (match.is_finished) {
-                        announce(`Game shot, AND THE MATCH!!!, ${name}!`, 'game_shot', {});
+                        if (match.winner_id === null) {
+                            announce(`Game shot, in the ${legNum} leg, ${name}. The match a DRAW!!!`, 'game_shot');
+                        } else {
+                            announce(`Game shot, AND THE MATCH!!!, ${name}!`, 'game_shot');
+                        }
                     } else {
-                        announce(`Game shot in the ${legNum} leg!, ${name}!`, 'game_shot', {});
+                        announce(`Game shot in the ${legNum} leg!, ${name}!`, 'game_shot');
                     }
                 }
 
-                function announce(text, type, options) {
-                    var voice = "US English Female";
-                    nsp.emit('say', { voice: voice, text: text, type: type, options: options });
-                    debug(`[${legId}] Sending announcement: ${text}`);
+                function announce(text, type) {
+                    var data = { text: text, type: type }
+                    debug(`[${legId}] say ${JSON.stringify(data)}`);
+                    nsp.emit('say', data);
                 }
-                debug("Created socket.io namespace '%s'", namespace);
+                debug(`[${namespace}] created`);
             }
         }
     };

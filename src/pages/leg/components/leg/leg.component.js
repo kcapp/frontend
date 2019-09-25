@@ -18,16 +18,12 @@ module.exports = {
             submitting: false,
             globalStatistics: input.global_statistics,
             socket: {},
-            responsiveVoice: {},
             audioAnnouncer: undefined,
             legNum: input.match.legs.length + (["st", "nd", "rd"][((input.match.legs.length + 90) % 100 - 10) % 10 - 1] || "th")
         }
     },
 
     onMount() {
-        document.write('<script type="text/javascript" src="/javascripts/responsivevoice.1.5.8..js"><\/script>');
-        setTimeout(() => { this.state.responsiveVoice = responsiveVoice; }, 100);
-
         document.addEventListener("keydown", this.onKeyDown.bind(this), false);
         document.addEventListener("keypress", this.onKeyPress.bind(this), false);
 

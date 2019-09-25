@@ -8,7 +8,11 @@
         Options&nbsp;&nbsp;<span class="caret"/>
         <span class="sr-only"/>
       </button>
-      <ul class="dropdown-menu"/>
+      <ul class="dropdown-menu">
+        <li>
+          <a on-click('enableVoiceAnnouncement')>${(state.enableAnnouncement ? 'Disable' : 'Enable')} Announcements</a>
+        </li>
+      </ul>
     </div>
     <div class="btn-group">
       <ul class="dropdown-menu"/>

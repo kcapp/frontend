@@ -1,4 +1,5 @@
 const axios = require('axios');
+var speaker = require('../../../../util/speaker');
 
 module.exports = {
     onInput(input) {
@@ -30,7 +31,7 @@ module.exports = {
     },
     playVoice() {
         if (this.state.vocal_name) {
-            responsiveVoice.speak(this.state.vocal_name, "US English Female");
+            speaker.speak({text: this.state.vocal_name});
         }
     },
 
