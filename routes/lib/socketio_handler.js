@@ -237,7 +237,7 @@ module.exports = (io, app) => {
                         visit.third_dart.value * visit.third_dart.multiplier;
                     var text = '' + score;
                     if (visit.is_bust) {
-                        text = 'Noscore';
+                        text = 'No score';
                     }
                     announce(text, 'score');
                 }
