@@ -3,7 +3,6 @@ var debug = require('debug')('kcapp:legs');
 var express = require('express');
 var router = express.Router();
 var _ = require('underscore');
-var request = require('request');
 
 var axios = require('axios');
 
@@ -25,23 +24,13 @@ router.get('/:id', function (req, res, next) {
                 var match = response.data;
                 // Sort players based on order
                 legPlayers = _.sortBy(legPlayers.data, (player) => player.order)
-                if (match.match_type.id === 2) {
-                    // TODO Move this view to marko
-                    res.render('leg/entry_shootout.pug', {
-                        leg: leg,
-                        players: players.data,
-                        match: match,
-                        leg_players: legPlayers
-                    });
-                } else {
-                    res.marko(x01InputTemplate, {
-                        leg: leg,
-                        players: players.data,
-                        match: match,
-                        leg_players: legPlayers,
-                        global_statistics: globalStatistics.data
-                    });
-                }
+                res.marko(x01InputTemplate, {
+                    leg: leg,
+                    players: players.data,
+                    match: match,
+                    leg_players: legPlayers,
+                    global_statistics: globalStatistics.data
+                });
             }).catch(error => {
                 debug('Error when getting match: ' + error);
                 next(error);
@@ -294,35 +283,6 @@ router.put('/:id/undo', function (req, res, next) {
             res.status(200).end();
         }).catch(error => {
             debug('Unable to undo finish: %s', error);
-            next(error);
-        });
-});
-
-/** Method for piping live stream */
-router.get('/:id/stream', function (req, res, next) {
-    axios.get(req.app.locals.kcapp.api + '/leg/' + req.params.id)
-        .then(response => {
-            var leg = response.data;
-
-            var req_pipe = request({ url: leg.board_stream_url });
-            req_pipe.pipe(res);
-
-            req_pipe.on('error', function (e) {
-                debug(e)
-            });
-            // Client quit normally
-            req.on('end', function () {
-                debug('Live stream ended');
-                req_pipe.abort();
-
-            });
-            // Client quit unexpectedly
-            req.on('close', function () {
-                debug('Live stream closed');
-                req_pipe.abort()
-            });
-        }).catch(error => {
-            debug('Error when getting leg: ' + error);
             next(error);
         });
 });

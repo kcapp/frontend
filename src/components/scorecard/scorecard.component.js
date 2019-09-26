@@ -1,4 +1,6 @@
 const alertify = require("../../util/alertify");
+var x01 = require("./components/x01");
+var shootout = require("./components/shootout")
 
 const DART_CONTAINER_MAP = { 1: 'first', 2: 'second', 3: 'third' };
 
@@ -6,8 +8,10 @@ module.exports = {
     onCreate(input) {
         var player = input.player;
         this.state = {
-            legId: input.legId,
+            leg: input.leg,
+            visits: input.leg.visits.length,
             player: player,
+            mode: input.mode,
             playerId: player.player_id,
             isCurrentPlayer: player.is_current_player,
             totalScore: 0,
@@ -16,7 +20,7 @@ module.exports = {
             isBusted: false
         }
     },
-    
+
     reset() {
         this.state.totalScore = 0;
         this.state.currentDart = 1;
@@ -27,6 +31,10 @@ module.exports = {
         this.getComponent(DART_CONTAINER_MAP[1]).reset();
         this.getComponent(DART_CONTAINER_MAP[2]).reset();
         this.getComponent(DART_CONTAINER_MAP[3]).reset();
+    },
+
+    setLeg(leg) {
+        this.state.leg = leg;
     },
 
     getDart(idx) {
@@ -53,6 +61,7 @@ module.exports = {
 
     removeLast() {
         if (this.state.currentDart <= 1 && this.state.isSubmitted) {
+            this.state.visits--;
             this.emit('undo-throw');
             return;
         }
@@ -61,10 +70,20 @@ module.exports = {
             var dart = this.getCurrentDart();
             var value = dart.getValue();
 
-            this.state.totalScore -= value;
-            this.state.player.current_score += value;
-            this.emit('score-change', -value);
-            this.emit('possible-throw', false, false, this.state.currentDart, -dart.getScore(), dart.getMultiplier(), true);
+            switch (this.state.mode) {
+                case shootout.MODE:
+                    this.state.totalScore += value;
+                    this.state.player.current_score -= value;
+                    this.emit('score-change', value);
+                    this.emit('possible-throw', false, false, this.state.currentDart, dart.getScore(), dart.getMultiplier(), true);
+                    break;
+                case x01.MODE:
+                    this.state.totalScore -= value;
+                    this.state.player.current_score += value;
+                    this.emit('score-change', -value);
+                    this.emit('possible-throw', false, false, this.state.currentDart, -dart.getScore(), dart.getMultiplier(), true);
+                    break;
+            }
             dart.reset();
         } else {
             var dart = this.getCurrentDart()
@@ -76,59 +95,19 @@ module.exports = {
     confirmThrow() {
         var submitting = false;
         if (this.state.currentDart <= 3 && !this.state.isBusted) {
-            var dart = this.getCurrentDart();
-            var scored = dart.getValue();
-            if (scored === 0) {
-                this.setDart(0, 1);
+            switch (this.state.mode) {
+                case shootout.MODE:
+                    submitting = shootout.confirmThrow.bind(this)();
+                    break;
+                case x01.MODE:
+                    submitting = x01.confirmThrow.bind(this)();
+                    break;
             }
-            this.state.totalScore += scored;
-            this.state.currentDart++;
-            this.state.isSubmitted = true;
-
-            this.emit('score-change', scored);
-            var isCheckout = this.isCheckout(this.state.player.current_score, dart);
-            var isBust = this.isBust(this.state.player.current_score, scored);
-            if (isCheckout) {
-                submitting = true;
-                alertify.confirm('Leg will be finished.',
-                    () => {
-                        this.emit('leg-finished', true);
-                    }, () => {
-                        this.removeLast();
-                        this.emit('leg-finished', false);
-                    });
-            } else if (isBust) {
-                submitting = true;
-                this.state.isBusted = true;
-                alertify.confirm('Player busted',
-                    () => {
-                        alertify.success('Player busted');
-                        this.emit('player-busted', true);
-                    },
-                    () => {
-                        this.removeLast();
-                        this.state.isBusted = false;
-                        this.emit('player-busted', false);
-                    });
-            }
-            this.state.player.current_score -= scored;
-            this.emit('possible-throw', isCheckout, isBust, this.state.currentDart - 1, dart.getScore(), dart.getMultiplier(), false);
+        }
+        if (this.state.currentDart >= 3) {
+            this.state.visits++;
         }
         return submitting;
-    },
-
-    isBust(currentScore, thrown) {
-        if (currentScore - thrown < 2) {
-            return true;
-        }
-        return false;
-    },
-
-    isCheckout(currentScore, dart) {
-        if (currentScore - dart.getValue() === 0 && dart.getMultiplier() === 2) {
-            return true;
-        }
-        return false;
     },
 
     setDart(value, multiplier, idx) {
@@ -153,7 +132,7 @@ module.exports = {
         var third = this.getComponent(DART_CONTAINER_MAP[3]);
         return {
             player_id: this.state.playerId,
-            leg_id: this.state.legId,
+            leg_id: this.state.leg.id,
             first_dart: first.toJSON(),
             second_dart: second.toJSON(),
             third_dart: third.toJSON()

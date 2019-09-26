@@ -77,6 +77,7 @@ module.exports = {
 
     onScoreUpdate(data) {
         io.onScoreUpdate(data, this);
+        var component = this.findActive(this.getComponents('players')).setLeg(this.state.leg);
     },
 
     onScoreChange(scored, component) {
