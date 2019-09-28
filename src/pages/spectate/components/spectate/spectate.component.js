@@ -10,7 +10,9 @@ module.exports = {
             roundNumber: roundNumber,
             matchName: matchName,
             submitting: false,
-            socket: {}
+            socket: {},
+            audioAnnouncer: undefined,
+            voiceAnnouncements: false
         }
     },
 
@@ -27,8 +29,25 @@ module.exports = {
         socket.on('new_leg', (data) => {
             var match = data.match;
             location.href = `${window.location.origin}/matches/${match.id}/spectate`;
-        })
+        });
+        socket.on('connected', (data) => {
+            socket.emit('spectator_connected', '');
+        });
+        socket.on('say', this.onSay.bind(this));
+
+        this.state.audioAnnouncer = new Audio();
+
         this.state.socket = socket;
+    },
+
+    onEnableAnnouncement(data) {
+        this.state.voiceAnnouncements = data;
+    },
+
+    onSay(data) {
+        if (this.state.voiceAnnouncements) {
+            io.say(data, this);
+        }
     },
 
     onScoreUpdate(data) {

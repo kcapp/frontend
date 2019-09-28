@@ -1,25 +1,13 @@
 module.exports = {
     onInput(input) {
         this.state = {
-            round: input.round
+            round: input.round,
+            enableAnnouncement: false
         }
     },
-    editScores(event) {
-
-    },
-    cancelLeg(event) {
-
-    },
-    changeOrder(event) {
-
-    },
-    toggleButtons(event) {
-
-    },
-    openChat(event) {
-
-    },
-    cancelLeg(event) {
-
+    enableVoiceAnnouncement(event) {
+        var enable = !this.state.enableAnnouncement;
+        this.emit('enable-announcement', enable);
+        this.state.enableAnnouncement = enable;
     }
 };

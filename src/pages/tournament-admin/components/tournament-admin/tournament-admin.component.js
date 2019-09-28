@@ -152,7 +152,7 @@ module.exports = {
             .then(response => {
                 location.href = window.location.origin + '/tournaments';
             }).catch(error => {
-                alert("Unable to create trouanemtn. See log for details");
+                alert("Unable to create tournament. See log for details");
                 console.log(error);
             });
     }

@@ -1,6 +1,7 @@
 var _ = require("underscore");
 var io = require('socket.io-client');
 var alertify = require('./alertify');
+var speaker = require('./speaker');
 
 exports.connect = (url) => {
     var socket = io(url);
@@ -66,25 +67,17 @@ exports.say = (data, thiz) => {
     if (data.type === 'score' && ['100', '140', '180'].includes(data.text)) {
         var newPlayer = new Audio('/audio/' + data.text + '.mp3');
         if (isAudioAnnouncement) {
-            oldPlayer.addEventListener("ended", () => {
-                newPlayer.play();
-            }, false);
+            oldPlayer.addEventListener("ended", () => { newPlayer.play(); }, false);
         } else {
             newPlayer.play();
         }
         thiz.state.audioAnnouncer = newPlayer;
     } else {
-        if (responsiveVoice.isPlaying()) {
-            setTimeout(function () {
-                responsiveVoice.speak(data.text, data.voice, data.options);
-            }, 1500)
-        } else if (isAudioAnnouncement) {
-            oldPlayer.addEventListener("ended", () => {
-                responsiveVoice.speak(data.text, data.voice, data.options);
-            }, false);
+        if (isAudioAnnouncement) {
+            oldPlayer.addEventListener("ended", () => { speaker.speak(data); }, false);
         }
         else {
-            responsiveVoice.speak(data.text, data.voice, data.options);
+            speaker.speak(data);
         }
     }
 }
