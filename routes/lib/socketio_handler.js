@@ -172,9 +172,9 @@ module.exports = (io, app) => {
                                                 var match = response.data;
                                                 announceLegFinished(currentPlayer, match)
 
-                                                _this.io.of('/active').emit('leg_finished', { leg: leg, match: match });
+                                                _this.io.of('/active').emit('leg_finished', { leg: leg, match: match, throw: body });
                                                 nsp.emit('score_update', { leg: leg, players: players, match: match });
-                                                nsp.emit('leg_finished', { leg: leg, match: match });
+                                                nsp.emit('leg_finished', { leg: leg, match: match, throw: body });
                                             }).catch(error => {
                                                 var message = error.message + ' (' + error + ')'
                                                 debug(`[${legId}] Error when getting match: ${message}`);
