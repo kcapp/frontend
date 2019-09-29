@@ -58,7 +58,7 @@ module.exports = {
                 var name = currentPlayer.vocal_name ? currentPlayer.vocal_name : currentPlayer.first_name;
                 setTimeout(() => {
                     socket.emit('speak', { text: this.state.legNum + " leg, " + name + " to throw first. Game on!", type: 'leg_start' });
-                }, 500);
+                }, 900);
             }
         }
     },
