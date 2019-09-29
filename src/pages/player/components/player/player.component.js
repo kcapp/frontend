@@ -1,12 +1,6 @@
 var Chart = require("chart.js");
 
 module.exports = {
-    onCreate(input) {
-        this.state = {
-
-        }
-    },
-
     onMount() {
         if (window.location.hash != "") {
             $('a[href="' + window.location.hash + '"]').click();
