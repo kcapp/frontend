@@ -59,7 +59,7 @@
                         $ var change = diff > 0 ? 'fas fa-arrow-alt-circle-up' : diff < 0 ? 'fas fa-arrow-alt-circle-down' : 'fas fa-arrow-alt-circle-right'
                         $ var col = diff > 0 ? 'col-green' : diff < 0 ? 'col-red' : 'col-grey'
                         <div>${cp}%</div>
-                        <div style="font-size: 18px;">
+                        <div style="font-size: 18px;" class='${col}'>
                             <i class='${change}'></i>
                             <span style="margin-left: 5px;" data-toggle="tooltip" data-placement="bottom" title="Since last week">${Math.abs(diff)}%</span>
                         </div>
@@ -106,16 +106,6 @@
                     </td>
                 </tr>
             </table>
-        </div>
-        <div class="tab-pane" role="tabpanel" id="progression">
-            <div style="width: 100%;">
-                <div class="block-container">
-                    <h3>PPD</h3><canvas id="canvas-ppd"></canvas></div>
-                <div class="block-container">
-                    <h3>Checkout %</h3><canvas id="canvas-checkout"></canvas></div>
-                <div class="block-container">
-                    <h3>Scores</h3><canvas id="canvas-scores"></canvas></div>
-            </div>
         </div>
         <div class="tab-pane" role="tabpanel" id="highscores">
             <table style="width: 100%;">
@@ -210,8 +200,8 @@
                             <for|key, score| in=input.statistics.hits>
                                 <for|multiplier, value| in=score>
                                     <tr>
-                                        <td>
-                                            <dart-container value=key multiplier=multiplier/>
+                                        <td data-order=`${key * multiplier}` data-multiplier=`${multiplier}` data-score=`${key}`>
+                                            <dart-container value=key multiplier=multiplier label=true/>
                                         </td>
                                         <td class="text-center">${value}</td>
                                         <td class="text-center">${(value * 100 / input.statistics.darts_thrown).toFixed(2)}%</td>
@@ -248,13 +238,13 @@
                             <for|visit| of=input.statistics.visits>
                                 <tr>
                                     <td>
-                                        <dart-container dart=visit.first_dart/>
+                                        <dart-container dart=visit.first_dart label=true/>
                                     </td>
                                     <td>
-                                        <dart-container dart=visit.second_dart/>
+                                        <dart-container dart=visit.second_dart label=true/>
                                     </td>
                                     <td>
-                                        <dart-container dart=visit.third_dart/>
+                                        <dart-container dart=visit.third_dart label=true/>
                                     </td>
                                     <td class="text-center">${visit.count}</td>
                                     <td class="text-center">${(visit.count * 100 / input.statistics.total_visits).toFixed(2)}%</td>
@@ -291,7 +281,7 @@
                 <tbody>
                     <for|checkout| of=input.checkouts>
                         $ var trclass = !checkout.completed ? 'tr-no-checkout' : ''
-                        <tr>
+                        <tr class=`${trclass}`>
                             <td>
                                 <div class="block-container-no-margin">
                                     <table class="table-player-checkouts-row">
@@ -311,13 +301,13 @@
                                                             <for|visit| of=checkout.visits>
                                                                 <tr>
                                                                     <td>
-                                                                        <dart-container dart=visit.first_dart/>
+                                                                        <dart-container dart=visit.first_dart label=true/>
                                                                     </td>
                                                                     <td>
-                                                                        <dart-container dart=visit.second_dart/>
+                                                                        <dart-container dart=visit.second_dart label=true/>
                                                                     </td>
                                                                     <td>
-                                                                        <dart-container dart=visit.third_dart/>
+                                                                        <dart-container dart=visit.third_dart label=true/>
                                                                     </td>
                                                                     <td width="10%">${visit.count}</td>
                                                                 </tr>
@@ -334,6 +324,22 @@
                     </for>
                 </tbody>
             </table>
+        </div>
+        <div class="tab-pane" role="tabpanel" id="progression">
+            <div style="width: 100%;">
+                <div class="block-container">
+                    <h3>PPD</h3>
+                    <canvas id="canvas-ppd"></canvas>
+                </div>
+                <div class="block-container">
+                    <h3>Checkout %</h3>
+                    <canvas id="canvas-checkout"></canvas>
+                </div>
+                <div class="block-container">
+                    <h3>Scores</h3>
+                    <canvas id="canvas-scores"></canvas>
+                </div>
+            </div>
         </div>
         <div class="tab-pane" role="tabpanel" id="tournament">
             <div class="block-container no-padding no-border">
@@ -355,7 +361,7 @@
                                 <td>
                                     <a href='/tournaments/${standing.tournament.id}'>${standing.tournament.name}</a>
                                 </td>
-                                <td>${division} ${divisionPostfix}</td>
+                                <td>${division}${divisionPostfix}</td>
                                 <td>${standing.tournament_group.name}</td>
                                 <td>${standing.final_standing} / ${standing.total_players}
                                     <if(standing.final_standing === 1)>
@@ -369,6 +375,6 @@
                 </table>
             </div>
         </div>
-        <div style="clear: both;"></div>
     </div>
+    <div style="clear: both;"></div>
 </div>

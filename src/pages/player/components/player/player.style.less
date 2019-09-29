@@ -185,25 +185,6 @@
     }
 }
 
-.table-player-checkouts-header {
-    width: 100%;
-    td:nth-child(1) {
-        width: 110px;
-        text-align: center
-    }
-    td:nth-child(2) {
-        width: 55px;
-        text-align: center;
-    }
-    td:nth-child(3) {
-        width: 110px;
-        text-align: center;
-    }
-    td:last-child {
-        padding-left: 25px;
-    }
-}
-
 .tr-no-checkout {
     display: none;
 }
@@ -322,20 +303,6 @@
     }
 }
 
-.table-player-checkouts-details {
-    width: 100%;
-    td:nth-child(1),
-    td:nth-child(2),
-    td:nth-child(3) {
-        width: 30%;
-    }
-    td:last-child {
-        text-align: center;
-        font-weight: 700;
-        vertical-align: bottom;
-    }
-}
-
 .block-container-no-margin {
     background-color: #fff;
     padding: 20px;
@@ -381,4 +348,24 @@
 
 .rank4 {
     color: #e4c500;
+}
+
+.accuracy-chart {
+    .mr-10;
+    min-height: 180px;
+    canvas {
+        width: 100%;
+    }
+    .label-mid {
+        position: relative;
+        margin-top: -21%;
+        margin-left: 38%;
+        font-size: 14pt;
+        font-weight: 700;
+    }
+}
+
+.accuracy-chart-no-margin {
+    .accuracy-chart;
+    margin-right: 0px;
 }
