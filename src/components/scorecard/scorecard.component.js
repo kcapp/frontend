@@ -10,10 +10,19 @@ module.exports = {
             player: player,
             playerId: player.player_id,
             isCurrentPlayer: player.is_current_player,
+            submitClass: null,
             totalScore: 0,
             currentDart: 1,
             isSubmitted: true,
             isBusted: false
+        }
+    },
+
+    onInput(input) {
+        if (input.submitting && this.state.isCurrentPlayer) {
+            this.state.submitClass = "submitting";
+        } else {
+            this.state.submitClass = null;
         }
     },
     
