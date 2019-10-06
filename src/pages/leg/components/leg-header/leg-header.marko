@@ -15,10 +15,12 @@
         <li>
           <a id="change-player-order" data-toggle="modal" data-target="#modal-player-order"  on-click('changeOrder')>Change Order</a>
         </li>
-        <li class="divider" role="separator"/>
-        <li>
-          <a on-click('cancelLeg')>Cancel Leg</a>
-        </li>
+        <if(!input.isOfficial)>
+          <li class="divider" role="separator"/>
+          <li>
+            <a on-click('cancelLeg')>Cancel Leg</a>
+          </li>
+        </if>
       </ul>
     </div>
     <div class="btn-group">

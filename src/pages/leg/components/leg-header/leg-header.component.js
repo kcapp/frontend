@@ -25,6 +25,6 @@ module.exports = {
                 }).catch(error => {
                     alert('Unable to cancel leg. Reload and try again');
                 });
-        }, () => { /* NOOP */ });        
+        }, () => { /* NOOP */ });
     }
 };
