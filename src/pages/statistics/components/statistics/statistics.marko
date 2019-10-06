@@ -1,5 +1,38 @@
 <page-header heading="Statistics" subheading=`${state.from} to ${state.to}` icon="fa-signal" navigation=true on-next("navigateNext") on-previous("navigatePrevious")/>
 <office-selector offices=input.offices clazz="float-right" on-office-changed("officeChanged")/>
+<if(state.office_statistics.length === 0)>
+  <div class="block-container-red">No Checkouts yet</div>
+</if>
+<else>
+  <div class="block-container-red">Highest Checkouts</div>
+  <div class="block-container no-padding">
+    <div class="table table-responsive">
+      <table id="table-checkout-statistics">
+        <thead>
+          <tr>
+            <th class="text-right">Rank</th>
+            <th>Player</th>
+            <th class="text-center">Checkout</th>
+          </tr>
+        </thead>
+        <tbody>
+          <for|idx| from=1 to=5>
+            $ var stats = state.office_statistics[idx]
+            $ var player = input.players[stats.player_id];
+            <tr>
+              <td class="text-right">${idx}</td>
+              <td class="col-sm-3">
+                <a href=`/players/${player.id}/statistics`>${player.name}</a>
+              </td>
+              <td class="text-center">${stats.checkout}</td>
+            </tr>
+          </for>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</else>
+
 <if(state.x01.length === 0)>
   <div class="block-container-red">X01 - no legs played</div>
 </if>
@@ -62,7 +95,7 @@
   <div class="block-container-red">Shootout - no matches played</div>
 </if>
 <else>
-  <div class="block-container-red">Shootout</div>
+  <div class="block-container-red">9 Dart Shootout</div>
   <div class="block-container no-padding">
     <div class="table table-responsive">
       <table id="table-shootout-statistics">

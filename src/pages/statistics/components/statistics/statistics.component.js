@@ -6,6 +6,7 @@ module.exports = {
         this.state = {
             x01: input.x01,
             shootout: input.shootout,
+            office_statistics: input.office_statistics,
             from: input.from,
             to: input.to,
         }
@@ -29,14 +30,18 @@ module.exports = {
             this.state.shootout = this.input.shootout;
         } else {
             var players = this.input.players;
-            this.state.x01 = _.reject(this.input.x01, (stats) => { 
-                return players[stats.player_id].office_id != officeId ; 
+            this.state.x01 = _.reject(this.input.x01, (stats) => {
+                return players[stats.player_id].office_id != officeId ;
             });
             this.state.shootout = _.reject(this.input.shootout, (stats) => {
                 return players[stats.player_id].office_id != officeId;
             });
+            this.state.office_statistics = _.reject(this.input.office_statistics, (stats) => {
+                return stats.office_id != officeId;
+            });
         }
         this.setStateDirty("x01");
         this.setStateDirty("shootout");
+        this.setStateDirty("office_statistics");
     }
 }

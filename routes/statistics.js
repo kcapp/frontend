@@ -13,23 +13,24 @@ var statisticsTemplate = require('../src/pages/statistics/statistics-template.ma
 router.get('/:from/:to', function (req, res, next) {
     var from = req.params.from;
     var to = req.params.to;
-    getStatisticsMarko(from, to, req, res, next);
+    getStatistics(from, to, req, res, next);
 });
 
 /** Get statistics fro the past two weeks for all players */
 router.get('/weekly', function (req, res, next) {
     var from = moment().isoWeekday(1).format('YYYY-MM-DD');
     var to = moment().isoWeekday(7).format('YYYY-MM-DD');
-    getStatisticsMarko(from, to, req, res, next);
+    getStatistics(from, to, req, res, next);
 });
 
-function getStatisticsMarko(from, to, req, res, next) {
+function getStatistics(from, to, req, res, next) {
     axios.all([
         axios.get(req.app.locals.kcapp.api + '/player'),
         axios.get(req.app.locals.kcapp.api + '/office'),
         axios.get(req.app.locals.kcapp.api + '/statistics/x01/' + from + '/' + to),
-        axios.get(req.app.locals.kcapp.api + '/statistics/shootout/' + from + '/' + to)
-    ]).then(axios.spread((players, offices, x01, shootout) => {
+        axios.get(req.app.locals.kcapp.api + '/statistics/shootout/' + from + '/' + to),
+        axios.get(req.app.locals.kcapp.api + '/statistics/office/' + from + '/' + to)
+    ]).then(axios.spread((players, offices, x01, shootout, office) => {
         x01 = x01.data;
         shootout = shootout.data;
         shootout = sort(shootout);
@@ -39,7 +40,8 @@ function getStatisticsMarko(from, to, req, res, next) {
             offices: offices.data,
             statistics_x01: x01,
             statistics_shootout: shootout,
-            from: from, to: to
+            from: from, to: to,
+            office_statistics: office.data
         });
     })).catch(error => {
         debug('Error when getting data for statistics ' + error);
