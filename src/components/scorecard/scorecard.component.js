@@ -9,7 +9,6 @@ module.exports = {
         var player = input.player;
         this.state = {
             leg: input.leg,
-            visits: input.leg.visits.length,
             player: player,
             mode: input.mode,
             playerId: player.player_id,
@@ -61,7 +60,6 @@ module.exports = {
 
     removeLast() {
         if (this.state.currentDart <= 1 && this.state.isSubmitted) {
-            this.state.visits--;
             this.emit('undo-throw');
             return;
         }
@@ -103,9 +101,6 @@ module.exports = {
                     submitting = x01.confirmThrow.bind(this)();
                     break;
             }
-        }
-        if (this.state.currentDart >= 3) {
-            this.state.visits++;
         }
         return submitting;
     },
