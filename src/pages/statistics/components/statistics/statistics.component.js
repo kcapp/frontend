@@ -28,6 +28,7 @@ module.exports = {
         if (officeId == 0) {
             this.state.x01 = this.input.x01;
             this.state.shootout = this.input.shootout;
+            this.state.office_statistics = this.input.office_statistics;
         } else {
             var players = this.input.players;
             this.state.x01 = _.reject(this.input.x01, (stats) => {
@@ -37,7 +38,7 @@ module.exports = {
                 return players[stats.player_id].office_id != officeId;
             });
             this.state.office_statistics = _.reject(this.input.office_statistics, (stats) => {
-                return stats.office_id != officeId;
+                return players[stats.player_id].office_id != officeId;
             });
         }
         this.setStateDirty("x01");
