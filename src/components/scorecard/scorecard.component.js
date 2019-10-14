@@ -13,6 +13,7 @@ module.exports = {
             mode: input.mode,
             playerId: player.player_id,
             isCurrentPlayer: player.is_current_player,
+            submitClass: null,
             totalScore: 0,
             currentDart: 1,
             isSubmitted: true,
@@ -20,6 +21,14 @@ module.exports = {
         }
     },
 
+    onInput(input) {
+        if (input.submitting && this.state.isCurrentPlayer) {
+            this.state.submitClass = "submitting";
+        } else {
+            this.state.submitClass = null;
+        }
+    },
+    
     reset() {
         this.state.totalScore = 0;
         this.state.currentDart = 1;

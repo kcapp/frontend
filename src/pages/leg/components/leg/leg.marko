@@ -8,7 +8,7 @@
         <for|player| of=input.leg_players>
           <tr>
             <scorecard-header key=`player-${player.player_id}` player=player name=input.players[player.player_id].name/>
-            <scorecard key="players[]" leg=state.leg player=player mode=input.match.match_type.id
+            <scorecard key="players[]" leg=state.leg submitting=state.submitting player=player mode=input.match.match_type.id
                 on-possible-throw("onPossibleThrow")
                 on-score-change("onScoreChange")
                 on-player-busted("onPlayerBusted")
@@ -25,7 +25,7 @@
         </tr>
         <tr>
           <for|player| of=input.leg_players>
-            <scorecard key="players[]" leg=state.leg player=player mode=input.match.match_type.id
+            <scorecard key="players[]" leg=state.leg submitting=state.submitting player=player mode=input.match.match_type.id
                 on-possible-throw("onPossibleThrow")
                 on-score-change("onScoreChange")
                 on-player-busted("onPlayerBusted")
