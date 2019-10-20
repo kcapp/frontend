@@ -1,4 +1,4 @@
-var localStorageUtil = require("../../../../../../util/localstorage");
+var localStorageUtil = require("../../util/localstorage");
 
 module.exports = {
     onCreate(input) {
@@ -6,7 +6,7 @@ module.exports = {
             attribute: input.attribute,
             defaultValue: input.defaultValue,
             index: input.defaultValue || null,
-            enabled: true,
+            enabled: input.enabled || true,
             options: input.options
         }
     },

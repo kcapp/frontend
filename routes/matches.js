@@ -268,6 +268,7 @@ router.post('/new', function (req, res, next) {
                 match_mode: { id: req.body.match_mode },
                 players: players.map(Number),
                 player_handicaps: req.body.player_handicaps,
+                bot_player_config: req.body.bot_player_config,
                 legs: [{ starting_score: req.body.starting_score }],
                 office_id: req.body.office_id,
                 is_practice: isPractice

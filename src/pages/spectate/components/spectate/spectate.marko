@@ -5,7 +5,7 @@
     <tbody>
       <tr>
         <for|player| of=input.leg_players>
-          <scorecard-header key=`player-${player.player_id}` player=player name=input.players[player.player_id].name/>
+          <scorecard-header key=`player-${player.player_id}` player=player players=input.players/>
         </for>
       </tr>
       <tr>

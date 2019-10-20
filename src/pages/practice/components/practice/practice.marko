@@ -1,0 +1,79 @@
+<form>
+  <div class="game-players">
+    <div class="block-container-header">
+      <i class="fas fa-users"/>
+      <span class="ml-10">Players</span>
+    </div>
+    <div class="block-container-with-header">
+      <div class="form-group form-check players-selected">
+        <for|player| of=state.selected>
+          <player-selector player=player on-add-player("removePlayer")/>
+        </for>
+      </div>
+    </div>
+    <div class="block-container-header">
+      <i class="fas fa-mouse-pointer"/>
+      <span class="ml-10">Select players</span>
+    </div>
+    <div class="block-container-with-header">
+      <div class="form-group form-check players-all">
+        <for|player| of=state.players>
+          <player-selector player=player on-add-player("addPlayer")/>
+        </for>
+      </div>
+    </div>
+  </div>
+  <div class="block-container-header">
+    <i class="fas fa-users"/>
+    <span class="ml-10">Bot</span>
+  </div>
+  <div class="block-container-with-header">
+    <div class="form-group form-check players-selected">
+      <select class="form-control">
+        <for|player| of=state.bots>
+          <option value=player.id>${player.name}</option>
+        </for>
+      </select>
+      <div class="block-container-with-header">
+        <div class="btn-group" role="group">
+          <button type="button" class=`btn btn-${state.bot.type == state.skill.TYPE_SKILL ? "primary" : "secondary"}` value=state.skill.TYPE_SKILL on-click("botTypeChanged")>Skill</button>
+          <button type="button" class=`btn btn-${state.bot.type == state.skill.TYPE_MOCK ? "primary" : "secondary"}` value=state.skill.TYPE_MOCK on-click("botTypeChanged")>Mock</button>
+        </div>
+      </div>
+      <if(state.bot.type == state.skill.TYPE_MOCK)>
+        <select class="form-control" onChange("changeBotMock")>
+          <for|player| of=state.mock_players>
+            <option value=player.id>${player.name}</option>
+          </for>
+        </select>
+      </if>
+      <else>
+        <select class="form-control" onChange("changeBotSkill")>
+          <for|skill| of=state.skill.all()>
+            <option selected=(skill.skill === state.bot.skill) value=skill.skill>${skill.name}</option>
+          </for>
+        </select>
+      </else>
+    </div>
+  </div>
+  <div class="game-options">
+    <div class="block-container-header">
+      <i class="fas fa-building"/>
+      <span class="ml-10">Offices</span>
+    </div>
+    <office-selector localstorage=true offices=input.offices on-office-changed("changeOffice")/>
+  </div>
+  <div class="game-options">
+    <div class="block-container-header">
+      <i class="fas fa-cogs"/>
+      <span class="ml-10">Game settings</span>
+    </div>
+    <div class="block-container-with-header">
+      <game-option-selector values=[input.types[0]] enabled=false options=state.options key="game-type" label="Match Type" attribute="game_type" defaultValue=state.options.game_type on-value-changed("onGameTypeChanged")/>
+      <game-option-selector values=[input.scores[1]] options=state.options key="starting-score" label="Starting Score" attribute="starting_score" defaultValue=state.options.starting_score/>
+      <game-option-selector values=input.modes options=state.options key="game-mode" label="Match Mode" attribute="game_mode" defaultValue=state.options.game_mode/>
+      <game-option-selector values=state.venues options=state.options key="venue" label="Venue" attribute="venue" addNull=true/>
+      <button class="btn btn-primary" type="submit" on-click("newGame")>Start</button>
+    </div>
+  </div>
+</form>

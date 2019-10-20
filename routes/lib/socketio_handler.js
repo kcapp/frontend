@@ -3,6 +3,7 @@ var _ = require('underscore');
 var axios = require('axios');
 var moment = require('moment');
 var bottleneck = require("bottleneck/es5");
+var skill = require('kcapp-bot/bot-skill');
 
 var _this = this;
 
@@ -72,8 +73,14 @@ module.exports = (io, app) => {
                                 if (player.is_bot) {
                                     // TODO Make sure this works correctly
                                     debug(`[${legId}] Adding bot ${player.id}/${player.name}`);
+                                    var config = legPlayers[id].bot_config;
                                     var bot = require('kcapp-bot/kcapp-bot')(player.id, "localhost", 3000);
-                                    bot.playLeg(legId);
+                                    if (config && config.skill_level === 0) {
+                                        bot.replayLeg(legId, config.player_id);
+                                    } else {
+                                        var botSkill = config ? skill.fromInt(config.skill_level) : skill.MEDIUM;
+                                        bot.playLeg(legId, botSkill);
+                                    }
                                 }
                             }
                         }).catch(error => {
