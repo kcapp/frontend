@@ -1,5 +1,5 @@
 $ var clazz = input.class || "";
-<if(input.dart.value !== null)>
+<if(input.dart && input.dart.value !== null)>
   <if(input.label)>
     <div class="dart-score-container">
       <label class=`${clazz} ${state.class}`>${state.text}</label>
@@ -11,3 +11,8 @@ $ var clazz = input.class || "";
     </div>
   </else>
 </if>
+<else>
+  <div class="dart-score">
+    <div class=`${clazz} ${state.class}`>${state.text}</div>
+  </div>
+</else>

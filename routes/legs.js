@@ -275,7 +275,7 @@ router.put('/:id/order', function (req, res, next) {
         });
 });
 
-/** Method to change player order */
+/** Method to undo leg finish */
 router.put('/:id/undo', function (req, res, next) {
     axios.put(req.app.locals.kcapp.api + '/leg/' + req.params.id + '/undo')
         .then(() => {
