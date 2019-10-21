@@ -13,6 +13,7 @@
             <th class="text-right">Rank</th>
             <th>Player</th>
             <th class="text-center">Checkout</th>
+            <th class="text-center" colspan="3">Visit</th>
           </tr>
         </thead>
         <tbody>
@@ -26,10 +27,20 @@
                   <a href=`/players/${player.id}/statistics`>${player.name}</a>
                 </td>
                 <td class="text-center">${stats.checkout}</td>
+                <td class="text-center">
+                  <dart-container label=true dart=stats.darts[0]/>
+                </td>
+                <td class="text-center">
+                  <dart-container label=true dart=stats.darts[1]/>
+                </td>
+                <td class="text-center">
+                  <dart-container label=true dart=stats.darts[2]/>
+                </td>                
               </if>
               <else>
                 <td class="col-sm-3">-</td>
                 <td class="text-center">-</td>
+                <td colspan="3" class="text-center">-</td>
               </else>
             </tr>
           </for>
