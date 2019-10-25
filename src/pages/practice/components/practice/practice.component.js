@@ -13,7 +13,7 @@ module.exports = {
             bot: { mock_player_id: null, skill: 2, type: skill.TYPE_SKILL },
             mock_players: _.reject(input.players, (player) =>  { return player.matches_played < 100; }),
             skill: skill,
-            players: input.players,
+            players: _.reject(input.players, function (player) { return player.is_bot === true }),
             input: input,
             officeId: 0,
             venues: input.venues,
@@ -215,7 +215,12 @@ module.exports = {
         localStorageUtil.set('office_id', this.state.officeId);
     },
     botTypeChanged(event) {
-        this.state.bot.type = event.target.value;
+        this.state.bot.type = parseInt(event.target.value);
+        if (this.state.bot.type === skill.TYPE_MOCK) {
+            this.state.bot.mock_player_id = this.state.mock_players[0].id;
+        } else {
+            this.state.bot.mock_player_id = null;
+        }
         this.setStateDirty('bot');
     },
     changeBotMock(event) {

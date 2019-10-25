@@ -243,9 +243,10 @@ router.get('/:id/result', function (req, res, next) {
 /* Method for starting a new match */
 router.post('/new', function (req, res, next) {
     var players = req.body.players;
-    if (players === undefined) {
+    if (players === undefined || players.length === 0) {
         debug('No players specified, unable to start leg');
-        return res.redirect('/');
+        res.status(400).send("No players specified").end();
+        return;
     }
 
     axios.get(req.app.locals.kcapp.api + '/player')

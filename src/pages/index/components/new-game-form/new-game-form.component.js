@@ -190,7 +190,8 @@ module.exports = {
                 localStorageUtil.set('venue', this.state.options.venue);
                 location.href = 'legs/' + response.data.current_leg_id
             }).catch(error => {
-                alert("Error starting match. See log for details");
+                var msg = error.response.data ? error.response.data : "See log for details";
+                alert(`Error starting match. ${msg}`);
                 console.log(error);
             });
         if (event) {
