@@ -11,6 +11,7 @@ var bracket = require('./lib/bracket_generator');
 var matchesTemplate = require('../src/pages/matches/matches-template.marko');
 var matchResultTemplate = require('../src/pages/match-result/match-result-template.marko');
 var spectateTemplate = require('../src/pages/spectate/spectate-template.marko');
+var previewTemplate = require('../src/pages/match-preview/match-preview-template.marko');
 
 /* Redirect requests to /matches to /matches/page/1 */
 router.get('/', function (req, res) {
@@ -108,7 +109,7 @@ router.get('/:id/preview', function (req, res, next) {
                     players[player1].rank = p1Standing ? p1Standing.rank : "n/a";
                     players[player2].rank = p2Standing ? p2Standing.rank : "n/a";
 
-                    res.render('match/preview', {
+                    res.marko(previewTemplate, {
                         player1: players[player1], player2: players[player2], match: match, bracket: brackets[match.tournament.tournament_group_id],
                         head2head: head2head, players: response1, p1statistics: p1stats, p2statistics: p2stats, metadata: metadata
                     });

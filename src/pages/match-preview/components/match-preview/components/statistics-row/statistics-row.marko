@@ -1,0 +1,28 @@
+<if(input.left)>
+    <tr>
+        <td style="padding-right: 10px;">
+            <div class="block-container-small">
+                <div style="font-size: 15px;font-style: italic;font-weight: 400;padding: 10px;height: 40px;overflow: hidden;">${input.name}</div>
+            </div>
+        </td>
+        <td style="text-align: right;">
+            <div class="block-container-preview-small" style="height: 40px;">
+                <div style="font-size: 25px;font-style: italic;font-weight: 300; padding-right: 10px;">${input.value}</div>
+            </div>
+        </td>
+    </tr>
+</if>
+<else>
+    <tr>
+        <td style="text-align: left;">
+            <div class="block-container-preview-small" style="height: 40px;">
+                <div style="font-size: 25px;font-style: italic;font-weight: 300; padding-left: 10px;">${input.value}</div>
+            </div>
+        </td>
+        <td style="padding-right: 10px;">
+            <div class="block-container-small" style="text-align: right;">
+                <div style="font-size: 15px;font-style: italic;font-weight: 400;padding: 10px;height: 40px;overflow: hidden;">${input.name}</div>
+            </div>
+        </td>
+    </tr>
+</else>
