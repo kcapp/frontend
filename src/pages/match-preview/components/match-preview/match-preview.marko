@@ -1,0 +1,97 @@
+$ var player1 = input.player1;
+$ var player2 = input.player2;
+
+<div style="margin-top: 20px;">
+    <div class="left-container" style="float: left; width: 48%;">
+        <table style="width: 100%;">
+            <tr>
+                <td style="padding-right: 10px;">
+                    <div class="block-container" style="height: 140px;">
+                        <div class="player-pic-cutout float-left">
+                            <player-profile-picture player=player1/>
+                        </div>
+                        <div class="float-left pl-20" style="margin-top: -5px;">
+                            <h2>${player1.first_name}</h2>
+                            <h4 style="color: #a5a5a5;">${player1.nickname ? player1.nickname : '-'}</h4>
+                        </div>
+                    </div>
+                </td>
+                <td style="width: 140px;">
+                    <div class="block-container-preview-data" style="text-align: center; height: 140px;">
+                        <div style="text-align: center;">
+                            <div style="float: left; font-size: 50px; font-style: italic; line-height: 1; font-weight: 300;"><span style="color: #6f6f6f;">#</span>
+                                <span>${player1.rank}</span>
+                            </div>
+                            <div style="clear: both;"></div>
+                        </div>
+                        <div style="margin-top: 10px; font-size: 10px;">TOURNAMENT ELO</div>
+                        <div style="font-size: 25px; font-style: italic; font-weight: 300;">${input.head2head.player_elo[player1.id].tournament_elo}</div>
+                    </div>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div class="right-container" style="float: right; width: 48%;">
+        <table style="width: 100%;">
+            <tr>
+                <td style="width: 140px;">
+                    <div class="block-container-preview-data" style="text-align: center; height: 140px;">
+                        <div style="text-align: center;">
+                            <div style="float: left; font-size: 50px; font-style: italic; line-height: 1; font-weight: 300;"><span style="color: #6f6f6f;">#</span>
+                                <span>${player2.rank}</span>
+                            </div>
+                            <div style="clear: both;"></div>
+                        </div>
+                        <div style="margin-top: 10px; font-size: 10px;">TOURNAMENT ELO</div>
+                        <div style="font-size: 25px; font-style: italic; font-weight: 300;">${input.head2head.player_elo[player2.id].tournament_elo}</div>
+                    </div>
+                </td>
+                <td style="padding-right: 10px;">
+                    <div class="block-container" style="height: 140px;">
+                        <div class="player-pic-cutout float-right">
+                            <player-profile-picture player=player2/>
+                        </div>
+                        <div class="float-right pr-20" style="margin-top: -5px;">
+                            <h2>${player2.first_name}</h2>
+                            <h4 style="color: #a5a5a5;">${player2.nickname ? player2.nickname : '-'}</h4>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>
+<div class="middle-container" style="clear: both;">
+    <div class="block-container-preview-data preview-info-text">
+        <div style="color: #66ab00; font-size: 30px; letter-spacing: 5px; font-weight: 300;">${input.metadata.tournament_group.name}</div>
+        <div style="font-size: 20px; font-weight: 300; letter-spacing: 3px;">${input.metadata.match_displayname}</div>
+        <div style="font-size: 15px;margin-bottom: 20px; font-weight: 300; letter-spacing: 3px; color: #a7a7a7;">${input.match.match_mode.name}</div>
+        <div style="font-size: 20px; letter-spacing: 3px; font-weight: 300;">
+            <span style="color: #a7a7a7;">WINNER:</span>
+            <span>${input.metadata.winner_outcome}</span>
+        </div>
+        <div style="font-size: 20px; letter-spacing: 3px; font-weight: 300;">
+            <span style="color: #a7a7a7;">LOSER:</span>
+            <span>${input.metadata.looser_outcome}</span>
+        </div>
+    </div>
+</div>
+<div style="margin-top: 20px;">
+    <div class="left-container" style="float: left; width: 48%;">
+        <table style="width: 100%;">
+            <statistics-row name='CHECKOUT PERCENTAGE', value=input.p1statistics.checkout_percentage.toFixed(2) + '%', left=true/>
+            <statistics-row name='PPD', value=input.p1statistics.ppd.toFixed(2), left=true/>
+            <statistics-row name='OVERALL ACCURACY', value=input.p1statistics.accuracy_overall.toFixed(2), left=true/>
+        </table>
+    </div>
+    <div class="right-container" style="float: right; width: 48%;">
+        <table style="width: 100%;">
+            <statistics-row name='CHECKOUT PERCENTAGE', value=input.p2statistics.checkout_percentage.toFixed(2) + '%'/>
+            <statistics-row name='PPD', value=input.p2statistics.ppd.toFixed(2)/>
+            <statistics-row name='OVERALL ACCURACY', value=input.p2statistics.accuracy_overall.toFixed(2)/>
+        </table>
+    </div>
+    <div class="bracket-container">
+        <object>$!{input.bracket}</object>
+    </div>
+</div>
