@@ -20,7 +20,8 @@ module.exports = {
             mode: input.match.match_type.id,
             socket: {},
             audioAnnouncer: undefined,
-            legNum: input.match.legs.length + (["st", "nd", "rd"][((input.match.legs.length + 90) % 100 - 10) % 10 - 1] || "th")
+            legNum: input.match.legs.length + (["st", "nd", "rd"][((input.match.legs.length + 90) % 100 - 10) % 10 - 1] || "th"),
+            streamer: { interval: undefined, stream: undefined, id: 0 }
         }
     },
 
@@ -29,7 +30,7 @@ module.exports = {
         document.addEventListener("keypress", this.onKeyPress.bind(this), false);
 
         // Setup socket endpoints
-        var socket = io.connect(window.location.origin + '/legs/' + this.state.legId);
+        const socket = io.connect(window.location.origin + '/legs/' + this.state.legId);
         socket.on('score_update', this.onScoreUpdate.bind(this));
         socket.on('possible_throw', this.onPossibleThrowEvent.bind(this));
         socket.on('say', this.onSay.bind(this));
@@ -62,6 +63,18 @@ module.exports = {
                 }, 900);
             }
         }
+
+        var board = document.querySelector('#img-board-remote');
+        socket.on('board2', (data) => {
+            var data = JSON.parse(data);
+            if (this.state.streamer.stream === undefined || this.state.streamer.id !== data.id) {
+                if (!data.enabled) {
+                    board.src = '';
+                    return;
+                }
+                board.src = data.data;
+            }
+        });
     },
 
     onAnnounce(data) {
@@ -84,6 +97,43 @@ module.exports = {
     onScoreChange(scored, component) {
         var component = this.findActive(this.getComponents('players'));
         this.getComponent('player-' + component.state.playerId).setScored(scored);
+    },
+
+    onEnableStream(data) {
+        const video = document.querySelector('#cam-board-preview');
+
+        if (data.enabled) {
+            // request access to webcam
+            navigator.mediaDevices.getUserMedia( { video: { width: 560, height: 374 } } )
+                .then((stream) => {
+                    video.srcObject = stream;
+                    this.state.streamer.stream = stream;
+                });
+
+            const getFrame = () => {
+                const canvas = document.createElement('canvas');
+                canvas.width = video.videoWidth;
+                canvas.height = video.videoHeight;
+                canvas.getContext('2d').drawImage(video, 0, 0);
+                const data = canvas.toDataURL('image/png');
+                return data;
+            }
+            const FPS = 3;
+
+            this.state.streamer.id = data.board;
+            this.state.streamer.interval = setInterval(() => {
+                var data = JSON.stringify({ data: getFrame(), enabled: true, id: this.state.streamer.id });
+                this.state.socket.emit('stream', data);
+            }, 1000 / FPS);
+        } else {
+            video.pause();
+            video.src = '';
+            this.state.streamer.stream.getTracks()[0].stop();
+            this.state.streamer.stream = undefined;
+
+            this.state.socket.emit('stream', JSON.stringify({ enabled: false } ));
+            clearInterval(this.state.streamer.interval);
+        }
     },
 
     onPlayerBusted(busted, component) {

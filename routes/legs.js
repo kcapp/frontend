@@ -11,6 +11,37 @@ var spectateTemplate = require('../src/pages/spectate/spectate-template.marko');
 var legResultTemplate = require('../src/pages/leg-result/leg-result-template.marko');
 
 /* Render the leg view */
+router.get('/:id/beta', function (req, res, next) {
+    axios.all([
+        axios.get(req.app.locals.kcapp.api + '/player'),
+        axios.get(req.app.locals.kcapp.api + '/leg/' + req.params.id),
+        axios.get(req.app.locals.kcapp.api + '/leg/' + req.params.id + '/players'),
+        axios.get(req.app.locals.kcapp.api + '/statistics/global')
+    ]).then(axios.spread((players, legResponse, legPlayers, globalStatistics) => {
+        var leg = legResponse.data;
+        axios.get(req.app.locals.kcapp.api + '/match/' + leg.match_id)
+            .then(response => {
+                var match = response.data;
+                // Sort players based on order
+                legPlayers = _.sortBy(legPlayers.data, (player) => player.order)
+                res.marko(x01InputTemplate, {
+                    leg: leg,
+                    players: players.data,
+                    match: match,
+                    leg_players: legPlayers,
+                    global_statistics: globalStatistics.data,
+                    experimental: true
+                });
+            }).catch(error => {
+                debug('Error when getting match: ' + error);
+                next(error);
+            });
+    })).catch(error => {
+        debug('Error when getting data for leg ' + error);
+        next(error);
+    });
+});
+
 router.get('/:id', function (req, res, next) {
     axios.all([
         axios.get(req.app.locals.kcapp.api + '/player'),

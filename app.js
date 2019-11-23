@@ -54,7 +54,6 @@ var statistics = require('./routes/statistics');
 var tournaments = require('./routes/tournaments');
 var elo = require('./routes/elo');
 var venues = require('./routes/venues')(app, socketHandler);
-var streamer = require('./routes/streamer');
 socketHandler.addNamespace('/active');
 
 // view engine setup
@@ -84,7 +83,6 @@ app.use('/statistics', statistics);
 app.use('/tournaments', tournaments);
 app.use('/elo', elo);
 app.use('/venues', venues);
-app.use('/streamer', streamer);
 
 // Not Found (404) Handler
 app.use(function (req, res, next) {

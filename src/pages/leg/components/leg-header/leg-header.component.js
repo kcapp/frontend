@@ -2,10 +2,11 @@ var axios = require('axios');
 var alertify = require("../../../../util/alertify");
 
 module.exports = {
-    onInput(input) {
+    onCreate(input) {
         this.state = {
             legId: input.legId,
-            round: input.round
+            round: input.round,
+            streamEnabled: false
         }
     },
 
@@ -15,6 +16,15 @@ module.exports = {
 
     changeOrder(event) {
         // Modal is displayed, and code is handled in player-order component
+    },
+
+    enableBoardStream(id, event) {
+        var data = {
+            board: id,
+            enabled: !this.state.streamEnabled
+        };
+        this.emit('enable-stream', data);
+        this.state.streamEnabled = !this.state.streamEnabled;
     },
 
     cancelLeg(event) {

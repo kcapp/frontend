@@ -15,6 +15,14 @@
         <li>
           <a id="change-player-order" data-toggle="modal" data-target="#modal-player-order"  on-click('changeOrder')>Change Order</a>
         </li>
+        <if(input.experimental)>
+          <li>
+            <a on-click('enableBoardStream', 1)>${state.streamEnabled ? "Disable" : "Enable"} Stream 1</a>
+          </li>
+          <li>
+            <a on-click('enableBoardStream', 2)>${state.streamEnabled ? "Disable" : "Enable"} Stream 2</a>
+          </li>
+        </if>
         <if(!input.isOfficial)>
           <li class="divider" role="separator"/>
           <li>
