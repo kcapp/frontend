@@ -8,10 +8,10 @@
     href: "current-elo"
   }
 ]/>
+<office-selector offices=input.offices clazz="float-right" on-office-changed("officeChanged")/>
 <div class="tab-content">
   <div class="tab-pane active" role="tabpanel" id="tournament-elo">
     <div class="block-container no-padding">
-      <div style="padding: 10px;">Tournament Elo</div>
       <table id="table-tournaments-list">
         <thead>
           <tr>
@@ -22,8 +22,8 @@
           </tr>
         </thead>
         <tbody>
-          $ var redStep = Math.floor(256 / input.tournament.length);
-          <for|standing| of=input.tournament>
+          $ var redStep = Math.floor(256 / state.tournament.length);
+          <for|standing| of=state.tournament>
             $ var redValue = 256 - (standing.rank - 1) * redStep;
             <tr>
               <td class="pl-10">${standing.rank}</td>
@@ -43,7 +43,6 @@
   </div>
   <div class="tab-pane" role="tabpanel" id="current-elo">
     <div class="block-container no-padding">
-      <div style="padding: 10px;">Current Elo</div>
       <table id="table-tournaments-list">
         <thead>
           <tr>
@@ -54,8 +53,8 @@
           </tr>
         </thead>
         <tbody>
-          $ var redStep = Math.floor(256 / input.general.length);
-          <for|standing, idx| of=input.general>
+          $ var redStep = Math.floor(256 / state.general.length);
+          <for|standing, idx| of=state.general>
             $ var redValue = 256 - (standing.rank - 1) * redStep;
             <tr>
               <td class="pl-10">${idx + 1}</td>

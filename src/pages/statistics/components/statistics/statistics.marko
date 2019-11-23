@@ -26,7 +26,9 @@
                 <td class="col-sm-3">
                   <a href=`/players/${player.id}/statistics`>${player.name}</a>
                 </td>
-                <td class="text-center">${stats.checkout}</td>
+                <td class="text-center">
+                  <a href=`/legs/${stats.leg_id}/result`>${stats.checkout}</a>
+                </td>
                 <td class="text-center">
                   <dart-container label=true dart=stats.darts[0]/>
                 </td>
@@ -35,7 +37,7 @@
                 </td>
                 <td class="text-center">
                   <dart-container label=true dart=stats.darts[2]/>
-                </td>                
+                </td>
               </if>
               <else>
                 <td class="col-sm-3">-</td>

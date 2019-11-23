@@ -27,16 +27,16 @@ module.exports = {
         var progression = this.input.progression;
         var labels = [];
         var valuesMap = {
-            ppd: [], first9ppd: [],
+            three_dart_avg: [], first_9_three_dart: [],
             checkout_percentage: [],
             scores60s: [], scores100s: [], scores140s: [], scores180s: [] };
         for (var date in progression) {
             if (progression.hasOwnProperty(date)) {
                 var p = progression[date];
                 labels.push(date);
-                valuesMap.ppd.push(p.ppd.toFixed(2));
+                valuesMap.three_dart_avg.push(p.three_dart_avg.toFixed(2));
                 valuesMap.checkout_percentage.push(p.checkout_percentage == null ? 0 : p.checkout_percentage.toFixed(2));
-                valuesMap.first9ppd.push(p.first_nine_ppd.toFixed(2));
+                valuesMap.first_9_three_dart.push(p.first_nine_three_dart_avg.toFixed(2));
                 valuesMap.scores60s.push(p.scores_60s_plus);
                 valuesMap.scores100s.push(p.scores_100s_plus);
                 valuesMap.scores140s.push(p.scores_140s_plus);
@@ -44,21 +44,21 @@ module.exports = {
             }
         }
 
-        var datasetsPPD = [{
-            label: "First 9 PPD",
+        var datasetsAvg = [{
+            label: "First 9",
             backgroundColor: 'rgb(255, 99, 132)',
             borderColor: 'rgb(255, 99, 132)',
-            data: valuesMap.first9ppd,
+            data: valuesMap.first_9_three_dart,
             fill: false
         },
         {
-            label: "PPD",
+            label: "Three Dart Avg.",
             backgroundColor: 'rgb(54, 162, 235)',
             borderColor: 'rgb(54, 162, 235)',
-            data: valuesMap.ppd,
+            data: valuesMap.three_dart_avg,
             fill: false
         }]
-        var ppdChart = new Chart("canvas-ppd", this.getChartConfig('PPD Per Week', 'line', 'Date', 'PPD', labels, datasetsPPD));
+        var avgChart = new Chart("canvas-three-dart-avg", this.getChartConfig('Three Dart Avg. Per Week', 'line', 'Date', 'Three Dart Avg.', labels, datasetsAvg));
 
         var stats = this.input.statistics;
         var percentage = parseFloat(Math.round(stats.accuracy_overall * 100) / 100).toFixed(2);

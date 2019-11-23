@@ -144,8 +144,8 @@ router.get('/:id', function (req, res, next) {
         var statistics = statisticsResponse.data;
         if (!_.isEmpty(statistics)) {
             statistics.checkout_highest = _.sortBy(statistics.checkout_highest, (stats) => -stats.value);
-            statistics.best_ppd = _.sortBy(statistics.best_ppd, (stats) => -stats.value);
-            statistics.best_first_nine_ppd = _.sortBy(statistics.best_first_nine_ppd, (stats) => -stats.value);
+            statistics.best_three_dart_avg = _.sortBy(statistics.best_three_dart_avg, (stats) => -stats.value);
+            statistics.best_first_nine_avg = _.sortBy(statistics.best_first_nine_avg, (stats) => -stats.value);
             if (statistics.best_301_darts_thrown) {
                 statistics.best_301_darts_thrown = _.sortBy(statistics.best_301_darts_thrown, (stats) => stats.value);
             }

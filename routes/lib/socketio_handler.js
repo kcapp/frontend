@@ -233,6 +233,11 @@ module.exports = (io, app) => {
                             });
                     });
 
+                    client.on('stream', (data) => {
+                        //log ('frame', JSON.stringify(data));
+                        nsp.emit('board2', data);
+                    });
+
                     function log(event, data = '') {
                         debug(`[${legId}] ${event} ${data} from ${ip}`);
                     }
@@ -244,7 +249,7 @@ module.exports = (io, app) => {
                         visit.third_dart.value * visit.third_dart.multiplier;
                     var text = '' + score;
                     if (visit.is_bust) {
-                        text = 'No score';
+                        text = 'Noscore';
                     }
                     announce(text, 'score');
                 }

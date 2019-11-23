@@ -127,7 +127,7 @@ $ {
           <tbody>
             <tr>
               <td style="width: 25%;">
-                <div class="block-container-red mr-10">Highest checkout</div>
+                <div class="block-container-red mr-10">Highest Checkout</div>
                 <div class="highscore-card">
                   <table class="table table-tournament-statistics">
                     <tbody>
@@ -141,13 +141,13 @@ $ {
                 </div>
               </td>
               <td style="width: 25%;">
-                <div class="block-container-red mr-10">Best PPD</div>
+                <div class="block-container-red mr-10">Best Three Dart Avg</div>
                 <div class="highscore-card">
                   <table class="table table-tournament-statistics">
                     <tbody>
                       <for|i| from=0 to=10>
                         <tr>
-                          <top-statistics players=input.players statistics=input.statistics.best_ppd idx=i rank=(i + 1)/>
+                          <top-statistics players=input.players statistics=input.statistics.best_three_dart_avg idx=i rank=(i + 1)/>
                         </tr>
                       </for>
                     </tbody>
@@ -155,13 +155,13 @@ $ {
                 </div>
               </td>
               <td style="width: 25%;">
-                <div class="block-container-red mr-10">Best first 9 PPD</div>
+                <div class="block-container-red mr-10">Best First 9 Avg</div>
                 <div class="highscore-card">
                   <table class="table table-tournament-statistics">
                     <tbody>
                       <for|i| from=0 to=10>
                         <tr>
-                          <top-statistics players=input.players statistics=input.statistics.best_first_nine_ppd idx=i rank=(i + 1)/>
+                          <top-statistics players=input.players statistics=input.statistics.best_first_nine_avg idx=i rank=(i + 1)/>
                         </tr>
                       </for>
                     </tbody>
@@ -169,7 +169,7 @@ $ {
                 </div>
               </td>
               <td style="width: 25%;">
-                <div class="block-container-red">Least darts thrown</div>
+                <div class="block-container-red">Least Darts Thrown</div>
                 <div class="highscore-card-no-margin">
                   <table class="table table-tournament-statistics">
                     <tbody>

@@ -79,6 +79,9 @@ $ var columns = input.columns;
       <if(!match.is_finished)>
         <match-button title="Continue" icon="fa-play-circle" location=`/matches/${match.id}`/>
         <match-button title="Spectate" icon="fa-eye" location=`/matches/${match.id}/spectate`/>
+        <if(match.tournament_id)>
+          <match-button title="Preview" icon="fa-search" location=`/matches/${match.id}/preview`/>
+        </if>
       </if>
       <else>
         <match-button title="View" icon="fa-eye" location=`/matches/${match.id}/result`/>

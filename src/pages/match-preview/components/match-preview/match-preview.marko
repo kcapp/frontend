@@ -62,33 +62,49 @@ $ var player2 = input.player2;
     </div>
 </div>
 <div class="middle-container" style="clear: both;">
-    <div class="block-container-preview-data preview-info-text">
-        <div style="color: #66ab00; font-size: 30px; letter-spacing: 5px; font-weight: 300;">${input.metadata.tournament_group.name}</div>
-        <div style="font-size: 20px; font-weight: 300; letter-spacing: 3px;">${input.metadata.match_displayname}</div>
-        <div style="font-size: 15px;margin-bottom: 20px; font-weight: 300; letter-spacing: 3px; color: #a7a7a7;">${input.match.match_mode.name}</div>
-        <div style="font-size: 20px; letter-spacing: 3px; font-weight: 300;">
-            <span style="color: #a7a7a7;">WINNER:</span>
-            <span>${input.metadata.winner_outcome}</span>
+    <if(input.metadata.id !== 0)>
+        <div class="block-container-preview-data preview-info-text">
+            <div style="color: #66ab00; font-size: 30px; letter-spacing: 5px; font-weight: 300;">${input.metadata.tournament_group.name}</div>
+            <div style="font-size: 20px; font-weight: 300; letter-spacing: 3px;">${input.metadata.match_displayname}</div>
+            <div style="font-size: 15px;margin-bottom: 20px; font-weight: 300; letter-spacing: 3px; color: #a7a7a7;">${input.match.match_mode.name}</div>
+            <div style="font-size: 20px; letter-spacing: 3px; font-weight: 300;">
+                <span style="color: #a7a7a7;">WINNER:</span>
+                <span>${input.metadata.winner_outcome}</span>
+            </div>
+            <div style="font-size: 20px; letter-spacing: 3px; font-weight: 300;">
+                <span style="color: #a7a7a7;">LOSER:</span>
+                <span>${input.metadata.looser_outcome}</span>
+            </div>
         </div>
-        <div style="font-size: 20px; letter-spacing: 3px; font-weight: 300;">
-            <span style="color: #a7a7a7;">LOSER:</span>
-            <span>${input.metadata.looser_outcome}</span>
-        </div>
-    </div>
+    </if>
 </div>
 <div style="margin-top: 20px;">
     <div class="left-container" style="float: left; width: 48%;">
         <table style="width: 100%;">
-            <statistics-row name='CHECKOUT PERCENTAGE', value=input.p1statistics.checkout_percentage.toFixed(2) + '%', left=true/>
-            <statistics-row name='PPD', value=input.p1statistics.ppd.toFixed(2), left=true/>
-            <statistics-row name='OVERALL ACCURACY', value=input.p1statistics.accuracy_overall.toFixed(2), left=true/>
+            <if(input.p1statistics.matches_played)>
+                <statistics-row name='CHECKOUT PERCENTAGE', value=input.p1statistics.checkout_percentage.toFixed(2) + '%', left=true/>
+                <statistics-row name='THREE DART AVG.', value=input.p1statistics.three_dart_avg.toFixed(2), left=true/>
+                <statistics-row name='OVERALL ACCURACY', value=input.p1statistics.accuracy_overall.toFixed(2), left=true/>
+            </if>
+            <else>
+                <statistics-row name='CHECKOUT PERCENTAGE', value='0%', left=true/>
+                <statistics-row name='THREE DART AVG.', value='0.00', left=true/>
+                <statistics-row name='OVERALL ACCURACY', value='0.00', left=true/>
+            </else>
         </table>
     </div>
     <div class="right-container" style="float: right; width: 48%;">
         <table style="width: 100%;">
-            <statistics-row name='CHECKOUT PERCENTAGE', value=input.p2statistics.checkout_percentage.toFixed(2) + '%'/>
-            <statistics-row name='PPD', value=input.p2statistics.ppd.toFixed(2)/>
-            <statistics-row name='OVERALL ACCURACY', value=input.p2statistics.accuracy_overall.toFixed(2)/>
+            <if(input.p2statistics.matches_played)>
+                <statistics-row name='CHECKOUT PERCENTAGE', value=input.p2statistics.checkout_percentage.toFixed(2) + '%'/>
+                <statistics-row name='THREE DART AVG.', value=input.p2statistics.three_dart_avg.toFixed(2)/>
+                <statistics-row name='OVERALL ACCURACY', value=input.p2statistics.accuracy_overall.toFixed(2)/>
+            </if>
+            <else>
+                <statistics-row name='CHECKOUT PERCENTAGE', value='0%'/>
+                <statistics-row name='THREE DART AVG.', value='0.00'/>
+                <statistics-row name='OVERALL ACCURACY', value='0.00'/>
+            </else>
         </table>
     </div>
     <div class="bracket-container">

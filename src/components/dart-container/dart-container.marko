@@ -11,6 +11,8 @@ $ var clazz = input.class || "";
     </div>
   </else>
 </if>
+<else-if(input.dart && input.dart.value === null)>
+</else-if>
 <else>
   <div class="dart-score">
     <div class=`${clazz} ${state.class}`>${state.text}</div>

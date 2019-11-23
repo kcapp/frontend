@@ -38,9 +38,11 @@ $ var isFinished = leg.winner_player_id !== null;
   </div>
   <div style="float: right; padding-top: 4px;">
     <ul class="nav nav-pills">
-      <li role="presentation">
-        <a on-click("rematch")>Rematch</a>
-      </li>
+      <if(!input.match.tournament_id)>
+        <li role="presentation">
+          <a on-click("rematch")>Rematch</a>
+        </li>
+      </if>
       <li role="presentation">
         <a on-click("undoLegFinish")>Undo leg finish</a>
       </li>
