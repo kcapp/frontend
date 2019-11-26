@@ -7,7 +7,7 @@
       <if(input.leg.players.length % 2 != 0 && state.venueConfig.has_dual_monitor)>
         <for|player| of=input.leg_players>
           <tr>
-            <scorecard-header key=`player-${player.player_id}` player=player name=input.players[player.player_id].name/>
+            <scorecard-header key=`player-${player.player_id}` player=player name=input.players[player.player_id].name players=input.players/>
             <scorecard key="players[]" leg=state.leg submitting=state.submitting player=player mode=input.match.match_type.id
                 on-possible-throw("onPossibleThrow")
                 on-score-change("onScoreChange")
