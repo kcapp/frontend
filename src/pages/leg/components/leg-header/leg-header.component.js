@@ -5,7 +5,6 @@ module.exports = {
     onCreate(input) {
         this.state = {
             legId: input.legId,
-            round: input.round,
             streamEnabled: false
         }
     },

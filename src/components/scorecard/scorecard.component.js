@@ -28,7 +28,7 @@ module.exports = {
             this.state.submitClass = null;
         }
     },
-    
+
     reset() {
         this.state.totalScore = 0;
         this.state.currentDart = 1;
@@ -93,7 +93,7 @@ module.exports = {
             }
             dart.reset();
         } else {
-            var dart = this.getCurrentDart()
+            var dart = this.getCurrentDart();
             dart.reset();
         }
         this.state.isSubmitted = true;

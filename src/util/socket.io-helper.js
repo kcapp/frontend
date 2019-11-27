@@ -88,11 +88,11 @@ exports.say = (data, thiz) => {
 }
 
 exports.onPossibleThrow = function (data, thiz) {
-    if (data.origin === 'web') {
+    var component = thiz.findActive(thiz.getComponents('players'));
+    if (data.origin === 'web' && !component.getDart(data.darts_thrown).state.initial) {
         // No need to update possible throw if we just sent the throw
         return;
     }
-    var component = thiz.findActive(thiz.getComponents('players'));
 
     // Set current dart
     if (data.is_undo) {
