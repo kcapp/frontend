@@ -23,6 +23,12 @@ $ var match = state.match;
       heading: `Stakes ${match.owe_type_id === null ? "None" : match.owe_type.item}`,
       icon: "fa-trophy"
     }
+  ],
+  [
+    {
+      heading: `Office ${match.office_id ? input.offices[match.office_id].name : '-'} ${match.venue ? " / " + match.venue.name : '' }`,
+      icon: "fa-building"
+    }
   ]
 ]/>
 <if(match.tournament_id)>

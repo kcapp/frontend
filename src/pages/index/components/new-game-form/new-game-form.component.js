@@ -8,7 +8,7 @@ module.exports = {
     onCreate(input) {
         this.state = {
             selected: [],
-            players: input.players,
+            players: _.reject(input.players, (player) => { return player.is_bot; }),
             input: input,
             officeId: 0,
             venues: input.venues,
@@ -206,10 +206,10 @@ module.exports = {
         this.state.officeId = officeId;
 
         if (officeId == 0) {
-            this.state.players = this.input.players;
+            this.state.players =  _.reject(this.input.players, (player) => { return player.is_bot; });
             this.state.venues = this.input.venues;
         } else {
-            this.state.players = _.reject(this.input.players, (player) => { return player.office_id != officeId; });
+            this.state.players = _.reject(this.input.players, (player) => { return player.office_id != officeId || player.is_bot; });
             this.state.venues = _.reject(this.input.venues, (venue) => { return venue.office_id != officeId; });
         }
         this.setStateDirty('players');

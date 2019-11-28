@@ -222,9 +222,10 @@ router.get('/:id/result', function (req, res, next) {
 
     axios.all([
         axios.get(req.app.locals.kcapp.api + '/player'),
+        axios.get(req.app.locals.kcapp.api + '/office'),
         axios.get(req.app.locals.kcapp.api + '/match/' + id),
         axios.get(req.app.locals.kcapp.api + '/match/' + id + '/statistics')
-    ]).then(axios.spread((playerResponse, match, statisticsResponse) => {
+    ]).then(axios.spread((playerResponse, office, match, statisticsResponse) => {
         var players = playerResponse.data;
         var statistics = statisticsResponse.data;
         _.each(statistics, stats => {
@@ -232,6 +233,7 @@ router.get('/:id/result', function (req, res, next) {
         });
         res.marko(matchResultTemplate, {
             match: match.data,
+            offices: office.data,
             players: players,
             statistics: statistics
         });
