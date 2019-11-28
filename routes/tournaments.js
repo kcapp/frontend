@@ -11,6 +11,7 @@ var tournamentTemplate = require('../src/pages/tournament/tournament-template.ma
 var tournamentsTemplate = require('../src/pages/tournaments/tournaments-template.marko');
 var tournamentAdminTemplate = require('../src/pages/tournament-admin/tournament-admin-template.marko');
 var tournamentScheduleTemplate = require('../src/pages/tournament-schedule/tournament-schedule-template.marko');
+var tournamentPlayerMatchesTemplate = require('../src/pages/tournament-player-matches/tournament-player-matches-template.marko');
 
 /** Get all tournaments */
 router.get('/', function (req, res, next) {
@@ -232,6 +233,39 @@ router.get('/:id/schedule', function (req, res, next) {
         });
     })).catch(error => {
         debug('Error when getting data for tournament ' + error);
+        next(error);
+    });
+});
+
+/* Get player tournament matches */
+router.get('/:id/player/:player_id', function (req, res, next) {
+    axios.all([
+        axios.get(req.app.locals.kcapp.api + '/player'),
+        axios.get(req.app.locals.kcapp.api + '/tournament/' + req.params.id),
+        axios.get(req.app.locals.kcapp.api + '/tournament/' + req.params.id + '/player/' + req.params.player_id)
+    ]).then(axios.spread((playersData, tournament, matchesData) => {
+        var matches = matchesData.data;
+        var players = playersData.data;
+
+        var playerId = req.params.player_id;
+        for (var i = 0; i < matches.length; i++) {
+            var match = matches[i];
+            if (match.players[0] == playerId) {
+                continue;
+            }
+            var old = match.players[0];
+            match.players[0] = match.players[1];
+            match.players[1] = old;
+        }
+
+        res.marko(tournamentPlayerMatchesTemplate, {
+            tournament: tournament.data,
+            players: players,
+            player: players[playerId],
+            matches: matches
+        });
+    })).catch(error => {
+        debug('Error when getting data for player tournament matches ' + error);
         next(error);
     });
 });

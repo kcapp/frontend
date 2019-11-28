@@ -359,7 +359,7 @@
                                 $ var division = standing.tournament_group.division
                                 $ var divisionPostfix = division === 1 ? 'st' : division === 2 ? 'nd' : division === 3 ? 'rd' : 'th';
                                 <td>
-                                    <a href='/tournaments/${standing.tournament.id}'>${standing.tournament.name}</a>
+                                    <a href='/tournaments/${standing.tournament.id}/player/${input.player.id}'>${standing.tournament.name}</a>
                                 </td>
                                 <td>${division}${divisionPostfix}</td>
                                 <td>${standing.tournament_group.name}</td>

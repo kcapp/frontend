@@ -1,0 +1,6 @@
+$ var tournament = input.tournament.name;
+$ var group = input.matches[0].tournament.tournament_group_name;
+<page-header heading=`${tournament} / ${group}` subheading=`${input.player.name}`/>
+<div role="tabpanel" class="tab-pane">
+    <matches-table players=input.players matches=input.matches columns=["start_time", "status", "players", "results", "options"]/>
+  </div>
