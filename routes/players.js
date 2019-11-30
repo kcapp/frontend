@@ -72,41 +72,20 @@ router.get('/:id/statistics', function (req, res, next) {
     });
 });
 
+/* Get comparable statistics for players */
 router.get('/comparison', function (req, res, next) {
     axios.all([
         axios.get(req.app.locals.kcapp.api + '/player/active')
     ]).then(axios.spread((playersResponse) => {
         var players = playersResponse.data;
-        players = _.sortBy(players, (player) => player.name)
+        var sorted = _.sortBy(players, (player) => player.name)
         res.marko(playerComparisonTemplate, {
-            players: players,
+            players: sorted,
+            playersMap: players,
             locals: req.app.locals
         });
     })).catch(error => {
         debug('Error when getting data for player comparison ' + error);
-        next(error);
-    });
-});
-
-/* Get comparable statistics for the given players */
-router.get('/compare', function (req, res, next) {
-    var playerIds = req.query.player_id;
-    if (!Array.isArray(playerIds)) {
-        playerIds = [playerIds]
-    }
-    debug('Comparing players %s', playerIds);
-
-    axios.all([
-        axios.get(req.app.locals.kcapp.api + '/player'),
-        axios.get(req.app.locals.kcapp.api + '/player/compare?id=' + playerIds.join("&id="))
-    ]).then(axios.spread((players, statistics) => {
-        statistics = _.sortBy(statistics.data, function (stat) { return players.data[stat.player_id].name; });
-        res.render('player/players_comparison', {
-            players: players.data,
-            statistics: statistics
-        });
-    })).catch(error => {
-        debug('Error when getting data for player ' + error);
         next(error);
     });
 });

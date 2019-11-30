@@ -5,7 +5,8 @@ module.exports = {
     onCreate(input) {
         this.state = {
             statistics1: {},
-            statistics2: {}
+            statistics2: {},
+            statistics3: {}
         }
     },
     handlePlayerChange(statistics, playerId) {
