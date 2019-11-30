@@ -8,6 +8,7 @@ var _ = require('underscore');
 
 var playerTemplate = require('../src/pages/player/player-template.marko');
 var playersTemplate = require('../src/pages/players/players-template.marko');
+var playerComparisonTemplate = require('../src/pages/player-comparison/player-comparison-template.marko');
 
 /* Get a list of all players */
 router.get('/', function (req, res, next) {
@@ -67,6 +68,22 @@ router.get('/:id/statistics', function (req, res, next) {
         });
     })).catch(error => {
         debug('Error when getting data for player ' + error);
+        next(error);
+    });
+});
+
+router.get('/comparison', function (req, res, next) {
+    axios.all([
+        axios.get(req.app.locals.kcapp.api + '/player/active')
+    ]).then(axios.spread((playersResponse) => {
+        var players = playersResponse.data;
+        players = _.sortBy(players, (player) => player.name)
+        res.marko(playerComparisonTemplate, {
+            players: players,
+            locals: req.app.locals
+        });
+    })).catch(error => {
+        debug('Error when getting data for player comparison ' + error);
         next(error);
     });
 });

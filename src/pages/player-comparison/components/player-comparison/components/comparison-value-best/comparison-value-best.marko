@@ -1,0 +1,12 @@
+$ var obj = input.object;
+$ var value = input.value;
+<if(obj[value])>
+    $ var value = obj[value].value;
+    $ var isFloat = parseInt(value) !== value;
+    <td>
+        <a href=`/legs/${obj[input.value].leg_id}/result`>${isFloat ? value.toFixed(2) : value}</a>
+    </td>
+</if>
+<else>
+    <td>-</td>
+</else>

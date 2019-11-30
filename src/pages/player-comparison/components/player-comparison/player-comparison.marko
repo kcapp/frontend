@@ -1,0 +1,115 @@
+<page-header heading="Player Comparison" icon="fa-user"/>
+<div class="block-container no-padding">
+  <div class="table-responsive">
+    <table id="table-player-comparison" class="table">
+      <thead>
+        <tr>
+          <th/>
+          <th>
+            <player-combo players=input.players on-player-change("handlePlayerChange", "statistics1")/>
+          </th>
+          <th>
+            <player-combo players=input.players on-player-change("handlePlayerChange", "statistics2")/>
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Won/Played</td>
+          <td>${state.statistics1.matches_won ? (state.statistics1.matches_won + ' / ' + state.statistics1.matches_played) : "-"}</td>
+          <td>${state.statistics2.matches_won ? (state.statistics2.matches_won + ' / ' + state.statistics2.matches_played) : "-"}</td>
+        </tr>
+        <tr>
+          <td>Win %</td>
+          <td>${state.statistics1.matches_won ? ((state.statistics1.matches_won / state.statistics1.matches_played * 100).toFixed(2) + "%") : '-'}</td>
+          <td>${state.statistics2.matches_won ? ((state.statistics2.matches_won / state.statistics2.matches_played * 100).toFixed(2) + "%") : '-'}</td>
+        </tr>
+        <tr>
+          <td>Three Dart Avg.</td>
+          <comparison-value object=state.statistics1 value="three_dart_avg"/>
+          <comparison-value object=state.statistics2 value="three_dart_avg"/>
+        </tr>
+        <tr>
+          <td>First 9 Avg.</td>
+          <comparison-value object=state.statistics1 value="first_nine_three_dart_avg"/>
+          <comparison-value object=state.statistics2 value="first_nine_three_dart_avg"/>
+        </tr>
+        <tr>
+          <td>Best Three Dart Avg.-</td>
+          <comparison-value-best object=state.statistics1 value="best_three_dart_avg"/>
+          <comparison-value-best object=state.statistics2 value="best_three_dart_avg"/>
+        </tr>
+        <tr>
+          <td>Best First 9 Avg.</td>
+          <comparison-value-best object=state.statistics1 value="best_first_nine_avg"/>
+          <comparison-value-best object=state.statistics2 value="best_first_nine_avg"/>
+        </tr>
+        <tr>
+          <td>Checkout%</td>
+          <comparison-value object=state.statistics1 value="checkout_percentage" postfix=" %"/>
+          <comparison-value object=state.statistics2 value="checkout_percentage" postfix=" %"/>
+        </tr>
+        <tr>
+          <td>Highest Checkout</td>
+          <comparison-value-best object=state.statistics1 value="highest_checkout"/>
+          <comparison-value-best object=state.statistics2 value="highest_checkout"/>
+        </tr>
+        <tr>
+          <td>Best 301</td>
+          <comparison-value-best object=state.statistics1 value="best_301"/>
+          <comparison-value-best object=state.statistics2 value="best_301"/>
+        </tr>
+        <tr>
+          <td>Best 501</td>
+          <comparison-value-best object=state.statistics1 value="best_501"/>
+          <comparison-value-best object=state.statistics2 value="best_501"/>
+        </tr>
+        <tr>
+          <td/>
+          <th>High Scores</th>
+          <td/>
+        </tr>
+        <tr>
+          <td>60+</td>
+          <comparison-value object=state.statistics1 value="scores_60s_plus"/>
+          <comparison-value object=state.statistics2 value="scores_60s_plus"/>
+        </tr>
+        <tr>
+          <td>100+</td>
+          <comparison-value object=state.statistics1 value="scores_100s_plus"/>
+          <comparison-value object=state.statistics2 value="scores_100s_plus"/>
+        </tr>
+        <tr>
+          <td>140+</td>
+          <comparison-value object=state.statistics1 value="scores_140s_plus"/>
+          <comparison-value object=state.statistics2 value="scores_140s_plus"/>
+        </tr>
+        <tr>
+          <td>180</td>
+          <comparison-value object=state.statistics1 value="scores_180s"/>
+          <comparison-value object=state.statistics2 value="scores_180s"/>
+        </tr>
+        <tr>
+          <td/>
+          <th>Accuracy</th>
+          <td/>
+        </tr>
+        <tr>
+          <td>Overall</td>
+          <comparison-value object=state.statistics1 value="accuracy_overall"/>
+          <comparison-value object=state.statistics2 value="accuracy_overall"/>
+        </tr>
+        <tr>
+          <td>20s</td>
+          <comparison-value object=state.statistics1 value="accuracy_20"/>
+          <comparison-value object=state.statistics2 value="accuracy_20"/>
+        </tr>
+        <tr>
+          <td>19s</td>
+          <comparison-value object=state.statistics1 value="accuracy_19"/>
+          <comparison-value object=state.statistics2 value="accuracy_19"/>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
