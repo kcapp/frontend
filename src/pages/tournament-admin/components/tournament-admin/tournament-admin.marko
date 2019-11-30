@@ -1,100 +1,118 @@
-<page-header heading="Tournament" subheading="Administrate tournaments"/>
-<div class="game-options">
-  <div class="block-container-header">
-    <i class="fas fa-cogs"/>
-    <span class="ml-10">Settings</span>
-  </div>
-  <div class="block-container-with-header">
-    <p>Name</p>
-    <input type="text" placeholder="Name" on-input("tournamentNameChange") value=`${state.tournamentName}`/>
-    <p>Short Name</p>
-    <input type="text" placeholder="Short Name" on-input("shortNameChange") value=`${state.shortName}`/>
-    <p>Start</p>
-    <input type="datetime-local" placeholder="Start" on-input("startDateChange") value=`${state.start}`/>
-    <p>End</p>
-    <input type="datetime-local" placeholder="End" on-input("endDateChange") value=`${state.end}`/>
-    <p>Office</p>
-    <select on-change("officeChange")>
-      <for|id, office| in=input.offices>
-        <option value=`${id}` selected=(office.id == state.office)>${office.name}</option>
-      </for>
-    </select>
+<page-header heading=`${input.tournament.name}` subheading="Tournament"/>
+<div class="block-container no-padding">
+  <div class="table table-responsive">
+    <table class="table-matches-admin">
+      <thead>
+        <tr>
+          <th class="text-center">
+            <span>Match ID</span>
+          </th>
+          <th class="text-center">
+            <span>Mode</span>
+          </th>
+          <th class="text-center">
+            <span>Players</span>
+          </th>
+          <th class="text-center">
+            <span>Group</span>
+          </th>
+          <th class="text-center">
+            <span>Order</span>
+          </th>
+          <th class="text-center">
+            <span>Displayname</span>
+          </th>
+          <th class="text-center">
+            <span>Winner Outcome</span>
+          </th>
+          <th class="text-center">
+            <span>Winner Outcome Match</span>
+          </th>
+          <th class="text-center">
+            <span>Winner Outcome Home</span>
+          </th>
+          <th class="text-center">
+            <span>Looser Outcome</span>
+          </th>
+          <th class="text-center">
+            <span>Looser Outcome Match</span>
+          </th>
+          <th class="text-center">
+            <span>Looser Outcome Home</span>
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <for|metadata| of=input.metadata>
+          $ var match = input.matches[metadata.match_id];
+          <tr>
+            <td class="text-center">
+              <div>${match.id}</div>
+            </td>
+            <td class="text-center">
+              <select>
+                <for|mode| of=input.modes>
+                  <option selected=(mode.id == match.match_mode.id) value=`${mode.id}`>${mode.short_name}</option>
+                </for>
+              </select>
+            </td>
+            <td class="text-center">
+              <for|id| of=match.players>
+                <div class="float-left">
+                  <span class=`label label-secondary`>${input.players[id].name}</span>
+                </div>
+              </for>
+            </td>
+            <td class="text-center">
+                <div>${metadata.tournament_group.name}</div>
+            </td>
+            <td class="text-center">
+              <select>
+                <for|m| of=input.metadata>
+                  <option selected=(m.id == metadata.id) value=`${m.order_of_player}`>${m.order_of_play}</option>
+                </for>
+              </select>
+            </td>
+            <td class="text-center">
+              <input type="text" value=`${metadata.match_displayname}`/>
+            </td>
+            <td class="text-center">
+              <input type="text" value=`${metadata.winner_outcome}` size=50/>
+            </td>
+            <td class="text-center">
+              <select>
+                <option selected=(metadata.winner_outcome_match_id == null) value="-1">-</option>
+                <for|m| of=input.metadata>
+                  <option selected=(m.match_id == metadata.winner_outcome_match_id) value=`${m.match_id}`>${m.tournament_group.name} / ${m.match_displayname}</option>
+                </for>
+              </select>
+            </td>
+            <td class="text-center">
+              <input type="checkbox" checked=metadata.is_winner_outcome_home value=`${metadata.is_winner_outcome_home}`/>
+            </td>
+            <td class="text-center">
+              <input type="text" value=`${metadata.looser_outcome}` size=50/>
+            </td>
+            <td class="text-center">
+              <select>
+                <option selected=(metadata.looser_outcome_match_id == null) value="-1">-</option>
+                <for|m| of=input.metadata>
+                  <option selected=(m.match_id == metadata.looser_outcome_match_id) value=`${m.match_id}`>${m.tournament_group.name} / ${m.match_displayname}</option>
+                </for>
+              </select>
+            </td>
+            <td class="text-center">
+              <input type="checkbox" checked=metadata.is_looser_outcome_home value=`${metadata.is_looser_outcome_home}`/>
+            </td>
+          </tr>
+        </for>
+      </tbody>
+    </table>
   </div>
 </div>
-<h3>Groups</h3>
-<table>
-  <thead>
-    <tr>
-      <th>Name</th>
-      <th>Starting Score</th>
-      <th>Type</th>
-      <th>Mode</th>
-    </tr>
-  </thead>
-  <tbody>
-    <for|group, idx| of=state.groups>
-      <tr>
-        <td>
-          <select idx=idx on-change("groupChange")>
-            <for|id, inputGroup| in=input.groups>
-              <option value=`${id}` selected=(inputGroup.id == group.id)>${inputGroup.name}</option>
-            </for>
-          </select>
-        </td>
-        <td>
-          <input type="number" idx=idx placeholder="301" on-input("scoreChange") value=`${group.score}`/>
-        </td>
-        <td>
-          <select idx=idx on-change("typeChange")>
-            <for|type| of=input.types>
-              <option value=`${type.id}` selected=(type.id == group.type)>${type.name}</option>
-            </for>
-          </select>
-        </td>
-        <select idx=idx on-change("modeChange")>
-          <for|mode| of=input.modes>
-            <option value=`${mode.id}` selected=(mode.id == group.mode)>${mode.name}</option>
-          </for>
-        </select>
-        <td/>
-      </tr>
-    </for>
-  </tbody>
-</table>
-<button class="btn btn-primary" type="button" on-click("addGroup")>Add</button>
-<button class="btn btn-primary" type="button" on-click("removeGroup")>Remove</button>
-<h3>Matches</h3>
-<table>
-  <thead>
-    <tr>
-      <th>Date</th>
-      <th>Time</th>
-      <th>Group</th>
-      <th>Home Player</th>
-      <th>Away Player</th>
-    </tr>
-  </thead>
-  <tbody>
-    <for|match| of=state.matches>
-      <tr>
-        <td>
-          <input on-paste("onPaste") class=`${match[0].valid ? "" : "invalid"}` type="text" placeholder="yyyy-mm-dd" value=`${match[0].value}`/>
-        </td>
-        <td>
-          <input type="text" class=`${match[1].valid ? "" : "invalid"}` placeholder="HH:MM" value=`${match[1].value}`/>
-        </td>
-        <td>
-          <input type="text" class=`${match[2].valid ? "" : "invalid"}` value=`${match[2].value}` disabled/>
-        </td>
-        <td>
-          <input type="text" class=`${match[3].valid ? "" : "invalid"}` placeholder="Home Player" value=`${match[3].value}`/>
-        </td>
-        <td>
-          <input type="text" class=`${match[4].valid ? "" : "invalid"}` placeholder="Away Player" value=`${match[4].value}`/>
-        </td>
-      </tr>
-    </for>
-  </tbody>
-</table>
-<button class="btn btn-primary" type="button" on-click("validate")>Validate</button>
-<button class="btn btn-primary" type="button" on-click("createTournament")>Create</button>
+<for|id, bracket| in=input.brackets>
+    <div class="center">
+        <h2>${input.groups[id].name}</h2>
+        <object>$!{bracket}</object>
+    </div>
+</for>

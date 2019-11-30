@@ -10,6 +10,7 @@ var bracket = require('./lib/bracket_generator');
 var tournamentTemplate = require('../src/pages/tournament/tournament-template.marko');
 var tournamentsTemplate = require('../src/pages/tournaments/tournaments-template.marko');
 var tournamentAdminTemplate = require('../src/pages/tournament-admin/tournament-admin-template.marko');
+var tournamentsAdminTemplate = require('../src/pages/tournaments-admin/tournaments-admin-template.marko');
 var tournamentScheduleTemplate = require('../src/pages/tournament-schedule/tournament-schedule-template.marko');
 var tournamentPlayerMatchesTemplate = require('../src/pages/tournament-player-matches/tournament-player-matches-template.marko');
 
@@ -48,7 +49,7 @@ router.get('/admin', function (req, res, next) {
         axios.get(req.app.locals.kcapp.api + '/match/modes'),
         axios.get(req.app.locals.kcapp.api + '/match/types'),
     ]).then(axios.spread((groups, players, offices, modes, types) => {
-        res.marko(tournamentAdminTemplate, {
+        res.marko(tournamentsAdminTemplate, {
             groups: groups.data,
             players: players.data,
             offices: offices.data,
@@ -57,6 +58,47 @@ router.get('/admin', function (req, res, next) {
         });
     })).catch(error => {
         debug('Error when getting data for tournament ' + error);
+        next(error);
+    });
+});
+
+/* Get tournament with the given ID */
+router.get('/:id/admin', function (req, res, next) {
+    axios.all([
+        axios.get(req.app.locals.kcapp.api + '/player'),
+        axios.get(req.app.locals.kcapp.api + '/tournament/' + req.params.id),
+        axios.get(req.app.locals.kcapp.api + '/tournament/' + req.params.id + '/matches'),
+        axios.get(req.app.locals.kcapp.api + '/tournament/' + req.params.id + '/metadata'),
+        axios.get(req.app.locals.kcapp.api + '/tournament/groups'),
+        axios.get(req.app.locals.kcapp.api + '/match/modes'),
+        axios.get(req.app.locals.kcapp.api + '/venue'),
+    ]).then(axios.spread((playersResponse, tournamentResponse, matchesData, metadataResponse, groups, modes, venue) => {
+        var matches = matchesData.data;
+        var metadata = _.sortBy(metadataResponse.data, 'order_of_play');
+        var players = playersResponse.data;
+        var tournament = tournamentResponse.data;
+
+        var matchesMap = {};
+        for (var key in matches) {
+            _.extend(matchesMap, _.object(_.map(matches[key], function (match) {
+                return [match.id, match]
+            })));
+        }
+
+        bracket.generateNew(metadata, matches, players, '', (brackets) => {
+            res.marko(tournamentAdminTemplate, {
+                brackets: brackets,
+                tournament: tournament,
+                players: players,
+                matches: matchesMap,
+                metadata: metadata,
+                groups: groups.data,
+                modes: modes.data,
+                venues: venue.data
+            });
+        });
+    })).catch(error => {
+        debug('Error when getting data for tournament admin ' + error);
         next(error);
     });
 });
@@ -184,7 +226,7 @@ router.get('/:id', function (req, res, next) {
                     brackets: brackets, tournament: tournament, overview: overview,
                     players: players, matches: matches, statistics: statistics
                 });
-            })
+            });
         }
     })).catch(error => {
         debug('Error when getting data for tournament ' + error);
