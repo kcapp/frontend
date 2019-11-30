@@ -161,25 +161,8 @@ router.get('/:id', function (req, res, next) {
         var tournament = tournamentResponse.data;
 
         var overview = overviewData.data;
-        for (var groupId in overview) {
-            var group = overview[groupId];
-            // Sort players by points earned
-            group.sort((p1, p2) => p2.points - p1.points);
+        sortTournamentOverview(overview);
 
-            // Calculate rank for each player
-            var rank = 0;
-            for (var i = 0; i < group.length; i++) {
-                var current = group[i];
-                var prev = group[i - 1];
-
-                if (prev && prev.points == current.points && prev.legs_difference === current.legs_difference) {
-                    current.rank = prev.rank;
-                } else {
-                    current.rank = rank + 1;
-                }
-                rank++;
-            }
-        }
         if (tournament.playoffs_tournament_id !== null) {
             axios.all([
                 axios.get(req.app.locals.kcapp.api + '/tournament/' + tournament.playoffs_tournament_id + '/matches'),
@@ -242,8 +225,10 @@ router.get('/:id/player/:player_id', function (req, res, next) {
     axios.all([
         axios.get(req.app.locals.kcapp.api + '/player'),
         axios.get(req.app.locals.kcapp.api + '/tournament/' + req.params.id),
+        axios.get(req.app.locals.kcapp.api + '/tournament/' + req.params.id + '/overview'),
+        axios.get(req.app.locals.kcapp.api + '/tournament/' + req.params.id + '/statistics'),
         axios.get(req.app.locals.kcapp.api + '/tournament/' + req.params.id + '/player/' + req.params.player_id)
-    ]).then(axios.spread((playersData, tournament, matchesData) => {
+    ]).then(axios.spread((playersData, tournament, overviewData, statistics, matchesData) => {
         var matches = matchesData.data;
         var players = playersData.data;
 
@@ -257,11 +242,15 @@ router.get('/:id/player/:player_id', function (req, res, next) {
             match.players[0] = match.players[1];
             match.players[1] = old;
         }
+        var overview = overviewData.data;
+        sortTournamentOverview(overview);
 
         res.marko(tournamentPlayerMatchesTemplate, {
             tournament: tournament.data,
             players: players,
             player: players[playerId],
+            overview: overview,
+            statistics: statistics.data,
             matches: matches
         });
     })).catch(error => {
@@ -269,5 +258,27 @@ router.get('/:id/player/:player_id', function (req, res, next) {
         next(error);
     });
 });
+
+function sortTournamentOverview(overview) {
+    for (var groupId in overview) {
+        var group = overview[groupId];
+        // Sort players by points earned
+        group.sort((p1, p2) => p2.points - p1.points);
+
+        // Calculate rank for each player
+        var rank = 0;
+        for (var i = 0; i < group.length; i++) {
+            var current = group[i];
+            var prev = group[i - 1];
+
+            if (prev && prev.points == current.points && prev.legs_difference === current.legs_difference) {
+                current.rank = prev.rank;
+            } else {
+                current.rank = rank + 1;
+            }
+            rank++;
+        }
+    }
+}
 
 module.exports = router;
