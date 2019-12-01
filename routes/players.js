@@ -73,7 +73,7 @@ router.get('/:id/statistics', function (req, res, next) {
 });
 
 /* Get comparable statistics for players */
-router.get('/comparison', function (req, res, next) {
+router.get('/compare', function (req, res, next) {
     axios.all([
         axios.get(req.app.locals.kcapp.api + '/player/active')
     ]).then(axios.spread((playersResponse) => {
