@@ -1,7 +1,13 @@
 $ var tournament = input.tournament.name;
 $ var group = input.matches[0].tournament.tournament_group_name;
 
-<page-header heading=`${tournament} / ${group}` subheading=`${input.player.name}`/>
+
+$ {
+  var buttons = [ { name: "Matches", href: ``},
+    { name: "Player", href: `/players/${input.player.id}/statistics`},
+    { name: "Tournament", href: `/tournaments/${input.tournament.id}`} ];
+}
+<page-header heading=`${tournament} / ${group}` subheading=`${input.player.name}` buttons=buttons/>
 <div role="tabpanel" class="tab-pane">
   <tournament-overview-table tournament=input.tournament players=input.players overview=state.overview statistics=input.statistics/>
   <matches-table players=input.players matches=input.matches columns=["start_time", "status", "players", "results", "options"]/>

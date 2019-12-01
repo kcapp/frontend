@@ -3,12 +3,21 @@ $ {
   if (state.hasStatistics) {
     tabs.push({ name: "Statistics", href: "statistics" });
   }
-  tabs.push({ name: "Playoffs", href: "playoffs" });
+  tabs.push({ name: "Bracket", href: "playoffs" });
   if (input.tournament.standings) {
     tabs.push({ name: "Final Standings", href: "standings" });
   }
 }
-<page-header heading=`${input.tournament.name}` subheading="Tournament" tabs=tabs/>
+$ {
+  var buttons = [];
+  if (input.tournament.playoffs_tournament_id) {
+    buttons.push({ name: "Playoffs", href: `/tournaments/${input.tournament.playoffs_tournament_id}`});
+  }
+  if (input.tournament.is_playoffs) {
+    buttons.push({ name: "Schedule", href: `/tournaments/${input.tournament.id}/schedule`});
+  }
+}
+<page-header heading=`${input.tournament.name}` subheading="Tournament" tabs=tabs buttons=buttons/>
 <div class="tab-content">
   <div role="tabpanel" id="season" class="tab-pane active">
     <for|id, group| in=input.overview>

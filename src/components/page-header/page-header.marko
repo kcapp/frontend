@@ -23,6 +23,17 @@ $ var icon = input.icon || "fa-trophy";
       <p>${input.subheading || ""}</p>
     </else>
   </div>
+  <if(input.buttons)>
+    <div class="content-right">
+      <ul class="nav nav-pills">
+        <for|button, idx| of=input.buttons>
+          <li class=`${idx == 0 && !input.tabs ? "active" : ""}` role="presentation">
+            <a href=`${button.href}`>${button.name}</a>
+          </li>
+        </for>
+      </ul>
+    </div>
+  </if>
   <if(input.tabs)>
     <div class="content-right">
       <ul class="nav nav-pills">
