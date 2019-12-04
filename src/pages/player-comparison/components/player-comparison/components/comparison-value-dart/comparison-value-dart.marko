@@ -1,0 +1,36 @@
+$ var obj = input.object;
+$ var value = input.value;
+$ var triple = input.triple || true;
+<if(obj && obj[value])>
+  $ var value = obj[value];
+  <td>
+    <table style="width: 100%;">
+      <thead>
+        <tr>
+          <th>Singles</th>
+          <th>Doubles</th>
+          <if(triple == true)>
+            <th>Triples</th>
+          </if>
+          <th>Total</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          $ var singles = value[1] ? value[1] : 0;
+          $ var doubles = value[2] ? value[2] : 0;
+          $ var triples = value[3] ? value[3] : 0;
+          <td>${singles}</td>
+          <td>${doubles}</td>
+          <if(triple == true)>
+            <td>${triples}</td>
+          </if>
+          <td>${singles + doubles * 2 + triples * 3}</td>
+        </tr>
+      </tbody>
+    </table>
+  </td>
+</if>
+<else>
+  <td>-</td>
+</else>

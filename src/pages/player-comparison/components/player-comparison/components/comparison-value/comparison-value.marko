@@ -2,10 +2,10 @@ $ var obj = input.object;
 $ var value = input.value;
 $ var postfix = input.postfix || "";
 <if(obj[value])>
-    $ var value = obj[value];
-    $ var isFloat = parseInt(value) !== value;
-    <td>${isFloat ? value.toFixed(2) : value}${postfix}</td>
+  $ var value = obj[value];
+  $ var isFloat = parseInt(value) !== value;
+  <td>${isFloat ? value.toFixed(2) : value}${postfix}</td>
 </if>
 <else>
-    <td>-</td>
+  <td>-</td>
 </else>
