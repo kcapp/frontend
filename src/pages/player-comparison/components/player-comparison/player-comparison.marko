@@ -6,13 +6,13 @@
         <tr>
           <th/>
           <th>
-            <player-combo players=input.players on-player-change("handlePlayerChange", "statistics1")/>
+            <player-combo selected=state.statistics1.player_id players=input.players on-player-change("handlePlayerChange", "statistics1")/>
           </th>
           <th>
-            <player-combo players=input.players on-player-change("handlePlayerChange", "statistics2")/>
+            <player-combo selected=state.statistics2.player_id players=input.players on-player-change("handlePlayerChange", "statistics2")/>
           </th>
           <th>
-            <player-combo players=input.players on-player-change("handlePlayerChange", "statistics3")/>
+            <player-combo selected=state.statistics3.player_id players=input.players on-player-change("handlePlayerChange", "statistics3")/>
           </th>
         </tr>
       </thead>
@@ -181,5 +181,10 @@
         </tr>
       </tbody>
     </table>
+  </div>
+  <div class="content-right">
+    <a class="pr-10" on-click('onShareButtonClick')>
+      Share <i class=`fas fa-share-square`/>
+    </a>
   </div>
 </div>

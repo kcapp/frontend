@@ -4,9 +4,9 @@ var _ = require('underscore');
 module.exports = {
     onCreate(input) {
         this.state = {
-            statistics1: {},
-            statistics2: {},
-            statistics3: {}
+            statistics1: input.statistics[0] || {},
+            statistics2: input.statistics[1] || {},
+            statistics3: input.statistics[2] || {}
         }
     },
     handlePlayerChange(statistics, playerId) {
@@ -18,5 +18,24 @@ module.exports = {
         })).catch(error => {
             console.log('Error when getting data for tournament ' + error);
         });
+    },
+    onShareButtonClick(event) {
+        var playerIds = [];
+        if (this.state.statistics1.player_id) {
+            playerIds.push(this.state.statistics1.player_id);
+        }
+        if (this.state.statistics2.player_id) {
+            playerIds.push(this.state.statistics2.player_id);
+        }
+        if (this.state.statistics3.player_id) {
+            playerIds.push(this.state.statistics3.player_id);
+        }
+        var params = playerIds.length === 0 ? "" : "?player_id=";
+        if (playerIds.length === 1) {
+            params += playerIds[0];
+        } else {
+            params += playerIds.join("&player_id=");
+        }
+        location.href = location.href.split('?')[0] + params;
     }
 }

@@ -1,6 +1,7 @@
+
 <select onChange("handlePlayerChange")>
   <option selected value="-1">-</option>
   <for|player| of=input.players>
-    <option value=`${player.id}`>${player.name}</option>
+    <option selected=(input.selected == player.id) value=`${player.id}`>${player.name}</option>
   </for>
 </select>

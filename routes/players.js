@@ -74,14 +74,23 @@ router.get('/:id/statistics', function (req, res, next) {
 
 /* Get comparable statistics for players */
 router.get('/compare', function (req, res, next) {
-    axios.all([
-        axios.get(req.app.locals.kcapp.api + '/player/active')
-    ]).then(axios.spread((playersResponse) => {
+    var requests = [ axios.get(req.app.locals.kcapp.api + '/player/active') ];
+
+    var playerIds = req.query.player_id;
+    if (playerIds) {
+        if (!Array.isArray(playerIds)) {
+            playerIds = [playerIds]
+        }
+        requests.push(axios.get(req.app.locals.kcapp.api + '/player/compare?id=' + playerIds.join("&id=")));
+    }
+    axios.all(requests).then(axios.spread((playersResponse, statisticsData) => {
+        var statistics = statisticsData ? statisticsData.data : [];
         var players = playersResponse.data;
         var sorted = _.sortBy(players, (player) => player.name)
         res.marko(playerComparisonTemplate, {
             players: sorted,
             playersMap: players,
+            statistics: statistics,
             locals: req.app.locals
         });
     })).catch(error => {
