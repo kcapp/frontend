@@ -70,7 +70,7 @@ module.exports = {
             case 66: return [{modifier:'triple',value:'10'},{modifier:'double',value:'18'}];
             case 67: return [{modifier:'triple',value:'17'},{modifier:'double',value:'8'}];
             case 68: return [{modifier:'triple',value:'20'},{modifier:'double',value:'4'}];
-            case 69: return [{modifier:'single',value:'19'},{modifier:'double',value:'Bull'}];
+            case 69: return [{modifier:'single',value:'19'},{modifier:'double',value:'25'}];
             case 70: return [{modifier:'triple',value:'18'},{modifier:'double',value:'8'}];
             case 71: return [{modifier:'triple',value:'13'},{modifier:'double',value:'16'}];
             case 72: return [{modifier:'triple',value:'16'},{modifier:'double',value:'12'}];
@@ -102,7 +102,7 @@ module.exports = {
             case 98: return [{modifier:'triple',value:'20'},{modifier:'double',value:'19'}];
             case 99: return [{modifier:'triple',value:'19'},{modifier:'single',value:'10'},{modifier:'double',value:'16'}];
             case 100: return [{modifier:'triple',value:'20'},{modifier:'double',value:'20'}];
-            case 101: return [{modifier:'triple',value:'19'},{modifier:'single',value:'10'},{modifier:'double',value:'20'}];
+            case 101: return [{modifier:'triple',value:'19'},{modifier:'single',value:'12'},{modifier:'double',value:'16'}];
             case 102: return [{modifier:'triple',value:'20'},{modifier:'single',value:'10'},{modifier:'double',value:'16'}];
             case 103: return [{modifier:'triple',value:'19'},{modifier:'single',value:'14'},{modifier:'double',value:'16'}];
             case 104: return [{modifier:'triple',value:'20'},{modifier:'single',value:'12'},{modifier:'double',value:'16'}];
@@ -123,11 +123,11 @@ module.exports = {
             case 119: return [{modifier:'triple',value:'20'},{modifier:'single',value:'19'},{modifier:'double',value:'20'}];
             case 120: return [{modifier:'triple',value:'20'},{modifier:'single',value:'20'},{modifier:'double',value:'20'}];
             case 121: return [{modifier:'triple',value:'19'},{modifier:'triple',value:'16'},{modifier:'double',value:'8'}];
-            case 122: return [{modifier:'triple',value:'18'},{modifier:'single',value:'18'},{modifier:'double',value:'Bull'}];
+            case 122: return [{modifier:'triple',value:'18'},{modifier:'single',value:'18'},{modifier:'double',value:'25'}];
             case 123: return [{modifier:'triple',value:'20'},{modifier:'triple',value:'13'},{modifier:'double',value:'12'}];
             case 124: return [{modifier:'triple',value:'20'},{modifier:'triple',value:'16'},{modifier:'double',value:'8'}];
             case 125: return [{modifier:'triple',value:'20'},{modifier:'triple',value:'19'},{modifier:'double',value:'4'}];
-            case 126: return [{modifier:'triple',value:'19'},{modifier:'single',value:'19'},{modifier:'double',value:'Bull'}];
+            case 126: return [{modifier:'triple',value:'19'},{modifier:'single',value:'19'},{modifier:'double',value:'25'}];
             case 127: return [{modifier:'triple',value:'20'},{modifier:'triple',value:'17'},{modifier:'double',value:'8'}];
             case 128: return [{modifier:'triple',value:'20'},{modifier:'triple',value:'20'},{modifier:'double',value:'4'}];
             case 129: return [{modifier:'triple',value:'19'},{modifier:'triple',value:'16'},{modifier:'double',value:'12'}];
@@ -161,14 +161,36 @@ module.exports = {
             case 157: return [{modifier:'triple',value:'19'},{modifier:'triple',value:'20'},{modifier:'double',value:'20'}];
             case 158: return [{modifier:'triple',value:'20'},{modifier:'triple',value:'20'},{modifier:'double',value:'19'}];
             case 160: return [{modifier:'triple',value:'20'},{modifier:'triple',value:'20'},{modifier:'double',value:'20'}];
-            case 161: return [{modifier:'triple',value:'20'},{modifier:'triple',value:'17'},{modifier:'double',value:'Bull'}];
-            case 164: return [{modifier:'triple',value:'19'},{modifier:'triple',value:'19'},{modifier:'double',value:'Bull'}];
-            case 167: return [{modifier:'triple',value:'20'},{modifier:'triple',value:'19'},{modifier:'double',value:'Bull'}];
-            case 170: return [{modifier:'triple',value:'20'},{modifier:'triple',value:'20'},{modifier:'double',value:'Bull'}];
+            case 161: return [{modifier:'triple',value:'20'},{modifier:'triple',value:'17'},{modifier:'double',value:'25'}];
+            case 164: return [{modifier:'triple',value:'19'},{modifier:'triple',value:'19'},{modifier:'double',value:'25'}];
+            case 167: return [{modifier:'triple',value:'20'},{modifier:'triple',value:'19'},{modifier:'double',value:'25'}];
+            case 170: return [{modifier:'triple',value:'20'},{modifier:'triple',value:'20'},{modifier:'double',value:'25'}];
             default: return [];
         }
     },
+    twoDartSuggestion(score) {
+        switch (score) {
+            case 101: return [{modifier:'triple',value:'17'},{modifier:'double',value:'25'}];
+            case 104: return [{modifier:'triple',value:'18'},{modifier:'double',value:'25'}];
+            case 107: return [{modifier:'triple',value:'19'},{modifier:'double',value:'25'}];
+            case 110: return [{modifier:'triple',value:'20'},{modifier:'double',value:'25'}];
+            default: return this.getSuggestion(score);
+        }
+    },
+    oneDartSuggestion(score) {
+        return score === 50 ? [{modifier:'double',value:'25'}] : this.getSuggestion(score);
+    },
     onInput(input) {
-        this.state = {suggestion: this.getSuggestion(input.score)};
+        switch (input.currentDart) {
+            case 2:
+                this.state = {suggestion: this.twoDartSuggestion(input.score)};
+                break;
+            case 3:
+                this.state = {suggestion: this.oneDartSuggestion(input.score)};
+                break;
+          default:
+                this.state = {suggestion: this.getSuggestion(input.score)};
+                break;
+        }
     },
 };

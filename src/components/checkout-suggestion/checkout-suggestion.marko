@@ -1,5 +1,7 @@
 <div class="checkout-suggestion ${state.suggestion.length == 0 ? 'transparent' : ''}">
     <for|dart| of=state.suggestion>
-        <div class=`suggested-dart dart-score-${dart.modifier}`>${dart.value}</div>
+        <div class=`suggested-dart dart-score-${dart.modifier}`>
+            ${dart.modifier == 'triple' ? 'T-' : (dart.modifier == 'double' ? 'D-' : '')}${dart.value}
+        </div>
     </for>
 </div>
