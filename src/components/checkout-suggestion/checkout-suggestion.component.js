@@ -97,7 +97,7 @@ module.exports = {
             case 93: return [{modifier:'triple',value:'19'},{modifier:'double',value:'18'}];
             case 94: return [{modifier:'triple',value:'18'},{modifier:'double',value:'20'}];
             case 95: return [{modifier:'triple',value:'19'},{modifier:'double',value:'19'}];
-            case 96: return [{modifier:'double',value:'20'},{modifier:'double',value:'18'}];
+            case 96: return [{modifier:'triple',value:'20'},{modifier:'double',value:'18'}];
             case 97: return [{modifier:'triple',value:'19'},{modifier:'double',value:'20'}];
             case 98: return [{modifier:'triple',value:'20'},{modifier:'double',value:'19'}];
             case 99: return [{modifier:'triple',value:'19'},{modifier:'single',value:'10'},{modifier:'double',value:'16'}];
