@@ -5,6 +5,7 @@ var router = express.Router();
 
 var axios = require('axios');
 var _ = require('underscore');
+var skill = require('kcapp-bot/bot-skill');
 
 var bracket = require('./lib/bracket_generator');
 
@@ -96,22 +97,41 @@ router.get('/:id/preview', function (req, res, next) {
 
                 bracket.generateNew(tournamentMetadata, tournamentMatches, players, metadata.match_displayname, (brackets => {
                     var head2head = response2.data;
-                    head2head.player_visits[player1] = _.sortBy(head2head.player_visits[player1], function (visit) { return -visit.count; })
-                    head2head.player_visits[player2] = _.sortBy(head2head.player_visits[player2], function (visit) { return -visit.count; })
+                    head2head.player_visits[player1] = _.sortBy(head2head.player_visits[player1], function (visit) {
+                        return -visit.count;
+                    })
+                    head2head.player_visits[player2] = _.sortBy(head2head.player_visits[player2], function (visit) {
+                        return -visit.count;
+                    })
 
-                    head2head.player_checkouts[player1] = _.sortBy(head2head.player_checkouts[player1], function (checkout) { return -checkout.count; })
-                    head2head.player_checkouts[player2] = _.sortBy(head2head.player_checkouts[player2], function (checkout) { return -checkout.count; })
+                    head2head.player_checkouts[player1] = _.sortBy(head2head.player_checkouts[player1], function (checkout) {
+                        return -checkout.count;
+                    })
+                    head2head.player_checkouts[player2] = _.sortBy(head2head.player_checkouts[player2], function (checkout) {
+                        return -checkout.count;
+                    })
 
                     var standings = standingsresponse.data;
-                    var p1Standing = _.findWhere(standings, { player_id: p1stats.player_id });
-                    var p2Standing = _.findWhere(standings, { player_id: p2stats.player_id })
+                    var p1Standing = _.findWhere(standings, {
+                        player_id: p1stats.player_id
+                    });
+                    var p2Standing = _.findWhere(standings, {
+                        player_id: p2stats.player_id
+                    })
 
                     players[player1].rank = p1Standing ? p1Standing.rank : "n/a";
                     players[player2].rank = p2Standing ? p2Standing.rank : "n/a";
 
                     res.marko(previewTemplate, {
-                        player1: players[player1], player2: players[player2], match: match, bracket: brackets[match.tournament.tournament_group_id],
-                        head2head: head2head, players: response1, p1statistics: p1stats, p2statistics: p2stats, metadata: metadata
+                        player1: players[player1],
+                        player2: players[player2],
+                        match: match,
+                        bracket: brackets[match.tournament.tournament_group_id],
+                        head2head: head2head,
+                        players: response1,
+                        p1statistics: p1stats,
+                        p2statistics: p2stats,
+                        metadata: metadata
                     });
                 }));
             })).catch(error => {
@@ -225,18 +245,37 @@ router.get('/:id/result', function (req, res, next) {
         axios.get(req.app.locals.kcapp.api + '/office'),
         axios.get(req.app.locals.kcapp.api + '/match/' + id),
         axios.get(req.app.locals.kcapp.api + '/match/' + id + '/statistics')
-    ]).then(axios.spread((playerResponse, office, match, statisticsResponse) => {
+    ]).then(axios.spread((playerResponse, office, matchData, statisticsResponse) => {
         var players = playerResponse.data;
         var statistics = statisticsResponse.data;
-        _.each(statistics, stats => {
-            stats.player_name = players[stats.player_id].name;
-        });
-        res.marko(matchResultTemplate, {
-            match: match.data,
-            offices: office.data,
-            players: players,
-            statistics: statistics
-        });
+        var match = matchData.data;
+
+        axios.get(req.app.locals.kcapp.api + '/leg/' + match.legs[0].id + '/players')
+            .then(response => {
+                var botConfigs = _.object(_.map(response.data, (player) => { return [player.player_id, player.bot_config] }));
+                _.each(statistics, stats => {
+                    var name = players[stats.player_id].name;
+
+                    var botConfig = botConfigs[stats.player_id];
+                    if (botConfig) {
+                        if (botConfig.player_id) {
+                            name = name + " as " + players[botConfig.player_id].name;
+                        } else {
+                            name = name + " (" + skill.fromInt(botConfig.skill_level).name + ")";
+                        }
+                    }
+                    stats.player_name = name;
+                });
+                res.marko(matchResultTemplate, {
+                    match: match,
+                    offices: office.data,
+                    players: players,
+                    statistics: statistics
+                });
+            }).catch(error => {
+                debug('Error when getting data for match result ' + error);
+                next(error);
+            });
     })).catch(error => {
         debug('Error when getting data for match result ' + error);
         next(error);
@@ -268,12 +307,18 @@ router.post('/new', function (req, res, next) {
             var body = {
                 owe_type_id: req.body.match_stake == -1 ? null : req.body.match_stake,
                 venue_id: req.body.venue,
-                match_type: { id: req.body.match_type },
-                match_mode: { id: req.body.match_mode },
+                match_type: {
+                    id: req.body.match_type
+                },
+                match_mode: {
+                    id: req.body.match_mode
+                },
                 players: players.map(Number),
                 player_handicaps: req.body.player_handicaps,
                 bot_player_config: req.body.bot_player_config,
-                legs: [{ starting_score: req.body.starting_score }],
+                legs: [{
+                    starting_score: req.body.starting_score
+                }],
                 office_id: req.body.office_id,
                 is_practice: isPractice
             }
@@ -285,7 +330,8 @@ router.post('/new', function (req, res, next) {
                     // Forward all spectating clients to next leg
                     if (match.venue) {
                         this.socketHandler.emitMessage('/venue/' + match.venue.id, 'venue_new_match', {
-                            match_id: match.id, leg_id: match.current_leg_id
+                            match_id: match.id,
+                            leg_id: match.current_leg_id
                         });
                         this.socketHandler.emitMessage('/active', 'new_match', {
                             match: match
@@ -309,6 +355,16 @@ router.post('/:id/rematch', function (req, res, next) {
         .then(response => {
             var match = response.data;
             this.socketHandler.setupLegsNamespace(match.current_leg_id);
+            // Forward all spectating clients to next leg
+            if (match.venue) {
+                this.socketHandler.emitMessage('/venue/' + match.venue.id, 'venue_new_match', {
+                    match_id: match.id,
+                    leg_id: match.current_leg_id
+                });
+                this.socketHandler.emitMessage('/active', 'new_match', {
+                    match: match
+                });
+            }
             res.status(200).send(match).end();
         }).catch(error => {
             debug('Error when starting new match: ' + error);

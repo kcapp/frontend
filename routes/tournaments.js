@@ -1,5 +1,8 @@
 var debug = require('debug')('kcapp:tournaments');
 
+var bottleneck = require("bottleneck/es5");
+var limiter = new bottleneck({ minTime: 51 });
+
 var express = require('express');
 var router = express.Router();
 
@@ -21,7 +24,8 @@ router.get('/', function (req, res, next) {
         axios.get(req.app.locals.kcapp.api + '/office')
     ]).then(axios.spread((tournaments, offices) => {
         res.marko(tournamentsTemplate, {
-            tournaments: tournaments.data, offices: offices.data
+            tournaments: tournaments.data,
+            offices: offices.data
         });
     })).catch(error => {
         debug('Error when getting data for tournament ' + error);
@@ -126,7 +130,10 @@ router.post('/admin', function (req, res, next) {
     for (var groupId in playersByGroup) {
         var players = playersByGroup[groupId];
         players.forEach(playerId => {
-            tournamentPlayers.push({ player_id: playerId, tournament_group_id: parseInt(groupId) })
+            tournamentPlayers.push({
+                player_id: playerId,
+                tournament_group_id: parseInt(groupId)
+            })
         });
     }
 
@@ -152,25 +159,23 @@ router.post('/admin', function (req, res, next) {
 
                 var matchBody = {
                     created_at: startDatetime,
-                    match_type: { id: group.type },
-                    match_mode: { id: group.mode },
+                    match_type: {
+                        id: group.type
+                    },
+                    match_mode: {
+                        id: group.mode
+                    },
                     players: [match[3].id, match[4].id],
-                    legs: [{ starting_score: group.score }],
+                    legs: [{
+                        starting_score: group.score
+                    }],
                     tournament_id: tournament.id
                 }
-                axios.post(req.app.locals.kcapp.api + '/match', matchBody)
-                    .then(response => {
-                        var match = response.data;
-                        this.socketHandler.setupLegsNamespace(match.current_leg_id);
-                    }).catch(error => {
-                        debug('Error when starting new match: ' + error);
-                        next(error);
-                    });
+                createMatch(req, matchBody);
             }
             res.end();
         }).catch(error => {
             debug('Error when starting new match: ' + error);
-            next(error);
         });
 });
 
@@ -212,8 +217,12 @@ router.get('/:id', function (req, res, next) {
             ]).then(axios.spread((matchesResponse, metadataResponse) => {
                 bracket.generateNew(metadataResponse.data, matchesResponse.data, players, '', (brackets) => {
                     res.marko(tournamentTemplate, {
-                        brackets: brackets, tournament: tournament, overview: overview,
-                        players: players, matches: matches, statistics: statistics
+                        brackets: brackets,
+                        tournament: tournament,
+                        overview: overview,
+                        players: players,
+                        matches: matches,
+                        statistics: statistics
                     });
                 });
             })).catch(error => {
@@ -223,8 +232,12 @@ router.get('/:id', function (req, res, next) {
         } else {
             bracket.generateNew(metadata, matches, players, '', (brackets) => {
                 res.marko(tournamentTemplate, {
-                    brackets: brackets, tournament: tournament, overview: overview,
-                    players: players, matches: matches, statistics: statistics
+                    brackets: brackets,
+                    tournament: tournament,
+                    overview: overview,
+                    players: players,
+                    matches: matches,
+                    statistics: statistics
                 });
             });
         }
@@ -254,7 +267,11 @@ router.get('/:id/schedule', function (req, res, next) {
 
         metadata = _.sortBy(metadata, 'order_of_play');
         res.marko(tournamentScheduleTemplate, {
-            tournament: tournament.data, players: players.data, metadata: metadata, matches: matchesMap, locals: req.app.locals
+            tournament: tournament.data,
+            players: players.data,
+            metadata: metadata,
+            matches: matchesMap,
+            locals: req.app.locals
         });
     })).catch(error => {
         debug('Error when getting data for tournament ' + error);
@@ -321,6 +338,19 @@ function sortTournamentOverview(overview) {
             rank++;
         }
     }
+}
+
+function createMatch(req, body) {
+    // To not spam the API with too many requests, we add a short limit to the requests here
+    limiter.schedule(() => {
+        axios.post(req.app.locals.kcapp.api + '/match', body)
+            .then(response => {
+                var match = response.data;
+                this.socketHandler.setupLegsNamespace(match.current_leg_id);
+            }).catch(error => {
+                debug('Error when starting new match: ' + error);
+            });
+    });
 }
 
 module.exports = router;

@@ -185,9 +185,22 @@ router.get('/:id/result', function (req, res, next) {
 
                 var players = playerResponse.data;
                 var legPlayers = legPlayersResponse.data;
+
+                var botConfigs = _.object(_.map(legPlayers, (player) => { return [player.player_id, player.bot_config] }));
                 _.each(legPlayers, (player) => {
                     players[player.player_id].starting_score = leg.starting_score + player.handicap;
                     players[player.player_id].remaining_score = leg.starting_score + player.handicap;
+
+                    var name = players[player.player_id].name;
+                    var botConfig = botConfigs[player.player_id];
+                    if (botConfig) {
+                        if (botConfig.player_id) {
+                            name = name + " as " + players[botConfig.player_id].name;
+                        } else {
+                            name = name + " (" + skill.fromInt(botConfig.skill_level).name + ")";
+                        }
+                        players[player.player_id].name = name;
+                    }
                 });
 
                 _.each(leg.visits, (visit, index) => {
