@@ -89,7 +89,7 @@ router.get('/:id/admin', function (req, res, next) {
             })));
         }
 
-        bracket.generateNew(metadata, matches, players, '', (brackets) => {
+        bracket.generateNew(metadata, matches, players, '', (err, brackets) => {
             res.marko(tournamentAdminTemplate, {
                 brackets: brackets,
                 tournament: tournament,
@@ -215,7 +215,7 @@ router.get('/:id', function (req, res, next) {
                 axios.get(req.app.locals.kcapp.api + '/tournament/' + tournament.playoffs_tournament_id + '/matches'),
                 axios.get(req.app.locals.kcapp.api + '/tournament/' + tournament.playoffs_tournament_id + '/metadata')
             ]).then(axios.spread((matchesResponse, metadataResponse) => {
-                bracket.generateNew(metadataResponse.data, matchesResponse.data, players, '', (brackets) => {
+                bracket.generateNew(metadataResponse.data, matchesResponse.data, players, '', (err, brackets) => {
                     res.marko(tournamentTemplate, {
                         brackets: brackets,
                         tournament: tournament,
@@ -230,7 +230,7 @@ router.get('/:id', function (req, res, next) {
                 next(error);
             });
         } else {
-            bracket.generateNew(metadata, matches, players, '', (brackets) => {
+            bracket.generateNew(metadata, matches, players, '', (err, brackets) => {
                 res.marko(tournamentTemplate, {
                     brackets: brackets,
                     tournament: tournament,

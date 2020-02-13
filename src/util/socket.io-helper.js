@@ -47,7 +47,6 @@ exports.onScoreUpdate = (data, thiz) => {
 
         var headerComponent = thiz.getComponent('player-' + player.player_id);
         headerComponent.state.player = player;
-        headerComponent.state.currentScore = player.current_score;
         headerComponent.state.isCurrentPlayer = player.player_id === leg.current_player_id;
 
         totalFishNChips += player.visit_statistics.fish_and_chips_counter;
@@ -108,9 +107,10 @@ exports.onPossibleThrow = function (data, thiz) {
     // Update player score
     var header = thiz.getComponent('player-' + data.current_player_id);
     if (thiz.state.mode == shootout.MODE) {
-        header.state.currentScore += (data.score * data.multiplier)
+        header.state.player.current_score += (data.score * data.multiplier);
     } else {
-        header.state.currentScore -= (data.score * data.multiplier)
+        header.state.player.current_score -= (data.score * data.multiplier);
+        header.setScored();
     }
 }
 

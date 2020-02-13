@@ -16,11 +16,10 @@ module.exports = {
             player: player,
             name: name,
             isCurrentPlayer: player.is_current_player,
-            currentScore: player.current_score,
             wins: player.wins ? player.wins : 0
         }
     },
     setScored(scored) {
-        this.state.currentScore -= scored;
+        this.setStateDirty('player');
     }
 };

@@ -95,7 +95,7 @@ router.get('/:id/preview', function (req, res, next) {
                 var tournamentMetadata = tournamentMetadataResponse.data;
                 var metadata = metadataResponse.data;
 
-                bracket.generateNew(tournamentMetadata, tournamentMatches, players, metadata.match_displayname, (brackets => {
+                bracket.generateNew(tournamentMetadata, tournamentMatches, players, metadata.match_displayname, ((err, brackets) => {
                     var head2head = response2.data;
                     head2head.player_visits[player1] = _.sortBy(head2head.player_visits[player1], function (visit) {
                         return -visit.count;
@@ -126,7 +126,7 @@ router.get('/:id/preview', function (req, res, next) {
                         player1: players[player1],
                         player2: players[player2],
                         match: match,
-                        bracket: brackets[match.tournament.tournament_group_id],
+                        bracket: err ? null : brackets[match.tournament.tournament_group_id],
                         head2head: head2head,
                         players: response1,
                         p1statistics: p1stats,

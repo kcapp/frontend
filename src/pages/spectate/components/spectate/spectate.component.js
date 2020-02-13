@@ -69,7 +69,8 @@ module.exports = {
 
         // Update player score
         var header = this.getComponent('player-' + data.current_player_id);
-        header.state.currentScore -= (data.score * data.multiplier)
+        header.state.player.current_score -= (data.score * data.multiplier)
+        header.setStateDirty('player');
     },
 
     findActive(components) {

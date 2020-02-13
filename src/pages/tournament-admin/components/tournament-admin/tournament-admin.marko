@@ -83,7 +83,8 @@
               <select>
                 <option selected=(metadata.winner_outcome_match_id == null) value="-1">-</option>
                 <for|m| of=input.metadata>
-                  <option selected=(m.match_id == metadata.winner_outcome_match_id) value=`${m.match_id}`>${m.tournament_group.name} / ${m.match_displayname}</option>
+                  $ var players = `${input.players[input.matches[m.match_id].players[0]].first_name} vs. ${input.players[input.matches[m.match_id].players[1]].first_name}`
+                  <option selected=(m.match_id == metadata.winner_outcome_match_id) value=`${m.match_id}`>${m.tournament_group.name} / ${m.match_displayname} / ${players}</option>
                 </for>
               </select>
             </td>
@@ -97,7 +98,8 @@
               <select>
                 <option selected=(metadata.looser_outcome_match_id == null) value="-1">-</option>
                 <for|m| of=input.metadata>
-                  <option selected=(m.match_id == metadata.looser_outcome_match_id) value=`${m.match_id}`>${m.tournament_group.name} / ${m.match_displayname}</option>
+                  $ var players = `${input.players[input.matches[m.match_id].players[0]].first_name} vs. ${input.players[input.matches[m.match_id].players[1]].first_name}`
+                  <option selected=(m.match_id == metadata.looser_outcome_match_id) value=`${m.match_id}`>${m.tournament_group.name} / ${m.match_displayname} / ${players}</option>
                 </for>
               </select>
             </td>

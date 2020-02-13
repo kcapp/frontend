@@ -8,7 +8,9 @@ module.exports = {
         // Setup socket endpoints
         var socket = io.connect(window.location.origin + '/active');
         socket.on('warmup_started', (data) => {
-            location.href = '/matches/' + data.match.id + '/preview';
+            if (data.match.tournament_id !== null) {
+                location.href = '/matches/' + data.match.id + '/preview';
+            }
         });
     }
 };
