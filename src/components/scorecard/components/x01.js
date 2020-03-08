@@ -1,7 +1,5 @@
 var alertify = require("../../../util/alertify");
 
-exports.MODE = 1;
-
 exports.isBust = (currentScore, thrown) => {
     if (currentScore - thrown < 2) {
         return true;
@@ -27,7 +25,7 @@ exports.confirmThrow = function () {
     this.state.currentDart++;
     this.state.isSubmitted = true;
 
-    this.emit('score-change', scored);
+    this.emit('score-change', scored, this.state.player.player_id);
     var isCheckout = module.exports.isCheckout(this.state.player.current_score, dart);
     var isBust = module.exports.isBust(this.state.player.current_score, scored);
     if (isCheckout) {

@@ -2,7 +2,7 @@ var _ = require("underscore");
 var io = require('socket.io-client');
 var alertify = require('./alertify');
 var speaker = require('./speaker');
-var shootout = require('../components/scorecard/components/shootout.js');
+var types = require('../components/scorecard/components/match_types');
 
 exports.connect = (url) => {
     var socket = io(url);
@@ -44,6 +44,7 @@ exports.onScoreUpdate = (data, thiz) => {
         }
         component.state.isCurrentPlayer = isCurrentPlayer;
         component.state.player = player;
+        component.state.players = players;
 
         var headerComponent = thiz.getComponent('player-' + player.player_id);
         headerComponent.state.player = player;
@@ -61,8 +62,8 @@ exports.onScoreUpdate = (data, thiz) => {
 exports.say = (data, thiz) => {
     // Check if an audio clip is currently playing, if it is we don't want to wait until it is finished, before saying anything else
     console.log(data);
-    if (thiz.state.mode == shootout.MODE && data.type === 'remaining_score') {
-        // Skip announcement of remaining score for 9 Dart Shootout
+    if ((thiz.state.type == types.SHOOTOUT || thiz.state.type == types.CRICKET) && data.type === 'remaining_score') {
+        // Skip announcement of remaining score for 9 Dart Shootout and Cricket
         return;
     }
 
@@ -106,7 +107,7 @@ exports.onPossibleThrow = function (data, thiz) {
 
     // Update player score
     var header = thiz.getComponent('player-' + data.current_player_id);
-    if (thiz.state.mode == shootout.MODE) {
+    if (thiz.state.type == types.SHOOTOUT) {
         header.state.player.current_score += (data.score * data.multiplier);
     } else {
         header.state.player.current_score -= (data.score * data.multiplier);

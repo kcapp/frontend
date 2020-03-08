@@ -17,7 +17,7 @@ module.exports = {
             venueConfig: venue ? venue.config ? venue.config : {} : {},
             submitting: false,
             globalStatistics: input.global_statistics,
-            mode: input.match.match_type.id,
+            type: input.match.match_type.id,
             socket: {},
             audioAnnouncer: undefined,
             legNum: input.match.legs.length + (["st", "nd", "rd"][((input.match.legs.length + 90) % 100 - 10) % 10 - 1] || "th"),
@@ -94,9 +94,11 @@ module.exports = {
         var component = this.findActive(this.getComponents('players')).setLeg(this.state.leg);
     },
 
-    onScoreChange(scored, component) {
-        var component = this.findActive(this.getComponents('players'));
-        this.getComponent('player-' + component.state.playerId).setScored(scored);
+    onScoreChange(scored, playerId, component) {
+        if (!playerId) {
+            playerId = this.findActive(this.getComponents('players')).state.playerId;
+        }
+        this.getComponent('player-' + playerId).setScored(scored);
     },
 
     onEnableStream(data) {

@@ -4,6 +4,8 @@ var express = require('express');
 var router = express.Router();
 var _ = require('underscore');
 
+var skill = require('kcapp-bot/bot-skill');
+
 var axios = require('axios');
 
 var x01InputTemplate = require('../src/pages/leg/leg-template.marko');

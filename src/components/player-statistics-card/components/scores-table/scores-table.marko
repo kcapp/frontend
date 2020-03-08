@@ -1,9 +1,18 @@
 $ var statistics = input.statistics;
 <table>
   <tr>
-    <score-pill text="60+" value=statistics.scores_60s_plus/>
-    <score-pill text="100+" value=statistics.scores_100s_plus/>
-    <score-pill text="140+" value=statistics.scores_140s_plus/>
-    <score-pill text="180" value=statistics.scores_180s/>
+    <if(input.type == 4)>
+      <score-pill text="5 Marks" value=statistics.marks_5/>
+      <score-pill text="6 Marks" value=statistics.marks_6/>
+      <score-pill text="7 Marks" value=statistics.marks_7/>
+      <score-pill text="8 Marks" value=statistics.marks_8/>
+      <score-pill text="9 Marks" value=statistics.marks_9/>
+    </if>
+    <else>
+      <score-pill text="60+" value=statistics.scores_60s_plus/>
+      <score-pill text="100+" value=statistics.scores_100s_plus/>
+      <score-pill text="140+" value=statistics.scores_140s_plus/>
+      <score-pill text="180" value=statistics.scores_180s/>
+    </else>
   </tr>
 </table>

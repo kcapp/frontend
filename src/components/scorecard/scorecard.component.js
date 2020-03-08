@@ -1,6 +1,8 @@
 const alertify = require("../../util/alertify");
 var x01 = require("./components/x01");
-var shootout = require("./components/shootout")
+var shootout = require("./components/shootout");
+var cricket = require("./components/cricket");
+var types = require("./components/match_types");
 
 const DART_CONTAINER_MAP = { 1: 'first', 2: 'second', 3: 'third' };
 
@@ -8,9 +10,10 @@ module.exports = {
     onCreate(input) {
         var player = input.player;
         this.state = {
+            players: input.players,
             leg: input.leg,
             player: player,
-            mode: input.mode,
+            type: input.type,
             playerId: player.player_id,
             isCurrentPlayer: player.is_current_player,
             submitClass: null,
@@ -77,18 +80,21 @@ module.exports = {
             var dart = this.getCurrentDart();
             var value = dart.getValue();
 
-            switch (this.state.mode) {
-                case shootout.MODE:
+            switch (this.state.type) {
+                case types.SHOOTOUT:
                     this.state.totalScore += value;
                     this.state.player.current_score -= value;
-                    this.emit('score-change', value);
+                    this.emit('score-change', value, this.state.player.player_id);
                     this.emit('possible-throw', false, false, this.state.currentDart, dart.getScore(), dart.getMultiplier(), true);
                     break;
-                case x01.MODE:
+                case types.X01:
                     this.state.totalScore -= value;
                     this.state.player.current_score += value;
-                    this.emit('score-change', -value);
+                    this.emit('score-change', -value, this.state.player.player_id);
                     this.emit('possible-throw', false, false, this.state.currentDart, -dart.getScore(), dart.getMultiplier(), true);
+                    break;
+                case types.CRICKET:
+                    cricket.removeLast.bind(this)(dart);
                     break;
             }
             dart.reset();
@@ -102,12 +108,15 @@ module.exports = {
     confirmThrow() {
         var submitting = false;
         if (this.state.currentDart <= 3 && !this.state.isBusted) {
-            switch (this.state.mode) {
-                case shootout.MODE:
+            switch (this.state.type) {
+                case types.SHOOTOUT:
                     submitting = shootout.confirmThrow.bind(this)();
                     break;
-                case x01.MODE:
+                case types.X01:
                     submitting = x01.confirmThrow.bind(this)();
+                    break;
+                case types.CRICKET:
+                    submitting = cricket.confirmThrow.bind(this)();
                     break;
             }
         }

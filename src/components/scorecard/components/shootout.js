@@ -1,7 +1,5 @@
 var alertify = require("../../../util/alertify");
 
-exports.MODE = 2;
-
 exports.confirmThrow = function () {
     var submitting = false;
     var dart = this.getCurrentDart();
@@ -13,7 +11,7 @@ exports.confirmThrow = function () {
     this.state.currentDart++;
     this.state.isSubmitted = true;
 
-    this.emit('score-change', -scored);
+    this.emit('score-change', -scored, this.state.player.player_id);
     var isCheckout = module.exports.isCheckout(this.state.leg, this.state.currentDart);
     if (isCheckout) {
         submitting = true;

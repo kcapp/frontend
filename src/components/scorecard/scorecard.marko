@@ -1,3 +1,6 @@
+$ var types = require("./components/match_types");
+$ var cricket = require("./components/cricket");
+
 <td class=(state.isCurrentPlayer ? "visits-active" : "visits-inactive")>
   <table>
     <tbody>
@@ -15,16 +18,60 @@
       <tr>
         <td style="padding: 3px;"/>
       </tr>
-      <tr>
-        <td colspan="3">
-          <div class=["total-score", state.submitClass]>${state.totalScore}</div>
-        </td>
-      </tr>
+      <if(state.type != types.CRICKET)>
+        <tr>
+          <td colspan="3">
+            <div class=["total-score", state.submitClass]>${state.totalScore}</div>
+          </td>
+        </tr>
+      </if>
+      <if(state.type == types.X01)>
       <tr>
         <td colspan="3">
           <checkout-suggestion key="suggestion" score=state.player.current_score currentDart=state.currentDart />
         </td>
       </tr>
+      </if>
+      <if(state.type == types.CRICKET)>
+        <tr>
+          <td colspan="3">
+            <table id='table-circket-scores' class='table-striped'>
+              <thead>
+                <tr>
+                  <td class="text-center">Number</td>
+                  <td class="text-center">Hits</td>
+                </tr>
+              </thead>
+              <tbody>
+                <for|number| of=cricket.DARTS>
+                  <tr>
+                    <td class="text-center" style="font-size: 16pt; font-weight: 900;">${number === 25 ? "Bull" : number}</td>
+                    $ var hits = state.player.hits[number];
+                    <if(hits >= 3)>
+                      <td class="text-center">
+                        <i class="fas fa-plus-circle fa-rotate--45" style="font-size: 20pt;"></i>
+                      </td>
+                    </if>
+                    <else-if(hits == 2)>
+                      <td class="text-center">
+                        <i class="fas fa-times" style="font-size: 18pt;"></i>
+                      </td>
+                    </else-if>
+                    <else-if(hits == 1)>
+                      <td class="text-center">
+                        <i class="fas fa-minus fa-rotate--45" style="font-size: 18pt;"></i>
+                      </td>
+                    </else-if>
+                    <else>
+                      <td class="text-center" style="font-size: 19pt; font-weight: 400;"></td>
+                    </else>
+                  </tr>
+                </for>
+              </tbody>
+            </table>
+          </td>
+        </tr>
+      </if>
     </tbody>
   </table>
 </td>

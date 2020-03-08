@@ -1,8 +1,7 @@
 var _ = require("underscore");
 var axios = require('axios');
 var localStorageUtil = require("../../../../util/localstorage");
-
-var NINE_DART_SHOOTOUT = 2;
+var types = require("../../../../components/scorecard/components/match_types.js")
 
 module.exports = {
     onCreate(input) {
@@ -87,9 +86,9 @@ module.exports = {
                 component.state.index = this.cycleValues(this.state.input.types, this.state.options.game_type);
                 this.state.options.game_type = component.state.index;
 
-                // If this is 9 Dart Shootout, make sure to set score to 0 and disable the selector
+                // If this is 9 Dart Shootout or Cricket, make sure to set score to 0 and disable the selector
                 var scoreComponent = this.getComponent('starting-score')
-                if (this.state.options.game_type === NINE_DART_SHOOTOUT) {
+                if (this.state.options.game_type === types.SHOOTOUT || this.state.options.game_type == types.CRICKET) {
                     scoreComponent.state.index = 0;
                     scoreComponent.state.enabled = false;
                 } else if (this.state.options.starting_score === 0) {
@@ -99,8 +98,8 @@ module.exports = {
                 this.state.options.starting_score = scoreComponent.state.index
                 break;
             case '*':
-                // Don't allow cycling of score when 9 Dart Shootout is selected
-                if (this.state.options.game_type !== NINE_DART_SHOOTOUT) {
+                // Don't allow cycling of score when 9 Dart Shootout or Cricket is selected
+                if (this.state.options.game_type !== types.SHOOTOUT && this.state.options.game_type != types.CRICKET) {
                     var component = this.getComponent('starting-score');
                     var score = this.cycleValues(this.state.input.scores, this.state.options.starting_score);
                     if (score === 0) {
@@ -133,7 +132,7 @@ module.exports = {
         if (attribute == 'game_type') {
             // If this is 9 Dart Shootout, make sure to set score to 0 and disable the selector
             var scoreComponent = this.getComponent('starting-score')
-            if (this.state.options.game_type === NINE_DART_SHOOTOUT) {
+            if (this.state.options.game_type === types.SHOOTOUT || this.state.options.game_type == types.CRICKET) {
                 scoreComponent.state.index = 0;
                 scoreComponent.state.enabled = false;
             } else if (this.state.options.starting_score === 0) {

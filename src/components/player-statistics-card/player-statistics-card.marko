@@ -1,3 +1,5 @@
+$ var type = require("../scorecard/components/match_types");
+
 $ var match = input.match;
 $ var leg = input.leg;
 $ var statistic = input.statistic;
@@ -16,10 +18,17 @@ $ var startingScore = input.player.starting_score || 0;
         <player-profile-picture player=player/>
       </div>
     </div>
-    <if(match.match_type.id == 2)>
+    <if(match.match_type.id == type.SHOOTOUT)>
       <statistics-row heading="PPD" value=statistic.ppd.toFixed(2)/>
       <statistics-row heading="Score" value=player.remaining_score/>
     </if>
+    <else-if(match.match_type.id == type.CRICKET)>
+      <statistics-row heading="Marks Per Round" value=statistic.mpr.toFixed(2)/>
+      <statistics-row heading="First 9 MPR" value=statistic.first_nine_mpr.toFixed(2)/>
+      <if(statistic.score)>
+        <statistics-row heading="Score" value=statistic.score/>
+      </if>
+    </else-if>
     <else>
       <statistics-row heading="Three Dart Avg." value=`${statistic.three_dart_avg.toFixed(2)} / ${statistic.first_nine_three_dart_avg.toFixed(2)}`/>
       $ var accuracy_20 = statistic.accuracy_20 === null ? "-" : statistic.accuracy_20.toFixed(2);
@@ -40,19 +49,19 @@ $ var startingScore = input.player.starting_score || 0;
     </else>
     <div class="info">
       <div style="text-align: center;">
-        <scores-table statistics=statistic/>
+        <scores-table statistics=statistic type=match.match_type.id/>
       </div>
     </div>
     <div style="clear: both;"/>
     <if(dartsThrown)>
-      <if(match.match_type.id == 1)>
+      <if(match.match_type.id == type.X01)>
         <statistics-row heading="Darts Thrown" value=dartsThrown/>
       </if>
     </if>
-    <if(match.match_type.id == 3 && startingScore)>
+    <if(match.match_type.id == type.X01HANDICAP && startingScore)>
       <statistics-row heading="Starting Score" value=startingScore/>
     </if>
-    <if(match.match_type.id == 2)>
+    <if(match.match_type.id == type.SHOOTOUT)>
       <statistics-row heading="Points Score" value=player.remaining_score/>
       <if(state.isWinner)>
         <div class="label-winner">WINNER</div>
@@ -61,7 +70,7 @@ $ var startingScore = input.player.starting_score || 0;
         <div class="label-loser">&nbsp;</div>
       </else>
     </if>
-    <else-if(match.match_type.id == 3)>
+    <else-if(match.match_type.id == type.X01HANDICAP)>
       <if(state.isWinner)>
         <div class="label-winner">WINNER</div>
       </if>
@@ -72,6 +81,14 @@ $ var startingScore = input.player.starting_score || 0;
         <else>
           <div class="label-loser">&nbsp;</div>
         </else>
+      </else>
+    </else-if>
+    <else-if(match.match_type.id == type.CRICKET)>
+      <if(state.isWinner)>
+        <div class="label-winner">WINNER</div>
+      </if>
+      <else>
+        <div class="label-loser">&nbsp;</div>
       </else>
     </else-if>
     <else>
