@@ -110,6 +110,57 @@
     </div>
   </div>
 </else>
+<if(state.cricket.length === 0)>
+  <div class="block-container-red">Cricket - no legs played</div>
+</if>
+<else>
+  <div class="block-container-red">Cricket</div>
+  <div class="block-container no-padding">
+    <div class="table table-responsive">
+      <table id="table-x01-statistics">
+        <thead>
+          <tr>
+            <th colspan="6"/>
+            <th class="text-center" colspan="5">Per Match</th>
+          </tr>
+          <tr>
+            <th class="text-right">Rank</th>
+            <th>Player</th>
+            <th class="text-center">Played</th>
+            <th class="text-center">Won</th>
+            <th class="text-right">Win %</th>
+            <th class="text-center">Marks Per Round</th>
+            <th class="text-right">5 Marks</th>
+            <th class="text-right">6 Marks</th>
+            <th class="text-right">7 Marks</th>
+            <th class="text-right">8 Marks</th>
+            <th class="text-right">9 Marks</th>
+          </tr>
+        </thead>
+        <tbody>
+          <for|stats, idx| of=state.cricket>
+            $ var player = input.players[stats.player_id];
+            <tr>
+              <td class="text-right">${idx + 1}</td>
+              <td class="col-sm-3">
+                <a href=`/players/${player.id}/statistics`>${player.name}</a>
+              </td>
+              <td class="text-center">${stats.matches_played}</td>
+              <td class="text-center">${stats.matches_won ? stats.matches_won : 0}</td>
+              <td class="text-right">${stats.matches_won ? ((stats.matches_won / stats.matches_played) * 100).toFixed(2) + "" : "0.00"}%</td>
+              <td class="text-center">${stats.mpr.toFixed(2) + " / " + stats.first_nine_mpr.toFixed(2)}</td>
+              <td class="text-right">${stats.marks_5 === 0 ? "0.00" : (stats.marks_5 / stats.matches_played).toFixed(2)}</td>
+              <td class="text-right">${stats.marks_6 === 0 ? "0.00" : (stats.marks_6 / stats.matches_played).toFixed(2)}</td>
+              <td class="text-right">${stats.marks_7 === 0 ? "0.00" : (stats.marks_7 / stats.matches_played).toFixed(2)}</td>
+              <td class="text-right">${stats.marks_8 === 0 ? "0.00" : (stats.marks_8 / stats.matches_played).toFixed(2)}</td>
+              <td class="text-right">${stats.marks_9 === 0 ? "0.00" : (stats.marks_9 / stats.matches_played).toFixed(2)}</td>
+            </tr>
+          </for>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</else>
 <if(state.shootout.length === 0)>
   <div class="block-container-red">Shootout - no matches played</div>
 </if>
