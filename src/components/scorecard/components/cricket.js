@@ -1,3 +1,5 @@
+var alertify = require("../../../util/alertify");
+
 var DARTS = [ 20, 19, 18, 17, 16, 15, 25 ];
 exports.DARTS = DARTS;
 
@@ -28,6 +30,46 @@ exports.removeLast = function(dart) {
         }
     }
     this.emit('possible-throw', false, false, this.state.currentDart, -dart.getScore(), dart.getMultiplier(), true);
+}
+
+exports.isCheckout = (current, players) => {
+    // Check if current player has closed all numbers
+    var closed = true;
+    var currentPlayer = {};
+    for (var i = 0; i < players.length; i++) {
+        var player = players[i];
+        if (player.player_id == current.player_id) {
+            currentPlayer = player;
+            break;
+        }
+    }
+
+    for (var i = 0; i < DARTS.length; i++) {
+        var score = DARTS[i];
+
+        if (!currentPlayer.hits[score] || currentPlayer.hits[score] < 3) {
+            closed = false;
+            break;
+        }
+    }
+
+
+    if (closed) {
+        // What is the lowest score?
+        var lowest = Number.MAX_VALUE;
+        for (var i = 0; i < players.length; i++) {
+            var player = players[i];
+
+            if (player.current_score < lowest) {
+                lowest = player.current_score;
+            }
+        }
+
+        if (currentPlayer.current_score == lowest) {
+            return true;
+        }
+    }
+    return false;
 }
 
 exports.confirmThrow = function () {
@@ -63,6 +105,17 @@ exports.confirmThrow = function () {
                     this.emit('score-change', points, player.player_id);
                 }
             }
+        }
+        var isCheckout = module.exports.isCheckout(this.state.player, this.state.players);
+        if (isCheckout) {
+            submitting = true;
+            alertify.confirm('Leg will be finished.',
+                () => {
+                    this.emit('leg-finished', true);
+                }, () => {
+                    this.removeLast();
+                    this.emit('leg-finished', false);
+                });
         }
         this.emit('possible-throw', false, false, this.state.currentDart - 1, dart.getScore(), dart.getMultiplier(), false);
     }
