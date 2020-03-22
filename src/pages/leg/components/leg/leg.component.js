@@ -154,6 +154,9 @@ module.exports = {
 
     onPossibleThrow(isCheckout, isBust, dartsThrown, score, multiplier, isUndo) {
         var component = this.findActive(this.getComponents('players'));
+        if (isCheckout) {
+            component.confirmLegFinish();
+        }
         this.state.socket.emit('possible_throw', {
             current_player_id: component.state.playerId,
             score: score,

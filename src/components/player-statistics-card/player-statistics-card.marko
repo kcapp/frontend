@@ -25,11 +25,20 @@ $ var startingScore = input.player.starting_score || 0;
     <else-if(match.match_type.id == type.CRICKET)>
       <statistics-row heading="Marks Per Round" value=statistic.mpr.toFixed(2)/>
       <statistics-row heading="First 9 MPR" value=statistic.first_nine_mpr.toFixed(2)/>
-      <if(statistic.score)>
+      <if(statistic.score !== null)>
         <statistics-row heading="Score" value=statistic.score/>
       </if>
     </else-if>
-    <else>
+    <else-if(match.match_type.id == type.DARTS_AT_X)>
+      <if(leg)>
+        <statistics-row heading="Number" value=leg.starting_score/>
+      </if>
+      <statistics-row heading="Hit Rate" value=((statistic.hit_rate * 100).toFixed(2) + "%")/>
+      <if(statistic.score !== null)>
+        <statistics-row heading="Score" value=statistic.score/>
+      </if>
+    </else-if>
+    <else-if(match.match_type.id == type.X01 || match.match_type.id == type.X01HANDICAP)>
       <statistics-row heading="Three Dart Avg." value=`${statistic.three_dart_avg.toFixed(2)} / ${statistic.first_nine_three_dart_avg.toFixed(2)}`/>
       $ var accuracy_20 = statistic.accuracy_20 === null ? "-" : statistic.accuracy_20.toFixed(2);
       $ var accuracy_19 = statistic.accuracy_19 === null ? "-" : statistic.accuracy_19.toFixed(2);
@@ -46,7 +55,7 @@ $ var startingScore = input.player.starting_score || 0;
         </else>
         <statistics-row heading="Elo" value=`${change > 0 ? "+" + change : change}`/>
       </if>
-    </else>
+    </else-if>
     <div class="info">
       <div style="text-align: center;">
         <scores-table statistics=statistic type=match.match_type.id/>
@@ -83,7 +92,7 @@ $ var startingScore = input.player.starting_score || 0;
         </else>
       </else>
     </else-if>
-    <else-if(match.match_type.id == type.CRICKET)>
+    <else-if(match.match_type.id == type.CRICKET || match.match_type.id == type.DARTS_AT_X)>
       <if(state.isWinner)>
         <div class="label-winner">WINNER</div>
       </if>

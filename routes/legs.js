@@ -1,5 +1,7 @@
 var debug = require('debug')('kcapp:legs');
 
+var types = require('../src/components/scorecard/components/match_types.js');
+
 var express = require('express');
 var router = express.Router();
 var _ = require('underscore');
@@ -190,8 +192,13 @@ router.get('/:id/result', function (req, res, next) {
 
                 var botConfigs = _.object(_.map(legPlayers, (player) => { return [player.player_id, player.bot_config] }));
                 _.each(legPlayers, (player) => {
-                    players[player.player_id].starting_score = leg.starting_score + player.handicap;
-                    players[player.player_id].remaining_score = leg.starting_score + player.handicap;
+                    if (match.match_type.id == types.DARTS_AT_X) {
+                        players[player.player_id].starting_score = 0;
+                        players[player.player_id].remaining_score = 0;
+                    } else {
+                        players[player.player_id].starting_score = leg.starting_score + player.handicap;
+                        players[player.player_id].remaining_score = leg.starting_score + player.handicap;
+                    }
 
                     var name = players[player.player_id].name;
                     var botConfig = botConfigs[player.player_id];
@@ -204,36 +211,6 @@ router.get('/:id/result', function (req, res, next) {
                         players[player.player_id].name = name;
                     }
                 });
-
-                _.each(leg.visits, (visit, index) => {
-                    var player = players[visit.player_id]
-                    var visitScore = (visit.first_dart.value * visit.first_dart.multiplier) +
-                        (visit.second_dart.value * visit.second_dart.multiplier) +
-                        (visit.third_dart.value * visit.third_dart.multiplier);
-                    if (!visit.is_bust) {
-                        if (match.match_type.id == 2) {
-                            player.remaining_score += visitScore;
-                        }
-                        else {
-                            player.remaining_score -= visitScore;
-                        }
-                    }
-
-                    var scores = player.remaining_score;
-                    for (var i = 1; i < leg.players.length; i++) {
-                        var nextVisit = leg.visits[index + i];
-                        if (!nextVisit) {
-                            // There is no next visit, so look at previous instead
-                            // Need to look in reverese order to keep the order of scores the same
-                            nextVisit = leg.visits[index - (leg.players.length - i)]
-                        }
-                        if (nextVisit) {
-                            scores += ' : ' + players[nextVisit.player_id].remaining_score;
-                        }
-                    }
-                    visit.scores = scores;
-                });
-
                 res.marko(legResultTemplate, {
                     leg: leg,
                     players: players,

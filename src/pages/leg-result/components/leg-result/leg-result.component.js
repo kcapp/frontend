@@ -1,6 +1,9 @@
+var types = require("../../../../components/scorecard/components/match_types");
+
 var moment = require("moment");
 var axios = require("axios");
 var alertify = require("../../../../util/alertify");
+var _ = require('underscore');
 var Chart = require("chart.js");
 
 module.exports = {
@@ -13,6 +16,24 @@ module.exports = {
         if (leg.visits.length > 0) {
             leg.duration = moment.duration(moment(leg.end_time).diff(leg.visits[0].created_at)).asMinutes().toFixed();
         }
+        for (var i = 0; i < leg.visits.length; i++) {
+            var visit = leg.visits[i];
+
+            var count = leg.players.length;
+            var idx = leg.players.indexOf(visit.player_id);
+
+            var order = [ leg.players[idx] ];
+            for (var j = 1; j < leg.players.length; j++) {
+                order[j] = leg.players[(idx + j) < count ? idx + j : (j - (count - idx))];
+            }
+            var scores = visit.scores[order[0]];
+            for (var j = 1; j < order.length; j++) {
+                var id = order[j];
+                scores += " : " + (visit.scores[id] ? visit.scores[id] : _.find(input.leg_players, (player) => { return player.player_id === id }).current_score);
+            }
+            visit.score_str = scores;
+        }
+
         this.state = {
             leg: leg,
             matchId: leg.match_id,
@@ -29,12 +50,16 @@ module.exports = {
         var match = this.input.match;
         var visits = leg.visits;
 
-        var chartMaxValue = match.match_type.id == 1 || match.match_type.id == 3 ? leg.starting_score : 0;
+        var chartMaxValue = match.match_type.id == types.X01 || match.match_type.id == types.X01HANDICAP ? leg.starting_score : 0;
         var labels = [];
         var values = { }
         for (var i = 0; i < legPlayers.length; i++) {
             var player = legPlayers[i];
+
             var score = leg.starting_score + player.handicap
+            if (match.match_type.id == types.DARTS_AT_X) {
+                score = 0;
+            }
             values[player.player_id] = [ score ];
             if (score > chartMaxValue) {
                 chartMaxValue = score;
@@ -54,18 +79,15 @@ module.exports = {
                 values[visit.player_id].push(current);
             }
             else {
-                var visitScore = ((visit.first_dart.value * visit.first_dart.multiplier) +
-                    (visit.second_dart.value * visit.second_dart.multiplier) +
-                    (visit.third_dart.value * visit.third_dart.multiplier))
-                if (match.match_type.id == 2) {
-                    current = current + visitScore
+                if (match.match_type.id == types.SHOOTOUT || match.match_type.id == types.DARTS_AT_X) {
+                    current = current + visit.score;
                     values[visit.player_id].push(current);
                     if (current > chartMaxValue) {
                         chartMaxValue = current;
                     }
                 }
                 else {
-                    values[visit.player_id].push(current - visitScore);
+                    values[visit.player_id].push(current - visit.score);
                 }
             }
         }

@@ -7,6 +7,7 @@ module.exports = {
             x01: input.x01,
             shootout: input.shootout,
             cricket: input.cricket,
+            darts_at_x: input.darts_at_x,
             office_statistics: input.office_statistics,
             from: input.from,
             to: input.to,
@@ -39,6 +40,9 @@ module.exports = {
                 return players[stats.player_id].office_id != officeId;
             });
             this.state.shootout = _.reject(this.input.shootout, (stats) => {
+                return players[stats.player_id].office_id != officeId;
+            });
+            this.state.darts_at_x = _.reject(this.input.darts_at_x, (stats) => {
                 return players[stats.player_id].office_id != officeId;
             });
             this.state.office_statistics = _.reject(this.input.office_statistics, (stats) => {

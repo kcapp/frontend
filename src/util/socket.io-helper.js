@@ -52,9 +52,12 @@ exports.onScoreUpdate = (data, thiz) => {
 
         totalFishNChips += player.visit_statistics.fish_and_chips_counter;
     }
-    if (isLastVisitFishNChips && !data.is_undo) {
-        var msg = alertify.notify(getFishNChipsHTML(totalFishNChips - 1, globalFish - 1), 'fish-n-chips', 5, () => { });
-        setInterval(() => { msg.setContent(getFishNChipsHTML(totalFishNChips, globalFish)); }, 1000);
+
+    if (thiz.state.type == types.X01) {
+        if (isLastVisitFishNChips && !data.is_undo) {
+            var msg = alertify.notify(getFishNChipsHTML(totalFishNChips - 1, globalFish - 1), 'fish-n-chips', 5, () => { });
+            setInterval(() => { msg.setContent(getFishNChipsHTML(totalFishNChips, globalFish)); }, 1000);
+        }
     }
     thiz.state.leg = leg;
 }
@@ -62,7 +65,7 @@ exports.onScoreUpdate = (data, thiz) => {
 exports.say = (data, thiz) => {
     // Check if an audio clip is currently playing, if it is we don't want to wait until it is finished, before saying anything else
     console.log(data);
-    if ((thiz.state.type == types.SHOOTOUT || thiz.state.type == types.CRICKET) && data.type === 'remaining_score') {
+    if ((thiz.state.type !== types.X01 && thiz.state.type !== types.X01HANDICAP) && data.type === 'remaining_score') {
         // Skip announcement of remaining score for 9 Dart Shootout and Cricket
         return;
     }
@@ -94,24 +97,33 @@ exports.onPossibleThrow = function (data, thiz) {
         return;
     }
 
-    // Set current dart
-    if (data.is_undo) {
-        component.getDart(data.darts_thrown).reset();
-        component.state.currentDart--;
+    if (thiz.input.match.match_type.id == types.CRICKET) {
+        if (data.is_undo) {
+            component.removeLast();
+        } else {
+            component.setDart(data.score, data.multiplier, data.darts_thrown);
+            component.confirmThrow();
+        }
     } else {
-        component.setDart(data.score, data.multiplier, data.darts_thrown);
-        component.state.currentDart++;
-    }
-    // Set total score
-    component.state.totalScore += data.score * data.multiplier;
+        // Set current dart
+        if (data.is_undo) {
+            component.getDart(data.darts_thrown).reset();
+        } else {
+            component.setDart(data.score, data.multiplier, data.darts_thrown);
+        }
 
-    // Update player score
-    var header = thiz.getComponent('player-' + data.current_player_id);
-    if (thiz.state.type == types.SHOOTOUT) {
-        header.state.player.current_score += (data.score * data.multiplier);
-    } else {
-        header.state.player.current_score -= (data.score * data.multiplier);
-        header.setScored();
+        // Set total score
+        component.state.totalScore += data.score * data.multiplier;
+
+        // Update player score
+        var header = thiz.getComponent('player-' + data.current_player_id);
+        if (thiz.state.type == types.SHOOTOUT) {
+            header.state.player.current_score += (data.score * data.multiplier);
+        } else {
+            header.state.player.current_score -= (data.score * data.multiplier);
+            header.setScored();
+        }
+        header.setStateDirty('player');
     }
 }
 

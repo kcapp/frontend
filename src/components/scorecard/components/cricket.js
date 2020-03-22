@@ -1,17 +1,15 @@
-var alertify = require("../../../util/alertify");
-
 var DARTS = [ 20, 19, 18, 17, 16, 15, 25 ];
 exports.DARTS = DARTS;
 
 exports.removeLast = function(dart) {
     var score = dart.getScore();
-    var hits = this.state.player.hits[score];
+    var hits = this.state.player.hits[score].total;
 
     if (DARTS.includes(score)) {
-        if (this.state.player.hits[score]) {
-            this.state.player.hits[score] -= dart.getMultiplier();
+        if (this.state.player.hits[score].total) {
+            this.state.player.hits[score].total -= dart.getMultiplier();
         }
-        var multiplier = this.state.player.hits[score] < 3 ? 3 - this.state.player.hits[score] : hits - this.state.player.hits[score];
+        var multiplier = this.state.player.hits[score].total < 3 ? hits - dart.getMultiplier() : hits - this.state.player.hits[score].total;
         var points = score * multiplier;
 
         if (hits > 3) {
@@ -22,7 +20,7 @@ exports.removeLast = function(dart) {
                     continue;
                 }
 
-                if (!player.hits[score] || player.hits[score] < 3) {
+                if (!player.hits[score] || player.hits[score].total < 3) {
                     player.current_score -= points;
                     this.emit('score-change', -points, player.player_id);
                 }
@@ -47,7 +45,7 @@ exports.isCheckout = (current, players) => {
     for (var i = 0; i < DARTS.length; i++) {
         var score = DARTS[i];
 
-        if (!currentPlayer.hits[score] || currentPlayer.hits[score] < 3) {
+        if (!currentPlayer.hits[score] || currentPlayer.hits[score].total < 3) {
             closed = false;
             break;
         }
@@ -74,6 +72,7 @@ exports.isCheckout = (current, players) => {
 
 exports.confirmThrow = function () {
     var submitting = false;
+
     var dart = this.getCurrentDart();
     if (dart.getValue() === 0) {
         this.setDart(0, 1);
@@ -85,14 +84,16 @@ exports.confirmThrow = function () {
     if (DARTS.includes(score)) {
         var hits = this.state.player.hits[score];
         if (hits) {
-            this.state.player.hits[score] += dart.getMultiplier();
+            hits = hits.total;
+            this.state.player.hits[score].total += dart.getMultiplier();
         } else {
-            this.state.player.hits[score] = dart.getMultiplier();
+            this.state.player.hits[score] = { total: dart.getMultiplier() } ;
+            hits = 0;
         }
-        var multiplier = hits < 3 ? this.state.player.hits[score] - 3 : this.state.player.hits[score] - hits;
+        var multiplier = hits < 3 ? this.state.player.hits[score].total - 3 : this.state.player.hits[score].total - hits;
         var points = score * multiplier;
 
-        if (this.state.player.hits[score] > 3) {
+        if (this.state.player.hits[score].total > 3) {
             var players = this.state.players;
             for (var i = 0; i < players.length; i++) {
                 var player = players[i];
@@ -100,7 +101,7 @@ exports.confirmThrow = function () {
                     continue;
                 }
 
-                if (!player.hits[score] || player.hits[score] < 3) {
+                if (!player.hits[score] || player.hits[score].total < 3) {
                     player.current_score += points;
                     this.emit('score-change', points, player.player_id);
                 }
@@ -109,15 +110,8 @@ exports.confirmThrow = function () {
         var isCheckout = module.exports.isCheckout(this.state.player, this.state.players);
         if (isCheckout) {
             submitting = true;
-            alertify.confirm('Leg will be finished.',
-                () => {
-                    this.emit('leg-finished', true);
-                }, () => {
-                    this.removeLast();
-                    this.emit('leg-finished', false);
-                });
         }
-        this.emit('possible-throw', false, false, this.state.currentDart - 1, dart.getScore(), dart.getMultiplier(), false);
+        this.emit('possible-throw', isCheckout, false, this.state.currentDart - 1, dart.getScore(), dart.getMultiplier(), false);
     }
     return submitting;
 }

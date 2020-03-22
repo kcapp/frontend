@@ -30,8 +30,9 @@ function getStatistics(from, to, req, res, next) {
         axios.get(req.app.locals.kcapp.api + '/statistics/x01/' + from + '/' + to),
         axios.get(req.app.locals.kcapp.api + '/statistics/shootout/' + from + '/' + to),
         axios.get(req.app.locals.kcapp.api + '/statistics/cricket/' + from + '/' + to),
+        axios.get(req.app.locals.kcapp.api + '/statistics/dartsatx/' + from + '/' + to),
         axios.get(req.app.locals.kcapp.api + '/statistics/office/' + from + '/' + to)
-    ]).then(axios.spread((players, offices, x01, shootout, cricket, office) => {
+    ]).then(axios.spread((players, offices, x01, shootout, cricket, dartsAtX, office) => {
         x01 = x01.data;
         shootout = shootout.data;
         shootout = sort(shootout);
@@ -42,6 +43,7 @@ function getStatistics(from, to, req, res, next) {
             statistics_x01: x01,
             statistics_shootout: shootout,
             statistics_cricket: cricket.data,
+            statistics_darts_at_x: dartsAtX.data,
             from: from, to: to,
             office_statistics: office.data
         });

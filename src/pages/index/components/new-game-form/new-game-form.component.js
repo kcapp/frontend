@@ -88,9 +88,19 @@ module.exports = {
 
                 // If this is 9 Dart Shootout or Cricket, make sure to set score to 0 and disable the selector
                 var scoreComponent = this.getComponent('starting-score')
+                scoreComponent.updateOptions(this.input.scores);
                 if (this.state.options.game_type === types.SHOOTOUT || this.state.options.game_type == types.CRICKET) {
                     scoreComponent.state.index = 0;
                     scoreComponent.state.enabled = false;
+                } else if (this.state.options.game_type == types.DARTS_AT_X) {
+                    scoreComponent.updateOptions([
+                        { id: 20, name: 20 },  { id: 19, name: 19 }, { id: 18, name: 18 }, { id: 17, name: 17 },
+                        { id: 16, name: 16 }, { id: 15, name: 15 }, { id: 14, name: 14 }, { id: 13, name: 13 },
+                        { id: 12, name: 12 }, { id: 11, name: 11 }, { id: 10, name: 10 }, { id: 9, name: 9 },
+                        { id: 8, name: 8 }, { id: 7, name: 7 }, { id: 6, name: 6 }, { id: 5, name: 5 },
+                        { id: 4, name: 4 }, { id: 3, name: 3 }, { id: 2, name: 2 }, { id: 1, name: 1 }, { id: 25, name: 'Bull' } ]);
+                    scoreComponent.state.index = 0;
+                    scoreComponent.state.enabled = true;
                 } else if (this.state.options.starting_score === 0) {
                     scoreComponent.state.index = scoreComponent.state.defaultValue;
                     scoreComponent.state.enabled = true;
@@ -130,11 +140,21 @@ module.exports = {
     },
     onGameTypeChanged(attribute, value) {
         if (attribute == 'game_type') {
-            // If this is 9 Dart Shootout, make sure to set score to 0 and disable the selector
+            // If this is 9 Dart Shootout or Cricket, make sure to set score to 0 and disable the selector
             var scoreComponent = this.getComponent('starting-score')
+            scoreComponent.updateOptions(this.input.scores);
             if (this.state.options.game_type === types.SHOOTOUT || this.state.options.game_type == types.CRICKET) {
                 scoreComponent.state.index = 0;
                 scoreComponent.state.enabled = false;
+            } else if (this.state.options.game_type == types.DARTS_AT_X) {
+                scoreComponent.updateOptions([
+                    { id: 20, name: 20 },  { id: 19, name: 19 }, { id: 18, name: 18 }, { id: 17, name: 17 },
+                    { id: 16, name: 16 }, { id: 15, name: 15 }, { id: 14, name: 14 }, { id: 13, name: 13 },
+                    { id: 12, name: 12 }, { id: 11, name: 11 }, { id: 10, name: 10 }, { id: 9, name: 9 },
+                    { id: 8, name: 8 }, { id: 7, name: 7 }, { id: 6, name: 6 }, { id: 5, name: 5 },
+                    { id: 4, name: 4 }, { id: 3, name: 3 }, { id: 2, name: 2 }, { id: 1, name: 1 }, { id: 25, name: 'Bull' } ]);
+                scoreComponent.state.index = 20;
+                scoreComponent.state.enabled = true;
             } else if (this.state.options.starting_score === 0) {
                 scoreComponent.state.index = scoreComponent.state.defaultValue;
                 scoreComponent.state.enabled = true;

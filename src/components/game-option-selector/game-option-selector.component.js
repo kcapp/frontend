@@ -3,6 +3,7 @@ var localStorageUtil = require("../../util/localstorage");
 module.exports = {
     onCreate(input) {
         this.state = {
+            values: input.values,
             attribute: input.attribute,
             defaultValue: input.defaultValue,
             index: input.defaultValue || null,
@@ -19,5 +20,9 @@ module.exports = {
         this.state.index = selected.value === -1 ? null : parseInt(selected.value);
         this.state.options[this.state.attribute] = this.state.index;
         this.emit('value-changed', this.state.attribute, this.state.index);
+    },
+    updateOptions(values) {
+        this.state.values = values;
+        this.setStateDirty('values');
     }
 }

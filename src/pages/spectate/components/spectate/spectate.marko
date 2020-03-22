@@ -10,7 +10,9 @@
       </tr>
       <tr>
         <for|player| of=input.leg_players>
-          <scorecard key="players[]" legId=state.legId player=player on-score-change("onScoreChange") on-player-busted("onPlayerBusted") on-leg-finished("onLegFinished")/>
+          <scorecard key="players[]" leg=state.leg player=player players=input.leg_players type=input.match.match_type.id
+              on-score-change("onScoreChange")
+              on-player-busted("onPlayerBusted")/>
         </for>
       </tr>
     </tbody>

@@ -2,6 +2,7 @@ const alertify = require("../../util/alertify");
 var x01 = require("./components/x01");
 var shootout = require("./components/shootout");
 var cricket = require("./components/cricket");
+var dartsAtX = require("./components/darts_at_x");
 var types = require("./components/match_types");
 
 const DART_CONTAINER_MAP = { 1: 'first', 2: 'second', 3: 'third' };
@@ -96,6 +97,9 @@ module.exports = {
                 case types.CRICKET:
                     cricket.removeLast.bind(this)(dart);
                     break;
+                case types.DARTS_AT_X:
+                    dartsAtX.removeLast.bind(this)(dart);
+                    break;
             }
             dart.reset();
         } else {
@@ -117,6 +121,9 @@ module.exports = {
                     break;
                 case types.CRICKET:
                     submitting = cricket.confirmThrow.bind(this)();
+                    break;
+                case types.DARTS_AT_X:
+                    submitting = dartsAtX.confirmThrow.bind(this)();
                     break;
             }
         }
@@ -150,5 +157,15 @@ module.exports = {
             second_dart: second.toJSON(),
             third_dart: third.toJSON()
         };
+    },
+
+    confirmLegFinish() {
+        alertify.confirm('Leg will be finished.',
+            () => {
+                this.emit('leg-finished', true);
+            }, () => {
+                this.removeLast();
+                this.emit('leg-finished', false);
+            });
     }
 };

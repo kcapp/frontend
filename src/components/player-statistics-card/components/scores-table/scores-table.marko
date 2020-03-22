@@ -1,13 +1,19 @@
+$ var types = require("../../../scorecard/components/match_types");
 $ var statistics = input.statistics;
 <table>
   <tr>
-    <if(input.type == 4)>
+    <if(input.type == types.CRICKET)>
       <score-pill text="5 Marks" value=statistics.marks_5/>
       <score-pill text="6 Marks" value=statistics.marks_6/>
       <score-pill text="7 Marks" value=statistics.marks_7/>
       <score-pill text="8 Marks" value=statistics.marks_8/>
       <score-pill text="9 Marks" value=statistics.marks_9/>
     </if>
+    <else-if(input.type === types.DARTS_AT_X)>
+      <score-pill text="Singles" value=statistics.singles/>
+      <score-pill text="Doubles" value=statistics.doubles/>
+      <score-pill text="Triples" value=statistics.triples/>
+    </else-if>
     <else>
       <score-pill text="60+" value=statistics.scores_60s_plus/>
       <score-pill text="100+" value=statistics.scores_100s_plus/>
