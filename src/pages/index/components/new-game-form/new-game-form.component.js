@@ -85,27 +85,7 @@ module.exports = {
                 var component = this.getComponent('game-type');
                 component.state.index = this.cycleValues(this.state.input.types, this.state.options.game_type);
                 this.state.options.game_type = component.state.index;
-
-                // If this is 9 Dart Shootout or Cricket, make sure to set score to 0 and disable the selector
-                var scoreComponent = this.getComponent('starting-score')
-                scoreComponent.updateOptions(this.input.scores);
-                if (this.state.options.game_type === types.SHOOTOUT || this.state.options.game_type == types.CRICKET) {
-                    scoreComponent.state.index = 0;
-                    scoreComponent.state.enabled = false;
-                } else if (this.state.options.game_type == types.DARTS_AT_X) {
-                    scoreComponent.updateOptions([
-                        { id: 20, name: 20 },  { id: 19, name: 19 }, { id: 18, name: 18 }, { id: 17, name: 17 },
-                        { id: 16, name: 16 }, { id: 15, name: 15 }, { id: 14, name: 14 }, { id: 13, name: 13 },
-                        { id: 12, name: 12 }, { id: 11, name: 11 }, { id: 10, name: 10 }, { id: 9, name: 9 },
-                        { id: 8, name: 8 }, { id: 7, name: 7 }, { id: 6, name: 6 }, { id: 5, name: 5 },
-                        { id: 4, name: 4 }, { id: 3, name: 3 }, { id: 2, name: 2 }, { id: 1, name: 1 }, { id: 25, name: 'Bull' } ]);
-                    scoreComponent.state.index = 0;
-                    scoreComponent.state.enabled = true;
-                } else if (this.state.options.starting_score === 0) {
-                    scoreComponent.state.index = scoreComponent.state.defaultValue;
-                    scoreComponent.state.enabled = true;
-                }
-                this.state.options.starting_score = scoreComponent.state.index
+                this.onGameTypeChanged('game_type', component.state.index);
                 break;
             case '*':
                 // Don't allow cycling of score when 9 Dart Shootout or Cricket is selected
@@ -160,6 +140,12 @@ module.exports = {
                 scoreComponent.state.enabled = true;
             }
             this.state.options.starting_score = scoreComponent.state.index
+
+
+            var selectedPlayers = this.getComponents('players');
+            for (var i = 0; i < selectedPlayers.length; i++) {
+                selectedPlayers[i].handleTypeChange(this.state.options.game_type);
+            }
         }
     },
     addPlayer(event, selected) {
@@ -192,6 +178,16 @@ module.exports = {
             }
         }
 
+        var handicaps = {};
+        if (this.state.options.game_type === types.X01HANDICAP) {
+            for (var i = 0; i < this.state.selected.length; i++) {
+                var player = this.state.selected[i];
+                if (player.handicap) {
+                    handicaps[player.id] = player.handicap;
+                }
+            }
+        }
+
         var body = {
             starting_score: this.state.options.starting_score,
             match_type: this.state.options.game_type,
@@ -200,8 +196,7 @@ module.exports = {
             venue: this.state.options.venue,
             players: this.state.selected.map(player => player.id),
             office_id: officeId,
-            // TODO need to add support for handicaps
-            player_handicaps: {}
+            player_handicaps: handicaps
         }
         axios.post(window.location.origin + '/matches/new', body)
             .then(response => {

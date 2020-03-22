@@ -7,7 +7,7 @@
     <div class="block-container-with-header">
       <div class="form-group form-check players-selected">
         <for|player| of=state.selected>
-          <player-selector player=player on-add-player("removePlayer")/>
+          <player-selector key="players[]" player=player on-add-player("removePlayer") type=state.options.game_type show_handicap=true/>
         </for>
       </div>
     </div>
@@ -18,7 +18,7 @@
     <div class="block-container-with-header">
       <div class="form-group form-check players-all">
         <for|player| of=state.players>
-          <player-selector player=player on-add-player("addPlayer")/>
+          <player-selector player=player on-add-player("addPlayer") type=state.options.game_type/>
         </for>
       </div>
     </div>

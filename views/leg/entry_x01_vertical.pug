@@ -1,8 +1,0 @@
-extends entry_layout.pug
-
-block append scripts
-    script
-        include keyboard_scripts.js
-
-block score_header
-    +get_score_header_vertical(match.match_mode, round_number, leg_players, match.tournament_id != null, true)
