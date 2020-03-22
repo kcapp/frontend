@@ -25,7 +25,7 @@ exports.isCheckout = (leg, currentDart) => {
     return visits > 0 && ((visits * 3) % (99 * leg.players.length) === 0);
 }
 
-exports.confirmThrow = function () {
+exports.confirmThrow = function (external) {
     var submitting = false;
 
     var dart = this.getCurrentDart();
@@ -64,6 +64,9 @@ exports.confirmThrow = function () {
     if (isCheckout) {
         submitting = true;
     }
-    this.emit('possible-throw', isCheckout, false, this.state.currentDart - 1, dart.getScore(), dart.getMultiplier(), false);
+    if (!external) {
+        // If an external event triggered the update don't emit a throw
+        this.emit('possible-throw', isCheckout, false, this.state.currentDart - 1, dart.getScore(), dart.getMultiplier(), false);
+    }
     return submitting;
 }

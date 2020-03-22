@@ -191,7 +191,7 @@ module.exports = (io, app) => {
                                         if (leg.visits.length === 1) {
                                             _this.io.of('/active').emit('first_throw', { leg: leg, players: players, globalstat: globalstat });
                                         }
-                                        announceScored(visit);
+                                        announceScored(leg.visits[leg.visits.length - 1]);
                                         setTimeout(() => {
                                             // There is a race between these two announcements, so delay the one slightly
                                             announceScoreRemaining(currentPlayer);
@@ -244,9 +244,7 @@ module.exports = (io, app) => {
                 });
 
                 function announceScored(visit) {
-                    var score = visit.first_dart.value * visit.first_dart.multiplier +
-                        visit.second_dart.value * visit.second_dart.multiplier +
-                        visit.third_dart.value * visit.third_dart.multiplier;
+                    var score = visit.score;
                     var text = '' + score;
                     if (visit.is_bust) {
                         text = 'Noscore';

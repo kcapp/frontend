@@ -97,12 +97,13 @@ exports.onPossibleThrow = function (data, thiz) {
         return;
     }
 
-    if (thiz.input.match.match_type.id == types.CRICKET) {
+    var type = thiz.input.match.match_type.id;
+    if (type == types.CRICKET || type == types.DARTS_AT_X) {
         if (data.is_undo) {
             component.removeLast();
         } else {
             component.setDart(data.score, data.multiplier, data.darts_thrown);
-            component.confirmThrow();
+            component.confirmThrow(true);
         }
     } else {
         // Set current dart

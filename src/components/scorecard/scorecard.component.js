@@ -109,21 +109,21 @@ module.exports = {
         this.state.isSubmitted = true;
     },
 
-    confirmThrow() {
+    confirmThrow(external) {
         var submitting = false;
         if (this.state.currentDart <= 3 && !this.state.isBusted) {
             switch (this.state.type) {
                 case types.SHOOTOUT:
-                    submitting = shootout.confirmThrow.bind(this)();
+                    submitting = shootout.confirmThrow.bind(this)(external);
                     break;
                 case types.X01:
-                    submitting = x01.confirmThrow.bind(this)();
+                    submitting = x01.confirmThrow.bind(this)(external);
                     break;
                 case types.CRICKET:
-                    submitting = cricket.confirmThrow.bind(this)();
+                    submitting = cricket.confirmThrow.bind(this)(external);
                     break;
                 case types.DARTS_AT_X:
-                    submitting = dartsAtX.confirmThrow.bind(this)();
+                    submitting = dartsAtX.confirmThrow.bind(this)(external);
                     break;
             }
         }

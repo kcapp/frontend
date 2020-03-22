@@ -111,7 +111,10 @@ exports.confirmThrow = function () {
         if (isCheckout) {
             submitting = true;
         }
-        this.emit('possible-throw', isCheckout, false, this.state.currentDart - 1, dart.getScore(), dart.getMultiplier(), false);
+        if (!external) {
+            // If an external event triggered the update don't emit a throw
+            this.emit('possible-throw', isCheckout, false, this.state.currentDart - 1, dart.getScore(), dart.getMultiplier(), false);
+        }
     }
     return submitting;
 }
