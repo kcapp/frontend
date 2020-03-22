@@ -27,10 +27,10 @@
                 <div class="keyinfo">
                     <div class="label-fat-18-grey">OVERALL AVG.</div>
                     <div class="label-fat-25">
-                        $ var diff = (input.statistics.three_dart_avg - input.previous_statistics.three_dart_avg).toFixed(2)
+                        $ var diff = (state.x01.three_dart_avg - input.previous_statistics.three_dart_avg).toFixed(2)
                         $ var change = diff > 0 ? 'fas fa-arrow-alt-circle-up' : diff < 0 ? 'fas fa-arrow-alt-circle-down' : 'fas fa-arrow-alt-circle-right'
                         $ var col = diff > 0 ? 'col-green' : diff < 0 ? 'col-red' : 'col-grey'
-                        <div>${input.statistics.three_dart_avg.toFixed(2)}</div>
+                        <div>${state.x01.three_dart_avg.toFixed(2)}</div>
                         <div style="font-size: 18px;" class='${col}'>
                             <i class='${change}'></i>
                             <span style="margin-left: 5px;" data-toggle="tooltip" data-placement="bottom" title="Since last week">${Math.abs(diff)}</span>
@@ -40,10 +40,10 @@
                 <div class="keyinfo">
                     <div class="label-fat-18-grey">FIRST 9 AVG.</div>
                     <div class="label-fat-25">
-                        $ var diff = (input.statistics.first_nine_three_dart_avg - input.previous_statistics.first_nine_three_dart_avg).toFixed(2)
+                        $ var diff = (state.x01.first_nine_three_dart_avg - input.previous_statistics.first_nine_three_dart_avg).toFixed(2)
                         $ var change = diff > 0 ? 'fas fa-arrow-alt-circle-up' : diff < 0 ? 'fas fa-arrow-alt-circle-down' : 'fas fa-arrow-alt-circle-right'
                         $ var col = diff > 0 ? 'col-green' : diff < 0 ? 'col-red' : 'col-grey'
-                        <div>${input.statistics.first_nine_three_dart_avg.toFixed(2)}</div>
+                        <div>${state.x01.first_nine_three_dart_avg.toFixed(2)}</div>
                         <div style="font-size: 18px;" class='${col}'>
                             <i class='${change}'></i>
                             <span style="margin-left: 5px;" data-toggle="tooltip" data-placement="bottom" title="Since last week">${Math.abs(diff)}</span>
@@ -53,7 +53,7 @@
                 <div class="keyinfo">
                     <div class="label-fat-18-grey">CHECKOUT %</div>
                     <div class="label-fat-25">
-                        $ var cp = input.statistics.checkout_percentage === null ? 0 : input.statistics.checkout_percentage.toFixed(2)
+                        $ var cp = state.x01.checkout_percentage === null ? 0 : state.x01.checkout_percentage.toFixed(2)
                         $ var pcp = input.previous_statistics.checkout_percentage === null ? 0 : input.previous_statistics.checkout_percentage.toFixed(2)
                         $ var diff = (cp - pcp).toFixed(2)
                         $ var change = diff > 0 ? 'fas fa-arrow-alt-circle-up' : diff < 0 ? 'fas fa-arrow-alt-circle-down' : 'fas fa-arrow-alt-circle-right'
@@ -67,7 +67,7 @@
                 </div>
                 <div class="keyinfo">
                     <div class="label-fat-18-grey">HIGHEST CHECKOUT</div>
-                    <div class="label-fat-25">${input.statistics.highest_checkout ? input.statistics.highest_checkout.value : '-'}</div>
+                    <div class="label-fat-25">${state.x01.highest_checkout ? state.x01.highest_checkout.value : '-'}</div>
                 </div>
             </div>
             <table style="width: 100%;">
@@ -112,28 +112,28 @@
                 <tr>
                     <td style="width: 25%;">
                         <div class="highscore-card">
-                            <div>${input.statistics.scores_60s_plus}</div>
+                            <div>${state.x01.scores_60s_plus}</div>
                             <div class="hs-star rank4"><i class="fas fa-star highscore"></i></div>
                             <div class="hs-label">60+</div>
                         </div>
                     </td>
                     <td style="width: 25%;">
                         <div class="highscore-card">
-                            <div>${input.statistics.scores_100s_plus}</div>
+                            <div>${state.x01.scores_100s_plus}</div>
                             <div class="hs-star rank4"><i class="fas fa-star highscore"></i><i class="fas fa-star highscore"></i></div>
                             <div class="hs-label">100+</div>
                         </div>
                     </td>
                     <td style="width: 25%;">
                         <div class="highscore-card">
-                            <div>${input.statistics.scores_140s_plus}</div>
+                            <div>${state.x01.scores_140s_plus}</div>
                             <div class="hs-star rank4"><i class="fas fa-star highscore"></i><i class="fas fa-star highscore"></i><i class="fas fa-star highscore"></i></div>
                             <div class="hs-label">140+</div>
                         </div>
                     </td>
                     <td style="width: 25%;">
                         <div class="highscore-card-no-margin">
-                            <div>${input.statistics.scores_180s}</div>
+                            <div>${state.x01.scores_180s}</div>
                             <div class="hs-star rank4"><i class="fas fa-star highscore"></i><i class="fas fa-star highscore"></i><i class="fas fa-star highscore"></i><i class="fas fa-star highscore"></i></div>
                             <div class="hs-label">180</div>
                         </div>
@@ -145,13 +145,13 @@
                             <div style="font-size: 18pt;">
                                 <span>Best Three Dart Avg.</span>
                                 <span class="float-right">
-                                    <best-statistics statistic=input.statistics.best_three_dart_avg/>
+                                    <best-statistics statistic=state.x01.best_three_dart_avg/>
                                 </span>
                             </div>
                             <div style="font-size: 18pt;">
                                 <span>Best First 9 Avg.</span>
                                 <span class="float-right">
-                                    <best-statistics statistic=input.statistics.best_first_nine_avg/>
+                                    <best-statistics statistic=state.x01.best_first_nine_avg/>
                                 </span>
                             </div>
                         </div>
@@ -161,20 +161,20 @@
                             <div style="font-size: 18pt;">
                                 <span>Best 301</span>
                                 <span class="float-right">
-                                    <best-statistics statistic=input.statistics.best_301/>
+                                    <best-statistics statistic=state.x01.best_301/>
                                 </span>
                             </div>
                             <div style="clear: both;"></div>
                             <div style="font-size: 18pt;">
                                 <span>Best 501</span>
                                 <span class="float-right">
-                                    <best-statistics statistic=input.statistics.best_501/>
+                                    <best-statistics statistic=state.x01.best_501/>
                                 </span>
                             </div>
                             <div style="font-size: 18pt;">
                                 <span>Best 701</span>
                                 <span class="float-right">
-                                    <best-statistics statistic=input.statistics.best_701/>
+                                    <best-statistics statistic=state.x01.best_701/>
                                 </span>
                             </div>
                         </div>
@@ -184,7 +184,7 @@
         </div>
         <div class="tab-pane" role="tabpanel" id="hits">
             <div class="block-container no-padding no-border">
-                <if(input.statistics.hits)>
+                <if(state.x01.hits)>
                     <table id="table-player-profile-hits" style="margin: 0px; padding-top: 0px;">
                         <thead>
                             <tr>
@@ -197,15 +197,15 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <for|key, score| in=input.statistics.hits>
+                            <for|key, score| in=state.x01.hits>
                                 <for|multiplier, value| in=score>
                                     <tr>
                                         <td data-order=`${key * multiplier}` data-multiplier=`${multiplier}` data-score=`${key}`>
                                             <dart-container value=key multiplier=multiplier label=true/>
                                         </td>
                                         <td class="text-center">${value}</td>
-                                        <td class="text-center">${(value * 100 / input.statistics.darts_thrown).toFixed(2)}%</td>
-                                        <td class="text-center">${(value / input.statistics.total_visits).toFixed(2)}</td>
+                                        <td class="text-center">${(value * 100 / state.x01.darts_thrown).toFixed(2)}%</td>
+                                        <td class="text-center">${(value / state.x01.total_visits).toFixed(2)}</td>
                                         <td class="text-center">${(value / input.player.legs_played).toFixed(2)}</td>
                                         <td class="text-center">${(value / input.player.matches_played).toFixed(2)}</td>
                                     </tr>
@@ -221,7 +221,7 @@
         </div>
         <div class="tab-pane" role="tabpanel" id="visits">
             <div class="block-container no-padding">
-                <if(input.statistics.visits)>
+                <if(state.x01.visits)>
                     <table id="table-player-profile-visits" style="margin: 0px; padding-top: 0px;">
                         <thead>
                             <tr>
@@ -235,7 +235,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <for|visit| of=input.statistics.visits>
+                            <for|visit| of=state.x01.visits>
                                 <tr>
                                     <td>
                                         <dart-container dart=visit.first_dart label=true/>
@@ -247,7 +247,7 @@
                                         <dart-container dart=visit.third_dart label=true/>
                                     </td>
                                     <td class="text-center">${visit.count}</td>
-                                    <td class="text-center">${(visit.count * 100 / input.statistics.total_visits).toFixed(2)}%</td>
+                                    <td class="text-center">${(visit.count * 100 / state.x01.total_visits).toFixed(2)}%</td>
                                     <td class="text-center">${(visit.count / input.player.legs_played).toFixed(2)}</td>
                                     <td class="text-center">${(visit.count / input.player.matches_played).toFixed(2)}</td>
                                 </tr>

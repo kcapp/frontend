@@ -1,6 +1,14 @@
 var Chart = require("chart.js");
 
 module.exports = {
+    onCreate(input) {
+        this.state = {
+            x01: input.statistics.x01,
+            shootout: input.statistics.shootout,
+            cricket: input.statistics.cricket,
+            dartsAtX: input.statistics.darts_at_x
+        }
+    },
     onMount() {
         if (window.location.hash != "") {
             $('a[href="' + window.location.hash + '"]').click();
@@ -60,7 +68,7 @@ module.exports = {
         }]
         var avgChart = new Chart("canvas-three-dart-avg", this.getChartConfig('Three Dart Avg. Per Week', 'line', 'Date', 'Three Dart Avg.', labels, datasetsAvg));
 
-        var stats = this.input.statistics;
+        var stats = this.input.statistics.x01;
         var percentage = parseFloat(Math.round(stats.accuracy_overall * 100) / 100).toFixed(2);
         var matchesChart = new Chart('canvas-accuracy-overall', this.getPercentageChartConfig(percentage, 'Overall accuracy', 'doughnut', '', false));
         $('#canvas-accuracy-overall-percentage').text(percentage + '%');

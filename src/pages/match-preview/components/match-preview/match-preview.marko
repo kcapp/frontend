@@ -81,10 +81,11 @@ $ var player2 = input.player2;
 <div style="margin-top: 20px;">
     <div class="left-container" style="float: left; width: 48%;">
         <table style="width: 100%;">
-            <if(input.p1statistics.matches_played)>
-                <statistics-row name='CHECKOUT PERCENTAGE', value=input.p1statistics.checkout_percentage.toFixed(2) + '%', left=true/>
-                <statistics-row name='THREE DART AVG.', value=input.p1statistics.three_dart_avg.toFixed(2), left=true/>
-                <statistics-row name='OVERALL ACCURACY', value=input.p1statistics.accuracy_overall.toFixed(2), left=true/>
+            $ var p1statistics = input.p1statistics.x01;
+            <if(p1statistics.matches_played)>
+                <statistics-row name='CHECKOUT PERCENTAGE', value=p1statistics.checkout_percentage.toFixed(2) + '%', left=true/>
+                <statistics-row name='THREE DART AVG.', value=p1statistics.three_dart_avg.toFixed(2), left=true/>
+                <statistics-row name='OVERALL ACCURACY', value=p1statistics.accuracy_overall.toFixed(2), left=true/>
             </if>
             <else>
                 <statistics-row name='CHECKOUT PERCENTAGE', value='0%', left=true/>
@@ -95,10 +96,11 @@ $ var player2 = input.player2;
     </div>
     <div class="right-container" style="float: right; width: 48%;">
         <table style="width: 100%;">
-            <if(input.p2statistics.matches_played)>
-                <statistics-row name='CHECKOUT PERCENTAGE', value=input.p2statistics.checkout_percentage.toFixed(2) + '%'/>
-                <statistics-row name='THREE DART AVG.', value=input.p2statistics.three_dart_avg.toFixed(2)/>
-                <statistics-row name='OVERALL ACCURACY', value=input.p2statistics.accuracy_overall.toFixed(2)/>
+            $ var p2statistics = input.p2statistics.x01;
+            <if(p2statistics.matches_played)>
+                <statistics-row name='CHECKOUT PERCENTAGE', value=p2statistics.checkout_percentage.toFixed(2) + '%'/>
+                <statistics-row name='THREE DART AVG.', value=p2statistics.three_dart_avg.toFixed(2)/>
+                <statistics-row name='OVERALL ACCURACY', value=p2statistics.accuracy_overall.toFixed(2)/>
             </if>
             <else>
                 <statistics-row name='CHECKOUT PERCENTAGE', value='0%'/>

@@ -4,16 +4,16 @@ var _ = require('underscore');
 module.exports = {
     onCreate(input) {
         this.state = {
-            statistics1: input.statistics[0] || {},
-            statistics2: input.statistics[1] || {},
-            statistics3: input.statistics[2] || {}
+            statistics1: input.statistics[0] ? input.statistics[0].x01 : {},
+            statistics2: input.statistics[1] ? input.statistics[1].x01 : {},
+            statistics3: input.statistics[2] ? input.statistics[2].x01 : {}
         }
     },
     handlePlayerChange(statistics, playerId) {
         axios.all([
             axios.get(this.input.locals.kcapp.api_external + '/player/' + playerId + '/statistics')
         ]).then(axios.spread((staisticsData) => {
-            this.state[statistics] = staisticsData.data;
+            this.state[statistics] = staisticsData.data.x01;
             this.setStateDirty(statistics);
         })).catch(error => {
             console.log('Error when getting data for tournament ' + error);
