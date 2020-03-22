@@ -90,15 +90,13 @@ $ var matchType = input.match.match_type.id;
             <th class="text-center">First Dart</th>
             <th class="text-center">Second Dart</th>
             <th class="text-center">Third Dart</th>
-            <if(matchType == types.X01 || matchType == types.X01HANDICAP || matchType == types.SHOOTOUT || matchType == types.DARTS_AT_X)>
-              <th class="text-center">Score</th>
-            </if>
+            <th class="text-center">Score</th>
             <if(matchType == types.X01 || matchType == types.X01HANDICAP)>
               <th class="text-center">Remaining</th>
             </if>
-            <else-if(matchType == types.SHOOTOUT || matchType == types.DARTS_AT_X)>
+            <else>
               <th class="text-center">Scores</th>
-            </else-if>
+            </else>
             <th class="text-center">Thrown</th>
             <if(matchType == types.X01 || matchType == types.X01HANDICAP || matchType == types.SHOOTOUT)>
               <th class="text-center">PPD</th>
@@ -113,16 +111,12 @@ $ var matchType = input.match.match_type.id;
               <dart-label dart=visit.second_dart/>
               <dart-label dart=visit.third_dart/>
 
-              <if(matchType == types.X01 || matchType == types.X01HANDICAP || matchType == types.SHOOTOUT || matchType == types.DARTS_AT_X)>
-                <td class="text-center">
-                  <label>${visit.score}</label>
-                </td>
-              </if>
-              <if(matchType == types.X01 || matchType == types.X01HANDICAP || matchType == types.SHOOTOUT || matchType == types.DARTS_AT_X)>
-                <td class="text-center">
-                  <label>${visit.score_str}</label>
-                </td>
-              </if>
+              <td class="text-center">
+                <label>${visit.score}</label>
+              </td>
+              <td class="text-center">
+                <label>${visit.score_str}</label>
+              </td>
               <td class="text-center">${visit.darts_thrown}</td>
               <if(matchType == types.X01 || matchType == types.X01HANDICAP || matchType == types.SHOOTOUT)>
                 $ var ppd = visit.score / 3;
@@ -135,53 +129,7 @@ $ var matchType = input.match.match_type.id;
     </div>
   </div>
   <div role="tabpanel" id="stats" class="tab-pane">
-    <if(matchType == types.X01 || matchType == types.X01HANDICAP)>
-      <div style="float: left; width: 61%;">
-        <div class="block-container-header">Checkout attempts</div>
-        <div class="block-container">
-          $ var checkouts = leg.checkout_statistics;
-          <if(checkouts.checkout_attempts)>
-            <div>
-              <div class="table-responsive">
-                <table id="table-leg-checkouts" class="table">
-                  <thead>
-                    <tr>
-                      <th>Dart</th>
-                      <th class="text-center">Count</th>
-                      <th class="text-center">Attempt %</th>
-                      <th class="text-center">Actual</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <for|value, count| in=checkouts.checkout_attempts>
-                      <tr>
-                        <dart-label dart={
-                          value: value / 2,
-                          multiplier: 2
-                        }/>
-                        <td class="no-border text-center">${count}</td>
-                        $ var percent = ((count * 100) / checkouts.count).toFixed(2);
-                        <td class="no-border text-center">${percent}%</td>
-                        <if(value == checkouts.checkout)>
-                          <td class="no-border text-center">
-                            <span class="glyphicon glyphicon-ok" aria-hidden="true"/>
-                          </td>
-                        </if>
-                        <else>
-                          <td class="no-border text-center"/>
-                        </else>
-                      </tr>
-                    </for>
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </if>
-        </div>
-      </div>
-    </if>
-    $ var width = matchType == types.CRICKET ? "100%" : "37%";
-    <div style=`float: right; width: ${width};`>
+    <div style=`float: right; width: 37%;`>
       <div class="block-container-header">Hits</div>
       <div class="block-container-with-header">
         <div id="hits-div">
@@ -216,13 +164,11 @@ $ var matchType = input.match.match_type.id;
         </div>
       </div>
     </div>
-    <if(matchType == types.X01 || matchType == types.X01HANDICAP || matchType == types.SHOOTOUT || matchType == types.DARTS_AT_X)>
-      <div style="float: left; width: 61%;">
-        <div class="block-container-header">Scores</div>
-        <div class="block-container">
-          <canvas id="canvas-scores"/>
-        </div>
+    <div style="float: left; width: 61%;">
+      <div class="block-container-header">Scores</div>
+      <div class="block-container">
+        <canvas id="canvas-scores"/>
       </div>
-    </if>
+    </div>
   </div>
 </div>
