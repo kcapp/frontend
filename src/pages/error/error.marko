@@ -1,0 +1,11 @@
+import Layout from "../layout.marko"
+
+<${Layout}>
+  <@body>
+    <div>
+        <h2>500 Internal Server Error</h2>
+        <p>Got an internal Server Error ${input.error}</p>
+        <pre>${input.error.stack}</pre>
+    </div>
+  </@body>
+</>

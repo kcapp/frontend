@@ -9,7 +9,7 @@
         <h2>${input.player.name}</h2>
         <h4 style="color: #a5a5a5;">${input.player.nickname ? input.player.nickname : '-'}</h4>
     </div>
-    <div class="float-right"><label class="player-color-label" style='background-color: ${input.player.color}; color: ${input.player.color};'>${input.player.color}</label></div>
+    <div class="float-right"><label class="player-color-label" style=`background-color: ${input.player.color}; color: ${input.player.color};`>${input.player.color}</label></div>
 </div>
 <div style="display: flex;">
     <div class="block-container player-profile-menu">
@@ -31,8 +31,8 @@
                         $ var change = diff > 0 ? 'fas fa-arrow-alt-circle-up' : diff < 0 ? 'fas fa-arrow-alt-circle-down' : 'fas fa-arrow-alt-circle-right'
                         $ var col = diff > 0 ? 'col-green' : diff < 0 ? 'col-red' : 'col-grey'
                         <div>${state.x01.three_dart_avg.toFixed(2)}</div>
-                        <div style="font-size: 18px;" class='${col}'>
-                            <i class='${change}'></i>
+                        <div style="font-size: 18px;" class=`${col}`>
+                            <i class=`${change}`></i>
                             <span style="margin-left: 5px;" data-toggle="tooltip" data-placement="bottom" title="Since last week">${Math.abs(diff)}</span>
                         </div>
                     </div>
@@ -44,8 +44,8 @@
                         $ var change = diff > 0 ? 'fas fa-arrow-alt-circle-up' : diff < 0 ? 'fas fa-arrow-alt-circle-down' : 'fas fa-arrow-alt-circle-right'
                         $ var col = diff > 0 ? 'col-green' : diff < 0 ? 'col-red' : 'col-grey'
                         <div>${state.x01.first_nine_three_dart_avg.toFixed(2)}</div>
-                        <div style="font-size: 18px;" class='${col}'>
-                            <i class='${change}'></i>
+                        <div style="font-size: 18px;" class=`${col}`>
+                            <i class=`${change}`></i>
                             <span style="margin-left: 5px;" data-toggle="tooltip" data-placement="bottom" title="Since last week">${Math.abs(diff)}</span>
                         </div>
                     </div>
@@ -59,8 +59,8 @@
                         $ var change = diff > 0 ? 'fas fa-arrow-alt-circle-up' : diff < 0 ? 'fas fa-arrow-alt-circle-down' : 'fas fa-arrow-alt-circle-right'
                         $ var col = diff > 0 ? 'col-green' : diff < 0 ? 'col-red' : 'col-grey'
                         <div>${cp}%</div>
-                        <div style="font-size: 18px;" class='${col}'>
-                            <i class='${change}'></i>
+                        <div style="font-size: 18px;" class=`${col}`>
+                            <i class=`${change}`></i>
                             <span style="margin-left: 5px;" data-toggle="tooltip" data-placement="bottom" title="Since last week">${Math.abs(diff)}%</span>
                         </div>
                     </div>
@@ -359,7 +359,7 @@
                                 $ var division = standing.tournament_group.division
                                 $ var divisionPostfix = division === 1 ? 'st' : division === 2 ? 'nd' : division === 3 ? 'rd' : 'th';
                                 <td>
-                                    <a href='/tournaments/${standing.tournament.id}/player/${input.player.id}'>${standing.tournament.name}</a>
+                                    <a href=`/tournaments/${standing.tournament.id}/player/${input.player.id}`>${standing.tournament.name}</a>
                                 </td>
                                 <td>${division}${divisionPostfix}</td>
                                 <td>${standing.tournament_group.name}</td>

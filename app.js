@@ -39,7 +39,7 @@ app.io = io;
 
 // Set application variables
 app.locals.kcapp = {};
-app.locals.kcapp.api = 'http://localhost:8001';
+app.locals.kcapp.api = process.env.KCAPP_API || 'http://localhost:8001';
 app.locals.kcapp.api_external = process.env.KCAPP_API || app.locals.kcapp.api;
 
 // Create all routes
@@ -92,6 +92,8 @@ app.use(function (req, res, next) {
 });
 
 // Error Handler
+var notFoundTemplate = require('./src/pages/404/404.marko');
+var errorTemplate = require('./src/pages/error/error.marko');
 app.use(function (err, req, res, next) {
     // set locals, only providing error in development
     res.locals.message = err.message;
@@ -103,7 +105,7 @@ app.use(function (err, req, res, next) {
     if (err.status == 404) {
         // respond with html page
         if (req.accepts('html')) {
-            res.render('404', { url: req.url });
+            res.marko(notFoundTemplate, { url: req.url });
             return;
         }
 
@@ -119,7 +121,7 @@ app.use(function (err, req, res, next) {
         if (err.response !== undefined) {
             debug("Axios error message: " + err.response.data.trim());
         }
-        res.render('error');
+        res.marko(errorTemplate, { error: err });
     }
 });
 
