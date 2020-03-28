@@ -13,6 +13,7 @@ var matchesTemplate = require('../src/pages/matches/matches-template.marko');
 var matchResultTemplate = require('../src/pages/match-result/match-result-template.marko');
 var spectateTemplate = require('../src/pages/spectate/spectate-template.marko');
 var previewTemplate = require('../src/pages/match-preview/match-preview-template.marko');
+var obsTemplate = require('../src/pages/obs/obs-template.marko');
 
 /* Redirect requests to /matches to /matches/page/1 */
 router.get('/', function (req, res) {
@@ -212,22 +213,24 @@ router.get('/:id/spectate/compact', function (req, res, next) {
 router.get('/:id/obs', function (req, res, next) {
     axios.all([
         axios.get(req.app.locals.kcapp.api + '/player'),
-        axios.get(req.app.locals.kcapp.api + '/match/' + req.params.id)
-    ]).then(axios.spread((players, response) => {
-        var match = response.data;
+        axios.get(req.app.locals.kcapp.api + '/match/' + req.params.id),
+        axios.get(req.app.locals.kcapp.api + '/match/' + req.params.id + '/metadata')
+    ]).then(axios.spread((players, matchData, metadata) => {
+        var match = matchData.data;
         axios.all([
             axios.get(req.app.locals.kcapp.api + '/leg/' + match.current_leg_id),
             axios.get(req.app.locals.kcapp.api + '/leg/' + match.current_leg_id + '/players')
         ]).then(axios.spread((leg, legPlayers) => {
             legPlayers = _.sortBy(legPlayers.data, (player) => player.order)
-            res.render('leg/obs', {
+            res.marko(obsTemplate, {
                 leg: leg.data,
-                leg_players: legPlayers,
+                legPlayers: legPlayers,
                 players: players.data,
-                match: match
+                match: match,
+                matchMetadata: metadata.data
             });
         })).catch(error => {
-            debug('Error when getting data for matches ' + error);
+            debug('Error when getting data for match ' + error);
             next(error);
         });
     })).catch(error => {

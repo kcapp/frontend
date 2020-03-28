@@ -241,7 +241,7 @@ module.exports = {
                     this.state.submitting = true;
                     this.state.socket.emit('throw', JSON.stringify(component.getPayload()));
                 } else {
-                    this.state.submitting = component.confirmThrow();
+                    this.state.submitting = component.confirmThrow(false);
                 }
                 return;
             case '/': // Single

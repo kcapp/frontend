@@ -70,7 +70,7 @@ exports.isCheckout = (current, players) => {
     return false;
 }
 
-exports.confirmThrow = function () {
+exports.confirmThrow = function (external) {
     var submitting = false;
 
     var dart = this.getCurrentDart();
@@ -81,6 +81,7 @@ exports.confirmThrow = function () {
     this.state.isSubmitted = true;
 
     var score = dart.getScore();
+    var isCheckout = false;
     if (DARTS.includes(score)) {
         var hits = this.state.player.hits[score];
         if (hits) {
@@ -107,14 +108,14 @@ exports.confirmThrow = function () {
                 }
             }
         }
-        var isCheckout = module.exports.isCheckout(this.state.player, this.state.players);
+        isCheckout = module.exports.isCheckout(this.state.player, this.state.players);
         if (isCheckout) {
             submitting = true;
         }
-        if (!external) {
-            // If an external event triggered the update don't emit a throw
-            this.emit('possible-throw', isCheckout, false, this.state.currentDart - 1, dart.getScore(), dart.getMultiplier(), false);
-        }
+    }
+    if (!external) {
+        // If an external event triggered the update don't emit a throw
+        this.emit('possible-throw', isCheckout, false, this.state.currentDart - 1, dart.getScore(), dart.getMultiplier(), false);
     }
     return submitting;
 }

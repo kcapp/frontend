@@ -1,0 +1,24 @@
+<div>
+  <table style='width: 600px; font-size: 20px; background-color: #2877ca;'>
+    <tr>
+      $ var group = input.match.tournament ? input.match.tournament.tournament_group_name : "Unofficial";
+      <td colspan='8' class='obs-table-header'>${group} / ${input.match_metadata.match_displayname} (${input.match.match_mode.short_name})</td>
+    </tr>
+    <for|player| of=state.leg_players>
+      $ var playerId = player.player_id;
+      $ var activeClass = player.is_current_player ? 'obs-visits-active' : 'obs-visits-inactive'
+      <tr class=activeClass style='height: 30px; line-height: 30px;'>
+        <td style='display: none;' class='obs-total-score'>0</td>
+        <td style='width: 30px; text-align: center; color: white;'>
+          <i class="fas fa-caret-right" style=`${"opacity: " + (player.is_current_player ? "1.0" : "0.0")}`/>
+        </td>
+        <td class='obs-table-player-name'>${player.player.name}</td>
+        <dart-label-simple dart=state.throws[player.player_id][1]/>
+        <dart-label-simple dart=state.throws[player.player_id][2]/>
+        <dart-label-simple dart=state.throws[player.player_id][3]/>
+        <td class='obs-player-score'>${player.current_score}</td>
+        <td class='obs-player-legs'>${(player.wins ? player.wins : '0')}</td>
+      </tr>
+    </for>
+  </table>
+</div>

@@ -29,13 +29,12 @@ static function reverseIterator(list, callback) {
           <td class="dart-score-container no-border">
             <dart-container dart=visit.third_dart/>
           </td>
-          <td>
+          <td class="text-center">
             <if(visit.is_bust)>
               <label>BUST</label>
             </if>
             <else>
-              $ var total = visit.first_dart.multiplier * visit.first_dart.value + visit.second_dart.multiplier * visit.second_dart.value + visit.third_dart.multiplier * visit.third_dart.value;
-              <label>${total}</label>
+              <label>${visit.score}</label>
             </else>
           </td>
         </tr>
