@@ -79,7 +79,7 @@ module.exports = {
                 values[visit.player_id].push(current);
             }
             else {
-                if (match.match_type.id == types.SHOOTOUT || match.match_type.id == types.DARTS_AT_X) {
+                if (match.match_type.id == types.SHOOTOUT || match.match_type.id == types.DARTS_AT_X || match.match_type.id === types.CRICKET) {
                     current = current + visit.score;
                     values[visit.player_id].push(current);
                     if (current > chartMaxValue) {
