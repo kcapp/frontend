@@ -39,6 +39,11 @@ $ var heading = input.heading || "Add player";
           <input class="form-control" type="color" value=state.color on-input("colorChange")/>
         </div>
         <div class="form-group">
+          <div class="player-pic-cutout center">
+            <player-profile-picture player=input.player/>
+          </div>
+        </div>
+        <div class="form-group">
           <label class="control-label" for="player-profile-pic-input">Profile Picture URL</label>
           <input class="form-control" type="text" value=state.profile_pic_url on-input("profilePicChange")/>
         </div>
