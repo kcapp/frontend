@@ -5,14 +5,13 @@ var alertify = require("../../../../util/alertify");
 
 module.exports = {
     onCreate(input) {
-        var roundNumber = Math.floor(input.leg.visits.length / input.leg.players.length) + 1;
         var matchName = input.match.match_mode.short_name;
         var venue = input.match.venue;
 
         this.state = {
             legId: input.leg.id,
             leg: input.leg,
-            roundNumber: roundNumber,
+            roundNumber: input.leg.round,
             matchName: matchName,
             venueConfig: venue ? venue.config ? venue.config : {} : {},
             submitting: false,
@@ -20,7 +19,7 @@ module.exports = {
             type: input.match.match_type.id,
             socket: {},
             audioAnnouncer: undefined,
-            legNum: input.match.legs.length + (["st", "nd", "rd"][((input.match.legs.length + 90) % 100 - 10) % 10 - 1] || "th"),
+            legNum: input.match.current_leg_num,
             streamer: { interval: undefined, stream: undefined, id: 0 }
         }
     },

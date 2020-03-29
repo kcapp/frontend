@@ -261,16 +261,15 @@ module.exports = (io, app) => {
                 }
 
                 function announceLegFinished(player, match) {
-                    var legNum = match.legs.length + (["st", "nd", "rd"][((match.legs.length + 90) % 100 - 10) % 10 - 1] || "th");
                     var name = player.player.vocal_name === null ? player.player.first_name : player.player.vocal_name;
                     if (match.is_finished) {
                         if (match.winner_id === null) {
-                            announce(`Game shot, in the ${legNum} leg, ${name}. The match a DRAW!!!`, 'game_shot');
+                            announce(`Game shot, in the ${match.current_leg_num} leg, ${name}. The match a DRAW!!!`, 'game_shot');
                         } else {
                             announce(`Game shot, AND THE MATCH!!!, ${name}!`, 'game_shot');
                         }
                     } else {
-                        announce(`Game shot in the ${legNum} leg!, ${name}!`, 'game_shot');
+                        announce(`Game shot in the ${match.current_leg_num} leg!, ${name}!`, 'game_shot');
                     }
                 }
 

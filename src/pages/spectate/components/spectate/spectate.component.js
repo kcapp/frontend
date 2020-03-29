@@ -4,11 +4,10 @@ const types = require('../../../../components/scorecard/components/match_types')
 
 module.exports = {
     onCreate(input) {
-        var roundNumber = Math.floor(input.leg.visits.length / input.leg.players.length) + 1;
         var matchName = input.match.match_mode.short_name;
         this.state = {
             leg: input.leg,
-            roundNumber: roundNumber,
+            roundNumber: input.leg.round,
             matchName: matchName,
             type: input.match.match_type.id,
             submitting: false,
