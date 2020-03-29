@@ -27,7 +27,11 @@ To get started with development quickly, the following [installer script](https:
 2. Install all new `nodejs` dependencies `npm install`
 
 ## Configuration
-Frontend depends on the [kcapp-api](https://github.com/kcapp/api) for fetching data from the database. Curently this is always running on port `localhost:8001`, but this can be changed locally be modifying this line in `app.js` if the `api` is running on another host or port
-```
-app.locals.kcapp.api = 'http://localhost:8001';
-```
+Frontend depends on the [kcapp-api](https://github.com/kcapp/api) for fetching data from the database.
+
+The following environment variables can be used to adjust configuration
+* `NODE_ENV`: specify if app should run in `prod` or `dev` mode.
+    * `prod` will enable bundling and minifying
+    * `dev`  will start with [browser-refresh](https://github.com/patrick-steele-idem/browser-refresh) for easier development
+* `DEBUG`: value is passed to [debug](https://github.com/visionmedia/debug) module to specify which packages should be logged
+* `KCAPP_API`: by default `api` runs on `http://localhost:8001`, but this can be changed by setting it to `http://<host>:<port>`

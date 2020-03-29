@@ -4,7 +4,6 @@ module.exports = {
             selected: input.selected
         }
     },
-
     comparePlayers(event) {
         var params = '?';
         for (var i = 0; i < this.state.selected.length; i++) {

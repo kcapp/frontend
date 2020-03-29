@@ -4,13 +4,13 @@ var speaker = require('../../../../util/speaker');
 module.exports = {
     onInput(input) {
         this.state = {
-            first_name: '',
-            last_name: '',
-            vocal_name: '',
-            nickname: '',
-            slack_handle: '',
+            first_name: undefined,
+            last_name: undefined,
+            vocal_name: undefined,
+            nickname: undefined,
+            slack_handle: undefined,
             color: '#dfdfdf',
-            profile_pic_url: '',
+            profile_pic_url: undefined,
             office_id: 1,
             isAdd: input.isAdd
         }
@@ -34,7 +34,6 @@ module.exports = {
             speaker.speak({text: this.state.vocal_name});
         }
     },
-
     firstNameChange(event) {
         this.state.first_name = event.target.value;
     },
@@ -60,6 +59,11 @@ module.exports = {
         this.state.office_id = event.target.value;
     },
     addPlayer(event) {
+        if (!this.state.first_name) {
+            alert("At least first name must be specified");
+            event.preventDefault();
+            return;
+        }
         var body = {
             first_name: this.state.first_name,
             last_name: this.state.last_name,
