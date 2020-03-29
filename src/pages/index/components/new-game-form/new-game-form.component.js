@@ -178,6 +178,11 @@ module.exports = {
             }
         }
 
+        var venueId = this.state.options.venue;
+        if (venueId <= 0) {
+            venueId = null;
+        }
+
         var handicaps = {};
         if (this.state.options.game_type === types.X01HANDICAP) {
             for (var i = 0; i < this.state.selected.length; i++) {
@@ -193,7 +198,7 @@ module.exports = {
             match_type: this.state.options.game_type,
             match_mode: this.state.options.game_mode,
             match_stake: this.state.options.stake,
-            venue: this.state.options.venue,
+            venue: venueId,
             players: this.state.selected.map(player => player.id),
             office_id: officeId,
             player_handicaps: handicaps
