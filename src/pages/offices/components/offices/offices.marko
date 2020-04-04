@@ -1,0 +1,79 @@
+<page-header heading="Offices" icon="fa-building"/>
+<div>
+    <options-panel key="options-panel"/>
+    <div class="block-container no-padding">
+        <div class="table table-responsive">
+            <table>
+                <thead>
+                <tr>
+                    <th class="text-left">Name</th>
+                    <th>Active</th>
+                    <th>Options</th>
+                    <th>Venues</th>
+                </tr>
+                </thead>
+                <tbody>
+                <for|key, office| in=input.offices>
+                    <tr>
+                    <td class="text-left">${office.name}</td>
+                    <td>
+                        <if(office.is_active)>
+                            <i class="fas fa-check"></i>
+                        </if>
+                    </td>
+                    <td>
+                        $ var modalId = `edit-office-${office.id}-modal`;
+                        <button class="btn btn-primary" type="button" data-toggle="modal" data-target=`#${modalId}`>
+                            <i class="fas fa-edit"/>
+                            <span class="ml-10">Edit</span>
+                        </button>
+                        <new-office-form id=`${modalId}` office=office heading="Edit Office" isAdd=false/>
+                    </td>
+                    <td>
+                        <div class="table table-responsive">
+                            <table>
+                                <thead>
+                                <tr>
+                                    <th class="text-left">Name</th>
+                                    <th>Description</th>
+                                    <th>Dual Monitor</th>
+                                    <th>LED Lights</th>
+                                    <th>Smartboard</th>
+                                    <th>Options</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <for|key, venue| in=input.venues>
+                                    <if(venue.office_id === office.id)>
+                                        <tr>
+                                            <td class="text-left">${venue.name}</td>
+                                            <td>${venue.description}</td>
+                                            <td><input type="checkbox" name="Dual Monitor" checked=venue.config.has_dual_monitor disabled></td>
+                                            <td><input type="checkbox" name="LED Lights" checked=venue.config.has_led_lights disabled></td>
+                                            <td><input type="checkbox" name="Smartboard" checked=venue.config.has_smartboard disabled></td>
+                                            <td>
+                                                $ var modalId = `edit-venue-${venue.id}-modal`;
+                                                <button class="btn btn-primary" type="button" data-toggle="modal" data-target=`#${modalId}`>
+                                                    <i class="fas fa-edit"/>
+                                                    <span class="ml-10">Edit</span>
+                                                </button>
+                                                <new-venue-form id=`${modalId}` venue=venue offices=input.offices heading="Edit Venue" isAdd=false/>
+                                            </td>
+                                        </tr>
+                                    </if>
+                                </for>
+                                </tbody>
+                            </table>
+                        </div>
+                    </td>
+                    </tr>
+                </for>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class='text-center'>
+        <new-office-form isAdd=true offices=input.offices venues=input.venues />
+        <new-venue-form isAdd=true offices=input.offices />
+    </div>
+</div>

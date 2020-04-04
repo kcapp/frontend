@@ -5,6 +5,28 @@ var router = express.Router();
 
 var axios = require('axios');
 
+/* Add a new venue */
+router.post('/', function (req, res, next) {
+    axios.post(req.app.locals.kcapp.api + '/venue', req.body)
+        .then(() => {
+            res.redirect('/offices');
+        }).catch(error => {
+            debug('Error when adding new venue: ' + error);
+            next(error);
+        });
+});
+
+/* Edit venue */
+router.put('/:id', function (req, res, next) {
+    axios.put(req.app.locals.kcapp.api + '/venue/' + req.params.id, req.body)
+        .then(() => {
+            res.redirect(303, '/offices');
+        }).catch(error => {
+            debug('Error when editing venue: ' + error);
+            next(error);
+        });
+});
+
 /** Spectate a given venue */
 router.get('/:id/spectate', function (req, res, next) {
     axios.all([
