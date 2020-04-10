@@ -8,6 +8,16 @@
       <button type="submit" class="btn btn-primary mt-10" onclick="window.location.href = '/offices'">Add Venue</button>
   </div>
 </if>
+<if(state.players.length < 1)>
+  <div class="block-container-header">
+    <i class="fas fa-user"/>
+    <span class="ml-10">No Players</span>
+  </div>
+  <div class="block-container-with-header">
+      <div>To start playing, add some players</div>
+      <button type="submit" class="btn btn-primary mt-10" onclick="window.location.href = '/players'">Add Players</button>
+  </div>
+</if>
 <else>
   <form>
       <div class="game-players">

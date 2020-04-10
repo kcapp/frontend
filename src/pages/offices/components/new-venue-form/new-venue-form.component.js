@@ -2,6 +2,7 @@ const axios = require('axios');
 
 module.exports = {
     onInput(input) {
+        var office = input.offices[Object.keys(input.offices)[0]];
         this.state = {
             name: undefined,
             description: undefined,
@@ -10,7 +11,7 @@ module.exports = {
             has_smartboard: false,
             smartboard_uuid: undefined,
             smartboard_button_number: undefined,
-            office_id: input.offices[Object.keys(input.offices)[0]].id,
+            office_id: office ? office.id : undefined,
             isAdd: input.isAdd
         }
         if (input.venue) {

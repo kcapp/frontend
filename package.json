@@ -5,6 +5,7 @@
     "scripts": {
         "dev": "browser-refresh ./bin/www",
         "prod": "cross-env NODE_ENV=production npm start",
+        "docker": "NODE_ENV=production npm start",
         "start": "node ./bin/www"
     },
     "dependencies": {

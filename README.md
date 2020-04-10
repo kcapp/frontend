@@ -35,3 +35,4 @@ The following environment variables can be used to adjust configuration
     * `dev`  will start with [browser-refresh](https://github.com/patrick-steele-idem/browser-refresh) for easier development
 * `DEBUG`: value is passed to [debug](https://github.com/visionmedia/debug) module to specify which packages should be logged
 * `KCAPP_API`: by default `api` runs on `http://localhost:8001`, but this can be changed by setting it to `http://<host>:<port>`
+* `PORT` : by default `3000`
