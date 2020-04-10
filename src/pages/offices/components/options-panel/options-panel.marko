@@ -7,7 +7,7 @@
     <i class="fas fa-building"/>
     <span class="ml-10">Add Office</span>
   </button>
-  <if(input.offices.length > 0)>
+  <if(Object.keys(input.offices).length > 0)>
     <button class="btn btn-primary ml-5" type="button" data-toggle="modal" data-target="#add-venue-modal" on-click("addVenue")>
       <i class="fas fa-laptop-house"/>
       <span class="ml-10">Add Venue</span>
