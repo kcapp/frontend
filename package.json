@@ -29,8 +29,6 @@
         "marko": "^4.19.8",
         "moment": "^2.24.0",
         "morgan": "^1.10.0",
-        "pug": "2.0.3",
-        "responsive-voice-node": "^1.0.0",
         "rotating-file-stream": "^1.4.3",
         "serve-favicon": "^2.5.0",
         "socket.io": "^2.3.0",
