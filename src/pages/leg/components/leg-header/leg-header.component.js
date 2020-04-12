@@ -1,20 +1,27 @@
 var axios = require('axios');
 var alertify = require("../../../../util/alertify");
+var types = require("../../../../components/scorecard/components/match_types");
 
 module.exports = {
     onCreate(input) {
+        var simpleInputSupported = types.SUPPORT_SIMPLE_INPUT.includes(input.match.match_type.id);
         this.state = {
             legId: input.legId,
+            simpleInput: {
+                supported: simpleInputSupported,
+                enable: false,
+            },
             streamEnabled: false
         }
     },
 
-    editScores(event) {
-        location.href = '/legs/' + this.state.legId + '/result#visits';
-    },
-
     changeOrder(event) {
         // Modal is displayed, and code is handled in player-order component
+    },
+    enableSimiplifiedInput(event) {
+        this.state.simpleInput.enable = !this.state.simpleInput.enable;
+        this.setStateDirty("simpleInput");
+        this.emit("enable-simple-input", this.state.simpleInput.enable);
     },
 
     enableBoardStream(id, event) {

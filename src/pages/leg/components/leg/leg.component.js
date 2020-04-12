@@ -2,6 +2,7 @@ var _ = require("underscore");
 var moment = require('moment');
 var io = require('../../../../util/socket.io-helper.js');
 var alertify = require("../../../../util/alertify");
+var types = require('../../../../components/scorecard/components/match_types');
 
 module.exports = {
     onCreate(input) {
@@ -20,7 +21,8 @@ module.exports = {
             socket: {},
             audioAnnouncer: undefined,
             legNum: input.match.current_leg_num,
-            streamer: { interval: undefined, stream: undefined, id: 0 }
+            streamer: { interval: undefined, stream: undefined, id: 0 },
+            simpleInput: false
         }
     },
 
@@ -137,6 +139,10 @@ module.exports = {
         }
     },
 
+    onEnableSimpleInput(enable) {
+        this.state.simpleInput = enable;
+    },
+
     onPlayerBusted(busted, component) {
         if (busted) {
             this.state.socket.emit('throw', JSON.stringify(component.getPayload()));
@@ -229,6 +235,30 @@ module.exports = {
             return;
         }
         var component = this.findActive(this.getComponents('players'));
+
+        // Simplified input
+        if (this.state.simpleInput) {
+            console.log("yep")
+            var multiplier = 1;
+            if (e.key === "3") {
+                multiplier = 3;
+            } else if (e.key === "2") {
+                multiplier = 2;
+            }
+            var value = this.state.leg.starting_score
+            if (e.key !== "1" && e.key !== "2" && e.key !== "3") {
+                value = 0;
+            }
+            component.setDart(value, multiplier);
+            var dartsThrown = component.getDartsThrown();
+            if (dartsThrown > 2) {
+                this.state.submitting = true;
+                this.state.socket.emit('throw', JSON.stringify(component.getPayload()));
+            } else {
+                this.state.submitting = component.confirmThrow(false);
+            }
+            return;
+        }
 
         var text = '';
         var currentValue = component.getCurrentValue();

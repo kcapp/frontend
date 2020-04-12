@@ -1,6 +1,6 @@
 <div class="alert alert-danger" id="cancel-leg-failed-alert" role="alert" hidden="true">Unable to cancel leg</div>
 <div class="pt-20"/>
-<leg-header legId=state.legId name=state.matchName round=state.roundNumber isOfficial=(input.match.tournament_id !== null) experimental=input.experimental on-enable-stream('onEnableStream')/>
+<leg-header legId=state.legId match=input.match round=state.roundNumber isOfficial=(input.match.tournament_id !== null) experimental=input.experimental on-enable-stream('onEnableStream') on-enable-simple-input("onEnableSimpleInput")/>
 <div>
   <table>
     <tbody>

@@ -1,7 +1,7 @@
 <div class="block-container-blue">
-  <div class="float-left font-24">Leg (X01)</div>
-  <div class="float-left font-24 pl-10">${input.name}/</div>
-  <div class="float-left font-24">R${input.round}</div>
+  <div class="float-left font-24">Leg (${input.match.match_type.name})</div>
+  <div class="float-left font-24 pl-10">${input.match.match_mode.short_name}</div>
+  <div class="float-left font-24">/R${input.round}</div>
   <div class="float-right">
     <div class="btn-group">
       <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -9,9 +9,11 @@
         <span class="sr-only"/>
       </button>
       <ul class="dropdown-menu">
-        <li>
-          <a on-click('editScores')>Edit scores</a>
-        </li>
+        <if(state.simpleInput.supported)>
+          <li>
+            <a value=state.simpleInput.enabled on-click('enableSimiplifiedInput')>${state.simpleInput.enable ? "Disable" : "Enable"} Simple Input</a>
+          </li>
+        </if>
         <li>
           <a id="change-player-order" data-toggle="modal" data-target="#modal-player-order"  on-click('changeOrder')>Change Order</a>
         </li>
