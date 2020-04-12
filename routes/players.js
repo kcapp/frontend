@@ -9,6 +9,7 @@ var _ = require('underscore');
 var playerTemplate = require('../src/pages/player/player-template.marko');
 var playersTemplate = require('../src/pages/players/players-template.marko');
 var playerComparisonTemplate = require('../src/pages/player-comparison/player-comparison-template.marko');
+var head2headTemplate = require('../src/pages/player-head2head/player-head2head-template.marko');
 
 /* Get a list of all players */
 router.get('/', function (req, res, next) {
@@ -117,7 +118,7 @@ router.get('/:player1/vs/:player2', function (req, res, next) {
         head2head.player_checkouts[player1] = _.sortBy(head2head.player_checkouts[player1], function (checkout) { return -checkout.count; })
         head2head.player_checkouts[player2] = _.sortBy(head2head.player_checkouts[player2], function (checkout) { return -checkout.count; })
 
-        res.render('player/head_to_head', { player1: players[player1], player2: players[player2], head2head: head2head });
+        res.marko(head2headTemplate, { player1: players[player1], player2: players[player2], head2head: head2head });
     })).catch(error => {
         debug('Error when getting data for head to head ' + error);
         next(error);

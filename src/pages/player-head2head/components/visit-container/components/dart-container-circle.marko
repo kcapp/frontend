@@ -1,0 +1,13 @@
+$ var dart = input.dart;
+<if(dart.multiplier === 3)>
+    <i class="fa fa-circle fa-stack-2x col-triple"></i>
+    <strong class="fa-stack-1x text-primary col-white font-15">T${dart.value}</strong>
+</if>
+<else-if(dart.multiplier === 2)>
+    <i class="fa fa-circle fa-stack-2x col-double"></i>
+    <strong class="fa-stack-1x text-primary col-white font-15">D${dart.value}</strong>
+</else-if>
+<else>
+    <i class="fa fa-circle fa-stack-2x col-single"></i>
+    <strong class="fa-stack-1x text-primary col-white font-15">${dart.value === 0 ? "" : dart.value}</strong>
+</else>

@@ -1,0 +1,90 @@
+$ var stats1 = input.stats1;
+$ var stats2 = input.stats2;
+<table class="table-vs">
+    <if(stats1 && stats2)>
+        <tr>
+            <td>${stats1.three_dart_avg.toFixed(2)}</td>
+            <td>Three Dart Avg.</td>
+            <td>${stats2.three_dart_avg.toFixed(2)}</td>
+        </tr>
+        <tr>
+            <td>${stats1.first_nine_three_dart_avg.toFixed(2)}</td>
+            <td>First 9 Avg.</td>
+            <td>${stats2.first_nine_three_dart_avg.toFixed(2)}</td>
+        </tr>
+        <tr>
+            <td>${stats1.checkout_percentage.toFixed(2)}%</td>
+            <td>Checkout %</td>
+            <td>${stats2.checkout_percentage.toFixed(2)}%</td>
+        </tr>
+        <tr>
+            <best-statistics statistic=(stats1.best_501 ? stats1.best_501 : stats1.best_301)/>
+            <td>Best Leg</td>
+            <best-statistics statistic=(stats2.best_501 ? stats2.best_501 : stats2.best_301)/>
+        </tr>
+        <tr>
+            <best-statistics statistic=stats1.best_three_dart_avg/>
+            <td>Best Three Dart Avg.</td>
+            <best-statistics statistic=stats2.best_three_dart_avg/>
+        </tr>
+        <tr>
+            <best-statistics statistic=stats1.best_first_nine_avg/>
+            <td>Best First 9 Avg.</td>
+            <best-statistics statistic=stats2.best_first_nine_avg/>
+        </tr>
+        <tr>
+            <best-statistics statistic=stats1.highest_checkout/>
+            <td>Highest Checkout</td>
+            <best-statistics statistic=stats2.highest_checkout/>
+        </tr>
+        <tr>
+            <td colspan="3">
+                <hr/>
+            </td>
+        </tr>
+        <tr>
+            <td>${stats1.accuracy_overall.toFixed(2)}</td>
+            <td>Accuracy Overall</td>
+            <td>${stats2.accuracy_overall.toFixed(2)}</td>
+        </tr>
+        <tr>
+            <td>${stats1.accuracy_20 == null ? '-' : stats1.accuracy_20.toFixed(2)}</td>
+            <td>Accuracy 20s</td>
+            <td>${stats2.accuracy_20 == null ? '-' : stats2.accuracy_20.toFixed(2)}</td>
+        </tr>
+        <tr>
+            <td>${stats1.accuracy_19 == null ? '-' : stats1.accuracy_19.toFixed(2)}</td>
+            <td>Accuracy 19s</td>
+            <td>${stats2.accuracy_19 == null ? '-' : stats2.accuracy_19.toFixed(2)}</td>
+        </tr>
+        <tr>
+            <td colspan="3">
+                <hr/>
+            </td>
+        </tr>
+
+        $ var p1s60 = stats1.scores_60s_plus == null ? '0' : stats1.scores_60s_plus
+        $ var p2s60 = stats2.scores_60s_plus == null ? '0' : stats2.scores_60s_plus
+        $ var p1s60pl = stats1.scores_60s_plus == null ? '0' : (stats1.scores_60s_plus / stats1.legs_played).toFixed(2)
+        $ var p2s60pl = stats2.scores_60s_plus == null ? '0' : (stats2.scores_60s_plus / stats1.legs_played).toFixed(2)
+        <score-statistic-row label="60+" stat1=p1s60 stat1PerLeg=p1s60pl stat2=p2s60 stat2PerLeg=p2s60pl />
+
+        $ var p1s100 = stats1.scores_100s_plus == null ? '0' : stats1.scores_100s_plus
+        $ var p2s100 = stats2.scores_100s_plus == null ? '0' : stats2.scores_100s_plus
+        $ var p1s100pl = stats1.scores_100s_plus == null ? '0' : (stats1.scores_100s_plus / stats1.legs_played).toFixed(2)
+        $ var p2s100pl = stats2.scores_100s_plus == null ? '0' : (stats2.scores_100s_plus / stats1.legs_played).toFixed(2)
+        <score-statistic-row label="100+" stat1=p1s100 stat1PerLeg=p1s100pl stat2=p2s100 stat2PerLeg=p2s100pl />
+
+        $ var p1s140 = stats1.scores_140s_plus == null ? '0' : stats1.scores_140s_plus
+        $ var p2s140 = stats2.scores_140s_plus == null ? '0' : stats2.scores_140s_plus
+        $ var p1s140pl = stats1.scores_140s_plus == null ? '0' : (stats1.scores_140s_plus / stats1.legs_played).toFixed(2)
+        $ var p2s140pl = stats2.scores_140s_plus == null ? '0' : (stats2.scores_140s_plus / stats1.legs_played).toFixed(2)
+        <score-statistic-row label="140+" stat1=p1s140 stat1PerLeg=p1s140pl stat2=p2s140 stat2PerLeg=p2s140pl />
+
+        $ var p1s180 = stats1.scores_180s == null ? '0' : stats1.scores_180s
+        $ var p2s180 = stats2.scores_180s == null ? '0' : stats2.scores_180s
+        $ var p1s180pl = stats1.scores_180s == null ? '0' : (stats1.scores_180s / stats1.legs_played).toFixed(2)
+        $ var p2s180pl = stats2.scores_180s == null ? '0' : (stats2.scores_180s / stats1.legs_played).toFixed(2)
+        <score-statistic-row label="180" stat1=p1s180 stat1PerLeg=p1s180pl stat2=p2s180 stat2PerLeg=p2s180pl />
+    </if>
+</table>

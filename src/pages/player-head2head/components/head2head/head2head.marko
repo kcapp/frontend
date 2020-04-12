@@ -1,0 +1,186 @@
+$ var player1 = input.player1;
+$ var player2 = input.player2;
+$ var head2head = input.head2head;
+
+/*block scripts
+    script.
+        $(function () {
+            $('.table-player-form td').click(function () {
+                location.href = '/matches/' + $(this).data('match-id') + '/result';
+            });
+        });
+*/
+
+<div class="pt-20"></div>
+<div class="block-container">
+    <table style="width: 100%;">
+        <tr>
+            <td style="width: 40%; text-align: right;"><span style="font-size: 30px; padding-right: 20px;">${player1.name}</span>
+                <div class="player-pic-cutout float-right">
+                    <player-profile-picture player=player1/>
+                </div>
+            </td>
+            <td style="width: 20%; text-align: center; font-size: 35px; font-weight: 700;">VS</td>
+            <td style="width: 40%; text-align: left;"><span style="font-size: 30px; padding-left: 20px;">${player2.name}</span>
+                <div class="player-pic-cutout float-left">
+                    <player-profile-picture player=player2/>
+                </div>
+            </td>
+        </tr>
+    </table>
+</div>
+<div class="block-container-heading"><span>Overall</span></div>
+<div class="block-container">
+    <table class="table-vs">
+        <tr>
+            <td></td>
+            <td>Matches</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>${player1.matches_played}</td>
+            <td>Played</td>
+            <td>${player2.matches_played}</td>
+        </tr>
+        <tr>
+            <td>${player1.matches_won}</td>
+            <td>Won</td>
+            <td>${player2.matches_won}</td>
+        </tr>
+        <tr>
+            <td>${((player1.matches_won * 100) / player1.matches_played).toFixed(2)}%</td>
+            <td>Win %</td>
+            <td>${((player2.matches_won * 100) / player2.matches_played).toFixed(2)}%</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td>Legs</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>${player1.legs_played}</td>
+            <td>Played</td>
+            <td>${player2.legs_played}</td>
+        </tr>
+        <tr>
+            <td>${player1.legs_won}</td>
+            <td>Win</td>
+            <td>${player2.legs_won}</td>
+        </tr>
+        <tr>
+            <td>${((player1.legs_won * 100) / player1.legs_played).toFixed(2)}%</td>
+            <td>Win %</td>
+            <td>${((player2.legs_won * 100) / player2.legs_played).toFixed(2)}%</td>
+        </tr>
+    </table>
+</div>
+<div class="block-container-heading"><span>Elo</span></div>
+<div class="block-container">
+    <table class="table-vs">
+        <tr>
+            <td>${head2head.player_elo[player1.id].tournament_elo}</td>
+            <td>Current</td>
+            <td>${head2head.player_elo[player2.id].tournament_elo}</td>
+        </tr>
+        <tr>
+            <td>${(head2head.player_elo[player1.id].win_probability * 100).toFixed(0)}%</td>
+            <td>Winning Probability</td>
+            <td>${(head2head.player_elo[player2.id].win_probability * 100).toFixed(0)}%</td>
+        </tr>
+    </table>
+</div>
+<div class="block-container-heading"><span>Form</span></div>
+<div class="block-container">
+    <table class="table-vs-form">
+        <tr>
+            <td style="width: 35%; text-align: right;">
+                <form-table matches=head2head.last_matches[player1.id] player=player1 align="right"/>
+            </td>
+            <td style="width: 30%; text-align: center;">Last</td>
+            <td style="width: 35%; text-align: left;">
+                <form-table matches=head2head.last_matches[player2.id] player=player2 align="left"/>
+            </td>
+        </tr>
+        <tr>
+            <td style="width: 35%; text-align: right;">
+                <form-table matches=head2head.head_to_head_matches player=player1 align="right"/>
+            </td>
+            <td style="width: 30%; text-align: center;">vs.</td>
+            <td style="width: 35%; text-align: left;">
+                <form-table matches=head2head.head_to_head_matches player=player2 align="left"/>
+            </td>
+        </tr>
+
+        $ var player1Wins = head2head.head_to_head_wins[player1.id] ? head2head.head_to_head_wins[player1.id] : 0;
+        $ var player2Wins = head2head.head_to_head_wins[player2.id] ? head2head.head_to_head_wins[player2.id] : 0;
+        $ var draws = head2head.head_to_head_wins[0] ? head2head.head_to_head_wins[0] : 0
+        $ var totalMatches = player1Wins + player2Wins + draws;
+        <tr>
+            <td style="width: 35%; text-align: right; font-size: 20px; font-weight: 600;padding-top: 10px;">${totalMatches} (${player1Wins} / ${draws} / ${player2Wins})</td>
+            <td style="width: 30%; text-align: center; padding-top: 10px;">Total (W / D / L)</td>
+            <td style="width: 35%; text-align: left; font-size: 20px; font-weight: 600;padding-top: 10px;">${totalMatches} (${player2Wins} / ${draws} / ${player1Wins})</td>
+        </tr>
+        <tr>
+            <td style="width: 35%; text-align: right; font-size: 20px; font-weight: 600;padding-top: 10px;">${totalMatches == 0 ? '-' : (player1Wins / totalMatches * 100).toFixed(2) + '%'}</td>
+            <td style="width: 30%; text-align: center;padding-top: 10px;">vs. Winning %</td>
+            <td style="width: 35%; text-align: left; font-size: 20px; font-weight: 600;padding-top: 10px;">${totalMatches == 0 ? '-' : (player2Wins / totalMatches * 100).toFixed(2) + '%'}</td>
+        </tr>
+    </table>
+</div>
+<div class="block-container-heading"><span>301</span></div>
+<div class="block-container">
+    <versus-table stats1=head2head.player_301_statistics[player1.id] stats2=head2head.player_301_statistics[player2.id] />
+</div>
+<div class="block-container-heading"><span>501</span></div>
+<div class="block-container">
+    <versus-table stats1=head2head.player_501_statistics[player1.id] stats2=head2head.player_501_statistics[player2.id] />
+</div>
+<div class="block-container-heading"><span>Top 5 Visits</span></div>
+<div class="block-container">
+    <table class="table-vs">
+        $ var p1visits = head2head.player_visits[player1.id];
+        $ var p2visits = head2head.player_visits[player2.id];
+        <if(p1visits && p2visits)>
+            <tr>
+                <td></td>
+                <td>per match</td>
+                <td></td>
+            </tr>
+            <for|round, i| of=[0, 1, 2, 3, 4]>
+                <tr>
+                    <td>
+                        <visit-container visits=p1visits round=round/>
+                    </td>
+                    <td>${(p1visits[round].count / player1.matches_played).toFixed(2)} | ${(p2visits[round].count / player2.matches_played).toFixed(2)}</td>
+                    <td>
+                        <visit-container visits=p2visits round=round/>
+                    </td>
+                </tr>
+            </for>
+        </if>
+    </table>
+</div>
+<div class="block-container-heading"><span>Top 5 Checkouts</span></div>
+<div class="block-container">
+    <table class="table-vs">
+        $ var p1checkouts = head2head.player_checkouts[player1.id]
+        $ var p2checkouts = head2head.player_checkouts[player2.id]
+        <if(p1checkouts && p2checkouts)>
+            <for|round, i| of=[0, 1, 2, 3, 4]>
+                <tr>
+                    <td>
+                        <if(p1checkouts[round].completed)>
+                            <visit-container visits=p1checkouts[round].visits round=round/>
+                        </if>
+                    </td>
+                    <td></td>
+                    <td>
+                        <if(p2checkouts[round].completed)>
+                            <visit-container visits=p2checkouts[round].visits round=round/>
+                        </if>
+                    </td>
+                </tr>
+            </for>
+        </if>
+    </table>
+</div>
