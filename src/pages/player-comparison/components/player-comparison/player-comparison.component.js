@@ -16,7 +16,7 @@ module.exports = {
             this.state[statistics] = staisticsData.data.x01;
             this.setStateDirty(statistics);
         })).catch(error => {
-            console.log('Error when getting data for tournament ' + error);
+            console.log('Error when getting comparison data ' + error);
         });
     },
     onShareButtonClick(event) {

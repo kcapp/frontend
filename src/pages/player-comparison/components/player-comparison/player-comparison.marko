@@ -55,9 +55,9 @@
         </tr>
         <tr>
           <td>Won/Played</td>
-          <td>${state.statistics1.matches_won ? state.statistics1.matches_won + " / " + state.statistics1.matches_played : "-"}</td>
-          <td>${state.statistics2.matches_won ? state.statistics2.matches_won + " / " + state.statistics2.matches_played : "-"}</td>
-          <td>${state.statistics3.matches_won ? state.statistics3.matches_won + " / " + state.statistics3.matches_played : "-"}</td>
+          <td>${state.statistics1.matches_won !== undefined ? state.statistics1.matches_won + " / " + state.statistics1.matches_played : "-"}</td>
+          <td>${state.statistics2.matches_won !== undefined ? state.statistics2.matches_won + " / " + state.statistics2.matches_played : "-"}</td>
+          <td>${state.statistics3.matches_won !== undefined ? state.statistics3.matches_won + " / " + state.statistics3.matches_played : "-"}</td>
         </tr>
         <tr>
           <td>Win %</td>

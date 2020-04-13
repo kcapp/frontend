@@ -24,7 +24,13 @@ module.exports = {
     onMount() {
         var officeId = localStorageUtil.getInt("office_id");
         if (officeId) {
-            this.changeOffice(officeId);
+            if (!this.input.offices[officeId]) {
+                // Unset stored value if it points to a non-existing office
+                localStorageUtil.remove("office_id");
+                localStorageUtil.remove("venue");
+            } else {
+                this.changeOffice(officeId);
+            }
         }
         document.addEventListener("keydown", this.onKeyDown.bind(this), false);
         document.addEventListener("keypress", this.onKeyPress.bind(this), false);

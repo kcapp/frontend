@@ -7,3 +7,4 @@ exports.getInt = key => parseInt(localStorage.getItem(getKey(key)));
 exports.set = (key, value) =>
     localStorage.setItem(getKey(key), value);
 exports.getKey = getKey;
+exports.remove = key => localStorage.removeItem(getKey(key));
