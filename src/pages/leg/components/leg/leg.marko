@@ -1,6 +1,6 @@
 <div class="alert alert-danger" id="cancel-leg-failed-alert" role="alert" hidden="true">Unable to cancel leg</div>
 <div class="pt-20"/>
-<leg-header legId=state.legId match=input.match round=state.roundNumber isOfficial=(input.match.tournament_id !== null) experimental=input.experimental on-enable-stream('onEnableStream') on-enable-simple-input("onEnableSimpleInput")/>
+<leg-header legId=state.legId match=input.match round=state.roundNumber isOfficial=(input.match.tournament_id !== null) experimental=input.experimental on-enable-stream('onEnableStream')/>
 <div>
   <table>
     <tbody>
@@ -36,7 +36,7 @@
       </else>
     </tbody>
   </table>
-  <player-order players=input.leg_players legId=state.legId on-warmup-started("onWarmupStarted")/>
+  <player-order players=input.leg_players legId=state.leg.id on-warmup-started("onWarmupStarted")/>
   <confirm-checkout on-confirm-checkout("onConfirmCheckout")/>
 </div>
 <video autoplay id='cam-board-preview'/>

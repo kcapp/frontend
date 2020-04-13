@@ -9,11 +9,6 @@
         <span class="sr-only"/>
       </button>
       <ul class="dropdown-menu">
-        <if(state.simpleInput.supported)>
-          <li>
-            <a value=state.simpleInput.enabled on-click('enableSimiplifiedInput')>${state.simpleInput.enable ? "Disable" : "Enable"} Simple Input</a>
-          </li>
-        </if>
         <li>
           <a id="change-player-order" data-toggle="modal" data-target="#modal-player-order"  on-click('changeOrder')>Change Order</a>
         </li>

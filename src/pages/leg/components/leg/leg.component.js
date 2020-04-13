@@ -6,23 +6,17 @@ var types = require('../../../../components/scorecard/components/match_types');
 
 module.exports = {
     onCreate(input) {
-        var matchName = input.match.match_mode.short_name;
         var venue = input.match.venue;
-
         this.state = {
-            legId: input.leg.id,
             leg: input.leg,
             roundNumber: input.leg.round,
-            matchName: matchName,
-            venueConfig: venue ? venue.config ? venue.config : {} : {},
+            venueConfig: venue && venue.config ? venue.config : {},
             submitting: false,
             globalStatistics: input.global_statistics,
             type: input.match.match_type.id,
             socket: {},
             audioAnnouncer: undefined,
-            legNum: input.match.current_leg_num,
-            streamer: { interval: undefined, stream: undefined, id: 0 },
-            simpleInput: false
+            streamer: { interval: undefined, stream: undefined, id: 0 }
         }
     },
 
@@ -31,7 +25,7 @@ module.exports = {
         document.addEventListener("keypress", this.onKeyPress.bind(this), false);
 
         // Setup socket endpoints
-        const socket = io.connect(window.location.origin + '/legs/' + this.state.legId);
+        const socket = io.connect(window.location.origin + '/legs/' + this.state.leg.id);
         socket.on('score_update', this.onScoreUpdate.bind(this));
         socket.on('possible_throw', this.onPossibleThrowEvent.bind(this));
         socket.on('say', this.onSay.bind(this));
@@ -60,7 +54,7 @@ module.exports = {
                 var currentPlayer = this.input.players[this.input.leg.current_player_id];
                 var name = currentPlayer.vocal_name ? currentPlayer.vocal_name : currentPlayer.first_name;
                 setTimeout(() => {
-                    socket.emit('speak', { text: this.state.legNum + " leg, " + name + " to throw first. Game on!", type: 'leg_start' });
+                    socket.emit('speak', { text: this.input.match.current_leg_num + " leg, " + name + " to throw first. Game on!", type: 'leg_start' });
                 }, 900);
             }
         }
@@ -137,10 +131,6 @@ module.exports = {
             this.state.socket.emit('stream', JSON.stringify({ enabled: false } ));
             clearInterval(this.state.streamer.interval);
         }
-    },
-
-    onEnableSimpleInput(enable) {
-        this.state.simpleInput = enable;
     },
 
     onPlayerBusted(busted, component) {
@@ -221,9 +211,38 @@ module.exports = {
             // Don't allow input while score is being submitted
             return;
         }
+        const KEY_END = 35;
+        const KEY_ARROW_DOWN = 40;
+        const KEY_PAGE_DOWN = 34;
+        const KEY_INSERT = 45;
+        const KEY_DELETE = 46;
+        const simplified = [ KEY_END, KEY_ARROW_DOWN, KEY_PAGE_DOWN, KEY_INSERT, KEY_DELETE ];
+
+        var component = this.findActive(this.getComponents('players'));
         if (e.key === 'Backspace') {
-            var component = this.findActive(this.getComponents('players'));
             component.removeLast();
+            e.preventDefault();
+        } else if (types.SUPPORT_SIMPLE_INPUT.includes(this.input.match.match_type.id) && simplified.includes(e.keyCode)) {
+            var multiplier = 1;
+            if (e.keyCode === KEY_PAGE_DOWN) {
+                multiplier = 3;
+            } else if (e.keyCode === KEY_ARROW_DOWN) {
+                multiplier = 2;
+            }
+
+            var value = this.state.leg.starting_score
+            if (e.keyCode === KEY_INSERT || e.keyCode === KEY_DELETE) {
+                value = 0;
+            }
+
+            component.setDart(value, multiplier);
+            var dartsThrown = component.getDartsThrown();
+            if (dartsThrown > 2) {
+                this.state.submitting = true;
+                this.state.socket.emit('throw', JSON.stringify(component.getPayload()));
+            } else {
+                this.state.submitting = component.confirmThrow(false);
+            }
             e.preventDefault();
         }
         return;
@@ -235,30 +254,6 @@ module.exports = {
             return;
         }
         var component = this.findActive(this.getComponents('players'));
-
-        // Simplified input
-        if (this.state.simpleInput) {
-            console.log("yep")
-            var multiplier = 1;
-            if (e.key === "3") {
-                multiplier = 3;
-            } else if (e.key === "2") {
-                multiplier = 2;
-            }
-            var value = this.state.leg.starting_score
-            if (e.key !== "1" && e.key !== "2" && e.key !== "3") {
-                value = 0;
-            }
-            component.setDart(value, multiplier);
-            var dartsThrown = component.getDartsThrown();
-            if (dartsThrown > 2) {
-                this.state.submitting = true;
-                this.state.socket.emit('throw', JSON.stringify(component.getPayload()));
-            } else {
-                this.state.submitting = component.confirmThrow(false);
-            }
-            return;
-        }
 
         var text = '';
         var currentValue = component.getCurrentValue();
