@@ -4,7 +4,7 @@ module.exports = {
     onInput(input) {
         this.state = {
             name: undefined,
-            is_active: undefined,
+            is_active: true,
             isAdd: input.isAdd
         }
         if (input.office) {

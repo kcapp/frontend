@@ -1,15 +1,17 @@
 <if(Object.keys(input.offices).length < 1)>
-  <div class="block-container-header">
-    <i class="fas fa-building"/>
-    <span class="ml-10">No offices</span>
-  </div>
-  <div class="block-container-with-header">
-      <div>To start playing, add a venue</div>
-      <button type="submit" class="btn btn-primary mt-10" onclick="window.location.href = '/offices'">Add Venue</button>
+  <div class="pt-20">
+    <div class="block-container-header">
+      <i class="fas fa-building"/>
+      <span class="ml-10">No offices</span>
+    </div>
+    <div class="block-container-with-header">
+        <div>To start playing, add a venue</div>
+        <button type="submit" class="btn btn-primary mt-10" onclick="window.location.href = '/offices'">Add Venue</button>
+    </div>
   </div>
 </if>
-<if(Object.keys(input.players).length < 1)>
-  <div class="block-container-header">
+<else-if(Object.keys(input.players).length < 1)>
+  <div class="block-container-header pt-20">
     <i class="fas fa-user"/>
     <span class="ml-10">No Players</span>
   </div>
@@ -17,9 +19,9 @@
       <div>To start playing, add some players</div>
       <button type="submit" class="btn btn-primary mt-10" onclick="window.location.href = '/players'">Add Players</button>
   </div>
-</if>
+</else-if>
 <else>
-  <form>
+  <form class="pt-20">
       <div class="game-players">
         <div class="block-container-header">
           <i class="fas fa-users"/>
