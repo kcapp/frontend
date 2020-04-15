@@ -147,10 +147,13 @@ $ var matchType = input.match.match_type.id;
                   <for|multiplier, count| in=leg.hits[key]>
                     <if(count !== 0)>
                       <tr>
-                        <dart-label dart={
-                          value: key,
-                          multiplier: multiplier
-                        }/>
+                        <if(matchType == types.DARTS_AT_X)>
+                          $ var label = key != leg.starting_score ? "Miss" : multiplier == 3 ? "Triples" : multiplier == 2 ? "Doubles" :  "Singles";
+                          <dart-label dart={ label: label, value: key, multiplier: multiplier }/>
+                        </if>
+                        <else>
+                          <dart-label dart={ value: key, multiplier: multiplier }/>
+                        </else>
                         <td class="no-border text-center">${count}</td>
                         $ var percent = ((count * 100) / leg.darts_thrown).toFixed(2);
                         <td class="no-border text-center">${percent}%</td>

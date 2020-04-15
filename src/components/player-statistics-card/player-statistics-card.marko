@@ -1,7 +1,7 @@
 $ var type = require("../scorecard/components/match_types");
 
 $ var match = input.match;
-$ var leg = input.leg;
+$ var leg = input.leg || input.match.legs[0];
 $ var statistic = input.statistic;
 $ var dartsThrown = input.statistic.darts_thrown || 0;
 $ var player = input.player;

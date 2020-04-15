@@ -23,6 +23,10 @@ module.exports = {
                 dart.class = CLASS_DART_SINGLE;
                 dart.text = dart.value;
             }
+            if (dart.label) {
+                // If a label is specified, use it directly
+                dart.text = dart.label;
+            }
         }
         this.state = dart;
     }
