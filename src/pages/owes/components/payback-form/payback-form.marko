@@ -29,7 +29,7 @@
                         <input class="form-control" type="number" name="payback-amount" min="0" step="1" value=state.amount on-change("amountChanged")/>
                     </div>
                     <div class="form-group">
-                        <label for="payback-item">Item:</label>
+                        <label for="payback-item">Item</label>
                         <select class="form-control" name="payback-item" on-change("itemChanged")>
                             <for|item, idx| of=input.items>
                                 <option value=item.id selected=(state.item === item.id)>${item.name}</option>

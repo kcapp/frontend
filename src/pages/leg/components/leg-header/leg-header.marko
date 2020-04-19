@@ -1,7 +1,7 @@
 <div class="block-container-blue">
   <div class="float-left font-24">Leg (${input.match.match_type.name})</div>
   <div class="float-left font-24 pl-10">${input.match.match_mode.short_name}</div>
-  <div class="float-left font-24">/R${input.round}</div>
+  <div class="float-left font-24">/R${input.leg.round}</div>
   <div class="float-right">
     <div class="btn-group">
       <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -9,6 +9,14 @@
         <span class="sr-only"/>
       </button>
       <ul class="dropdown-menu">
+        <li>
+          <a on-click('enableButtonInput')>${state.buttonInputEnabled ? "Disable" : "Enable"}  Button Input</a>
+        </li>
+        <if(state.buttonInputEnabled)>
+          <li>
+            <a on-click('enableCompactMode')>${state.compactMode ? "Disable" : "Enable"}  Compact Mode</a>
+          </li>
+        </if>
         <li>
           <a id="change-player-order" data-toggle="modal" data-target="#modal-player-order"  on-click('changeOrder')>Change Order</a>
         </li>
@@ -20,7 +28,7 @@
             <a on-click('enableBoardStream', 2)>${state.streamEnabled ? "Disable" : "Enable"} Stream 2</a>
           </li>
         </if>
-        <if(!input.isOfficial)>
+        <if(!state.isOfficial)>
           <li class="divider" role="separator"/>
           <li>
             <a on-click('cancelLeg')>Cancel Leg</a>

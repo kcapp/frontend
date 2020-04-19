@@ -1,7 +1,10 @@
 <div class="alert alert-danger" id="cancel-leg-failed-alert" role="alert" hidden="true">Unable to cancel leg</div>
 <div class="pt-20"/>
-<leg-header legId=state.legId match=input.match round=state.roundNumber isOfficial=(input.match.tournament_id !== null) experimental=input.experimental on-enable-stream('onEnableStream')/>
-<div>
+<leg-header leg=state.leg match=input.match experimental=input.experimental
+  on-enable-button-input("onEnableButtonInput")
+  on-enable-compact-mode("onEnableCompactMode")
+  on-enable-stream('onEnableStream')/>
+<div style={ display: state.compactMode ? "none" : "" }>
   <table>
     <tbody>
       <if(input.leg.players.length % 2 != 0 && state.venueConfig.has_dual_monitor)>
@@ -39,5 +42,8 @@
   <player-order players=input.leg_players legId=state.leg.id on-warmup-started("onWarmupStarted")/>
   <confirm-checkout on-confirm-checkout("onConfirmCheckout")/>
 </div>
+<if(state.enableButtonInput)>
+  <button-input-table key="compact-input" compactMode=state.compactMode players=input.leg_players on-score-button-pressed("onScoreButtonPressed")/>
+</if>
 <video autoplay id='cam-board-preview'/>
 <img id='img-board-remote' style='float: right;' src=""/>

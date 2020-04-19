@@ -1,5 +1,13 @@
 var alertify = require("../../../util/alertify");
 
+exports.removeLast = function(dart) {
+    var value = dart.getValue();
+    this.state.player.current_score -= value;
+
+    this.emit('score-change', value, this.state.player.player_id);
+    this.emit('possible-throw', false, false, this.state.currentDart, dart.getScore(), dart.getMultiplier(), true);
+}
+
 exports.confirmThrow = function () {
     var submitting = false;
     var dart = this.getCurrentDart();

@@ -1,0 +1,13 @@
+$ var clazz = state.clazz;
+$ var text = input.text || input.value;
+
+<button type='button' class=clazz data-score=input.value data-multiplier=input.multiplier on-click("onClick")>
+     <if(input.icon)>
+          <i class=input.icon></i>
+     </if>
+     <else>
+          ${text}
+          <br/>
+          ${".".repeat(input.multiplier)}
+     </else>
+</button>

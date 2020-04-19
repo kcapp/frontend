@@ -16,7 +16,9 @@ module.exports = {
             type: input.match.match_type.id,
             socket: {},
             audioAnnouncer: undefined,
-            streamer: { interval: undefined, stream: undefined, id: 0 }
+            streamer: { interval: undefined, stream: undefined, id: 0 },
+            enableButtonInput: false,
+            compactMode: false
         }
     },
 
@@ -70,6 +72,10 @@ module.exports = {
                 board.src = data.data;
             }
         });
+
+
+        // Disable gestures on mobile devices
+        document.addEventListener('gesturestart', (e) => { e.preventDefault(); });
     },
 
     onAnnounce(data) {
@@ -133,6 +139,17 @@ module.exports = {
         }
     },
 
+    onEnableButtonInput(enabled) {
+        this.state.enableButtonInput = enabled;
+        if (!enabled) {
+            this.state.compactMode = false;
+        }
+    },
+
+    onEnableCompactMode(enabled) {
+        this.state.compactMode = enabled;
+    },
+
     onPlayerBusted(busted, component) {
         if (busted) {
             this.state.socket.emit('throw', JSON.stringify(component.getPayload()));
@@ -145,6 +162,23 @@ module.exports = {
     onUndoThrow() {
         this.state.submitting = true;
         alertify.confirm('Delete last Visit', () => { this.state.socket.emit('undo_visit', {}); }, () => { this.state.submitting = false; });
+    },
+
+    onScoreButtonPressed(score, multiplier, isUndo) {
+        var component = this.findActive(this.getComponents('players'));
+
+        var dartsThrown = component.getDartsThrown();
+        if (isUndo) {
+            component.removeLast();
+        } else {
+            component.setDart(score, multiplier, dartsThrown);
+            this.state.submitting = component.confirmThrow(false);
+
+            if (dartsThrown >= 3 && !this.state.submitting) {
+                this.state.submitting = true;
+                this.state.socket.emit('throw', JSON.stringify(component.getPayload()));
+            }
+        }
     },
 
     onPossibleThrow(isCheckout, isBust, dartsThrown, score, multiplier, isUndo) {
@@ -160,7 +194,7 @@ module.exports = {
             is_finished: isCheckout,
             darts_thrown: dartsThrown,
             is_undo: isUndo,
-            origin: 'web'
+            origin: "web"
         });
     },
 

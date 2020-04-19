@@ -48,7 +48,11 @@ $ var heading = input.heading || "Add Venue";
           </div>
           <div style="width: 20%; float: right;">
             <label class="control-label">Button Number</label>
-            <input class="form-control" type="number" value=state.smartboard_button_number disabled=!state.has_smartboard on-input("smartboardButtonNumberChange")/>
+            <select class="form-control" disabled=!state.has_smartboard on-change("smartboardButtonNumberChange")>
+              <for|i| from=1 to=20>
+                <option value=i selected=(state.smartboard_button_number == i)>${i}</option>
+              </for>
+            </select>
           </div>
         </div>
         <button class="btn btn-default btn-close" type="button" data-dismiss="modal">Close</button>

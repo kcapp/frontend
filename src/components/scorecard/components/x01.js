@@ -14,18 +14,21 @@ exports.isCheckout = (currentScore, dart) => {
     return false;
 }
 
-exports.confirmThrow = function () {
+exports.confirmThrow = function (external) {
     var submitting = false;
+
     var dart = this.getCurrentDart();
     var scored = dart.getValue();
     if (scored === 0) {
         this.setDart(0, 1);
     }
-    this.state.totalScore += scored;
     this.state.currentDart++;
     this.state.isSubmitted = true;
 
+    this.state.totalScore += scored;
+
     this.emit('score-change', scored, this.state.player.player_id);
+
     var isCheckout = module.exports.isCheckout(this.state.player.current_score, dart);
     var isBust = module.exports.isBust(this.state.player.current_score, scored);
     if (isCheckout) {
@@ -52,7 +55,9 @@ exports.confirmThrow = function () {
             });
     }
     this.state.player.current_score -= scored;
-    this.emit('possible-throw', isCheckout, isBust, this.state.currentDart - 1, dart.getScore(), dart.getMultiplier(), false);
-
+    if (!external) {
+        // If an external event triggered the update don't emit a throw
+        this.emit('possible-throw', isCheckout, isBust, this.state.currentDart - 1, dart.getScore(), dart.getMultiplier(), false);
+    }
     return submitting;
 }

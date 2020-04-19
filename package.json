@@ -1,6 +1,6 @@
 {
     "name": "kcapp",
-    "version": "0.0.0",
+    "version": "1.0.0",
     "private": true,
     "scripts": {
         "dev": "browser-refresh ./bin/www",
@@ -21,6 +21,7 @@
         "cookie-parser": "^1.4.5",
         "debug": "^4.1.1",
         "express": "~5.0.0-alpha.7",
+        "is-mobile": "^2.2.1",
         "kcapp-bot": "git+https://github.com/kcapp/bot.git",
         "lasso": "^3.3.1",
         "lasso-less": "^3.0.2",

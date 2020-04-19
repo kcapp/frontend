@@ -3,7 +3,7 @@ exports.DARTS = DARTS;
 
 exports.removeLast = function(dart) {
     var score = dart.getScore();
-    var hits = this.state.player.hits[score].total;
+    var hits = this.state.player.hits[score] ? this.state.player.hits[score].total : 0;
 
     if (DARTS.includes(score)) {
         if (this.state.player.hits[score].total) {

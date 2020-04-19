@@ -79,16 +79,13 @@ module.exports = {
         if (this.state.isSubmitted) {
             this.state.currentDart--;
             var dart = this.getCurrentDart();
-            var value = dart.getValue();
 
             switch (this.state.type) {
                 case types.SHOOTOUT:
-                    this.state.totalScore += value;
-                    this.state.player.current_score -= value;
-                    this.emit('score-change', value, this.state.player.player_id);
-                    this.emit('possible-throw', false, false, this.state.currentDart, dart.getScore(), dart.getMultiplier(), true);
+                    shootout.removeLast.bind(this)(dart);
                     break;
                 case types.X01:
+                    var value = dart.getValue();
                     this.state.totalScore -= value;
                     this.state.player.current_score += value;
                     this.emit('score-change', -value, this.state.player.player_id);

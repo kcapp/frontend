@@ -21,6 +21,7 @@ exports.connect = (url) => {
 exports.onScoreUpdate = (data, thiz) => {
     thiz.state.submitting = false;
 
+    console.log(data);
     var leg = data.leg;
     var globalstat = data.globalstat;
     thiz.state.roundNumber = Math.floor(leg.visits.length / leg.players.length) + 1;
@@ -60,11 +61,15 @@ exports.onScoreUpdate = (data, thiz) => {
         }
     }
     thiz.state.leg = leg;
+
+    var compactComponent = thiz.getComponent("compact-input");
+    if (compactComponent) {
+        compactComponent.onScoreUpdate(data);
+    }
 }
 
 exports.say = (data, thiz) => {
     // Check if an audio clip is currently playing, if it is we don't want to wait until it is finished, before saying anything else
-    console.log(data);
     if ((thiz.state.type !== types.X01 && thiz.state.type !== types.X01HANDICAP) && data.type === 'remaining_score') {
         // Skip announcement of remaining score for 9 Dart Shootout and Cricket
         return;
@@ -92,6 +97,11 @@ exports.say = (data, thiz) => {
 
 exports.onPossibleThrow = function (data, thiz) {
     var component = thiz.findActive(thiz.getComponents('players'));
+    var compactComponent = thiz.getComponent("compact-input");
+    if (compactComponent) {
+        compactComponent.setStateDirty("players");
+    }
+
     if (data.origin === 'web' /*&& !component.getDart(data.darts_thrown).state.initial*/) {
         // No need to update possible throw if we just sent the throw
         return;
