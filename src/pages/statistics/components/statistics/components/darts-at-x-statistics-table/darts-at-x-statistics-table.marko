@@ -1,0 +1,59 @@
+<div class="block-container-red">Darts At X</div>
+<div class="block-container no-padding">
+    <div class="table table-responsive">
+        <table id="table-dartsatx-statistics">
+            <thead>
+                <tr>
+                    <th colspan="7"/>
+                    <th class="text-center" colspan="8">Per Match</th>
+                </tr>
+                <tr>
+                    <th class="text-right">Rank</th>
+                    <th>Player</th>
+                    <th class="text-center">Played</th>
+                    <th class="text-center">Won</th>
+                    <th class="text-right">Win %</th>
+                    <th class="text-center">Avg. Score</th>
+                    <th class="text-center">Hit Rate</th>
+                    <th class="text-right">Singles</th>
+                    <th class="text-right">Doubles</th>
+                    <th class="text-right">Triples</th>
+                    <th class="text-right">5 Hits</th>
+                    <th class="text-right">6 Hits</th>
+                    <th class="text-right">7 Hits</th>
+                    <th class="text-right">8 Hits</th>
+                    <th class="text-right">9 Hits</th>
+                </tr>
+            </thead>
+            <tbody>
+                <for|stats, idx| of=input.statistics>
+                    $ var player = input.players[stats.player_id];
+                    <tr>
+                        <td class="text-right">${idx + 1}</td>
+                        <td class="col-sm-2">
+                            <a href=`/players/${player.id}/statistics`>${player.name}</a>
+                        </td>
+                        <td class="text-center">${stats.matches_played}</td>
+                        <td class="text-center">${stats.matches_won ? stats.matches_won : 0}</td>
+                        <td class="text-right">${stats.matches_won ? ((stats.matches_won / stats.matches_played) * 100).toFixed(2) + "" : "0.00"}%</td>
+                        <td class="text-center">${stats.avg_score}</td>
+                        <td class="text-center">${(stats.hit_rate * 100).toFixed(2)}%</td>
+
+                        $ var singleHitRate = stats.singles === 0 ? '-' : (stats.singles / (99 * stats.legs_played) * 100).toFixed(2);
+                        $ var doubleHitRate = stats.doubles === 0 ? '-' : (stats.doubles / (99 * stats.legs_played) * 100).toFixed(2);
+                        $ var tripleHitRate = stats.triples === 0 ? '-' : (stats.triples / (99 * stats.legs_played) * 100).toFixed(2);
+                        <statistic-cell value=stats.singles defaultValue="-" decimals=0 played=stats.matches_played postfix=" (${singleHitRate}%)" />
+                        <statistic-cell value=stats.doubles defaultValue="-" decimals=0 played=stats.matches_played postfix=" (${doubleHitRate}%)" />
+                        <statistic-cell value=stats.triples defaultValue="-" decimals=0 played=stats.matches_played postfix=" (${tripleHitRate}%)" />
+
+                        <statistic-cell value=stats.hits_5 played=stats.matches_played />
+                        <statistic-cell value=stats.hits_6 played=stats.matches_played />
+                        <statistic-cell value=stats.hits_7 played=stats.matches_played />
+                        <statistic-cell value=stats.hits_8 played=stats.matches_played />
+                        <statistic-cell value=stats.hits_9 played=stats.matches_played />
+                    </tr>
+                </for>
+            </tbody>
+        </table>
+    </div>
+</div>

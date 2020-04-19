@@ -19,7 +19,7 @@ router.get('/:from/:to', function (req, res, next) {
 /** Get statistics fro the past two weeks for all players */
 router.get('/weekly', function (req, res, next) {
     var from = moment().isoWeekday(1).format('YYYY-MM-DD');
-    var to = moment().isoWeekday(7).format('YYYY-MM-DD');
+    var to = moment().isoWeekday(7).format('YYYY-MM-DD') + " 23:59:59";
     getStatistics(from, to, req, res, next);
 });
 

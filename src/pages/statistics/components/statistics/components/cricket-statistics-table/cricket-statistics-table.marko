@@ -1,0 +1,46 @@
+<div class="block-container-red">Cricket</div>
+<div class="block-container no-padding">
+  <div class="table table-responsive">
+    <table id="table-cricket-statistics">
+      <thead>
+        <tr>
+          <th colspan="6"/>
+          <th class="text-center" colspan="5">Per Match</th>
+        </tr>
+        <tr>
+          <th class="text-right">Rank</th>
+          <th>Player</th>
+          <th class="text-center">Played</th>
+          <th class="text-center">Won</th>
+          <th class="text-right">Win %</th>
+          <th class="text-center">Marks Per Round</th>
+          <th class="text-right">5 Marks</th>
+          <th class="text-right">6 Marks</th>
+          <th class="text-right">7 Marks</th>
+          <th class="text-right">8 Marks</th>
+          <th class="text-right">9 Marks</th>
+        </tr>
+      </thead>
+      <tbody>
+        <for|stats, idx| of=input.statistics>
+          $ var player = input.players[stats.player_id];
+          <tr>
+            <td class="text-right">${idx + 1}</td>
+            <td class="col-sm-3">
+              <a href=`/players/${player.id}/statistics`>${player.name}</a>
+            </td>
+            <td class="text-center">${stats.matches_played}</td>
+            <td class="text-center">${stats.matches_won ? stats.matches_won : 0}</td>
+            <td class="text-right">${stats.matches_won ? ((stats.matches_won / stats.matches_played) * 100).toFixed(2) + "" : "0.00"}%</td>
+            <td class="text-center">${stats.mpr.toFixed(2) + " / " + stats.first_nine_mpr.toFixed(2)}</td>
+            <statistic-cell value=stats.marks_5 played=stats.matches_played/>
+            <statistic-cell value=stats.marks_6 played=stats.matches_played/>
+            <statistic-cell value=stats.marks_7 played=stats.matches_played/>
+            <statistic-cell value=stats.marks_8 played=stats.matches_played/>
+            <statistic-cell value=stats.marks_9 played=stats.matches_played/>
+          </tr>
+        </for>
+      </tbody>
+    </table>
+  </div>
+</div>
