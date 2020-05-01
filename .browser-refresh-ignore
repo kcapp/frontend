@@ -5,3 +5,6 @@ static/
 .*
 *.marko.js
 log/
+CHANGELOG.md
+README.md
+Dockerfile
