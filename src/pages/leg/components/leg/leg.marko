@@ -39,9 +39,9 @@
       </else>
     </tbody>
   </table>
-  <player-order players=input.leg_players legId=state.leg.id on-warmup-started("onWarmupStarted")/>
-  <confirm-checkout on-confirm-checkout("onConfirmCheckout")/>
 </div>
+<player-order players=input.leg_players legId=state.leg.id on-warmup-started("onWarmupStarted")/>
+<confirm-checkout on-confirm-checkout("onConfirmCheckout")/>
 <if(state.enableButtonInput)>
   <button-input-table key="compact-input" compactMode=state.compactMode players=input.leg_players on-score-button-pressed("onScoreButtonPressed")/>
 </if>
