@@ -1,53 +1,50 @@
-<div class="block-container-red">X01</div>
-<div class="block-container no-padding">
-<div class="table table-responsive">
-    <table id="table-x01-statistics">
-    <thead>
+import Table from "../statistics-table/statistics-table-template.marko"
+
+<${Table} statistics=input.statistics heading="X01">
+    <@headers>
         <tr>
-        <th colspan="7"/>
-        <th class="text-center" colspan="4">Per Match</th>
-        <th class="text-center" colspan="3">Accuracy</th>
+            <th colspan="7"/>
+            <th class="text-center" colspan="4">Per Match</th>
+            <th class="text-center" colspan="3">Accuracy</th>
         </tr>
         <tr>
-        <th class="text-right">Rank</th>
-        <th>Player</th>
-        <th class="text-center">Played</th>
-        <th class="text-center">Won</th>
-        <th class="text-right">Win %</th>
-        <th class="text-center">Three Dart Avg.</th>
-        <th class="text-right">Checkout</th>
-        <th class="text-right">60s+</th>
-        <th class="text-right">100s+</th>
-        <th class="text-right">140s+</th>
-        <th class="text-right">180</th>
-        <th class="text-right">Overall</th>
-        <th class="text-right">20s</th>
-        <th class="text-right">19s</th>
+            <th class="text-right">Rank</th>
+            <th>Player</th>
+            <th class="text-center">Played</th>
+            <th class="text-center">Won</th>
+            <th class="text-right">Win %</th>
+            <th class="text-center">Three Dart Avg.</th>
+            <th class="text-right">Checkout</th>
+            <th class="text-right">60s+</th>
+            <th class="text-right">100s+</th>
+            <th class="text-right">140s+</th>
+            <th class="text-right">180</th>
+            <th class="text-right">Overall</th>
+            <th class="text-right">20s</th>
+            <th class="text-right">19s</th>
         </tr>
-    </thead>
-    <tbody>
+    </@headers>
+    <@body>
         <for|stats, idx| of=input.statistics>
-        $ var player = input.players[stats.player_id];
-        <tr>
-            <td class="text-right">${idx + 1}</td>
-            <td class="col-sm-3">
-            <a href=`/players/${player.id}/statistics`>${player.name}</a>
-            </td>
-            <td class="text-center">${stats.matches_played}</td>
-            <td class="text-center">${stats.matches_won ? stats.matches_won : 0}</td>
-            <td class="text-right">${stats.matches_won ? ((stats.matches_won / stats.matches_played) * 100).toFixed(2) + "" : "0.00"}%</td>
-            <td class="text-center">${stats.three_dart_avg.toFixed(2) + " / " + stats.first_nine_three_dart_avg.toFixed(2)}</td>
-            <statistic-cell value=stats.checkout_percentage defaultValue="-"  postfix=" %"/>
-            <statistic-cell value=stats.scores_60s_plus played=stats.matches_played />
-            <statistic-cell value=stats.scores_100s_plus played=stats.matches_played />
-            <statistic-cell value=stats.scores_140s_plus played=stats.matches_played />
-            <statistic-cell value=stats.scores_180s played=stats.matches_played />
-            <statistic-cell value=stats.accuracy_overall defaultValue="-" />
-            <statistic-cell value=stats.accuracy_20 defaultValue="-" />
-            <statistic-cell value=stats.accuracy_19 defaultValue="-" />
-        </tr>
+            $ var player = input.players[stats.player_id];
+            <tr>
+                <td class="text-right">${idx + 1}</td>
+                <td class="col-sm-3">
+                <a href=`/players/${player.id}/statistics`>${player.name}</a>
+                </td>
+                <td class="text-center">${stats.matches_played}</td>
+                <td class="text-center">${stats.matches_won ? stats.matches_won : 0}</td>
+                <td class="text-right">${stats.matches_won ? ((stats.matches_won / stats.matches_played) * 100).toFixed(2) + "" : "0.00"}%</td>
+                <td class="text-center">${stats.three_dart_avg.toFixed(2) + " / " + stats.first_nine_three_dart_avg.toFixed(2)}</td>
+                <statistic-cell value=stats.checkout_percentage defaultValue="-"  postfix=" %"/>
+                <statistic-cell value=stats.scores_60s_plus played=stats.matches_played />
+                <statistic-cell value=stats.scores_100s_plus played=stats.matches_played />
+                <statistic-cell value=stats.scores_140s_plus played=stats.matches_played />
+                <statistic-cell value=stats.scores_180s played=stats.matches_played />
+                <statistic-cell value=stats.accuracy_overall defaultValue="-" />
+                <statistic-cell value=stats.accuracy_20 defaultValue="-" />
+                <statistic-cell value=stats.accuracy_19 defaultValue="-" />
+            </tr>
         </for>
-    </tbody>
-    </table>
-</div>
-</div>
+    </@body>
+</>

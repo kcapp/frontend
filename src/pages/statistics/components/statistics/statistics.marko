@@ -51,27 +51,7 @@
     </div>
   </div>
 </else>
-<if(state.x01.length === 0)>
-  <no-statistics text="X01 - no legs played" />
-</if>
-<else>
-  <x01-statistics-table statistics=state.x01 players=input.players />
-</else>
-<if(state.cricket.length === 0)>
-  <no-statistics text="Cricket - no legs played" />
-</if>
-<else>
-  <cricket-statistics-table statistics=state.cricket players=input.players />
-</else>
-<if(state.shootout.length === 0)>
-  <div class="block-container-red">Shootout - no matches played</div>
-</if>
-<else>
-  <shootout-statistics-table statistics=state.shootout players=input.players />
-</else>
-<if(state.darts_at_x.length === 0)>
-  <no-statistics text="Darts At X - no legs played" />
-</if>
-<else>
-  <darts-at-x-statistics-table statistics=state.darts_at_x players=input.players />
-</else>
+<x01-statistics-table statistics=state.x01 players=input.players />
+<cricket-statistics-table statistics=state.cricket players=input.players />
+<shootout-statistics-table statistics=state.shootout players=input.players />
+<darts-at-x-statistics-table statistics=state.darts_at_x players=input.players />

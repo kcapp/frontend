@@ -1,8 +1,7 @@
-<div class="block-container-red">Cricket</div>
-<div class="block-container no-padding">
-  <div class="table table-responsive">
-    <table id="table-cricket-statistics">
-      <thead>
+import Table from "../statistics-table/statistics-table-template.marko"
+
+<${Table} statistics=input.statistics heading="Cricket">
+    <@headers>
         <tr>
           <th colspan="6"/>
           <th class="text-center" colspan="5">Per Match</th>
@@ -20,8 +19,8 @@
           <th class="text-right">8 Marks</th>
           <th class="text-right">9 Marks</th>
         </tr>
-      </thead>
-      <tbody>
+    </@headers>
+    <@body>
         <for|stats, idx| of=input.statistics>
           $ var player = input.players[stats.player_id];
           <tr>
@@ -40,7 +39,5 @@
             <statistic-cell value=stats.marks_9 played=stats.matches_played/>
           </tr>
         </for>
-      </tbody>
-    </table>
-  </div>
-</div>
+    </@body>
+</>

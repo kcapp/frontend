@@ -1,0 +1,18 @@
+<if(input.statistics.length === 0)>
+    <no-statistics heading=input.heading/>
+</if>
+<else>
+<div class="block-container-red">${input.heading}</div>
+    <div class="block-container no-padding">
+        <div class="table table-responsive">
+            <table class="table-statistics">
+                <thead>
+                    <${input.headers}/>
+                </thead>
+                <tbody>
+                        <${input.body}/>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</else>
