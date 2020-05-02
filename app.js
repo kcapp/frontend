@@ -106,7 +106,7 @@ app.use(function (err, req, res, next) {
     // render the error page
     res.status(err.status || 500);
 
-    if (err.status == 404) {
+    if (err.status == 404 || err.response.status == 404) {
         // respond with html page
         if (req.accepts('html')) {
             res.marko(notFoundTemplate, { url: req.url });

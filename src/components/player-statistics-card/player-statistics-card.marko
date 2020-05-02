@@ -20,7 +20,6 @@ $ var startingScore = input.player.starting_score || 0;
     </div>
     <if(match.match_type.id == type.SHOOTOUT)>
       <statistics-row heading="PPD" value=statistic.ppd.toFixed(2)/>
-      <statistics-row heading="Score" value=player.remaining_score/>
     </if>
     <else-if(match.match_type.id == type.CRICKET)>
       <statistics-row heading="Marks Per Round" value=statistic.mpr.toFixed(2)/>
@@ -31,7 +30,8 @@ $ var startingScore = input.player.starting_score || 0;
     </else-if>
     <else-if(match.match_type.id == type.DARTS_AT_X)>
       <if(leg)>
-        <statistics-row heading="Number" value=leg.starting_score/>
+        $ var startingScore = leg.starting_score === 25 ? "Bull" : leg.starting_score;
+        <statistics-row heading="Number" value=startingScore/>
       </if>
       <statistics-row heading="Hit Rate" value=((statistic.hit_rate * 100).toFixed(2) + "%")/>
       <if(statistic.score !== null)>
@@ -71,7 +71,7 @@ $ var startingScore = input.player.starting_score || 0;
       <statistics-row heading="Starting Score" value=startingScore/>
     </if>
     <if(match.match_type.id == type.SHOOTOUT)>
-      <statistics-row heading="Points Score" value=player.remaining_score/>
+      <statistics-row heading="Points Scored" value=player.current_score/>
       <if(state.isWinner)>
         <div class="label-winner">WINNER</div>
       </if>
@@ -84,8 +84,8 @@ $ var startingScore = input.player.starting_score || 0;
         <div class="label-winner">WINNER</div>
       </if>
       <else>
-        <if(player.remaining_score)>
-          <div class="label-loser">${player.remaining_score} left</div>
+        <if(player.current_score)>
+          <div class="label-loser">${player.current_score} left</div>
         </if>
         <else>
           <div class="label-loser">&nbsp;</div>
@@ -105,8 +105,8 @@ $ var startingScore = input.player.starting_score || 0;
         <div class="label-winner">WINNER</div>
       </if>
       <else>
-        <if(player.remaining_score)>
-          <div class="label-loser">${player.remaining_score} left</div>
+        <if(player.current_score)>
+          <div class="label-loser">${player.current_score} left</div>
         </if>
         <else>
           <div class="label-loser">&nbsp;</div>

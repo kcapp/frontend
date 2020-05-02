@@ -194,10 +194,10 @@ router.get('/:id/result', function (req, res, next) {
                 _.each(legPlayers, (player) => {
                     if (match.match_type.id == types.DARTS_AT_X) {
                         players[player.player_id].starting_score = 0;
-                        players[player.player_id].remaining_score = 0;
+                        players[player.player_id].current_score = player.current_score;
                     } else {
                         players[player.player_id].starting_score = leg.starting_score + player.handicap;
-                        players[player.player_id].remaining_score = leg.starting_score + player.handicap;
+                        players[player.player_id].current_score = player.current_score + player.handicap;
                     }
 
                     var name = players[player.player_id].name;

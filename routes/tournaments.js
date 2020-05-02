@@ -37,8 +37,12 @@ router.get('/', function (req, res, next) {
 router.get('/current', function (req, res, next) {
     axios.get(req.app.locals.kcapp.api + '/tournament/current')
         .then((response) => {
-            res.redirect("/tournaments/" + response.data.id);
+
+             res.redirect("/tournaments/" + response.data.id);
         }).catch(error => {
+            if (error.response.status === 404) {
+                console.log("Not found")
+            }
             debug('Error when getting data for tournament ' + error);
             next(error);
         });
