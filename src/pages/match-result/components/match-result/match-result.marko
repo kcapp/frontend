@@ -26,7 +26,7 @@ $ var match = state.match;
   ],
   [
     {
-      heading: `Office ${match.office_id ? input.offices[match.office_id].name : '-'} ${match.venue ? " / " + match.venue.name : '' }`,
+      heading: `${match.office_id ? input.offices[match.office_id].name : '-'} ${match.venue ? " / " + match.venue.name : '' }`,
       icon: "fa-building"
     }
   ]

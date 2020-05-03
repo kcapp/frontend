@@ -38,7 +38,9 @@
         <div class="block-container-with-header">
           <div class="btn-group" role="group">
             <button type="button" class=`btn btn-${state.bot.type == state.skill.TYPE_SKILL ? "primary" : "secondary"}` value=state.skill.TYPE_SKILL on-click("botTypeChanged")>Skill</button>
-            <button type="button" class=`btn btn-${state.bot.type == state.skill.TYPE_MOCK ? "primary" : "secondary"}` value=state.skill.TYPE_MOCK on-click("botTypeChanged")>Mock</button>
+            <if(state.mock_players.length > 0)>
+              <button type="button" class=`btn btn-${state.bot.type == state.skill.TYPE_MOCK ? "primary" : "secondary"}` value=state.skill.TYPE_MOCK on-click("botTypeChanged")>Mock</button>
+            </if>
           </div>
         </div>
         <if(state.bot.type == state.skill.TYPE_MOCK)>
