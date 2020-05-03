@@ -1,6 +1,6 @@
 # Changelog
 
-## [1.0.0] - TBD
+## [1.0.0] - 2020-05-03
 #### Feature
 - Support for multiple game types, including `x01`, `9 Dart Shootout`, and `Cricket`
 - Detailed statistics tracking for player scores, accuracy, Elo and more
