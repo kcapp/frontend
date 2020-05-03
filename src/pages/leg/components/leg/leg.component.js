@@ -257,14 +257,15 @@ module.exports = {
             component.removeLast();
             e.preventDefault();
         } else if (types.SUPPORT_SIMPLE_INPUT.includes(this.input.match.match_type.id) && simplified.includes(e.keyCode)) {
+            var value = this.state.leg.starting_score
+
             var multiplier = 1;
-            if (e.keyCode === KEY_PAGE_DOWN) {
+            if (e.keyCode === KEY_PAGE_DOWN && value !== 25) {
                 multiplier = 3;
             } else if (e.keyCode === KEY_ARROW_DOWN) {
                 multiplier = 2;
             }
 
-            var value = this.state.leg.starting_score
             if (e.keyCode === KEY_INSERT || e.keyCode === KEY_DELETE) {
                 value = 0;
             }

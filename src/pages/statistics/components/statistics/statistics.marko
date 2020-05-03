@@ -1,9 +1,6 @@
 <page-header heading="Statistics" subheading=`${state.from} to ${state.to}` icon="fa-signal" navigation=true on-next("navigateNext") on-previous("navigatePrevious")/>
 <office-selector offices=input.offices clazz="float-right" on-office-changed("officeChanged")/>
-<if(state.office_statistics.length === 0)>
-  <no-statistics text="No Checkouts yet" />
-</if>
-<else>
+<if(state.office_statistics.length !== 0)>
   <div class="block-container-red">Highest Checkouts</div>
   <div class="block-container no-padding">
     <div class="table table-responsive">
@@ -50,7 +47,7 @@
       </table>
     </div>
   </div>
-</else>
+</if>
 <x01-statistics-table statistics=state.x01 players=input.players />
 <cricket-statistics-table statistics=state.cricket players=input.players />
 <shootout-statistics-table statistics=state.shootout players=input.players />
