@@ -132,6 +132,10 @@ module.exports = {
             if (this.state.options.game_type === types.SHOOTOUT || this.state.options.game_type == types.CRICKET) {
                 scoreComponent.state.index = 0;
                 scoreComponent.state.enabled = false;
+            } else if (this.state.options.game_type === types.AROUND_THE_WORLD || this.state.options.game_type === types.SHANGHAI || this.state.options.game_type === types.AROUND_THE_CLOCK) {
+                scoreComponent.updateOptions([ { id: 1, name: 1 } ]);
+                scoreComponent.state.index = 1;
+                scoreComponent.state.enabled = false;
             } else if (this.state.options.game_type == types.DARTS_AT_X) {
                 scoreComponent.updateOptions([
                     { id: 20, name: 20 },  { id: 19, name: 19 }, { id: 18, name: 18 }, { id: 17, name: 17 },
@@ -144,9 +148,12 @@ module.exports = {
             } else if (this.state.options.starting_score === 0) {
                 scoreComponent.state.index = scoreComponent.state.defaultValue;
                 scoreComponent.state.enabled = true;
+            } else {
+                scoreComponent.state.index = scoreComponent.state.defaultValue;
+                scoreComponent.state.enabled = true;
             }
-            this.state.options.starting_score = scoreComponent.state.index
 
+            this.state.options.starting_score = scoreComponent.state.index
 
             var selectedPlayers = this.getComponents('players');
             for (var i = 0; i < selectedPlayers.length; i++) {

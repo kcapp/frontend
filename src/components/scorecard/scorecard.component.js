@@ -3,6 +3,9 @@ var x01 = require("./components/x01");
 var shootout = require("./components/shootout");
 var cricket = require("./components/cricket");
 var dartsAtX = require("./components/darts_at_x");
+var aroundTheWorld = require("./components/around_the_world");
+var shanghai = require("./components/shanghai");
+var aroundTheClock = require("./components/around_the_clock");
 var types = require("./components/match_types");
 
 const DART_CONTAINER_MAP = { 1: 'first', 2: 'second', 3: 'third' };
@@ -97,6 +100,15 @@ module.exports = {
                 case types.DARTS_AT_X:
                     dartsAtX.removeLast.bind(this)(dart);
                     break;
+                case types.AROUND_THE_WORLD:
+                    aroundTheWorld.removeLast.bind(this)(dart);
+                    break;
+                case types.SHANGHAI:
+                    shanghai.removeLast.bind(this)(dart);
+                    break;
+                case types.AROUND_THE_CLOCK:
+                    aroundTheClock.removeLast.bind(this)(dart);
+                    break;
             }
             dart.reset();
         } else {
@@ -121,6 +133,15 @@ module.exports = {
                     break;
                 case types.DARTS_AT_X:
                     submitting = dartsAtX.confirmThrow.bind(this)(external);
+                    break;
+                case types.AROUND_THE_WORLD:
+                    submitting = aroundTheWorld.confirmThrow.bind(this)(external);
+                    break;
+                case types.SHANGHAI:
+                    submitting = shanghai.confirmThrow.bind(this)(external);
+                    break;
+                case types.AROUND_THE_CLOCK:
+                    submitting = aroundTheClock.confirmThrow.bind(this)(external);
                     break;
             }
         }

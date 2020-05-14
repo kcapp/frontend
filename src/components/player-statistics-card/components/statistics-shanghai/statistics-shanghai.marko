@@ -1,0 +1,44 @@
+$ var statistic = input.statistic;
+$ var player = input.player;
+$ var isShanghai = statistic.shanghai !== null;
+<if(input.header)>
+  <div class="block-container-header-center">
+    <a href=`/players/${player.id}/statistics`>${player.name}</a>
+  </div>
+</if>
+<div class="block-container-with-header">
+  <div class="player-card-match">
+    <div style="padding-bottom: 20px;">
+      <div class="player-pic-cutout" style="margin: 0 auto;">
+        <player-profile-picture player=player/>
+      </div>
+    </div>
+    <statistics-row heading="Shanghai" value=`${input.isWinner && isShanghai ? statistic.shanghai :  "-"}` />
+    <statistics-row heading="Score" value=statistic.score/>
+    <statistics-row heading="MPR" value=(statistic.mpr).toFixed(2)/>
+    <statistics-row heading="Total Hitrate" value=`${(statistic.total_hit_rate * 100).toFixed(2)} %`/>
+
+    <statistics-row heading="Hitrates" clazz="pt-20" />
+    <table>
+      $ var shanghaiNum = statistic.shanghai === null ? 20 : statistic.shanghai;
+      $ var num = 0;
+      <for|row| from=1 to=4>
+        <tr>
+          <for|i| from=1 to=5>
+            $ num = 5 * (row - 1) + i;
+            <if(num <= shanghaiNum)>
+              <score-pill text=`${num}s` value=`${(statistic.hitrates[num] * 100).toFixed(2)} %`/>
+            </if>
+          </for>
+        </tr>
+      </for>
+    </table>
+
+    <if(input.isWinner)>
+        <div class="label-winner">WINNER</div>
+    </if>
+    <else>
+        <div class="label-loser">&nbsp;</div>
+    </else>
+  </div>
+</div>

@@ -1,5 +1,9 @@
 # Changelog
 
+## [unreleased] - TBD
+#### Feature
+- New game types for `Around The World`, `Around The Clock`, and `Shanghai`
+
 ## [1.0.0] - 2020-05-03
 #### Feature
 - Support for multiple game types, including `x01`, `9 Dart Shootout`, and `Cricket`
@@ -9,4 +13,5 @@
 - Multiple score entry methods
     - Including [Unicorn Smartboard](https://github.com/kcapp/smartboard)
 
+[unreleased]: https://github.com/kcapp/frontend/compare/v1.0.0...develop
 [1.0.0]: https://github.com/kcapp/frontend/releases/tag/v1.0.0
