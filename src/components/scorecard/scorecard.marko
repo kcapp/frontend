@@ -110,6 +110,26 @@ $ var cricket = require("./components/cricket");
           </td>
         </tr>
       </if>
+      <if(state.type === types.AROUND_THE_WORLD || state.type === types.SHANGHAI || state.type === types.AROUND_THE_CLOCK)>
+        <tr>
+          <td colspan="3">
+            $ var number = state.leg.starting_score;
+            <table id='table-dartsatx-scores' class='table-striped'>
+              <thead>
+                <tr>
+                  <td class="text-center">Target</td>
+                </tr>
+              </thead>
+              <tbody>
+                  <tr>
+                    $ var value = state.type === types.AROUND_THE_CLOCK ? state.player.current_score + 1 : input.leg.round;
+                    <td class="text-center" style="font-size: 19pt; font-weight: 400;">${value === 21 ? "Bull" : value}</td>
+                  </tr>
+              </tbody>
+            </table>
+          </td>
+        </tr>
+      </if>
     </tbody>
   </table>
 </td>

@@ -15,7 +15,7 @@ $ var isShanghai = statistic.shanghai !== null;
     </div>
     <statistics-row heading="Shanghai" value=`${input.isWinner && isShanghai ? statistic.shanghai :  "-"}` />
     <statistics-row heading="Score" value=statistic.score/>
-    <statistics-row heading="MPR" value=(statistic.mpr).toFixed(2)/>
+    <statistics-row heading="MPR" value=(statistic.mpr === null ? 0 : statistic.mpr).toFixed(2)/>
     <statistics-row heading="Total Hitrate" value=`${(statistic.total_hit_rate * 100).toFixed(2)} %`/>
 
     <statistics-row heading="Hitrates" clazz="pt-20" />

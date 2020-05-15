@@ -1,5 +1,5 @@
 exports.removeLast = function(dart) {
-    if (dart.getValue() === this.state.player.current_score - 1 && dart.getMultiplier() === 1) {
+    if (dart.getValue() === this.state.player.current_score && dart.getMultiplier() === 1) {
         this.state.player.current_score--;
         this.emit('score-change', this.state.player.current_score, this.state.player.player_id);
     }
@@ -7,7 +7,7 @@ exports.removeLast = function(dart) {
 }
 
 exports.isCheckout = (dart, player) => {
-    if (player.current_score == 21 && dart.getValue() === 25) {
+    if (player.current_score + 1 == 21 && dart.getValue() === 25) {
         return true;
     }
     return false;
@@ -24,7 +24,7 @@ exports.confirmThrow = function (external) {
     this.state.isSubmitted = true;
 
 
-    if (dart.getValue() === this.state.player.current_score && dart.getMultiplier() === 1) {
+    if (dart.getValue() === (this.state.player.current_score + 1) && dart.getMultiplier() === 1) {
         this.state.player.current_score++;
         this.emit('score-change', this.state.player.current_score, this.state.player.player_id);
     }

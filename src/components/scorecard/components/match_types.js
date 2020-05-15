@@ -8,4 +8,4 @@ exports.SHANGHAI = 7;
 exports.AROUND_THE_CLOCK = 8;
 
 // Define types which support a simple input mode
-exports.SUPPORT_SIMPLE_INPUT = [ 5 ];
+exports.SUPPORT_SIMPLE_INPUT = [ 5, 6, 7, 8 ];

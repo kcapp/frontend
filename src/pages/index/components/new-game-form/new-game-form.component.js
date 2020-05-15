@@ -129,12 +129,9 @@ module.exports = {
             // If this is 9 Dart Shootout or Cricket, make sure to set score to 0 and disable the selector
             var scoreComponent = this.getComponent('starting-score')
             scoreComponent.updateOptions(this.input.scores);
-            if (this.state.options.game_type === types.SHOOTOUT || this.state.options.game_type == types.CRICKET) {
+            if (this.state.options.game_type === types.SHOOTOUT || this.state.options.game_type == types.CRICKET ||
+                this.state.options.game_type === types.AROUND_THE_WORLD || this.state.options.game_type === types.SHANGHAI || this.state.options.game_type === types.AROUND_THE_CLOCK) {
                 scoreComponent.state.index = 0;
-                scoreComponent.state.enabled = false;
-            } else if (this.state.options.game_type === types.AROUND_THE_WORLD || this.state.options.game_type === types.SHANGHAI || this.state.options.game_type === types.AROUND_THE_CLOCK) {
-                scoreComponent.updateOptions([ { id: 1, name: 1 } ]);
-                scoreComponent.state.index = 1;
                 scoreComponent.state.enabled = false;
             } else if (this.state.options.game_type == types.DARTS_AT_X) {
                 scoreComponent.updateOptions([
