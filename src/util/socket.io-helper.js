@@ -20,8 +20,8 @@ exports.connect = (url) => {
 
 exports.onScoreUpdate = (data, thiz) => {
     thiz.state.submitting = false;
-
     console.log(data);
+
     var leg = data.leg;
     var globalstat = data.globalstat;
     thiz.state.roundNumber = Math.floor(leg.visits.length / leg.players.length) + 1;
@@ -61,6 +61,7 @@ exports.onScoreUpdate = (data, thiz) => {
         }
     }
     thiz.state.leg = leg;
+    thiz.state.players = players;
 
     var compactComponent = thiz.getComponent("compact-input");
     if (compactComponent) {

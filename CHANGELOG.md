@@ -3,6 +3,10 @@
 ## [unreleased] - TBD
 #### Feature
 - New game types for `Around The World`, `Around The Clock`, and `Shanghai`
+- Office selector to players page
+
+### Changed
+- Interface tweaks to multiple pages
 
 ## [1.0.0] - 2020-05-03
 #### Feature

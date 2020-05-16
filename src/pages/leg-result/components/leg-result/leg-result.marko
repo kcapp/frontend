@@ -6,21 +6,27 @@ $ var matchType = input.match.match_type.id;
 <page-header heading=`Leg Result (${leg.id})` style="block-container" icon="fa-crosshairs" subheadings=[
   [
     {
-      heading: `Started ${leg.started}`,
-      icon: "fa-clock"
+      heading: `Started   ${leg.started}`,
+      icon: "fa-clock",
+      type: "far",
+      style: "white-space: pre;"
     },
     {
       heading: `Finished ${leg.finished}`,
       icon: "fa-clock"
+    },
+    {
+      heading: `Duration ${leg.duration} minutes`,
+      icon: "fa-stopwatch"
     }
   ],
   [
     {
-      heading: `Duration ${leg.duration} minutes`,
-      icon: "fa-stopwatch"
+      heading: `${input.match.match_type.name}`,
+      icon: "fa-bullseye"
     },
     {
-      heading: `Rounds: ${Math.ceil(leg.visits.length / leg.players.length)}`,
+      heading: `Rounds: ${leg.round - 1}`,
       icon: "fa-play"
     }
   ]
@@ -69,7 +75,7 @@ $ var matchType = input.match.match_type.id;
           <tr>
             <for|statistic| of=input.statistics>
               $ var player = input.players[statistic.player_id];
-              <td class="text-center" style="padding: 10px;">
+              <td class="text-center" style="padding: 0px 10px 0px 10px;">
                 <div>
                   <player-statistics-card header=true elo=false match=input.match statistic=statistic statistics=input.statistics player=player leg=leg/>
                 </div>
@@ -106,7 +112,7 @@ $ var matchType = input.match.match_type.id;
         <tbody>
           <for|visit| of=leg.visits>
             <tr>
-              <td>${input.players[visit.player_id].name}</td>
+              <td style="white-space: nowrap;">${input.players[visit.player_id].name}</td>
               <dart-label dart=visit.first_dart/>
               <dart-label dart=visit.second_dart/>
               <dart-label dart=visit.third_dart/>
@@ -128,7 +134,7 @@ $ var matchType = input.match.match_type.id;
       </table>
     </div>
   </div>
-  <div role="tabpanel" id="stats" class="tab-pane">
+  <div class="tab-pane" role="tabpanel" id="stats">
     <div style=`float: right; width: 37%;`>
       <div class="block-container-header">Hits</div>
       <div class="block-container-with-header">

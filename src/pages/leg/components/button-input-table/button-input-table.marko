@@ -1,45 +1,86 @@
+$ var types = require("../../../../components/scorecard/components/match_types");
+
+<table id='compact-scores-table' style={ 'margin-top': input.compactMode ? "" : "20px" } class='table'>
+  <tbody>
+      <tr class='row' style={ display: input.compactMode ? "" : "none" }>
+        <td style="border: 0;"/>
+        <for|player| of=state.players>
+            <td style={ "width": `${100 / Object.keys(state.players).length}%`, "background-color": player.is_current_player ? "#337ab7" : "#a9a9a9" }>
+              <label style="color: white;">${player.player.name}</label>
+              <label style="color: white;">${player.current_score}</label>
+            </td>
+        </for>
+        <td style="border: 0;"/>
+      </tr>
+    </tbody>
+  </table>
 <table id='score-selector-table' class='table'>
   <tbody>
-    <tr class='row' style={ display: input.compactMode ? "" : "none" }>
-      <td style="border: 0;"/>
-      $ var length = 12 / Object.keys(state.players).length;
-      <for|player| of=state.players>
-          <td colspan=length style={ "background-color": player.is_current_player ? "#337ab7" : "#a9a9a9" }>
-            <label style="color: white;">${player.player.name}</label>
-            <label style="color: white;">${player.current_score}</label>
-          </td>
-      </for>
-      <td style="border: 0;"/>
-    </tr>
-    <tr class='row'>
-      <td>
-        <score-button text="Miss" value=0 multiplier=1 on-button-press("onButtonPress")/>
-      </td>
-      <button-row numbers=[ 20, 19, 18, 17 ] on-button-press("onButtonPress")/>
-      <td rowspan='2' style="width: 5%;">
-        <score-button icon="fas fa-long-arrow-alt-left" clazz='fill-button' isUndo=true on-button-press("onButtonPress")/>
-      </td>
-    </tr>
-    <tr class='row'>
-      <td rowspan='2'>
-        <score-button text="Bull" value=25 multiplier=1 clazz='btn-double fill-button' on-button-press("onButtonPress")/>
-      </td>
-      <button-row numbers=[ 16, 15, 14, 13 ] on-button-press("onButtonPress")/>
-    </tr>
-    <tr class='row'>
-      <button-row numbers=[ 12, 11, 10, 9 ] on-button-press("onButtonPress")/>
-      <td style="border: 0;"/>
-    </tr>
-    <tr class='row'>
-      <td rowspan='2'>
-        <score-button text="Bull" value=25 multiplier=2 clazz='btn-triple fill-button' on-button-press("onButtonPress")/>
-      </td>
-      <button-row numbers=[ 8, 7, 6, 5 ] on-button-press("onButtonPress")/>
-      <td style="border: 0;"/>
-    </tr>
-    <tr class='row'>
-      <button-row numbers=[ 4, 3, 2, 1 ] on-button-press("onButtonPress")/>
-      <td style="border: 0;"/>
-    </tr>
+    <if(input.type === types.AROUND_THE_WORLD || input.type === types.SHANGHAI)>
+      $ var target = input.leg.round;
+      <tr class='row'>
+        <td rowspan='2'>
+          <score-button text="Miss" value=0 multiplier=1 clazz='fill-button' on-button-press("onButtonPress")/>
+        </td>
+        <td rowspan='2' style="width: 25%;">
+          <score-button text=`Single (${target})` value=target multiplier=1 clazz='fill-button' on-button-press("onButtonPress")/>
+        </td>
+        <td rowspan='2' style="width: 25%;">
+          <score-button text=`Double (${target})` value=target multiplier=2 clazz='btn-double fill-button' on-button-press("onButtonPress")/>
+        </td>
+        <td rowspan='2' style="width: 25%;">
+          <score-button text=`Triple (${target})` value=target multiplier=3 clazz='btn-triple fill-button' on-button-press("onButtonPress")/>
+        </td>
+        <td rowspan='2' style="width: 5%;">
+          <score-button icon="fas fa-long-arrow-alt-left" clazz='fill-button' isUndo=true on-button-press("onButtonPress")/>
+        </td>
+      </tr>
+    </if>
+    <else-if(input.type === types.AROUND_THE_CLOCK)>
+      $ var target = state.current.current_score + 1;
+      <tr class='row'>
+        <td rowspan='2'>
+          <score-button text="Miss" value=0 multiplier=1 clazz='fill-button' on-button-press("onButtonPress")/>
+        </td>
+        <td rowspan='2' style="width: 50%;">
+          <score-button text=`Hit (${target})` value=target multiplier=1 clazz='fill-button' on-button-press("onButtonPress")/>
+        </td>
+        <td rowspan='2' style="width: 5%;">
+          <score-button icon="fas fa-long-arrow-alt-left" clazz='fill-button' isUndo=true on-button-press("onButtonPress")/>
+        </td>
+      </tr>
+    </else-if>
+    <else>
+      <tr class='row'>
+        <td>
+          <score-button text="Miss" value=0 multiplier=1 on-button-press("onButtonPress")/>
+        </td>
+        <button-row numbers=[ 20, 19, 18, 17 ] on-button-press("onButtonPress")/>
+        <td rowspan='2' style="width: 5%;">
+          <score-button icon="fas fa-long-arrow-alt-left" clazz='fill-button' isUndo=true on-button-press("onButtonPress")/>
+        </td>
+      </tr>
+      <tr class='row'>
+        <td rowspan='2'>
+          <score-button text="Bull" value=25 multiplier=1 clazz='btn-double fill-button' on-button-press("onButtonPress")/>
+        </td>
+        <button-row numbers=[ 16, 15, 14, 13 ] on-button-press("onButtonPress")/>
+      </tr>
+      <tr class='row'>
+        <button-row numbers=[ 12, 11, 10, 9 ] on-button-press("onButtonPress")/>
+        <td style="border: 0;"/>
+      </tr>
+      <tr class='row'>
+        <td rowspan='2'>
+          <score-button text="Bull" value=25 multiplier=2 clazz='btn-triple fill-button' on-button-press("onButtonPress")/>
+        </td>
+        <button-row numbers=[ 8, 7, 6, 5 ] on-button-press("onButtonPress")/>
+        <td style="border: 0;"/>
+      </tr>
+      <tr class='row'>
+        <button-row numbers=[ 4, 3, 2, 1 ] on-button-press("onButtonPress")/>
+        <td style="border: 0;"/>
+      </tr>
+    </else>
   </tbody>
 </table>

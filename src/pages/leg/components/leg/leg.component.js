@@ -9,6 +9,7 @@ module.exports = {
         var venue = input.match.venue;
         this.state = {
             leg: input.leg,
+            players: input.leg_players,
             roundNumber: input.leg.round,
             venueConfig: venue && venue.config ? venue.config : {},
             submitting: false,

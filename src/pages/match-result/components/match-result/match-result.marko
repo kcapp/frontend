@@ -2,8 +2,10 @@ $ var match = state.match;
 <page-header heading=`Match Result (${match.id})` style="block-container" subheadings=[
   [
     {
-      heading: `Started ${match.started}`,
-      icon: "fa-clock"
+      heading: `Started   ${match.started}`,
+      icon: "fa-clock",
+      type: "far",
+      style: "white-space: pre;"
     },
     {
       heading: `Finished ${match.finished}`,
@@ -16,8 +18,12 @@ $ var match = state.match;
   ],
   [
     {
-      heading: `${match.match_mode.name}`,
+      heading: `${match.match_type.name}`,
       icon: "fa-bullseye"
+    },
+    {
+      heading: `${match.match_mode.name}`,
+      icon: "fa-hashtag"
     },
     {
       heading: `Stakes ${match.owe_type_id === null ? "None" : match.owe_type.item}`,

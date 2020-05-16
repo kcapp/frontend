@@ -13,6 +13,12 @@ module.exports = {
             if (dart.value == 0) {
                 dart.text = 'Miss';
                 dart.class = CLASS_DART_SINGLE;
+            } else if (dart.value == 25) {
+                dart.text = 'Bull';
+                dart.class = CLASS_DART_SINGLE;
+                if (dart.multiplier == 2) {
+                    dart.class = CLASS_DART_DOUBLE;
+                }
             } else if (dart.multiplier == 3) {
                 dart.class = CLASS_DART_TRIPLE;
                 dart.text = 'T-' + dart.value;

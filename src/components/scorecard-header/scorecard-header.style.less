@@ -1,4 +1,4 @@
-table{
+table {
     width: 100%;
     table-layout: fixed;
     tr {
@@ -22,6 +22,7 @@ table{
         font-size: 18pt;
     }
 }
+
 .scorecard-active {
     .player-score-block-container;
     background-color: #337ab7;
@@ -39,6 +40,10 @@ table{
     color: #ffffff;
     font-weight: 500;
     text-transform: uppercase;
+
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .label-player-score {
