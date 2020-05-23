@@ -21,7 +21,7 @@ $ {
 <div class="tab-content">
   <div role="tabpanel" id="season" class="tab-pane active">
     <for|id, group| in=input.overview>
-      <div class="block-container p-10">
+      <div class="block-container p-10" style='margin-bottom: 0;'>
         <div class="float-left" style="font-size: 30px;">${group[0].tournament_group.name}</div>
         <div style="float: right; padding-top: 4px;">
           <ul class="nav nav-pills">
@@ -60,7 +60,6 @@ $ {
   </div>
   <if(state.hasStatistics)>
     <div role="tabpanel" id="statistics" class="tab-pane">
-      <div class="block-container">Tournament records</div>
       <div class="table table-responsive">
         <table class="tournament-records">
           <tbody>
@@ -70,7 +69,7 @@ $ {
                 <div class="highscore-card">
                   <table class="table table-tournament-statistics">
                     <tbody>
-                      <for|i| from=0 to=10>
+                      <for|i| from=0 to=9>
                         <tr>
                           <top-statistics players=input.players statistics=input.statistics.checkout_highest idx=i rank=(i + 1)/>
                         </tr>
@@ -84,7 +83,7 @@ $ {
                 <div class="highscore-card">
                   <table class="table table-tournament-statistics">
                     <tbody>
-                      <for|i| from=0 to=10>
+                      <for|i| from=0 to=9>
                         <tr>
                           <top-statistics players=input.players statistics=input.statistics.best_three_dart_avg idx=i rank=(i + 1)/>
                         </tr>
@@ -98,7 +97,7 @@ $ {
                 <div class="highscore-card">
                   <table class="table table-tournament-statistics">
                     <tbody>
-                      <for|i| from=0 to=10>
+                      <for|i| from=0 to=9>
                         <tr>
                           <top-statistics players=input.players statistics=input.statistics.best_first_nine_avg idx=i rank=(i + 1)/>
                         </tr>
@@ -112,7 +111,7 @@ $ {
                 <div class="highscore-card-no-margin">
                   <table class="table table-tournament-statistics">
                     <tbody>
-                      <for|i| from=0 to=10>
+                      <for|i| from=0 to=9>
                         <tr>
                           $ var dartsThrown = input.statistics.best_501_darts_thrown ? input.statistics.best_501_darts_thrown : input.statistics.best_301_darts_thrown ? input.statistics.best_301_darts_thrown : null;
                           <top-statistics players=input.players statistics=dartsThrown idx=i rank=(i + 1)/>

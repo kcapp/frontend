@@ -95,13 +95,18 @@ module.exports = {
                 break;
             case '*':
                 // Don't allow cycling of score when 9 Dart Shootout or Cricket is selected
-                if (this.state.options.game_type !== types.SHOOTOUT && this.state.options.game_type != types.CRICKET) {
+                if (this.state.options.game_type === types.X01 || this.state.options.game_type === types.X01HANDICAP) {
                     var component = this.getComponent('starting-score');
                     var score = this.cycleValues(this.state.input.scores, this.state.options.starting_score);
                     if (score === 0) {
                         // Don't allow cycling to 0 as starting score
                         score = this.cycleValues(this.state.input.scores, score);
                     }
+                    component.state.index = score
+                    this.state.options.starting_score = component.state.index;
+                } else if (this.state.options.game_type === types.DARTS_AT_X) {
+                    var component = this.getComponent('starting-score');
+                    var score = this.cycleValues(component.state.values, component.state.index);
                     component.state.index = score
                     this.state.options.starting_score = component.state.index;
                 }
@@ -113,7 +118,11 @@ module.exports = {
                 break;
             case '+':
                 var component = this.getComponent('stake');
-                component.state.index = this.cycleValues(this.state.input.stakes, this.state.options.stake);
+                if (component.state.index === this.input.stakes.length) {
+                    component.state.index = -1;
+                } else {
+                    component.state.index = this.cycleValues(this.state.input.stakes, this.state.options.stake);
+                }
                 this.state.options.stake = component.state.index;
                 break;
             default:

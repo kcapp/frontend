@@ -19,11 +19,17 @@ module.exports = {
             start: moment().format("YYYY-MM-DDT09:00"),
             end: "",
             office: 1,
+            venue: 1,
             groups: [{ id: 1, score: 301, mode: 1, type: 1 }],
             players: input.players,
-            matches: matches
+            matches: matches,
+            venues: input.venues
         }
     },
+    onMount() {
+        this.officeChange({ target: { value: this.state.office } });
+    },
+
     tournamentNameChange(event) {
         this.state.tournamentName = event.target.value;
     },
@@ -38,6 +44,18 @@ module.exports = {
     },
     officeChange(event) {
         this.state.office = parseInt(event.target.value);
+        this.state.venues = _.reject(this.input.venues, (venue) => {
+            return venue.office_id != this.state.office ;
+        });
+        this.setStateDirty("venues");
+        if (this.state.venues.length > 0) {
+            this.venueChange({ target: { value: this.state.venues[0].id } });
+        } else {
+            this.venueChange({ target: { value: -1 } });
+        }
+    },
+    venueChange(event) {
+        this.state.venue = parseInt(event.target.value);
     },
     groupChange(event) {
         this.state.groups[event.target.attributes.idx.value].id = parseInt(event.target.value);
@@ -102,7 +120,6 @@ module.exports = {
     },
     validate() {
         this.state.shortName = this.state.shortName.substring(0, 4);
-
         var matches = this.state.matches;
 
         for (var i = 0; i < matches.length; i++) {
@@ -145,6 +162,7 @@ module.exports = {
             start: this.state.start,
             end: this.state.end,
             office_id: this.state.office,
+            venue_id: this.state.venue,
             groups: this.state.groups,
             matches: this.state.matches
         }

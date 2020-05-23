@@ -12,9 +12,12 @@ $ var startingScore = input.player.starting_score || 0;
   </div>
 </if>
 
-<if(match.match_type.id == type.AROUND_THE_WORLD)>
-  <statistics-around-the-world isWinner=state.isWinner player=input.player statistic=input.statistic />
+<if(match.match_type.id == type.SHOOTOUT)>
+  <statistics-shootout isWinner=state.isWinner player=input.player statistic=input.statistic match=input.match />
 </if>
+<else-if(match.match_type.id == type.AROUND_THE_WORLD)>
+  <statistics-around-the-world isWinner=state.isWinner player=input.player statistic=input.statistic />
+</else-if>
 <else-if(match.match_type.id == type.SHANGHAI)>
   <statistics-shanghai isWinner=state.isWinner player=input.player statistic=input.statistic />
 </else-if>
@@ -29,16 +32,13 @@ $ var startingScore = input.player.starting_score || 0;
           <player-profile-picture player=player/>
         </div>
       </div>
-      <if(match.match_type.id == type.SHOOTOUT)>
-        <statistics-row heading="PPD" value=statistic.ppd.toFixed(2)/>
-      </if>
-      <else-if(match.match_type.id == type.CRICKET)>
+      <if(match.match_type.id == type.CRICKET)>
         <statistics-row heading="Marks Per Round" value=statistic.mpr.toFixed(2)/>
         <statistics-row heading="First 9 MPR" value=statistic.first_nine_mpr.toFixed(2)/>
         <if(statistic.score !== null)>
           <statistics-row heading="Score" value=statistic.score/>
         </if>
-      </else-if>
+      </if>
       <else-if(match.match_type.id == type.DARTS_AT_X)>
         <if(leg)>
           $ var startingScore = leg.starting_score === 25 ? "Bull" : leg.starting_score;
@@ -81,16 +81,7 @@ $ var startingScore = input.player.starting_score || 0;
       <if(match.match_type.id == type.X01HANDICAP && startingScore)>
         <statistics-row heading="Starting Score" value=startingScore/>
       </if>
-      <if(match.match_type.id == type.SHOOTOUT)>
-        <statistics-row heading="Points Scored" value=player.current_score/>
-        <if(state.isWinner)>
-          <div class="label-winner">WINNER</div>
-        </if>
-        <else>
-          <div class="label-loser">&nbsp;</div>
-        </else>
-      </if>
-      <else-if(match.match_type.id == type.X01HANDICAP)>
+      <if(match.match_type.id == type.X01HANDICAP)>
         <if(state.isWinner)>
           <div class="label-winner">WINNER</div>
         </if>
@@ -102,7 +93,7 @@ $ var startingScore = input.player.starting_score || 0;
             <div class="label-loser">&nbsp;</div>
           </else>
         </else>
-      </else-if>
+      </if>
       <else-if(match.match_type.id == type.CRICKET || match.match_type.id == type.DARTS_AT_X)>
         <if(state.isWinner)>
           <div class="label-winner">WINNER</div>

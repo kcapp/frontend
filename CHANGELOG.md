@@ -3,10 +3,15 @@
 ## [unreleased] - TBD
 #### Feature
 - New game types for `Around The World`, `Around The Clock`, and `Shanghai`
-- Office selector to players page
+- Office selector to players, tournament and statistics page
+- Venue selector on tournament admin page
 
-### Changed
-- Interface tweaks to multiple pages
+#### Changed
+- Multiple tweaks and improvments to multiple pages
+
+#### Fixed
+- Correctly show Top 10 statistics on tournament statistics page
+- Allow cycling of scores with keyboard for supported game types
 
 ## [1.0.0] - 2020-05-03
 #### Feature
