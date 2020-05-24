@@ -1,22 +1,16 @@
 import Table from "../statistics-table/statistics-table-template.marko"
 
-<${Table} statistics=input.statistics heading="9 Dart Shootout">>
+<${Table} statistics=input.statistics>
       <@headers>
-            <tr>
-                  <th colspan="6"/>
-                  <th class="text-center" colspan="4">Per Match</th>
-            </tr>
             <tr>
                   <th class="text-right">Rank</th>
                   <th>Player</th>
                   <th class="text-center">Played</th>
                   <th class="text-center">Won</th>
                   <th class="text-right">Win %</th>
-                  <th class="text-center">PPD</th>
-                  <th class="text-right">60s+</th>
-                  <th class="text-right">100s+</th>
-                  <th class="text-right">140s+</th>
-                  <th class="text-right">180</th>
+                  <th class="text-center">Avg. Score</th>
+                  <th class="text-center">Hit Rate</th>
+                  <th class="text-center">MPR</th>
             </tr>
       </@headers>
       <@body>
@@ -24,17 +18,15 @@ import Table from "../statistics-table/statistics-table-template.marko"
                   $ var player = input.players[stats.player_id];
                   <tr>
                         <td class="text-right">${idx + 1}</td>
-                        <td class="col-sm-3">
+                        <td class="col-sm-2">
                               <a href=`/players/${player.id}/statistics`>${player.name}</a>
                         </td>
                         <td class="text-center">${stats.matches_played}</td>
                         <td class="text-center">${stats.matches_won ? stats.matches_won : 0}</td>
                         <td class="text-right">${stats.matches_won ? ((stats.matches_won / stats.matches_played) * 100).toFixed(2) + "" : "0.00"}%</td>
-                        <td class="text-center">${stats.ppd.toFixed(2)}</td>
-                        <statistic-cell value=stats.scores_60s_plus played=stats.matches_played/>
-                        <statistic-cell value=stats.scores_100s_plus played=stats.matches_played/>
-                        <statistic-cell value=stats.scores_140s_plus played=stats.matches_played/>
-                        <statistic-cell value=stats.scores_180s played=stats.matches_played/>
+                        <td class="text-center">${(stats.score / stats.matches_played).toFixed(2)}</td>
+                        <td class="text-center">${(stats.total_hit_rate * 100).toFixed(2)}%</td>
+                        <td class="text-center">${(stats.mpr).toFixed(2)}</td>
                   </tr>
             </for>
       </@body>

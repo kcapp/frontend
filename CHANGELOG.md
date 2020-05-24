@@ -5,6 +5,7 @@
 - New game types for `Around The World`, `Around The Clock`, and `Shanghai`
 - Office selector to players, tournament and statistics page
 - Venue selector on tournament admin page
+- Added all game types to statistics page
 
 #### Changed
 - Multiple tweaks and improvments to multiple pages

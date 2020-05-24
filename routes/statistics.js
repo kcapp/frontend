@@ -28,24 +28,15 @@ function getStatistics(from, to, req, res, next) {
         axios.get(req.app.locals.kcapp.api + '/player'),
         axios.get(req.app.locals.kcapp.api + '/office'),
         axios.get(req.app.locals.kcapp.api + '/statistics/x01/' + from + '/' + to),
-        axios.get(req.app.locals.kcapp.api + '/statistics/shootout/' + from + '/' + to),
-        axios.get(req.app.locals.kcapp.api + '/statistics/cricket/' + from + '/' + to),
-        axios.get(req.app.locals.kcapp.api + '/statistics/dartsatx/' + from + '/' + to),
         axios.get(req.app.locals.kcapp.api + '/statistics/office/' + from + '/' + to)
-    ]).then(axios.spread((players, offices, x01, shootout, cricket, dartsAtX, office) => {
-        x01 = x01.data;
-        shootout = shootout.data;
-        shootout = sort(shootout);
-
+    ]).then(axios.spread((players, offices, x01, office) => {
         res.marko(statisticsTemplate, {
             players: players.data,
             offices: offices.data,
-            statistics_x01: x01,
-            statistics_shootout: shootout,
-            statistics_cricket: cricket.data,
-            statistics_darts_at_x: dartsAtX.data,
+            statistics_x01: x01.data,
+            office_statistics: office.data,
             from: from, to: to,
-            office_statistics: office.data
+            locals: req.app.locals
         });
     })).catch(error => {
         debug('Error when getting data for statistics ' + error);

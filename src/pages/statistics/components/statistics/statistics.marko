@@ -1,54 +1,76 @@
+$ var types = require('../../../../components/scorecard/components/match_types');
 <page-header heading="Statistics" subheading=`${state.from} to ${state.to}` icon="fa-signal" navigation=true on-next("navigateNext") on-previous("navigatePrevious")/>
 <office-selector offices=input.offices clazz="float-right" on-office-changed("officeChanged")/>
-<if(state.office_statistics.length !== 0)>
-  <div class="block-container-red">Highest Checkouts</div>
-  <div class="block-container no-padding">
-    <div class="table table-responsive">
-      <table id="table-checkout-statistics">
-        <thead>
-          <tr>
-            <th class="text-right">Rank</th>
-            <th>Player</th>
-            <th class="text-center">Checkout</th>
-            <th class="text-center" colspan="3">Visit</th>
-          </tr>
-        </thead>
-        <tbody>
-          <for|idx| from=0 to=4>
-            $ var stats = state.office_statistics[idx]
+<statistics-selector on-type-changed("typeChanged")/>
+<if(state.type == types.X01)>
+  <if(state.office_statistics.length !== 0)>
+    <div class="block-container-red">Highest Checkouts</div>
+    <div class="block-container no-padding">
+      <div class="table table-responsive">
+        <table id="table-checkout-statistics">
+          <thead>
             <tr>
-              <td class="text-right">${idx + 1}</td>
-              <if(idx < state.office_statistics.length)>
-                $ var player = input.players[stats.player_id];
-                <td class="col-sm-3">
-                  <a href=`/players/${player.id}/statistics`>${player.name}</a>
-                </td>
-                <td class="text-center">
-                  <a href=`/legs/${stats.leg_id}/result`>${stats.checkout}</a>
-                </td>
-                <td class="text-center">
-                  <dart-container label=true dart=stats.darts[0]/>
-                </td>
-                <td class="text-center">
-                  <dart-container label=true dart=stats.darts[1]/>
-                </td>
-                <td class="text-center">
-                  <dart-container label=true dart=stats.darts[2]/>
-                </td>
-              </if>
-              <else>
-                <td class="col-sm-3">-</td>
-                <td class="text-center">-</td>
-                <td colspan="3" class="text-center">-</td>
-              </else>
+              <th class="text-right">Rank</th>
+              <th>Player</th>
+              <th class="text-center">Checkout</th>
+              <th class="text-center" colspan="3">Visit</th>
             </tr>
-          </for>
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            <for|idx| from=0 to=4>
+              $ var stats = state.office_statistics[idx]
+              <tr>
+                <td class="text-right">${idx + 1}</td>
+                <if(idx < state.office_statistics.length)>
+                  $ var player = input.players[stats.player_id];
+                  <td class="col-sm-3">
+                    <a href=`/players/${player.id}/statistics`>${player.name}</a>
+                  </td>
+                  <td class="text-center">
+                    <a href=`/legs/${stats.leg_id}/result`>${stats.checkout}</a>
+                  </td>
+                  <td class="text-center">
+                    <dart-container label=true dart=stats.darts[0]/>
+                  </td>
+                  <td class="text-center">
+                    <dart-container label=true dart=stats.darts[1]/>
+                  </td>
+                  <td class="text-center">
+                    <dart-container label=true dart=stats.darts[2]/>
+                  </td>
+                </if>
+                <else>
+                  <td class="col-sm-3">-</td>
+                  <td class="text-center">-</td>
+                  <td colspan="3" class="text-center">-</td>
+                </else>
+              </tr>
+            </for>
+          </tbody>
+        </table>
+      </div>
     </div>
-  </div>
+  </if>
+  <statistics-table-x01 statistics=state.statistics players=input.players />
 </if>
-<x01-statistics-table statistics=state.x01 players=input.players />
-<cricket-statistics-table statistics=state.cricket players=input.players />
-<shootout-statistics-table statistics=state.shootout players=input.players />
-<darts-at-x-statistics-table statistics=state.darts_at_x players=input.players />
+<else-if(state.type == types.SHOOTOUT)>
+  <statistics-table-shootout statistics=state.statistics players=input.players />
+</else-if>
+<else-if(state.type == types.CRICKET)>
+  <statistics-table-cricket statistics=state.statistics players=input.players />
+</else-if>
+<else-if(state.type == types.DARTS_AT_X)>
+  <statistics-table-darts-at-x statistics=state.statistics players=input.players />
+</else-if>
+<else-if(state.type == types.AROUND_THE_CLOCK)>
+  <statistics-table-around-the-clock statistics=state.statistics players=input.players />
+</else-if>
+<else-if(state.type == types.AROUND_THE_WORLD)>
+  <statistics-table-around-the-world statistics=state.statistics players=input.players />
+</else-if>
+<else-if(state.type == types.SHANGHAI)>
+  <statistics-table-shanghai statistics=state.statistics players=input.players />
+</else-if>
+<else>
+  <div>TODO</div>
+</else>

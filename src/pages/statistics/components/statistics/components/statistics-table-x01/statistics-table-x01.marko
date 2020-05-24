@@ -28,7 +28,7 @@ import Table from "../statistics-table/statistics-table-template.marko"
         <for|stats, idx| of=input.statistics>
             $ var player = input.players[stats.player_id];
             <tr>
-                <td class="text-right">${idx + 1}</td>
+                <td class="pl-10 text-right">${idx + 1}</td>
                 <td class="col-sm-3">
                 <a href=`/players/${player.id}/statistics`>${player.name}</a>
                 </td>
