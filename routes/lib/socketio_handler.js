@@ -166,7 +166,7 @@ module.exports = (io, app) => {
                                 axios.all([
                                     axios.get(app.locals.kcapp.api + '/leg/' + body.leg_id),
                                     axios.get(app.locals.kcapp.api + '/leg/' + body.leg_id + '/players'),
-                                    axios.get(app.locals.kcapp.api + '/statistics/global')
+                                    axios.get(app.locals.kcapp.api + '/statistics/global/fnc')
                                 ]).then(axios.spread((legData, playersData, globalData) => {
                                     var leg = legData.data;
                                     var players = playersData.data;
@@ -217,7 +217,7 @@ module.exports = (io, app) => {
                                 axios.all([
                                     axios.get(app.locals.kcapp.api + '/leg/' + legId),
                                     axios.get(app.locals.kcapp.api + '/leg/' + legId + '/players'),
-                                    axios.get(app.locals.kcapp.api + '/statistics/global')
+                                    axios.get(app.locals.kcapp.api + '/statistics/global/fnc')
                                 ]).then(axios.spread((leg, players, globalstat) => {
                                     nsp.emit('undo_visit', {});
                                     nsp.emit('score_update', { leg: leg.data, players: players.data, globalstat: globalstat.data, is_undo: true });

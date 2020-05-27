@@ -2,6 +2,7 @@ var _ = require("underscore");
 var moment = require("moment");
 var axios = require('axios');
 var types = require('../../../../components/scorecard/components/match_types');
+var GLOBAL = 0;
 
 module.exports = {
     onCreate(input) {
@@ -13,6 +14,7 @@ module.exports = {
             office_statistics: input.office_statistics,
             from: input.from,
             to: input.to,
+            GLOBAL: 0
         }
     },
     navigatePrevious() {
@@ -42,16 +44,30 @@ module.exports = {
     },
 
     typeChanged(typeId) {
-        axios.get(this.input.locals.kcapp.api_external + '/statistics/' + typeId + '/' + this.state.from + '/' + this.state.to.split(' ')[0])
-            .then(response => {
-                this.state.statistics = response.data;
-                this.state.all = this.state.statistics;
-                this.officeChanged(this.state.officeId);
-                this.setStateDirty('statistics');
+        if (typeId == GLOBAL) {
+            axios.get(this.input.locals.kcapp.api_external + '/statistics/global')
+                .then(response => {
+                    this.state.statistics = response.data;
+                    this.state.all = this.state.statistics;
+                    this.officeChanged(this.state.officeId);
+                    this.setStateDirty('statistics');
 
-                this.state.type = typeId;
-            }).catch(error => {
-                console.log('Error when getting statistics data ' + error);
-            });
+                    this.state.type = typeId;
+                }).catch(error => {
+                    console.log('Error when getting statistics data ' + error);
+                });
+        } else {
+            axios.get(this.input.locals.kcapp.api_external + '/statistics/' + typeId + '/' + this.state.from + '/' + this.state.to.split(' ')[0])
+                .then(response => {
+                    this.state.statistics = response.data;
+                    this.state.all = this.state.statistics;
+                    this.officeChanged(this.state.officeId);
+                    this.setStateDirty('statistics');
+
+                    this.state.type = typeId;
+                }).catch(error => {
+                    console.log('Error when getting statistics data ' + error);
+                });
+        }
     }
 }

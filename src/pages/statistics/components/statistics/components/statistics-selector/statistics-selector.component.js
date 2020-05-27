@@ -19,5 +19,4 @@ module.exports = {
         this.state.type = event.target.value;
         this.emit('type-changed', this.state.type);
     }
-
 }

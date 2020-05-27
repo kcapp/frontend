@@ -6,6 +6,7 @@
 - Office selector to players, tournament and statistics page
 - Venue selector on tournament admin page
 - Added all game types to statistics page
+- Section for global statistics on statistics page
 
 #### Changed
 - Multiple tweaks and improvments to multiple pages
