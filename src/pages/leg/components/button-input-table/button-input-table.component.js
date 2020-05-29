@@ -8,6 +8,7 @@ module.exports = {
             current: this.findCurrent(input.players)
         }
     },
+
     findCurrent(players) {
         return _.find(players, (player) => player.is_current_player);
     },

@@ -73,8 +73,6 @@ module.exports = {
                 board.src = data.data;
             }
         });
-
-
         // Disable gestures on mobile devices
         document.addEventListener('gesturestart', (e) => { e.preventDefault(); });
     },

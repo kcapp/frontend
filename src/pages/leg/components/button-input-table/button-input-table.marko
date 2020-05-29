@@ -17,34 +17,67 @@ $ var types = require("../../../../components/scorecard/components/match_types")
 <table id='score-selector-table' class='table'>
   <tbody>
     <if(input.type === types.AROUND_THE_WORLD || input.type === types.SHANGHAI)>
-      $ var target = input.leg.round;
+      $ var target = input.leg.round === 21 ? 25 : input.leg.round;
+      $ var text = target === 25 ? "Bull" : target;
       <tr class='row'>
         <td rowspan='2'>
           <score-button text="Miss" value=0 multiplier=1 clazz='fill-button' on-button-press("onButtonPress")/>
         </td>
         <td rowspan='2' style="width: 25%;">
-          <score-button text=`Single (${target})` value=target multiplier=1 clazz='fill-button' on-button-press("onButtonPress")/>
+          <score-button text=`Single (${text})` value=target multiplier=1 clazz='fill-button' on-button-press("onButtonPress")/>
         </td>
         <td rowspan='2' style="width: 25%;">
-          <score-button text=`Double (${target})` value=target multiplier=2 clazz='btn-double fill-button' on-button-press("onButtonPress")/>
+          <score-button text=`Double (${text})` value=target multiplier=2 clazz='btn-double fill-button' on-button-press("onButtonPress")/>
         </td>
-        <td rowspan='2' style="width: 25%;">
-          <score-button text=`Triple (${target})` value=target multiplier=3 clazz='btn-triple fill-button' on-button-press("onButtonPress")/>
-        </td>
+        <if(target !== 25)>
+          <td rowspan='2' style="width: 25%;">
+            <score-button text=`Triple (${text})` value=target multiplier=3 clazz='btn-triple fill-button' on-button-press("onButtonPress")/>
+          </td>
+        </if>
+        <else>
+          <td rowspan='2' style="width: 25%;"/>
+        </else>
         <td rowspan='2' style="width: 5%;">
           <score-button icon="fas fa-long-arrow-alt-left" clazz='fill-button' isUndo=true on-button-press("onButtonPress")/>
         </td>
       </tr>
     </if>
     <else-if(input.type === types.AROUND_THE_CLOCK)>
-      $ var target = state.current.current_score + 1;
+      $ var target = state.current.current_score + 1 === 21 ? 25 : state.current.current_score + 1;
+      $ var text = target === 25 ? "Bull" : target;
       <tr class='row'>
         <td rowspan='2'>
           <score-button text="Miss" value=0 multiplier=1 clazz='fill-button' on-button-press("onButtonPress")/>
         </td>
         <td rowspan='2' style="width: 50%;">
-          <score-button text=`Hit (${target})` value=target multiplier=1 clazz='fill-button' on-button-press("onButtonPress")/>
+          <score-button text=`Hit (${text})` value=target multiplier=1 clazz='fill-button' on-button-press("onButtonPress")/>
         </td>
+        <td rowspan='2' style="width: 5%;">
+          <score-button icon="fas fa-long-arrow-alt-left" clazz='fill-button' isUndo=true on-button-press("onButtonPress")/>
+        </td>
+      </tr>
+    </else-if>
+    <else-if(input.type === types.DARTS_AT_X)>
+      $ var target = input.leg.starting_score;
+      $ var text = target === 25 ? "Bull" : target;
+      <tr class='row'>
+        <td rowspan='2'>
+          <score-button text="Miss" value=0 multiplier=1 clazz='fill-button' on-button-press("onButtonPress")/>
+        </td>
+        <td rowspan='2' style="width: 25%;">
+          <score-button text=`Single (${text})` value=target multiplier=1 clazz='fill-button' on-button-press("onButtonPress")/>
+        </td>
+        <td rowspan='2' style="width: 25%;">
+          <score-button text=`Double (${text})` value=target multiplier=2 clazz='btn-double fill-button' on-button-press("onButtonPress")/>
+        </td>
+        <if(target !== 25)>
+          <td rowspan='2' style="width: 25%;">
+            <score-button text=`Triple (${text})` value=target multiplier=3 clazz='btn-triple fill-button' on-button-press("onButtonPress")/>
+          </td>
+        </if>
+        <else>
+          <td rowspan='2' style="width: 25%;"/>
+        </else>
         <td rowspan='2' style="width: 5%;">
           <score-button icon="fas fa-long-arrow-alt-left" clazz='fill-button' isUndo=true on-button-press("onButtonPress")/>
         </td>

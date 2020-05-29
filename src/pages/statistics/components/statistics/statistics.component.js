@@ -34,10 +34,12 @@ module.exports = {
         if (officeId == 0) {
             this.state.statistics = this.state.all;
         } else {
-            var players = this.input.players;
-            this.state.statistics = _.reject(this.state.all, (stats) => {
-                return players[stats.player_id].office_id != officeId ;
-            });
+            if (this.state.type != this.state.GLOBAL) {
+                var players = this.input.players;
+                this.state.statistics = _.reject(this.state.all, (stats) => {
+                    return players[stats.player_id].office_id != officeId ;
+                });
+            }
         }
         this.state.officeId = officeId;
         this.setStateDirty("statistics");
@@ -49,7 +51,7 @@ module.exports = {
                 .then(response => {
                     this.state.statistics = response.data;
                     this.state.all = this.state.statistics;
-                    this.officeChanged(this.state.officeId);
+                    //this.officeChanged(this.state.officeId);
                     this.setStateDirty('statistics');
 
                     this.state.type = typeId;

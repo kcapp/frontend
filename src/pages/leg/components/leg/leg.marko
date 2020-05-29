@@ -45,5 +45,7 @@
 <if(state.enableButtonInput)>
   <button-input-table key="compact-input" type=state.type leg=state.leg compactMode=state.compactMode players=state.players on-score-button-pressed("onScoreButtonPressed")/>
 </if>
-<video autoplay id='cam-board-preview'/>
-<img id='img-board-remote' style='float: right;' src=""/>
+<if(input.experimental)>
+  <video autoplay id='cam-board-preview'/>
+  <img id='img-board-remote' style='float: right;' src=""/>
+</if>

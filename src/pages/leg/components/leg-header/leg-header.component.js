@@ -14,11 +14,16 @@ module.exports = {
     },
 
     onMount() {
-        var mobile = require('is-mobile');
-        var isMobile = mobile({ tablet: true });
+        var MobileDetect = require('mobile-detect'),
+        md = new MobileDetect(window.navigator.userAgent);
+
+        var isMobile = md.mobile();
+        var isTablet = md.tablet();
+
         this.state.buttonInputEnabled = isMobile;
         this.emit('enable-button-input', this.state.buttonInputEnabled);
-        this.state.compactMode = isMobile;
+
+        this.state.compactMode = isMobile && !isTablet;
         this.emit('enable-compact-mode', this.state.compactMode);
     },
 

@@ -36,11 +36,11 @@ $ var player = input.player;
       <tr>
           <td/>
           <td/>
-          <if(statistic.score > num)>
+          <if(statistic.score >= num)>
             <score-pill text="Bulls" value=`${(statistic.hitrates[25] * 100).toFixed(2)} %`/>
           </if>
           <else>
-            <score-pill text=`${num}s` value=`- %`/>
+            <score-pill text=`Bulls` value=`- %`/>
           </else>
       </tr>
     </table>
