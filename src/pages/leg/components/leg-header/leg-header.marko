@@ -20,6 +20,9 @@
         <li>
           <a id="change-player-order" data-toggle="modal" data-target="#modal-player-order"  on-click('changeOrder')>Change Order</a>
         </li>
+        <li>
+          <a id="show-qr-code" data-toggle="modal" data-target="#modal-show-qr-code">Show QR</a>
+        </li>
         <if(input.experimental)>
           <li>
             <a on-click('enableBoardStream', 1)>${state.streamEnabled ? "Disable" : "Enable"} Stream 1</a>

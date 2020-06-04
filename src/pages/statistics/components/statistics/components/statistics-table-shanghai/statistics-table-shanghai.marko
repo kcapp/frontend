@@ -24,7 +24,7 @@ import Table from "../statistics-table/statistics-table-template.marko"
                         <td class="text-center">${stats.matches_played}</td>
                         <td class="text-center">${stats.matches_won ? stats.matches_won : 0}</td>
                         <td class="text-right">${stats.matches_won ? ((stats.matches_won / stats.matches_played) * 100).toFixed(2) + "" : "0.00"}%</td>
-                        <td class="text-center">${(stats.score / stats.matches_played).toFixed(2)}</td>
+                        <td class="text-center">${stats.score}</td>
                         <td class="text-center">${(stats.total_hit_rate * 100).toFixed(2)}%</td>
                         <td class="text-center">${(stats.mpr).toFixed(2)}</td>
                   </tr>

@@ -130,8 +130,10 @@ module.exports = {
         }
     },
     cycleValues(values, current) {
-        var index = _.findIndex(values, (value) => { return value.id === current });
-        return values[(index + 1) % values.length].id;
+        if (values.length > 0) {
+            var index = _.findIndex(values, (value) => { return value.id === current });
+            return values[(index + 1) % values.length].id;
+        }
     },
     onGameTypeChanged(attribute, value) {
         if (attribute == 'game_type') {
