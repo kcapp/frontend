@@ -103,10 +103,11 @@ exports.onPossibleThrow = function (data, thiz) {
         compactComponent.setStateDirty("players");
     }
 
-    if (data.origin === 'web' /*&& !component.getDart(data.darts_thrown).state.initial*/) {
+    if (data.origin === 'web' && data.uuid === component.state.uuid) {
         // No need to update possible throw if we just sent the throw
         return;
     }
+    component.state.currentDart = data.darts_thrown + 1;
 
     var type = thiz.input.match.match_type.id;
     if (type == types.CRICKET || type == types.DARTS_AT_X) {

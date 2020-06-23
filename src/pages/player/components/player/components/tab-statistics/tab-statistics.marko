@@ -1,0 +1,209 @@
+$ var types = require('../../../../../../components/scorecard/components/match_types');
+<div class="block-container no-padding no-border">
+    <statistics-selector on-type-changed("typeChanged")/>
+
+    <div style='padding-top: 10px;'>
+        <table style="width: 100%;">
+            <if(input.statistics)>
+                <tr>
+                    <td style="width: 25%;">
+                        <statistics-card label="Win %" value=`${(input.statistics.legs_won / input.statistics.legs_played * 100).toFixed(2)} %` icon="fas fa-check-circle"/>
+                    </td>
+                    <if(input.type == types.X01)>
+                        <td style="width: 25%;">
+                            <statistics-card label="Three Dart Avg." value=`${(input.statistics.three_dart_avg).toFixed(2)} / ${(input.statistics.first_nine_three_dart_avg).toFixed(2)}` icon="fas fa-circle-notch"/>
+                        </td>
+                        <td style="width: 25%;">
+                            <statistics-card label="Checkout %" value=`${input.statistics.checkout_percentage.toFixed(2)} %` icon="fas fa-star"/>
+                        </td>
+                    </if>
+                    <else-if(input.type == types.SHOOTOUT)>
+                        <td style="width: 25%;">
+                            <statistics-card label="PPD" value=`${(input.statistics.ppd).toFixed(2)}` icon="fas fa-circle-notch"/>
+                        </td>
+                        <td style="width: 25%;">
+                            <statistics-card label="180s" value=`${input.statistics.scores_180s}` icon="fas fa-star"/>
+                        </td>
+                    </else-if>
+                    <else-if(input.type == types.CRICKET)>
+                        <td style="width: 25%;">
+                            <statistics-card label="MPR" value=`${(input.statistics.mpr).toFixed(2)} / ${(input.statistics.first_nine_mpr).toFixed(2)}` icon="fas fa-circle-notch"/>
+                        </td>
+                        <td style="width: 25%;">
+                            <statistics-card label="9 Marks" value=`${input.statistics.marks_9}` icon="fas fa-star"/>
+                        </td>
+                    </else-if>
+                    <else-if(input.type == types.DARTS_AT_X)>
+                        <td style="width: 25%;">
+                            <statistics-card label="Hit Rate" value=`${(input.statistics.hit_rate * 100).toFixed(2)} %` icon="fas fa-bullseye"/>
+                        </td>
+                        <td style="width: 25%;">
+                            <statistics-card label="Avg. Score" value=`${input.statistics.avg_score}` icon="far fa-star"/>
+                        </td>
+                        <td style="width: 25%;">
+                            <statistics-card label="9 Hits" value=`${input.statistics.hits_9}` icon="fas fa-star"/>
+                        </td>
+                    </else-if>
+                    <else-if(input.type == types.AROUND_THE_CLOCK)>
+                        <td style="width: 25%;">
+                            <statistics-card label="Hit Rate" value=`${(input.statistics.total_hit_rate * 100).toFixed(2)} %` icon="fas fa-bullseye"/>
+                        </td>
+                        <td style="width: 25%;">
+                            <statistics-card label="Longest Streak" value=`${input.statistics.longest_streak}` icon="fas fa-arrow-up"/>
+                        </td>
+                    </else-if>
+                    <else-if(input.type == types.AROUND_THE_WORLD || input.type == types.SHANGHAI)>
+                        <td style="width: 25%;">
+                            <statistics-card label="Hit Rate" value=`${(input.statistics.total_hit_rate * 100).toFixed(2)} %` icon="fas fa-bullseye"/>
+                        </td>
+                        <td style="width: 25%;">
+                            <statistics-card label="MPR" value=`${input.statistics.mpr.toFixed(2)}` icon="fas fa-circle-notch"/>
+                        </td>
+                        <td style="width: 25%;">
+                            <statistics-card label="Avg. Score" value=`${input.statistics.score}` icon="far fa-star"/>
+                        </td>
+                    </else-if>
+                    <else>
+                        <div>TODO</div>
+                    </else>
+                </tr>
+            </if>
+            <tr>
+                <td colspan="100%" style=`display: ${input.type == types.AROUND_THE_CLOCK || input.type == types.AROUND_THE_WORLD || input.type == types.SHANGHAI ? '' : 'none'};`>
+                    <div class="block-container" style='padding: 0;'>
+                        <canvas id="canvas-hit-rates"></canvas>
+                    </div>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+    <table id="table-player-statistics">
+        <thead>
+            <tr>
+                <th class="text-center" style='width: 18%;'>Start Time</th>
+                <th class="text-center" style='width: 30%;'>Players</th>
+                <if(input.type == types.X01)>
+                    <th class="text-center">Three Dart Avg.</th>
+                    <th class="text-center">Checkout</th>
+                    <th class="text-center">Overall</th>
+                    <th class="text-center">20s</th>
+                    <th class="text-center">19s</th>
+                </if>
+                <else-if(input.type == types.SHOOTOUT)>
+                    <th class="text-center">Score</th>
+                    <th class="text-center">PPD</th>
+                    <th class="text-center">60+</th>
+                    <th class="text-center">100+</th>
+                    <th class="text-center">140+</th>
+                    <th class="text-center">180s</th>
+                </else-if>
+                <else-if(input.type == types.CRICKET)>
+                    <th class="text-center">Score</th>
+                    <th class="text-center">MPR</th>
+                    <th class="text-center">Marks 5</th>
+                    <th class="text-center">Marks 6</th>
+                    <th class="text-center">Marks 7</th>
+                    <th class="text-center">Marks 8</th>
+                    <th class="text-center">Marks 9</th>
+                </else-if>
+                <else-if(input.type == types.DARTS_AT_X)>
+                    <th class="text-center">Score</th>
+                    <th class="text-center">Hit Rate</th>
+                    <th class="text-center" title="Singles / Doubles / Triples">S / D / T</th>
+                    <th class="text-center">5 Hits</th>
+                    <th class="text-center">6 Hits</th>
+                    <th class="text-center">7 Hits</th>
+                    <th class="text-center">8 Hits</th>
+                    <th class="text-center">9 Hits</th>
+                </else-if>
+                <else-if(input.type == types.AROUND_THE_CLOCK)>
+                    <th class="text-center">Score</th>
+                    <th class="text-center">Hit Rate</th>
+                    <th class="text-center">Darts Thrown</th>
+                    <th class="text-center">Longest Streak</th>
+                </else-if>
+                <else-if(input.type == types.AROUND_THE_WORLD || input.type == types.SHANGHAI)>
+                    <th class="text-center">Score</th>
+                    <th class="text-center">Hit Rate</th>
+                    <if(input.type == types.SHANGHAI)>
+                        <th class="text-center">Shanghai</th>
+                    </if>
+                    <th class="text-center">MPR</th>
+                </else-if>
+                <th class="text-center"/>
+            </tr>
+        </thead>
+        <tbody>
+            <for|history| of=input.history>
+                <tr>
+                    <td class="text-left">
+                        <div style={ 'white-space': 'nowrap', 'overflow': 'hidden' }>${history.created_at}</div>
+                    </td>
+                    <td class="text-center">
+                        <for|id| of=history.players>
+                            $ var isWinner = history.is_finished && id == history.winner_player_id;
+                            <div class="float-left">
+                            <span class=`label ${isWinner ? "label-success" : "label-secondary"}`>${input.players[id].name}</span>
+                            </div>
+                        </for>
+                    </td>
+                    $ var statistics = history.statistics;
+                    <if(input.type == types.X01)>
+                        <td class="text-center">${statistics.three_dart_avg.toFixed(2) + " / " + statistics.first_nine_three_dart_avg.toFixed(2)}</td>
+                        <td class="text-center">${statistics.checkout_percentage.toFixed(2)} %</td>
+                        <td class="text-center">${statistics.accuracy_overall.toFixed(2)}</td>
+                        <td class="text-center">${statistics.accuracy_20 == null ? "-" : statistics.accuracy_20.toFixed(2)}</td>
+                        <td class="text-center">${statistics.accuracy_19 == null ? "-" : statistics.accuracy_19.toFixed(2)}</td>
+                    </if>
+                    <else-if(input.type == types.SHOOTOUT)>
+                        <td class="text-center">${statistics.score}</td>
+                        <td class="text-center">${statistics.ppd.toFixed(2)}</td>
+                        <td class="text-center">${statistics.scores_60s_plus}</td>
+                        <td class="text-center">${statistics.scores_100s_plus}</td>
+                        <td class="text-center">${statistics.scores_140s_plus}</td>
+                        <td class="text-center">${statistics.scores_180s}</td>
+                    </else-if>
+                    <else-if(input.type == types.CRICKET)>
+                        <td class="text-center">${statistics.score}</td>
+                        <td class="text-center">${statistics.mpr.toFixed(2) + " / " + statistics.first_nine_mpr.toFixed(2)}</td>
+                        <td class="text-center">${statistics.marks_5}</td>
+                        <td class="text-center">${statistics.marks_6}</td>
+                        <td class="text-center">${statistics.marks_7}</td>
+                        <td class="text-center">${statistics.marks_8}</td>
+                        <td class="text-center">${statistics.marks_9}</td>
+                    </else-if>
+                    <else-if(input.type == types.DARTS_AT_X)>
+                        <td class="text-center">${statistics.score}</td>
+                        <td class="text-center">${(statistics.hit_rate * 100).toFixed(2)}%</td>
+                        <td class="text-center">${statistics.singles} / ${statistics.doubles} / ${statistics.triples}</td>
+                        <td class="text-center">${statistics.hits_5}</td>
+                        <td class="text-center">${statistics.hits_6}</td>
+                        <td class="text-center">${statistics.hits_7}</td>
+                        <td class="text-center">${statistics.hits_8}</td>
+                        <td class="text-center">${statistics.hits_9}</td>
+                    </else-if>
+                    <else-if(input.type == types.AROUND_THE_CLOCK)>
+                        <td class="text-center">${statistics.score}</td>
+                        <td class="text-center">${(statistics.total_hit_rate * 100).toFixed(2)}%</td>
+                        <td class="text-center">${statistics.darts_thrown}</td>
+                        <td class="text-center">${statistics.longest_streak}</td>
+                    </else-if>
+                    <else-if(input.type == types.AROUND_THE_WORLD || input.type == types.SHANGHAI)>
+                        <td class="text-center">${statistics.score}</td>
+                        <td class="text-center">${(statistics.total_hit_rate * 100).toFixed(2)}%</td>
+                        <if(input.type == types.SHANGHAI)>
+                            <td class="text-center">${statistics.shanghai == null ? "-" : statistics.shanghai}</td>
+                        </if>
+                        <td class="text-center">${statistics.mpr.toFixed(2)}</td>
+                    </else-if>
+                    <td>
+                        <a href=`/legs/${history.id}/result`>
+                            <i class=`fas fa-eye fas-option-button` data-toggle="tooltip" data-placement="top" title=`View`/>
+                        </a>
+                    </td>
+                </tr>
+            </for>
+        </tbody>
+    </table>
+</div>

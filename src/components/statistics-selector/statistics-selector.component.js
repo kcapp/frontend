@@ -1,4 +1,4 @@
-var types = require("../../../../../../components/scorecard/components/match_types");
+var types = require("../scorecard/components/match_types");
 
 module.exports = {
     onCreate(input) {

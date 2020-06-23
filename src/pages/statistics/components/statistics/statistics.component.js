@@ -31,10 +31,12 @@ module.exports = {
         }
     },
     officeChanged(officeId) {
-        if (officeId == 0) {
-            this.state.statistics = this.state.all;
+        if (this.state.type == this.state.GLOBAL) {
+            this.state.statistics = this.state.all[officeId] ? this.state.all[officeId] : {};
         } else {
-            if (this.state.type != this.state.GLOBAL) {
+            if (officeId == 0) {
+                this.state.statistics = this.state.all;
+            } else {
                 var players = this.input.players;
                 this.state.statistics = _.reject(this.state.all, (stats) => {
                     return players[stats.player_id].office_id != officeId ;
@@ -51,10 +53,10 @@ module.exports = {
                 .then(response => {
                     this.state.statistics = response.data;
                     this.state.all = this.state.statistics;
-                    //this.officeChanged(this.state.officeId);
                     this.setStateDirty('statistics');
 
                     this.state.type = typeId;
+                    this.officeChanged(this.state.officeId);
                 }).catch(error => {
                     console.log('Error when getting statistics data ' + error);
                 });
@@ -63,10 +65,10 @@ module.exports = {
                 .then(response => {
                     this.state.statistics = response.data;
                     this.state.all = this.state.statistics;
-                    this.officeChanged(this.state.officeId);
                     this.setStateDirty('statistics');
 
                     this.state.type = typeId;
+                    this.officeChanged(this.state.officeId);
                 }).catch(error => {
                     console.log('Error when getting statistics data ' + error);
                 });

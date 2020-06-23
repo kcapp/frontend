@@ -3,11 +3,13 @@ var moment = require('moment');
 var io = require('../../../../util/socket.io-helper.js');
 var alertify = require("../../../../util/alertify");
 var types = require('../../../../components/scorecard/components/match_types');
+var { v4: uuidv4 } = require('uuid');
 
 module.exports = {
     onCreate(input) {
         var venue = input.match.venue;
         this.state = {
+            uuid: uuidv4(),
             leg: input.leg,
             players: input.leg_players,
             roundNumber: input.leg.round,
@@ -186,6 +188,7 @@ module.exports = {
             component.confirmLegFinish();
         }
         this.state.socket.emit('possible_throw', {
+            uuid: this.state.uuid,
             current_player_id: component.state.playerId,
             score: score,
             multiplier: multiplier,

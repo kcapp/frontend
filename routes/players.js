@@ -52,20 +52,23 @@ router.put('/:id', function (req, res, next) {
 router.get('/:id/statistics', function (req, res, next) {
     var playerId = req.params.id;
     axios.all([
+        axios.get(req.app.locals.kcapp.api + '/player'),
         axios.get(req.app.locals.kcapp.api + '/player/' + playerId),
         axios.get(req.app.locals.kcapp.api + '/player/' + playerId + '/statistics'),
         axios.get(req.app.locals.kcapp.api + '/player/' + playerId + '/statistics/previous'),
         axios.get(req.app.locals.kcapp.api + '/player/' + playerId + '/progression'),
         axios.get(req.app.locals.kcapp.api + '/player/' + playerId + '/checkouts'),
         axios.get(req.app.locals.kcapp.api + '/player/' + playerId + '/tournament')
-    ]).then(axios.spread((player, statistics, previous_statistics, progression, checkouts, tournament) => {
+    ]).then(axios.spread((players, player, statistics, previous_statistics, progression, checkouts, tournament) => {
         res.marko(playerTemplate, {
+            players: players.data,
             player: player.data,
             statistics: statistics.data,
             previous_statistics: previous_statistics.data,
             progression: progression.data,
             checkouts: checkouts.data,
-            tournament_standings: tournament.data
+            tournament_standings: tournament.data,
+            locals: req.app.locals
         });
     })).catch(error => {
         debug('Error when getting data for player ' + error);

@@ -1,4 +1,5 @@
 const alertify = require("../../util/alertify");
+
 var x01 = require("./components/x01");
 var shootout = require("./components/shootout");
 var cricket = require("./components/cricket");
@@ -14,6 +15,7 @@ module.exports = {
     onCreate(input) {
         var player = input.player;
         this.state = {
+            uuid: input.uuid,
             players: input.players,
             leg: input.leg,
             player: player,

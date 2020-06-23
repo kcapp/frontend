@@ -1,0 +1,54 @@
+<div style='padding-top: 10px;'>
+    $ var formatter = new Intl.NumberFormat();
+    <table style="width: 100%;">
+        <tr>
+            <td style="width: 25%;">
+                <div class="global-statistics-card">
+                    <div>${formatter.format(input.statistics.matches ? input.statistics.matches : 0)}</div>
+                    <div>
+                    <i class="fas fa-flag"></i>
+                    </div>
+                    <div class="hs-label">Matches</div>
+                </div>
+            </td>
+            <td style="width: 25%;">
+                <div class="global-statistics-card">
+                    <div>${formatter.format(input.statistics.legs ? input.statistics.legs : 0)}</div>
+                    <div>
+                    <i class="fas fa-bullseye"></i>
+                    </div>
+                    <div class="hs-label">Legs</div>
+                </div>
+            </td>
+            <td style="width: 25%;">
+                <div class="global-statistics-card">
+                    <div>${formatter.format(input.statistics.visits ? input.statistics.visits : 0)}</div>
+                    <div>
+                    <i class="fas fa-hashtag"></i>
+                    </div>
+                    <div class="hs-label">Visits</div>
+                </div>
+            </td>
+            <td style="width: 25%;">
+                <div class="global-statistics-card">
+                    <div>${formatter.format(input.statistics.points ? input.statistics.points : 0)}</div>
+                    <div>
+                    <i class="fas fa-star"></i>
+                    </div>
+                    <div class="hs-label">Points</div>
+                </div>
+            </td>
+        </tr>
+        <tr>
+        <td style="width: 25%;">
+            <div class="global-statistics-card">
+                <div>${formatter.format(input.statistics.fish_n_chips ? input.statistics.fish_n_chips : 0)}</div>
+                <div>
+                <i class="fas fa-fish"></i>
+                </div>
+                <div class="hs-label">Fish N Chips</div>
+            </div>
+        </td>
+        </tr>
+    </table>
+</div>

@@ -1,7 +1,7 @@
 $ var types = require('../../../../components/scorecard/components/match_types');
 <page-header heading="Statistics" subheading=`${state.from} to ${state.to}` icon="fa-signal" navigation=true on-next("navigateNext") on-previous("navigatePrevious")/>
 <office-selector offices=input.offices clazz="float-right" on-office-changed("officeChanged")/>
-<statistics-selector on-type-changed("typeChanged")/>
+<statistics-selector addGlobal=true on-type-changed("typeChanged")/>
 <if(state.type == types.X01)>
   <if(state.office_statistics.length !== 0)>
     <div class="block-container-red">Highest Checkouts</div>
@@ -72,60 +72,7 @@ $ var types = require('../../../../components/scorecard/components/match_types')
   <statistics-table-shanghai statistics=state.statistics players=input.players />
 </else-if>
 <else-if(state.type == state.GLOBAL)>
-  <div style='padding-top: 10px;'>
-    $ var formatter = new Intl.NumberFormat();
-    <table style="width: 100%;">
-      <tr>
-          <td style="width: 25%;">
-              <div class="global-statistics-card">
-                  <div>${formatter.format(state.statistics.matches)}</div>
-                  <div>
-                    <i class="fas fa-flag"></i>
-                  </div>
-                  <div class="hs-label">Matches</div>
-              </div>
-          </td>
-          <td style="width: 25%;">
-              <div class="global-statistics-card">
-                  <div>${formatter.format(state.statistics.legs)}</div>
-                  <div>
-                    <i class="fas fa-bullseye"></i>
-                  </div>
-                  <div class="hs-label">Legs</div>
-              </div>
-          </td>
-          <td style="width: 25%;">
-              <div class="global-statistics-card">
-                  <div>${formatter.format(state.statistics.visits)}</div>
-                  <div>
-                    <i class="fas fa-hashtag"></i>
-                  </div>
-                  <div class="hs-label">Visits</div>
-              </div>
-          </td>
-          <td style="width: 25%;">
-              <div class="global-statistics-card">
-                  <div>${formatter.format(state.statistics.points)}</div>
-                  <div>
-                    <i class="fas fa-star"></i>
-                  </div>
-                  <div class="hs-label">Points</div>
-              </div>
-          </td>
-      </tr>
-      <tr>
-        <td style="width: 25%;">
-          <div class="global-statistics-card">
-              <div>${formatter.format(state.statistics.fish_n_chips)}</div>
-              <div>
-                <i class="fas fa-fish"></i>
-              </div>
-              <div class="hs-label">Fish N Chips</div>
-          </div>
-      </td>
-      </tr>
-    </table>
-  </div>
+  <statistics-table-global statistics=state.statistics players=input.players/>
 </else-if>
 <else>
   <div>TODO</div>
