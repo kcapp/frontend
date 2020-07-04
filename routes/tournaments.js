@@ -175,7 +175,8 @@ router.post('/admin', function (req, res, next) {
                     legs: [{
                         starting_score: group.score
                     }],
-                    tournament_id: tournament.id
+                    tournament_id: tournament.id,
+                    office_id: req.body.office_id
                 }
                 if (req.body.venue_id !== -1) {
                     matchBody.venue_id = req.body.venue_id;

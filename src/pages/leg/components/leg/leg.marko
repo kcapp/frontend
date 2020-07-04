@@ -3,6 +3,7 @@
 <leg-header leg=state.leg match=input.match experimental=input.experimental
   on-enable-button-input("onEnableButtonInput")
   on-enable-compact-mode("onEnableCompactMode")
+  on-enable-all-buttons-mode("onEnableAllButtonsMode")
   on-enable-stream('onEnableStream')/>
 <div style={ display: state.compactMode ? "none" : "" }>
   <table>
@@ -44,7 +45,7 @@
 <qr-code-modal/>
 <confirm-checkout on-confirm-checkout("onConfirmCheckout")/>
 <if(state.enableButtonInput)>
-  <button-input-table key="compact-input" type=state.type leg=state.leg compactMode=state.compactMode players=state.players on-score-button-pressed("onScoreButtonPressed")/>
+  <button-input-table key="compact-input" type=state.type leg=state.leg compactMode=state.compactMode allButtonsMode=state.allButtonsMode players=state.players on-score-button-pressed("onScoreButtonPressed")/>
 </if>
 <if(input.experimental)>
   <video autoplay id='cam-board-preview'/>

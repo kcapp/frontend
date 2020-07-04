@@ -16,6 +16,9 @@
           <li>
             <a on-click('enableCompactMode')>${state.compactMode ? "Disable" : "Enable"}  Compact Mode</a>
           </li>
+          <li>
+            <a on-click('enableAllButtonsMode')>${state.allButtonsMode ? "Disable" : "Enable"}  All Buttons</a>
+          </li>
         </if>
         <li>
           <a id="change-player-order" data-toggle="modal" data-target="#modal-player-order"  on-click('changeOrder')>Change Order</a>

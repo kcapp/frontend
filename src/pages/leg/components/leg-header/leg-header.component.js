@@ -9,7 +9,8 @@ module.exports = {
             isOfficial: input.match.tournament_id !== null,
             streamEnabled: false,
             buttonInputEnabled: input.buttonsEnabled,
-            compactMode: input.compactMode
+            compactMode: input.compactMode,
+            allButtonsMode : false
         }
     },
 
@@ -51,6 +52,11 @@ module.exports = {
     enableCompactMode() {
         this.state.compactMode = !this.state.compactMode;
         this.emit('enable-compact-mode', this.state.compactMode)
+    },
+
+    enableAllButtonsMode() {
+        this.state.allButtonsMode = !this.state.allButtonsMode;
+        this.emit('enable-all-buttons-mode', this.state.allButtonsMode)
     },
 
     cancelLeg(event) {

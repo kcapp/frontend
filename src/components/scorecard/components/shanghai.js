@@ -1,9 +1,11 @@
-exports.removeLast = function(dart) {
+exports.removeLast = function(dart, external) {
     if (dart.getScore() === this.state.leg.round || (dart.getScore() === 25 && this.state.leg.round === 21)) {
         this.state.player.current_score -= dart.getValue();
         this.emit('score-change', this.state.player.current_score, this.state.player.player_id);
     }
-    this.emit('possible-throw', false, false, this.state.currentDart, -dart.getScore(), dart.getMultiplier(), true);
+    if (!external) {
+        this.emit('possible-throw', false, false, this.state.currentDart, -dart.getScore(), dart.getMultiplier(), true);
+    }
 }
 
 exports.isCheckout = (leg, visit, currentDart) => {

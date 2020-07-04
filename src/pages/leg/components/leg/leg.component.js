@@ -21,7 +21,8 @@ module.exports = {
             audioAnnouncer: undefined,
             streamer: { interval: undefined, stream: undefined, id: 0 },
             enableButtonInput: false,
-            compactMode: false
+            compactMode: false,
+            allButtonsMode: false
         }
     },
 
@@ -149,6 +150,10 @@ module.exports = {
 
     onEnableCompactMode(enabled) {
         this.state.compactMode = enabled;
+    },
+
+    onEnableAllButtonsMode(enabled) {
+        this.state.allButtonsMode = enabled;
     },
 
     onPlayerBusted(busted, component) {

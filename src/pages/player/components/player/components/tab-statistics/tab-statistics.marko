@@ -7,7 +7,7 @@ $ var types = require('../../../../../../components/scorecard/components/match_t
             <if(input.statistics)>
                 <tr>
                     <td style="width: 25%;">
-                        <statistics-card label="Win %" value=`${(input.statistics.legs_won / input.statistics.legs_played * 100).toFixed(2)} %` icon="fas fa-check-circle"/>
+                        <statistics-card label="Win %" value=`${input.statistics.legs_played ? (input.statistics.legs_won / input.statistics.legs_played * 100).toFixed(2) : "-"} %` icon="fas fa-check-circle"/>
                     </td>
                     <if(input.type == types.X01)>
                         <td style="width: 25%;">
@@ -44,23 +44,23 @@ $ var types = require('../../../../../../components/scorecard/components/match_t
                             <statistics-card label="9 Hits" value=`${input.statistics.hits_9}` icon="fas fa-star"/>
                         </td>
                     </else-if>
-                    <else-if(input.type == types.AROUND_THE_CLOCK)>
-                        <td style="width: 25%;">
-                            <statistics-card label="Hit Rate" value=`${(input.statistics.total_hit_rate * 100).toFixed(2)} %` icon="fas fa-bullseye"/>
-                        </td>
-                        <td style="width: 25%;">
-                            <statistics-card label="Longest Streak" value=`${input.statistics.longest_streak}` icon="fas fa-arrow-up"/>
-                        </td>
-                    </else-if>
                     <else-if(input.type == types.AROUND_THE_WORLD || input.type == types.SHANGHAI)>
                         <td style="width: 25%;">
                             <statistics-card label="Hit Rate" value=`${(input.statistics.total_hit_rate * 100).toFixed(2)} %` icon="fas fa-bullseye"/>
                         </td>
                         <td style="width: 25%;">
-                            <statistics-card label="MPR" value=`${input.statistics.mpr.toFixed(2)}` icon="fas fa-circle-notch"/>
+                            <statistics-card label="MPR" value=`${input.statistics.legs_played ? input.statistics.mpr.toFixed(2) : "-"}` icon="fas fa-circle-notch"/>
                         </td>
                         <td style="width: 25%;">
-                            <statistics-card label="Avg. Score" value=`${input.statistics.score}` icon="far fa-star"/>
+                            <statistics-card label="Avg. Score" value=`${input.statistics.legs_played ? input.statistics.score : "-"}` icon="far fa-star"/>
+                        </td>
+                    </else-if>
+                    <else-if(input.type == types.AROUND_THE_CLOCK)>
+                        <td style="width: 25%;">
+                            <statistics-card label="Hit Rate" value=`${(input.statistics.total_hit_rate * 100).toFixed(2)} %` icon="fas fa-bullseye"/>
+                        </td>
+                        <td style="width: 25%;">
+                            <statistics-card label="Longest Streak" value=`${input.statistics.legs_played ? input.statistics.longest_streak : "-"}` icon="fas fa-arrow-up"/>
                         </td>
                     </else-if>
                     <else>
@@ -69,7 +69,8 @@ $ var types = require('../../../../../../components/scorecard/components/match_t
                 </tr>
             </if>
             <tr>
-                <td colspan="100%" style=`display: ${input.type == types.AROUND_THE_CLOCK || input.type == types.AROUND_THE_WORLD || input.type == types.SHANGHAI ? '' : 'none'};`>
+                $ var hasStatistics = input.statistics && input.statistics.legs_played;
+                <td colspan="100%" style=`display: ${hasStatistics && (input.type == types.DARTS_AT_X || input.type == types.AROUND_THE_CLOCK || input.type == types.AROUND_THE_WORLD || input.type == types.SHANGHAI) ? '' : 'none'};`>
                     <div class="block-container" style='padding: 0;'>
                         <canvas id="canvas-hit-rates"></canvas>
                     </div>
@@ -109,6 +110,7 @@ $ var types = require('../../../../../../components/scorecard/components/match_t
                 </else-if>
                 <else-if(input.type == types.DARTS_AT_X)>
                     <th class="text-center">Score</th>
+                    <th class="text-center">Target</th>
                     <th class="text-center">Hit Rate</th>
                     <th class="text-center" title="Singles / Doubles / Triples">S / D / T</th>
                     <th class="text-center">5 Hits</th>
@@ -175,6 +177,7 @@ $ var types = require('../../../../../../components/scorecard/components/match_t
                     </else-if>
                     <else-if(input.type == types.DARTS_AT_X)>
                         <td class="text-center">${statistics.score}</td>
+                        <td class="text-center">${history.starting_score}</td>
                         <td class="text-center">${(statistics.hit_rate * 100).toFixed(2)}%</td>
                         <td class="text-center">${statistics.singles} / ${statistics.doubles} / ${statistics.triples}</td>
                         <td class="text-center">${statistics.hits_5}</td>

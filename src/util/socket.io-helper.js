@@ -107,17 +107,9 @@ exports.onPossibleThrow = function (data, thiz) {
         // No need to update possible throw if we just sent the throw
         return;
     }
-    component.state.currentDart = data.darts_thrown + 1;
 
     var type = thiz.input.match.match_type.id;
-    if (type == types.CRICKET || type == types.DARTS_AT_X) {
-        if (data.is_undo) {
-            component.removeLast();
-        } else {
-            component.setDart(data.score, data.multiplier, data.darts_thrown);
-            component.confirmThrow(true);
-        }
-    } else {
+    if (type == types.X01 || type == types.X01HANDICAP) {
         // Set current dart
         if (data.is_undo) {
             component.getDart(data.darts_thrown).reset();
@@ -137,6 +129,13 @@ exports.onPossibleThrow = function (data, thiz) {
             header.setScored();
         }
         header.setStateDirty('player');
+    } else {
+        if (data.is_undo) {
+            component.removeLast(true);
+        } else {
+            component.setDart(data.score, data.multiplier, data.darts_thrown);
+            component.confirmThrow(true);
+        }
     }
 }
 

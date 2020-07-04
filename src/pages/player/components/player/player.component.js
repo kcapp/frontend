@@ -159,6 +159,18 @@ module.exports = {
                     fill: true,
                     pointRadius: 5,
                     pointHoverRadius: 7
+                },{
+                    label: "Bullseye",
+                    data: [ ],
+                    backgroundColor: "rgba(255, 99, 132, 0.2)",
+                    borderColor: "rgb(255, 99, 132)",
+                    pointBackgroundColor: "rgb(255, 99, 132)",
+                    pointBorderColor: "#fff",
+                    pointHoverBackgroundColor: "#fff",
+                    pointHoverBorderColor: "#fff",
+                    fill: true,
+                    pointRadius: 5,
+                    pointHoverRadius: 7
                 }]
             },
             options: {
@@ -177,7 +189,12 @@ module.exports = {
                 },
                 tooltips: {
                     callbacks: {
-                        title: (item, data) => { return `Hit Rate ${data.labels[item[0].index]}`; },
+                        title: (item, data) => {
+                            if (item[0].datasetIndex === 1) {
+                                return `Hit Rate Bullseye`;
+                            }
+                            return `Hit Rate ${data.labels[item[0].index]}`;
+                        },
                         label: (item, data) => { return `${parseFloat(item.value).toFixed(2)} %`; }
                     }
                 }
@@ -321,14 +338,12 @@ module.exports = {
             if (this.state.statistics.hitrates) {
                 var data = [];
                 for (var i = 0; i < 20; i++) {
-                    var num = DARTBOARD[i];
-                    data.push((this.state.statistics.hitrates[num] * 100).toFixed(2));
+                    data.push((this.state.statistics.hitrates[DARTBOARD[i]] * 100).toFixed(2));
                 }
 
                 var chart = this.state.chart_hitrates;
-                chart.data.datasets.forEach((dataset) => {
-                    dataset.data = data;
-                });
+                chart.data.datasets[0].data = data;
+                chart.data.datasets[1].data = [(this.state.statistics.hitrates[25] * 100).toFixed(2)]
                 chart.update();
             }
             this.state.type = typeId;

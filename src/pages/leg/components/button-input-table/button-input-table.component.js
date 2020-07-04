@@ -4,6 +4,7 @@ module.exports = {
     onCreate(input) {
         this.state = {
             compactMode: false,
+            allButtonsMode: false,
             players: input.players,
             current: this.findCurrent(input.players)
         }

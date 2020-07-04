@@ -76,7 +76,7 @@ module.exports = {
         return this.state.currentDart;
     },
 
-    removeLast() {
+    removeLast(external) {
         if (this.state.currentDart <= 1 && this.state.isSubmitted) {
             this.emit('undo-throw');
             return;
@@ -87,7 +87,7 @@ module.exports = {
 
             switch (this.state.type) {
                 case types.SHOOTOUT:
-                    shootout.removeLast.bind(this)(dart);
+                    shootout.removeLast.bind(this)(dart, external);
                     break;
                 case types.X01:
                     var value = dart.getValue();
@@ -97,19 +97,19 @@ module.exports = {
                     this.emit('possible-throw', false, false, this.state.currentDart, -dart.getScore(), dart.getMultiplier(), true);
                     break;
                 case types.CRICKET:
-                    cricket.removeLast.bind(this)(dart);
+                    cricket.removeLast.bind(this)(dart, external);
                     break;
                 case types.DARTS_AT_X:
-                    dartsAtX.removeLast.bind(this)(dart);
+                    dartsAtX.removeLast.bind(this)(dart, external);
                     break;
                 case types.AROUND_THE_WORLD:
-                    aroundTheWorld.removeLast.bind(this)(dart);
+                    aroundTheWorld.removeLast.bind(this)(dart, external);
                     break;
                 case types.SHANGHAI:
-                    shanghai.removeLast.bind(this)(dart);
+                    shanghai.removeLast.bind(this)(dart, external);
                     break;
                 case types.AROUND_THE_CLOCK:
-                    aroundTheClock.removeLast.bind(this)(dart);
+                    aroundTheClock.removeLast.bind(this)(dart, external);
                     break;
             }
             dart.reset();
