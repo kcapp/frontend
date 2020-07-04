@@ -21,6 +21,8 @@ module.exports = {
             this.startMatch();
         } else if (e.key == '0') {
             this.startWarmup();
+        } else if (e.key == 'r') {
+            this.reconnectSmartboard();
         } else {
             var player = this.input.players[parseInt(e.key) - 1]
             if (player) {
@@ -70,6 +72,10 @@ module.exports = {
         this.emit('warmup-started');
         this.getEl('btn-start-warmup').disabled = true;
         this.state.warmupStarted = true;
+    },
+
+    reconnectSmartboard(event) {
+        this.emit('smartboard-reconnect');
     },
 
     startMatch(event) {

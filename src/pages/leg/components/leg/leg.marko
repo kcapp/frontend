@@ -41,7 +41,7 @@
     </tbody>
   </table>
 </div>
-<player-order players=input.leg_players legId=state.leg.id on-warmup-started("onWarmupStarted")/>
+<player-order players=input.leg_players match=input.match legId=state.leg.id on-warmup-started("onWarmupStarted") on-smartboard-reconnect('onSmartboardReconnect')/>
 <qr-code-modal/>
 <confirm-checkout on-confirm-checkout("onConfirmCheckout")/>
 <if(state.enableButtonInput)>

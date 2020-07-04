@@ -107,6 +107,13 @@ exports.onPossibleThrow = function (data, thiz) {
         // No need to update possible throw if we just sent the throw
         return;
     }
+    else if (data.origin === 'smartboard') {
+        if (data.is_undo) {
+            component.state.currentDart--;
+        } else {
+            component.state.currentDart++;
+        }
+    }
 
     var type = thiz.input.match.match_type.id;
     if (type == types.X01 || type == types.X01HANDICAP) {

@@ -399,6 +399,10 @@ module.exports = {
 
     onWarmupStarted() {
         this.state.socket.emit('warmup_started', { leg: this.input.leg, match: this.input.match });
+    },
+
+    onSmartboardReconnect() {
+        this.state.socket.emit('reconnect_smartboard', { leg: this.input.leg, match: this.input.match });
     }
 };
 

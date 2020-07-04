@@ -41,6 +41,14 @@
         </div>
       </div>
       <div class="modal-footer">
+        <if(input.match.venue && input.match.venue.config.has_smartboard)>
+          <button key="btn-reconnect-smartboard" class="btn btn-primary" type="button" once-click("reconnectSmartboard")>
+            <div class="text-center">
+              <label class="key-small">R</label>
+              <label class='pl-10'>Reconnect Smartboard</label>
+            </div>
+          </button>
+        </if>
         <button key="btn-start-warmup" class="btn btn-primary" type="button" once-click("startWarmup")>
           <div class="text-center">
             <label class="key-small">0</label>

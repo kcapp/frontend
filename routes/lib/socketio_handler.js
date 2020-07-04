@@ -147,6 +147,11 @@ module.exports = (io, app) => {
                         }
                     });
 
+                    client.on('reconnect_smartboard', function (data) {
+                        log('reconnect_smartboard');
+                        _this.io.of('/active').emit('reconnect_smartboard', { leg: data.leg, match: data.match });
+                    });
+
                     client.on('speak', function (data) {
                         log('speak', JSON.stringify(data));
                         nsp.emit('say', {
