@@ -7,6 +7,9 @@
 - Venue selector on tournament admin page
 - Added all game types to statistics page
 - Section for global statistics on statistics page
+- Simplified button inputs for Cricket
+- Option to get QR code for current leg
+- Option to show full set of buttons instead of simplified
 
 #### Changed
 - Multiple tweaks and improvments to multiple pages
@@ -14,6 +17,7 @@
 #### Fixed
 - Correctly show Top 10 statistics on tournament statistics page
 - Allow cycling of scores with keyboard for supported game types
+- Proper handling of error events when adding visits
 
 ## [1.0.0] - 2020-05-03
 #### Feature

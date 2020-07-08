@@ -24,7 +24,6 @@ exports.onScoreUpdate = (data, thiz) => {
 
     var leg = data.leg;
     var globalstat = data.globalstat;
-    thiz.state.roundNumber = Math.floor(leg.visits.length / leg.players.length) + 1;
 
     var players = data.players;
     var playersMap = _.indexBy(players, 'player_id');
@@ -60,6 +59,7 @@ exports.onScoreUpdate = (data, thiz) => {
             setInterval(() => { msg.setContent(getFishNChipsHTML(totalFishNChips, globalFish)); }, 1000);
         }
     }
+
     thiz.state.leg = leg;
     thiz.state.players = players;
 

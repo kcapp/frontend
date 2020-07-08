@@ -47,6 +47,7 @@ module.exports = {
                 }
             }, 2000);
         });
+        socket.on('error', this.onError.bind(this));
         this.state.socket = socket;
         this.state.audioAnnouncer = new Audio();
 
@@ -93,6 +94,10 @@ module.exports = {
     },
 
     onScoreUpdate(data) {
+        if (data.match && data.match.is_finished) {
+            /// Don't update UI when match is finished
+            return;
+        }
         io.onScoreUpdate(data, this);
         var component = this.findActive(this.getComponents('players')).setLeg(this.state.leg);
     },
@@ -102,6 +107,12 @@ module.exports = {
             playerId = this.findActive(this.getComponents('players')).state.playerId;
         }
         this.getComponent('player-' + playerId).setScored(scored);
+    },
+
+    onError(error) {
+        alertify.alert(`Error: ${error.message}. Refresh and try again`, () => {
+            this.state.submitting = false;
+        });
     },
 
     onEnableStream(data) {

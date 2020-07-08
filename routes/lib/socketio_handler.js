@@ -209,9 +209,10 @@ module.exports = (io, app) => {
                                     nsp.emit('error', { message: error.message, code: error.code });
                                 });
                             }).catch(error => {
-                                var message = error.message + ' (' + error + ')'
-                                debug(`[${legId}] Error when adding visit: ${message}`);
-                                nsp.emit('error', { message: message, code: error.code });
+                                var message = error.response.data.trim();
+                                var status = error.response.status;
+                                debug(`[${legId}] Error when adding visit: (${status}) ${message}`);
+                                nsp.emit('error', { message: message, code: status });
                             });
                     });
 

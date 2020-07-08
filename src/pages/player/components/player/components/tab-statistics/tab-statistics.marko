@@ -177,7 +177,7 @@ $ var types = require('../../../../../../components/scorecard/components/match_t
                     </else-if>
                     <else-if(input.type == types.DARTS_AT_X)>
                         <td class="text-center">${statistics.score}</td>
-                        <td class="text-center">${history.starting_score}</td>
+                        <td class="text-center">${history.starting_score == 25 ? "Bull" : history.starting_score}</td>
                         <td class="text-center">${(statistics.hit_rate * 100).toFixed(2)}%</td>
                         <td class="text-center">${statistics.singles} / ${statistics.doubles} / ${statistics.triples}</td>
                         <td class="text-center">${statistics.hits_5}</td>
