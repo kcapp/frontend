@@ -18,7 +18,8 @@ module.exports = {
                 stake: null,
                 venue: null
             },
-            playerId: ""
+            playerId: "",
+            submitting: false
         }
     },
     onMount() {
@@ -49,7 +50,9 @@ module.exports = {
             case 'Enter':
                 var playerId = this.state.playerId;
                 if (playerId == '00') {
-                    this.newGame();
+                    if (!this.state.submitting) {
+                        this.newGame();
+                    }
                     return;
                 }
                 this.state.playerId = '';
@@ -190,6 +193,8 @@ module.exports = {
         this.setStateDirty('players');
     },
     newGame(event) {
+        this.state.submitting = true;
+
         var officeId = this.state.officeId;
         if (officeId <= 0) {
             if (officeId == 0 && this.state.options.venue && this.state.options.venue !== -1) {
@@ -230,6 +235,8 @@ module.exports = {
                 localStorageUtil.set('venue', this.state.options.venue);
                 location.href = 'legs/' + response.data.current_leg_id
             }).catch(error => {
+                this.state.submitting = false;
+
                 var msg = error.response.data ? error.response.data : "See log for details";
                 alert(`Error starting match. ${msg}`);
                 console.log(error);

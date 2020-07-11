@@ -6,7 +6,7 @@
                 <div class="global-statistics-card">
                     <div>${formatter.format(input.statistics.matches ? input.statistics.matches : 0)}</div>
                     <div>
-                    <i class="fas fa-flag"></i>
+                        <i class="fas fa-flag"></i>
                     </div>
                     <div class="hs-label">Matches</div>
                 </div>
@@ -15,7 +15,7 @@
                 <div class="global-statistics-card">
                     <div>${formatter.format(input.statistics.legs ? input.statistics.legs : 0)}</div>
                     <div>
-                    <i class="fas fa-bullseye"></i>
+                        <i class="fas fa-bullseye"></i>
                     </div>
                     <div class="hs-label">Legs</div>
                 </div>
@@ -24,31 +24,69 @@
                 <div class="global-statistics-card">
                     <div>${formatter.format(input.statistics.visits ? input.statistics.visits : 0)}</div>
                     <div>
-                    <i class="fas fa-hashtag"></i>
+                        <i class="fas fa-hashtag"></i>
                     </div>
                     <div class="hs-label">Visits</div>
                 </div>
             </td>
             <td style="width: 25%;">
                 <div class="global-statistics-card">
-                    <div>${formatter.format(input.statistics.points ? input.statistics.points : 0)}</div>
+                    <div>${formatter.format(input.statistics.darts ? input.statistics.darts : 0)}</div>
                     <div>
-                    <i class="fas fa-star"></i>
+                        <i class="fas fa-angle-double-up"></i>
                     </div>
-                    <div class="hs-label">Points</div>
+                    <div class="hs-label">Darts</div>
                 </div>
             </td>
         </tr>
         <tr>
-        <td style="width: 25%;">
-            <div class="global-statistics-card">
-                <div>${formatter.format(input.statistics.fish_n_chips ? input.statistics.fish_n_chips : 0)}</div>
-                <div>
-                <i class="fas fa-fish"></i>
+            <td style="width: 25%;">
+                <div class="global-statistics-card">
+                    <div>${formatter.format(input.statistics.points ? input.statistics.points : 0)}</div>
+                    <div>
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <div class="hs-label">Points</div>
                 </div>
-                <div class="hs-label">Fish N Chips</div>
-            </div>
-        </td>
+            </td>
+            <td style="width: 25%;">
+                <div class="global-statistics-card">
+                    <div>${formatter.format(input.statistics.points_busted ? input.statistics.points_busted : 0)}</div>
+                    <div>
+                        <i class="fas fa-unlink"></i>
+                    </div>
+                    <div class="hs-label">Busted</div>
+                </div>
+            </td>
+            <td style="width: 25%;">
+                <div class="global-statistics-card">
+                    <div>${formatter.format(input.statistics.score_180s ? input.statistics.score_180s : 0)}</div>
+                    <div>
+                        <i class="far fa-star"></i>
+                    </div>
+                    <div class="hs-label">180s</div>
+                </div>
+            </td>
+            <td style="width: 25%;">
+                <div class="global-statistics-card">
+                    <div>${formatter.format(input.statistics.score_bullseyes ? input.statistics.score_bullseyes : 0)}</div>
+                    <div>
+                        <i class="fas fa-dot-circle"></i>
+                    </div>
+                    <div class="hs-label">Bullseyes</div>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td style="width: 25%;">
+                <div class="global-statistics-card">
+                    <div>${formatter.format(input.statistics.fish_n_chips ? input.statistics.fish_n_chips : 0)}</div>
+                    <div>
+                        <i class="fas fa-fish"></i>
+                    </div>
+                    <div class="hs-label">Fish N Chips</div>
+                </div>
+            </td>
         </tr>
     </table>
 </div>
