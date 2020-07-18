@@ -9,17 +9,27 @@ module.exports = {
             isOfficial: input.match.tournament_id !== null,
             streamEnabled: false,
             buttonInputEnabled: input.buttonsEnabled,
-            compactMode: input.compactMode
+            compactMode: input.compactMode,
+            allButtonsMode : false
         }
     },
 
     onMount() {
-        var mobile = require('is-mobile');
-        var isMobile = mobile({ tablet: true });
+        var MobileDetect = require('mobile-detect'),
+        md = new MobileDetect(window.navigator.userAgent);
+
+        var isMobile = md.mobile();
+        var isTablet = md.tablet();
+
         this.state.buttonInputEnabled = isMobile;
         this.emit('enable-button-input', this.state.buttonInputEnabled);
-        this.state.compactMode = isMobile;
+
+        this.state.compactMode = isMobile && !isTablet;
         this.emit('enable-compact-mode', this.state.compactMode);
+
+        if (isMobile || isTablet) {
+            $(function() { window.scrollTo(0,document.body.scrollHeight); });
+        }
     },
 
     changeOrder(event) {
@@ -46,6 +56,11 @@ module.exports = {
     enableCompactMode() {
         this.state.compactMode = !this.state.compactMode;
         this.emit('enable-compact-mode', this.state.compactMode)
+    },
+
+    enableAllButtonsMode() {
+        this.state.allButtonsMode = !this.state.allButtonsMode;
+        this.emit('enable-all-buttons-mode', this.state.allButtonsMode)
     },
 
     cancelLeg(event) {

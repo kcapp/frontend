@@ -1,4 +1,8 @@
+var axios = require('axios');
 var Chart = require("chart.js");
+var types = require('../../../../components/scorecard/components/match_types');
+
+const DARTBOARD = ['20', '1', '18', '4', '13', '6', '10', '15', '2', '17', '3', '19', '7', '16', '8', '11', '14', '9', '12', '5' ];
 
 module.exports = {
     onCreate(input) {
@@ -6,7 +10,14 @@ module.exports = {
             x01: input.statistics.x01,
             shootout: input.statistics.shootout,
             cricket: input.statistics.cricket,
-            dartsAtX: input.statistics.darts_at_x
+            dartsAtX: input.statistics.darts_at_x,
+
+            statistics: undefined,
+            history: [],
+            limit: 15,
+            type: types.X01,
+
+            chart_hitrates: undefined
         }
     },
     onMount() {
@@ -23,12 +34,6 @@ module.exports = {
                 searching: false, bInfo : false, bLengthChange: false,
                 pageLength: 15,
                 order: [[ 1,  'desc' ]]
-            });
-            $('#table-player-profile-visits').DataTable({
-                searching: false, bInfo : false, bLengthChange: false,
-                pageLength: 15,
-                order: [[ 3,  'desc' ]],
-                columnDefs: [ { targets: [ 0, 1, 2 ], orderable: false, searchable: false } ]
             });
         });
 
@@ -136,6 +141,66 @@ module.exports = {
         var scoresChart = new Chart("canvas-scores", this.getChartConfig('Scores Per Week|', 'line', 'Date', 'Count', labels, datasetsScores));
 
         $('[data-toggle="tooltip"]').tooltip();
+
+        this.state.chart_hitrates = new Chart("canvas-hit-rates", {
+            type: 'radar',
+            responsive: false,
+            data: {
+                labels: DARTBOARD,
+                datasets: [{
+                    label: "Hit Rates",
+                    data: [ ],
+                    backgroundColor: "rgba(54, 162, 235, 0.2)",
+                    borderColor: "rgb(54, 162, 235)",
+                    pointBackgroundColor: "rgb(54, 162, 235)",
+                    pointBorderColor: "#fff",
+                    pointHoverBackgroundColor: "#fff",
+                    pointHoverBorderColor: "rgb(54, 162, 235)",
+                    fill: true,
+                    pointRadius: 5,
+                    pointHoverRadius: 7
+                },{
+                    label: "Bullseye",
+                    data: [ ],
+                    backgroundColor: "rgba(255, 99, 132, 0.2)",
+                    borderColor: "rgb(255, 99, 132)",
+                    pointBackgroundColor: "rgb(255, 99, 132)",
+                    pointBorderColor: "#fff",
+                    pointHoverBackgroundColor: "#fff",
+                    pointHoverBorderColor: "#fff",
+                    fill: true,
+                    pointRadius: 5,
+                    pointHoverRadius: 7
+                }]
+            },
+            options: {
+                title: {
+                    display: true,
+                    fontSize: 16,
+                    text: 'Hit Rate Per Number'
+                },
+                elements: {
+                    line: { tension: 0, borderWidth: 3 }
+                },
+                scale: {
+                    angleLines: { display: false },
+                    ticks: { suggestedMin: 0, suggestedMax: 100 },
+                    pointLabels: { fontSize: 18 }
+                },
+                tooltips: {
+                    callbacks: {
+                        title: (item, data) => {
+                            if (item[0].datasetIndex === 1) {
+                                return `Hit Rate Bullseye`;
+                            }
+                            return `Hit Rate ${data.labels[item[0].index]}`;
+                        },
+                        label: (item, data) => { return `${parseFloat(item.value).toFixed(2)} %`; }
+                    }
+                }
+            }
+        });
+        this.typeChanged(types.X01);
     },
 
     getChartConfig(title, type, xAxisLabel, yAxisLabel, lables, datasets) {
@@ -258,5 +323,32 @@ module.exports = {
         };
 
         return config;
+    },
+
+    typeChanged(typeId) {
+        axios.all([
+            axios.get(this.input.locals.kcapp.api_external + '/player/' + this.input.player.id + '/statistics/' + typeId),
+            axios.get(this.input.locals.kcapp.api_external + '/player/' + this.input.player.id + '/statistics/' + typeId + '/history/' + this.state.limit)
+        ]).then(axios.spread((statistics, history) => {
+            this.state.statistics = statistics.data;
+            this.setStateDirty('statistics');
+            this.state.history = history.data;
+            this.setStateDirty('history');
+
+            if (this.state.statistics.hitrates) {
+                var data = [];
+                for (var i = 0; i < 20; i++) {
+                    data.push((this.state.statistics.hitrates[DARTBOARD[i]] * 100).toFixed(2));
+                }
+
+                var chart = this.state.chart_hitrates;
+                chart.data.datasets[0].data = data;
+                chart.data.datasets[1].data = [(this.state.statistics.hitrates[25] * 100).toFixed(2)]
+                chart.update();
+            }
+            this.state.type = typeId;
+        })).catch(error => {
+            console.log('Error when getting data for player ' + error);
+        });
     }
 };

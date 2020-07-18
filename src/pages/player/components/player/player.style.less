@@ -113,6 +113,7 @@
     }
     .mb-10;
 }
+#table-player-statistics,
 #table-tournament-standings {
     width: 100%;
     thead {
@@ -257,33 +258,6 @@
     color: #d1bf21;
 }
 
-.highscore-card {
-    .block-container;
-    .mr-10;
-    div {
-        font-size: 45px;
-        font-weight: 700;
-        text-align: center;
-    }
-    i.highscore {
-        font-size: 20px;
-    }
-    .mb-10;
-}
-
-.highscore-card-no-margin {
-    .block-container;
-    div {
-        font-size: 45px;
-        font-weight: 700;
-        text-align: center;
-    }
-    i.highscore {
-        font-size: 20px;
-    }
-    .mb-10;
-}
-
 .table-player-checkouts-header {
     width: 100%;
     td:nth-child(1) {
@@ -358,7 +332,7 @@
     }
     .label-mid {
         position: relative;
-        margin-top: -21%;
+        margin-top: -23%;
         margin-left: 38%;
         font-size: 14pt;
         font-weight: 700;
@@ -368,4 +342,24 @@
 .accuracy-chart-no-margin {
     .accuracy-chart;
     margin-right: 0px;
+}
+
+#table-player-statistics {
+    .fas {
+        font-size: 25px;
+    }
+    .label-secondary {
+        margin-right: 3px;
+        background-color: rgb(0, 73, 59);
+        font-weight: 300;
+        padding: 3px 5px;
+        font-size: 12px;
+    }
+    .label-success {
+        margin-right: 3px;
+        background-color: #007cff;
+        font-weight: 300;
+        padding: 3px 5px;
+        font-size: 12px;
+    }
 }

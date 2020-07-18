@@ -11,9 +11,10 @@ $ var icon = input.icon || "fa-trophy";
       <for|column| of=input.subheadings>
         <div class="float-left" style="width: 250px;">
           <for|heading| of=column>
+            $ var type = heading.type || "fas";
             <p style="padding-top: 3px;">
-              <i class=`fas ${heading.icon}`/>
-              <span class="ml-5">${heading.heading}</span>
+              <i class=`${type} ${heading.icon}`/>
+              <span style=heading.style class="ml-5">${heading.heading}</span>
             </p>
           </for>
         </div>

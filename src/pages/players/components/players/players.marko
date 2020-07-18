@@ -12,9 +12,9 @@
 <else>
   <div>
     <options-panel key="options-panel" players=input.players/>
-    <div class="pt-20"/>
+    <office-selector offices=input.offices clazz="float-right" on-office-changed("officeChanged")/>
     <div class="block-container no-padding">
-      <players-table key="players-table" players=input.players offices=input.offices/>
+      <players-table key="players-table" players=state.players offices=input.offices/>
     </div>
     <div class='text-center'>
       <new-player-form isAdd=true offices=input.offices/>

@@ -13,6 +13,7 @@ module.exports = {
             clazz: clazz
         }
     },
+
     onClick(event) {
         var target = event.target;
         if (this.state.isUndo) {

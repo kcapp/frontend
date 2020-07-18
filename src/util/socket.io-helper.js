@@ -20,11 +20,10 @@ exports.connect = (url) => {
 
 exports.onScoreUpdate = (data, thiz) => {
     thiz.state.submitting = false;
-
     console.log(data);
+
     var leg = data.leg;
     var globalstat = data.globalstat;
-    thiz.state.roundNumber = Math.floor(leg.visits.length / leg.players.length) + 1;
 
     var players = data.players;
     var playersMap = _.indexBy(players, 'player_id');
@@ -60,7 +59,9 @@ exports.onScoreUpdate = (data, thiz) => {
             setInterval(() => { msg.setContent(getFishNChipsHTML(totalFishNChips, globalFish)); }, 1000);
         }
     }
+
     thiz.state.leg = leg;
+    thiz.state.players = players;
 
     var compactComponent = thiz.getComponent("compact-input");
     if (compactComponent) {
@@ -102,20 +103,20 @@ exports.onPossibleThrow = function (data, thiz) {
         compactComponent.setStateDirty("players");
     }
 
-    if (data.origin === 'web' /*&& !component.getDart(data.darts_thrown).state.initial*/) {
+    if (data.origin === 'web' && data.uuid === component.state.uuid) {
         // No need to update possible throw if we just sent the throw
         return;
     }
+    else if (data.origin === 'smartboard') {
+        if (data.is_undo) {
+            component.state.currentDart--;
+        } else {
+            component.state.currentDart++;
+        }
+    }
 
     var type = thiz.input.match.match_type.id;
-    if (type == types.CRICKET || type == types.DARTS_AT_X) {
-        if (data.is_undo) {
-            component.removeLast();
-        } else {
-            component.setDart(data.score, data.multiplier, data.darts_thrown);
-            component.confirmThrow(true);
-        }
-    } else {
+    if (type == types.X01 || type == types.X01HANDICAP) {
         // Set current dart
         if (data.is_undo) {
             component.getDart(data.darts_thrown).reset();
@@ -135,6 +136,13 @@ exports.onPossibleThrow = function (data, thiz) {
             header.setScored();
         }
         header.setStateDirty('player');
+    } else {
+        if (data.is_undo) {
+            component.removeLast(true);
+        } else {
+            component.setDart(data.score, data.multiplier, data.darts_thrown);
+            component.confirmThrow(true);
+        }
     }
 }
 

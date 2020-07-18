@@ -1,0 +1,32 @@
+<div class="block-container no-padding no-border">
+    <table id="table-tournament-standings">
+        <thead>
+            <tr>
+                <th>Tournament</th>
+                <th>Division</th>
+                <th>Group</th>
+                <th>Final Standing</th>
+                <th>Elo</th>
+            </tr>
+        </thead>
+        <tbody>
+            <for|standing| of=input.tournament_standings>
+                <tr>
+                    $ var division = standing.tournament_group.division
+                    $ var divisionPostfix = division === 1 ? 'st' : division === 2 ? 'nd' : division === 3 ? 'rd' : 'th';
+                    <td>
+                        <a href=`/tournaments/${standing.tournament.id}/player/${input.player.id}`>${standing.tournament.name}</a>
+                    </td>
+                    <td>${division}${divisionPostfix}</td>
+                    <td>${standing.tournament_group.name}</td>
+                    <td>${standing.final_standing} / ${standing.total_players}
+                        <if(standing.final_standing === 1)>
+                            <span class="glyphicon glyphicon-star glyphWinner" style="padding-left: 0.2em;" aria-hidden="true"></span>
+                        </if>
+                    </td>
+                    <td>${standing.elo}</td>
+                </tr>
+            </for>
+        </tbody>
+    </table>
+</div>

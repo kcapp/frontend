@@ -1,0 +1,86 @@
+$ var player = input.player;
+$ var prev = input.previous_statistics;
+$ var current = input.current_statistics;
+<div class="block-container">
+    <div class="keyinfo">
+        <div class="label-fat-18-grey">OVERALL AVG.</div>
+        <div class="label-fat-25">
+            $ var diff = (current.three_dart_avg - prev.three_dart_avg).toFixed(2)
+            $ var change = diff > 0 ? 'fas fa-arrow-alt-circle-up' : diff < 0 ? 'fas fa-arrow-alt-circle-down' : 'fas fa-arrow-alt-circle-right'
+            $ var col = diff > 0 ? 'col-green' : diff < 0 ? 'col-red' : 'col-grey'
+            <div>${current.three_dart_avg.toFixed(2)}</div>
+            <div style="font-size: 18px;" class=`${col}`>
+                <i class=`${change}`></i>
+                <span style="margin-left: 5px;" data-toggle="tooltip" data-placement="bottom" title="Since last week">${Math.abs(diff)}</span>
+            </div>
+        </div>
+    </div>
+    <div class="keyinfo">
+        <div class="label-fat-18-grey">FIRST 9 AVG.</div>
+        <div class="label-fat-25">
+            $ var diff = (current.first_nine_three_dart_avg - prev.first_nine_three_dart_avg).toFixed(2)
+            $ var change = diff > 0 ? 'fas fa-arrow-alt-circle-up' : diff < 0 ? 'fas fa-arrow-alt-circle-down' : 'fas fa-arrow-alt-circle-right'
+            $ var col = diff > 0 ? 'col-green' : diff < 0 ? 'col-red' : 'col-grey'
+            <div>${current.first_nine_three_dart_avg.toFixed(2)}</div>
+            <div style="font-size: 18px;" class=`${col}`>
+                <i class=`${change}`></i>
+                <span style="margin-left: 5px;" data-toggle="tooltip" data-placement="bottom" title="Since last week">${Math.abs(diff)}</span>
+            </div>
+        </div>
+    </div>
+    <div class="keyinfo">
+        <div class="label-fat-18-grey">CHECKOUT %</div>
+        <div class="label-fat-25">
+            $ var cp = current.checkout_percentage === null ? 0 : current.checkout_percentage.toFixed(2)
+            $ var pcp = prev.checkout_percentage === null ? 0 : prev.checkout_percentage.toFixed(2)
+            $ var diff = (cp - pcp).toFixed(2)
+            $ var change = diff > 0 ? 'fas fa-arrow-alt-circle-up' : diff < 0 ? 'fas fa-arrow-alt-circle-down' : 'fas fa-arrow-alt-circle-right'
+            $ var col = diff > 0 ? 'col-green' : diff < 0 ? 'col-red' : 'col-grey'
+            <div>${cp}%</div>
+            <div style="font-size: 18px;" class=`${col}`>
+                <i class=`${change}`></i>
+                <span style="margin-left: 5px;" data-toggle="tooltip" data-placement="bottom" title="Since last week">${Math.abs(diff)}%</span>
+            </div>
+        </div>
+    </div>
+    <div class="keyinfo">
+        <div class="label-fat-18-grey">HIGHEST CHECKOUT</div>
+        <div class="label-fat-25">${current.highest_checkout ? current.highest_checkout.value : '-'}</div>
+    </div>
+</div>
+<table style="width: 100%;">
+    <tr>
+        <td colspan="2">
+            <div class="block-container mr-10"><canvas id="canvas-win-percentage-matches"></canvas>
+                <div class="label-mid" id="canvas-win-percentage-matches-percentage"></div>
+            </div>
+        </td>
+        <td style="vertical-align: top;">
+            <div class="block-container" style="min-height: 333px;">
+                <div class="label-fat-15-grey">Tournament elo / Current elo</div>
+                <div class="label-fat-18-grey" style="color: black;padding-bottom: 20px; font-size: 25pt;">${player.tournament_elo} / ${player.current_elo}</div>
+                <div class="label-fat-15-grey">Matches played / Matches won</div>
+                <div class="label-fat-18-grey" style="color: black;padding-bottom: 20px; font-size: 25pt;">${player.matches_played} / ${player.matches_won}</div>
+                <div class="label-fat-15-grey">Legs played / Legs won</div>
+                <div class="label-fat-18-grey" style="color: black; font-size: 25pt;">${player.legs_played} / ${player.legs_won}</div>
+            </div>
+        </td>
+    </tr>
+    <tr>
+        <td style="width: 33%;">
+            <div class="block-container accuracy-chart"><canvas id="canvas-accuracy-overall"></canvas>
+                <div class="label-mid" id="canvas-accuracy-overall-percentage"></div>
+            </div>
+        </td>
+        <td style="width: 33%;">
+            <div class="block-container accuracy-chart"><canvas id="canvas-accuracy-20"></canvas>
+                <div class="label-mid" id="canvas-accuracy-20-percentage"></div>
+            </div>
+        </td>
+        <td style="width: 33%;">
+            <div class="block-container accuracy-chart-no-margin"><canvas id="canvas-accuracy-19"></canvas>
+                <div class="label-mid" id="canvas-accuracy-19-percentage"></div>
+            </div>
+        </td>
+    </tr>
+</table>

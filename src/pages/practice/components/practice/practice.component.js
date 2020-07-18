@@ -131,8 +131,10 @@ module.exports = {
         }
     },
     cycleValues(values, current) {
-        var index = _.findIndex(values, (value) => { return value.id === current });
-        return values[(index + 1) % values.length].id;
+        if (values.length > 0) {
+            var index = _.findIndex(values, (value) => { return value.id === current });
+            return values[(index + 1) % values.length].id;
+        }
     },
     addPlayer(event, selected) {
         var player = selected.input.player;
@@ -207,9 +209,20 @@ module.exports = {
             this.state.players = this.input.players;
             this.state.venues = this.input.venues;
         } else {
-            this.state.players = _.reject(this.input.players, (player) => { return player.office_id != officeId; });
+            this.state.players = _.reject(this.input.players, (player) => { return player.office_id != officeId || player.is_bot;  });
             this.state.venues = _.reject(this.input.venues, (venue) => { return venue.office_id != officeId; });
         }
+
+        // Remove any players already selected
+        this.state.players = _.reject(this.state.players, (player) => {
+            for (var i = 0; i < this.state.selected.length; i++) {
+                if (player.id === this.state.selected[i].id) {
+                    return true;
+                }
+            }
+            return false;
+        });
+
         this.setStateDirty('players');
         this.setStateDirty('venues');
         localStorageUtil.set('office_id', this.state.officeId);

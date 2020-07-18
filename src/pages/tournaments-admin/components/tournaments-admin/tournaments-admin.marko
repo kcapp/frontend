@@ -19,6 +19,12 @@
         <option value=`${id}` selected=(office.id == state.office)>${office.name}</option>
       </for>
     </select>
+    <p>Venue</p>
+    <select on-change("venueChange")>
+      <for|id, venue| in=state.venues>
+        <option value=`${venue.id}` selected=(venue.id == state.venue)>${venue.name}</option>
+      </for>
+    </select>
   </div>
 </div>
 <h3>Groups</h3>

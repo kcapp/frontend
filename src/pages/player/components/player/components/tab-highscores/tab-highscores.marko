@@ -1,0 +1,73 @@
+<table style="width: 100%;">
+    <tr>
+        <td style="width: 25%;">
+            <div class="highscore-card">
+                <div>${input.statistics.scores_60s_plus}</div>
+                <div class="hs-star rank4"><i class="fas fa-star highscore"></i></div>
+                <div class="hs-label">60+</div>
+            </div>
+        </td>
+        <td style="width: 25%;">
+            <div class="highscore-card">
+                <div>${input.statistics.scores_100s_plus}</div>
+                <div class="hs-star rank4"><i class="fas fa-star highscore"></i><i class="fas fa-star highscore"></i></div>
+                <div class="hs-label">100+</div>
+            </div>
+        </td>
+        <td style="width: 25%;">
+            <div class="highscore-card">
+                <div>${input.statistics.scores_140s_plus}</div>
+                <div class="hs-star rank4"><i class="fas fa-star highscore"></i><i class="fas fa-star highscore"></i><i class="fas fa-star highscore"></i></div>
+                <div class="hs-label">140+</div>
+            </div>
+        </td>
+        <td style="width: 25%;">
+            <div class="highscore-card-no-margin">
+                <div>${input.statistics.scores_180s}</div>
+                <div class="hs-star rank4"><i class="fas fa-star highscore"></i><i class="fas fa-star highscore"></i><i class="fas fa-star highscore"></i><i class="fas fa-star highscore"></i></div>
+                <div class="hs-label">180</div>
+            </div>
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2" style="vertical-align: top;">
+            <div class="block-container mr-10">
+                <div style="font-size: 18pt;">
+                    <span>Best Three Dart Avg.</span>
+                    <span class="float-right">
+                        <best-statistics statistic=input.statistics.best_three_dart_avg/>
+                    </span>
+                </div>
+                <div style="font-size: 18pt;">
+                    <span>Best First 9 Avg.</span>
+                    <span class="float-right">
+                        <best-statistics statistic=input.statistics.best_first_nine_avg/>
+                    </span>
+                </div>
+            </div>
+        </td>
+        <td colspan="2" style="vertical-align: top;">
+            <div class="block-container">
+                <div style="font-size: 18pt;">
+                    <span>Best 301</span>
+                    <span class="float-right">
+                        <best-statistics statistic=input.statistics.best_301/>
+                    </span>
+                </div>
+                <div style="clear: both;"></div>
+                <div style="font-size: 18pt;">
+                    <span>Best 501</span>
+                    <span class="float-right">
+                        <best-statistics statistic=input.statistics.best_501/>
+                    </span>
+                </div>
+                <div style="font-size: 18pt;">
+                    <span>Best 701</span>
+                    <span class="float-right">
+                        <best-statistics statistic=input.statistics.best_701/>
+                    </span>
+                </div>
+            </div>
+        </td>
+    </tr>
+</table>

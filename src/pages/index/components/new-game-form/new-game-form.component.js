@@ -18,7 +18,8 @@ module.exports = {
                 stake: null,
                 venue: null
             },
-            playerId: ""
+            playerId: "",
+            submitting: false
         }
     },
     onMount() {
@@ -49,7 +50,9 @@ module.exports = {
             case 'Enter':
                 var playerId = this.state.playerId;
                 if (playerId == '00') {
-                    this.newGame();
+                    if (!this.state.submitting) {
+                        this.newGame();
+                    }
                     return;
                 }
                 this.state.playerId = '';
@@ -95,13 +98,18 @@ module.exports = {
                 break;
             case '*':
                 // Don't allow cycling of score when 9 Dart Shootout or Cricket is selected
-                if (this.state.options.game_type !== types.SHOOTOUT && this.state.options.game_type != types.CRICKET) {
+                if (this.state.options.game_type === types.X01 || this.state.options.game_type === types.X01HANDICAP) {
                     var component = this.getComponent('starting-score');
                     var score = this.cycleValues(this.state.input.scores, this.state.options.starting_score);
                     if (score === 0) {
                         // Don't allow cycling to 0 as starting score
                         score = this.cycleValues(this.state.input.scores, score);
                     }
+                    component.state.index = score
+                    this.state.options.starting_score = component.state.index;
+                } else if (this.state.options.game_type === types.DARTS_AT_X) {
+                    var component = this.getComponent('starting-score');
+                    var score = this.cycleValues(component.state.values, component.state.index);
                     component.state.index = score
                     this.state.options.starting_score = component.state.index;
                 }
@@ -113,7 +121,11 @@ module.exports = {
                 break;
             case '+':
                 var component = this.getComponent('stake');
-                component.state.index = this.cycleValues(this.state.input.stakes, this.state.options.stake);
+                if (component.state.index === this.input.stakes.length) {
+                    component.state.index = -1;
+                } else {
+                    component.state.index = this.cycleValues(this.state.input.stakes, this.state.options.stake);
+                }
                 this.state.options.stake = component.state.index;
                 break;
             default:
@@ -121,15 +133,18 @@ module.exports = {
         }
     },
     cycleValues(values, current) {
-        var index = _.findIndex(values, (value) => { return value.id === current });
-        return values[(index + 1) % values.length].id;
+        if (values.length > 0) {
+            var index = _.findIndex(values, (value) => { return value.id === current });
+            return values[(index + 1) % values.length].id;
+        }
     },
     onGameTypeChanged(attribute, value) {
         if (attribute == 'game_type') {
             // If this is 9 Dart Shootout or Cricket, make sure to set score to 0 and disable the selector
             var scoreComponent = this.getComponent('starting-score')
             scoreComponent.updateOptions(this.input.scores);
-            if (this.state.options.game_type === types.SHOOTOUT || this.state.options.game_type == types.CRICKET) {
+            if (this.state.options.game_type === types.SHOOTOUT || this.state.options.game_type == types.CRICKET ||
+                this.state.options.game_type === types.AROUND_THE_WORLD || this.state.options.game_type === types.SHANGHAI || this.state.options.game_type === types.AROUND_THE_CLOCK) {
                 scoreComponent.state.index = 0;
                 scoreComponent.state.enabled = false;
             } else if (this.state.options.game_type == types.DARTS_AT_X) {
@@ -144,9 +159,12 @@ module.exports = {
             } else if (this.state.options.starting_score === 0) {
                 scoreComponent.state.index = scoreComponent.state.defaultValue;
                 scoreComponent.state.enabled = true;
+            } else {
+                scoreComponent.state.index = scoreComponent.state.defaultValue;
+                scoreComponent.state.enabled = true;
             }
-            this.state.options.starting_score = scoreComponent.state.index
 
+            this.state.options.starting_score = scoreComponent.state.index
 
             var selectedPlayers = this.getComponents('players');
             for (var i = 0; i < selectedPlayers.length; i++) {
@@ -175,6 +193,8 @@ module.exports = {
         this.setStateDirty('players');
     },
     newGame(event) {
+        this.state.submitting = true;
+
         var officeId = this.state.officeId;
         if (officeId <= 0) {
             if (officeId == 0 && this.state.options.venue && this.state.options.venue !== -1) {
@@ -215,6 +235,8 @@ module.exports = {
                 localStorageUtil.set('venue', this.state.options.venue);
                 location.href = 'legs/' + response.data.current_leg_id
             }).catch(error => {
+                this.state.submitting = false;
+
                 var msg = error.response.data ? error.response.data : "See log for details";
                 alert(`Error starting match. ${msg}`);
                 console.log(error);
@@ -237,6 +259,16 @@ module.exports = {
             this.state.players = _.reject(this.input.players, (player) => { return player.office_id != officeId || player.is_bot; });
             this.state.venues = _.reject(this.input.venues, (venue) => { return venue.office_id != officeId; });
         }
+        // Remove any players already selected
+        this.state.players = _.reject(this.state.players, (player) => {
+            for (var i = 0; i < this.state.selected.length; i++) {
+                if (player.id === this.state.selected[i].id) {
+                    return true;
+                }
+            }
+            return false;
+        });
+
         this.setStateDirty('players');
         this.setStateDirty('venues');
         localStorageUtil.set('office_id', this.state.officeId);

@@ -42,8 +42,8 @@
                             </else-if>
                         </div>
                         </td>
-                        <td>
-                            <a href=`/tournaments/${input.tournament.id}/player/${player.player_id}`>${input.players[player.player_id].name}</a>
+                        <td style='width: 15%;'>
+                            <a style='white-space: nowrap; overflow: hidden; text-overflow: ellipsis;' href=`/tournaments/${input.tournament.id}/player/${player.player_id}`>${input.players[player.player_id].name}</a>
                         </td>
                         <td class="text-right">${player.played}</td>
                         <td class="text-right pl-20">${player.matches_won}</td>

@@ -3,12 +3,15 @@ var moment = require('moment');
 var io = require('../../../../util/socket.io-helper.js');
 var alertify = require("../../../../util/alertify");
 var types = require('../../../../components/scorecard/components/match_types');
+var { v4: uuidv4 } = require('uuid');
 
 module.exports = {
     onCreate(input) {
         var venue = input.match.venue;
         this.state = {
+            uuid: uuidv4(),
             leg: input.leg,
+            players: input.leg_players,
             roundNumber: input.leg.round,
             venueConfig: venue && venue.config ? venue.config : {},
             submitting: false,
@@ -18,7 +21,8 @@ module.exports = {
             audioAnnouncer: undefined,
             streamer: { interval: undefined, stream: undefined, id: 0 },
             enableButtonInput: false,
-            compactMode: false
+            compactMode: false,
+            allButtonsMode: false
         }
     },
 
@@ -43,6 +47,7 @@ module.exports = {
                 }
             }, 2000);
         });
+        socket.on('error', this.onError.bind(this));
         this.state.socket = socket;
         this.state.audioAnnouncer = new Audio();
 
@@ -72,8 +77,6 @@ module.exports = {
                 board.src = data.data;
             }
         });
-
-
         // Disable gestures on mobile devices
         document.addEventListener('gesturestart', (e) => { e.preventDefault(); });
     },
@@ -91,6 +94,10 @@ module.exports = {
     },
 
     onScoreUpdate(data) {
+        if (data.match && data.match.is_finished) {
+            /// Don't update UI when match is finished
+            return;
+        }
         io.onScoreUpdate(data, this);
         var component = this.findActive(this.getComponents('players')).setLeg(this.state.leg);
     },
@@ -100,6 +107,12 @@ module.exports = {
             playerId = this.findActive(this.getComponents('players')).state.playerId;
         }
         this.getComponent('player-' + playerId).setScored(scored);
+    },
+
+    onError(error) {
+        alertify.alert(`Error: ${error.message}. Refresh and try again`, () => {
+            this.state.submitting = false;
+        });
     },
 
     onEnableStream(data) {
@@ -150,6 +163,10 @@ module.exports = {
         this.state.compactMode = enabled;
     },
 
+    onEnableAllButtonsMode(enabled) {
+        this.state.allButtonsMode = enabled;
+    },
+
     onPlayerBusted(busted, component) {
         if (busted) {
             this.state.socket.emit('throw', JSON.stringify(component.getPayload()));
@@ -187,6 +204,7 @@ module.exports = {
             component.confirmLegFinish();
         }
         this.state.socket.emit('possible_throw', {
+            uuid: this.state.uuid,
             current_player_id: component.state.playerId,
             score: score,
             multiplier: multiplier,
@@ -257,26 +275,64 @@ module.exports = {
             component.removeLast();
             e.preventDefault();
         } else if (types.SUPPORT_SIMPLE_INPUT.includes(this.input.match.match_type.id) && simplified.includes(e.keyCode)) {
-            var value = this.state.leg.starting_score
+            if (this.input.match.match_type.id === types.DARTS_AT_X) {
+                var value = this.state.leg.starting_score
 
-            var multiplier = 1;
-            if (e.keyCode === KEY_PAGE_DOWN && value !== 25) {
-                multiplier = 3;
-            } else if (e.keyCode === KEY_ARROW_DOWN) {
-                multiplier = 2;
-            }
+                var multiplier = 1;
+                if (e.keyCode === KEY_PAGE_DOWN && value !== 25) {
+                    multiplier = 3;
+                } else if (e.keyCode === KEY_ARROW_DOWN) {
+                    multiplier = 2;
+                }
 
-            if (e.keyCode === KEY_INSERT || e.keyCode === KEY_DELETE) {
-                value = 0;
-            }
+                if (e.keyCode === KEY_INSERT || e.keyCode === KEY_DELETE) {
+                    value = 0;
+                }
 
-            component.setDart(value, multiplier);
-            var dartsThrown = component.getDartsThrown();
-            if (dartsThrown > 2) {
-                this.state.submitting = true;
-                this.state.socket.emit('throw', JSON.stringify(component.getPayload()));
-            } else {
-                this.state.submitting = component.confirmThrow(false);
+                component.setDart(value, multiplier);
+                var dartsThrown = component.getDartsThrown();
+                if (dartsThrown > 2) {
+                    this.state.submitting = true;
+                    this.state.socket.emit('throw', JSON.stringify(component.getPayload()));
+                } else {
+                    this.state.submitting = component.confirmThrow(false);
+                }
+            } else if (this.input.match.match_type.id === types.AROUND_THE_CLOCK) {
+                var value = component.state.player.current_score + 1;
+                value = value === 21 ? 25 : value;
+                if (e.keyCode !== KEY_END) {
+                    value = 0;
+                }
+                var multiplier = 1;
+
+                component.setDart(value, multiplier);
+                var dartsThrown = component.getDartsThrown();
+                if (dartsThrown > 2) {
+                    this.state.submitting = true;
+                    this.state.socket.emit('throw', JSON.stringify(component.getPayload()));
+                } else {
+                    this.state.submitting = component.confirmThrow(false);
+                }
+            } else if (this.input.match.match_type.id === types.AROUND_THE_WORLD || this.input.match.match_type.id === types.SHANGHAI) {
+                var value = this.state.leg.round === 21 ? 25 : this.state.leg.round;
+                var multiplier = 1;
+                if (e.keyCode === KEY_PAGE_DOWN && value !== 25) {
+                    multiplier = 3;
+                } else if (e.keyCode === KEY_ARROW_DOWN) {
+                    multiplier = 2;
+                }
+                if (e.keyCode === KEY_INSERT || e.keyCode === KEY_DELETE) {
+                    value = 0;
+                }
+
+                component.setDart(value, multiplier);
+                var dartsThrown = component.getDartsThrown();
+                if (dartsThrown > 2) {
+                    this.state.submitting = true;
+                    this.state.socket.emit('throw', JSON.stringify(component.getPayload()));
+                } else {
+                    this.state.submitting = component.confirmThrow(false);
+                }
             }
             e.preventDefault();
         }
@@ -354,6 +410,10 @@ module.exports = {
 
     onWarmupStarted() {
         this.state.socket.emit('warmup_started', { leg: this.input.leg, match: this.input.match });
+    },
+
+    onSmartboardReconnect() {
+        this.state.socket.emit('reconnect_smartboard', { leg: this.input.leg, match: this.input.match });
     }
 };
 

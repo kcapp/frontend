@@ -1,4 +1,4 @@
-exports.removeLast = function(dart) {
+exports.removeLast = function(dart, external) {
     var score = dart.getScore();
     if (dart.getMultiplier() === 3) {
         this.state.player.hits[score]['3']--;
@@ -14,7 +14,9 @@ exports.removeLast = function(dart) {
         this.emit('score-change', -dart.getMultiplier(), this.state.player.player_id);
     }
 
-    this.emit('possible-throw', false, false, this.state.currentDart, -dart.getScore(), dart.getMultiplier(), true);
+    if (!external) {
+        this.emit('possible-throw', false, false, this.state.currentDart, -dart.getScore(), dart.getMultiplier(), true);
+    }
 }
 
 exports.isCheckout = (leg, currentDart) => {

@@ -37,11 +37,11 @@ router.get('/', function (req, res, next) {
 router.get('/current', function (req, res, next) {
     axios.get(req.app.locals.kcapp.api + '/tournament/current')
         .then((response) => {
-
              res.redirect("/tournaments/" + response.data.id);
         }).catch(error => {
             if (error.response.status === 404) {
-                console.log("Not found")
+                res.redirect("/tournaments/");
+                return;
             }
             debug('Error when getting data for tournament ' + error);
             next(error);
@@ -54,13 +54,15 @@ router.get('/admin', function (req, res, next) {
         axios.get(req.app.locals.kcapp.api + '/tournament/groups'),
         axios.get(req.app.locals.kcapp.api + '/player'),
         axios.get(req.app.locals.kcapp.api + '/office'),
+        axios.get(req.app.locals.kcapp.api + '/venue'),
         axios.get(req.app.locals.kcapp.api + '/match/modes'),
         axios.get(req.app.locals.kcapp.api + '/match/types'),
-    ]).then(axios.spread((groups, players, offices, modes, types) => {
+    ]).then(axios.spread((groups, players, offices, venues, modes, types) => {
         res.marko(tournamentsAdminTemplate, {
             groups: groups.data,
             players: players.data,
             offices: offices.data,
+            venues: venues.data,
             modes: modes.data,
             types: types.data
         });
@@ -173,7 +175,11 @@ router.post('/admin', function (req, res, next) {
                     legs: [{
                         starting_score: group.score
                     }],
-                    tournament_id: tournament.id
+                    tournament_id: tournament.id,
+                    office_id: req.body.office_id
+                }
+                if (req.body.venue_id !== -1) {
+                    matchBody.venue_id = req.body.venue_id;
                 }
                 createMatch(req, matchBody);
             }

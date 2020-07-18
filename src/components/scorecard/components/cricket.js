@@ -1,7 +1,7 @@
 var DARTS = [ 20, 19, 18, 17, 16, 15, 25 ];
 exports.DARTS = DARTS;
 
-exports.removeLast = function(dart) {
+exports.removeLast = function(dart, external) {
     var score = dart.getScore();
     var hits = this.state.player.hits[score] ? this.state.player.hits[score].total : 0;
 
@@ -27,7 +27,9 @@ exports.removeLast = function(dart) {
             }
         }
     }
-    this.emit('possible-throw', false, false, this.state.currentDart, -dart.getScore(), dart.getMultiplier(), true);
+    if (!external) {
+        this.emit('possible-throw', false, false, this.state.currentDart, -dart.getScore(), dart.getMultiplier(), true);
+    }
 }
 
 exports.isCheckout = (current, players) => {

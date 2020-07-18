@@ -1,0 +1,63 @@
+<table id="table-player-checkouts">
+    <thead>
+        <tr>
+            <th>
+                <div class="block-container-header pl-20">
+                    <table class="table-player-checkouts-header">
+                        <tr>
+                            <td>Checkout</td>
+                            <td>Done</td>
+                            <td>Count</td>
+                            <td>Visits</td>
+                        </tr>
+                    </table>
+                </div>
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        <for|checkout| of=input.checkouts>
+            $ var trclass = !checkout.completed ? 'tr-no-checkout' : ''
+            <tr class=`${trclass}`>
+                <td>
+                    <div class="block-container-no-margin">
+                        <table class="table-player-checkouts-row">
+                            <tr>
+                                <td>${checkout.checkout}</td>
+                                <if(checkout.completed)>
+                                    <td data-order="1"><i class="fas fa-check-circle"></i></td>
+                                </if>
+                                <else>
+                                    <td data-order="0"><i class="fas fa-times-circle"></i></td>
+                                </else>
+                                <td>${checkout.count}</td>
+                                <td style="width: 70%;">
+                                    <if(checkout.visits)>
+                                        <table class="table-player-checkouts-details">
+                                            <tbody>
+                                                <for|visit| of=checkout.visits>
+                                                    <tr>
+                                                        <td>
+                                                            <dart-container dart=visit.first_dart label=true/>
+                                                        </td>
+                                                        <td>
+                                                            <dart-container dart=visit.second_dart label=true/>
+                                                        </td>
+                                                        <td>
+                                                            <dart-container dart=visit.third_dart label=true/>
+                                                        </td>
+                                                        <td width="10%">${visit.count}</td>
+                                                    </tr>
+                                                </for>
+                                            </tbody>
+                                        </table>
+                                    </if>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </td>
+            </tr>
+        </for>
+    </tbody>
+</table>

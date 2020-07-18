@@ -147,6 +147,11 @@ module.exports = (io, app) => {
                         }
                     });
 
+                    client.on('reconnect_smartboard', function (data) {
+                        log('reconnect_smartboard');
+                        _this.io.of('/active').emit('reconnect_smartboard', { leg: data.leg, match: data.match });
+                    });
+
                     client.on('speak', function (data) {
                         log('speak', JSON.stringify(data));
                         nsp.emit('say', {
@@ -166,12 +171,12 @@ module.exports = (io, app) => {
                                 axios.all([
                                     axios.get(app.locals.kcapp.api + '/leg/' + body.leg_id),
                                     axios.get(app.locals.kcapp.api + '/leg/' + body.leg_id + '/players'),
-                                    axios.get(app.locals.kcapp.api + '/statistics/global')
+                                    axios.get(app.locals.kcapp.api + '/statistics/global/fnc')
                                 ]).then(axios.spread((legData, playersData, globalData) => {
                                     var leg = legData.data;
                                     var players = playersData.data;
                                     var currentPlayer = _.findWhere(players, { is_current_player: true });
-                                    var globalstat = globalData.data;
+                                    var globalstat = globalData.data[0];
 
                                     if (leg.is_finished) {
                                         axios.get(app.locals.kcapp.api + '/match/' + leg.match_id)
@@ -204,9 +209,10 @@ module.exports = (io, app) => {
                                     nsp.emit('error', { message: error.message, code: error.code });
                                 });
                             }).catch(error => {
-                                var message = error.message + ' (' + error + ')'
-                                debug(`[${legId}] Error when adding visit: ${message}`);
-                                nsp.emit('error', { message: message, code: error.code });
+                                var message = error.response.data.trim();
+                                var status = error.response.status;
+                                debug(`[${legId}] Error when adding visit: (${status}) ${message}`);
+                                nsp.emit('error', { message: message, code: status });
                             });
                     });
 
@@ -217,10 +223,10 @@ module.exports = (io, app) => {
                                 axios.all([
                                     axios.get(app.locals.kcapp.api + '/leg/' + legId),
                                     axios.get(app.locals.kcapp.api + '/leg/' + legId + '/players'),
-                                    axios.get(app.locals.kcapp.api + '/statistics/global')
+                                    axios.get(app.locals.kcapp.api + '/statistics/global/fnc')
                                 ]).then(axios.spread((leg, players, globalstat) => {
                                     nsp.emit('undo_visit', {});
-                                    nsp.emit('score_update', { leg: leg.data, players: players.data, globalstat: globalstat.data, is_undo: true });
+                                    nsp.emit('score_update', { leg: leg.data, players: players.data, globalstat: globalstat.data[0], is_undo: true });
                                 })).catch(error => {
                                     var message = error.message + ' (' + error.response.data.trim() + ')'
                                     debug(`[${legId}] Error when getting leg: ${message}`);

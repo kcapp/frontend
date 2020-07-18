@@ -1,16 +1,20 @@
 var _ = require("underscore");
 var moment = require("moment");
+var axios = require('axios');
+var types = require('../../../../components/scorecard/components/match_types');
+var GLOBAL = 0;
 
 module.exports = {
     onCreate(input) {
         this.state = {
-            x01: input.x01,
-            shootout: input.shootout,
-            cricket: input.cricket,
-            darts_at_x: input.darts_at_x,
+            type: types.X01,
+            officeId: 0,
+            statistics: input.x01,
+            all: input.x01,
             office_statistics: input.office_statistics,
             from: input.from,
             to: input.to,
+            GLOBAL: 0
         }
     },
     navigatePrevious() {
@@ -27,31 +31,47 @@ module.exports = {
         }
     },
     officeChanged(officeId) {
-        if (officeId == 0) {
-            this.state.x01 = this.input.x01;
-            this.state.shootout = this.input.shootout;
-            this.state.office_statistics = this.input.office_statistics;
+        if (this.state.type == this.state.GLOBAL) {
+            this.state.statistics = this.state.all[officeId] ? this.state.all[officeId] : {};
         } else {
-            var players = this.input.players;
-            this.state.x01 = _.reject(this.input.x01, (stats) => {
-                return players[stats.player_id].office_id != officeId ;
-            });
-            this.state.cricket = _.reject(this.input.cricket, (stats) => {
-                return players[stats.player_id].office_id != officeId;
-            });
-            this.state.shootout = _.reject(this.input.shootout, (stats) => {
-                return players[stats.player_id].office_id != officeId;
-            });
-            this.state.darts_at_x = _.reject(this.input.darts_at_x, (stats) => {
-                return players[stats.player_id].office_id != officeId;
-            });
-            this.state.office_statistics = _.reject(this.input.office_statistics, (stats) => {
-                return players[stats.player_id].office_id != officeId;
-            });
+            if (officeId == 0) {
+                this.state.statistics = this.state.all;
+            } else {
+                var players = this.input.players;
+                this.state.statistics = _.reject(this.state.all, (stats) => {
+                    return players[stats.player_id].office_id != officeId ;
+                });
+            }
         }
-        this.setStateDirty("x01");
-        this.setStateDirty("cricket");
-        this.setStateDirty("shootout");
-        this.setStateDirty("office_statistics");
+        this.state.officeId = officeId;
+        this.setStateDirty("statistics");
+    },
+
+    typeChanged(typeId) {
+        if (typeId == GLOBAL) {
+            axios.get(this.input.locals.kcapp.api_external + '/statistics/global')
+                .then(response => {
+                    this.state.statistics = response.data;
+                    this.state.all = this.state.statistics;
+                    this.setStateDirty('statistics');
+
+                    this.state.type = typeId;
+                    this.officeChanged(this.state.officeId);
+                }).catch(error => {
+                    console.log('Error when getting statistics data ' + error);
+                });
+        } else {
+            axios.get(this.input.locals.kcapp.api_external + '/statistics/' + typeId + '/' + this.state.from + '/' + this.state.to.split(' ')[0])
+                .then(response => {
+                    this.state.statistics = response.data;
+                    this.state.all = this.state.statistics;
+                    this.setStateDirty('statistics');
+
+                    this.state.type = typeId;
+                    this.officeChanged(this.state.officeId);
+                }).catch(error => {
+                    console.log('Error when getting statistics data ' + error);
+                });
+        }
     }
 }

@@ -1,14 +1,16 @@
 var alertify = require("../../../util/alertify");
 
-exports.removeLast = function(dart) {
+exports.removeLast = function(dart, external) {
     var value = dart.getValue();
     this.state.player.current_score -= value;
 
     this.emit('score-change', value, this.state.player.player_id);
-    this.emit('possible-throw', false, false, this.state.currentDart, dart.getScore(), dart.getMultiplier(), true);
+    if (!external) {
+        this.emit('possible-throw', false, false, this.state.currentDart, dart.getScore(), dart.getMultiplier(), true);
+    }
 }
 
-exports.confirmThrow = function () {
+exports.confirmThrow = function (external) {
     var submitting = false;
     var dart = this.getCurrentDart();
     var scored = dart.getValue();
@@ -32,7 +34,10 @@ exports.confirmThrow = function () {
             });
     }
     this.state.player.current_score += scored;
-    this.emit('possible-throw', isCheckout, false, this.state.currentDart - 1, dart.getScore(), dart.getMultiplier(), false);
+
+    if (!external) {
+        this.emit('possible-throw', isCheckout, false, this.state.currentDart - 1, dart.getScore(), dart.getMultiplier(), false);
+    }
 
     return submitting;
 }

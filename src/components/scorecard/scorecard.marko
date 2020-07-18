@@ -26,11 +26,11 @@ $ var cricket = require("./components/cricket");
         </tr>
       </if>
       <if(state.type == types.X01 || state.type == types.X01HANDICAP)>
-      <tr>
-        <td colspan="3">
-          <checkout-suggestion key="suggestion" score=state.player.current_score currentDart=state.currentDart />
-        </td>
-      </tr>
+        <tr>
+          <td colspan="3" style="height: 44px;">
+            <checkout-suggestion key="suggestion" score=state.player.current_score currentDart=state.currentDart />
+          </td>
+        </tr>
       </if>
       <if(state.type == types.CRICKET)>
         <tr>
@@ -104,6 +104,26 @@ $ var cricket = require("./components/cricket");
                     </if>
                     <td class="text-center">${state.player.darts_thrown ? ((singles + doubles + triples) / state.player.darts_thrown * 100).toFixed(2) : '- '}%</td>
                     <td class="text-center">${state.player.darts_thrown ? state.player.darts_thrown : 0}</td>
+                  </tr>
+              </tbody>
+            </table>
+          </td>
+        </tr>
+      </if>
+      <if(state.type === types.AROUND_THE_WORLD || state.type === types.SHANGHAI || state.type === types.AROUND_THE_CLOCK)>
+        <tr>
+          <td colspan="3">
+            $ var number = state.leg.starting_score;
+            <table id='table-dartsatx-scores' class='table-striped'>
+              <thead>
+                <tr>
+                  <td class="text-center">Target</td>
+                </tr>
+              </thead>
+              <tbody>
+                  <tr>
+                    $ var value = state.type === types.AROUND_THE_CLOCK ? state.player.current_score + 1 : input.leg.round;
+                    <td class="text-center" style="font-size: 19pt; font-weight: 400;">${value === 21 ? "Bull" : value}</td>
                   </tr>
               </tbody>
             </table>
