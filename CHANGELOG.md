@@ -1,5 +1,8 @@
 # Changelog
 
+## [unreleased] - TBD
+
+
 ## [1.1.0] - 2020-07-18
 #### Feature
 - New game types for `Around The World`, `Around The Clock`, and `Shanghai`
@@ -28,5 +31,6 @@
 - Multiple score entry methods
     - Including [Unicorn Smartboard](https://github.com/kcapp/smartboard)
 
-[1.1.0]: https://github.com/kcapp/frontend/compare/v1.0.0...v1.0.1
+[unreleased]: https://github.com/kcapp/frontend/compare/v1.1.0...develop
+[1.1.0]: https://github.com/kcapp/frontend/compare/v1.0.0...v1.1.0
 [1.0.0]: https://github.com/kcapp/frontend/releases/tag/v1.0.0
