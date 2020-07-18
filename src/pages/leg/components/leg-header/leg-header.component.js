@@ -26,6 +26,10 @@ module.exports = {
 
         this.state.compactMode = isMobile && !isTablet;
         this.emit('enable-compact-mode', this.state.compactMode);
+
+        if (isMobile || isTablet) {
+            $(function() { window.scrollTo(0,document.body.scrollHeight); });
+        }
     },
 
     changeOrder(event) {

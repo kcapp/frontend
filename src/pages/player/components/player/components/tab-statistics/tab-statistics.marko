@@ -182,9 +182,9 @@ $ var types = require('../../../../../../components/scorecard/components/match_t
                         <td class="text-center">${statistics.singles} / ${statistics.doubles} / ${statistics.triples}</td>
                         <td class="text-center">${statistics.hits_5}</td>
                         <td class="text-center">${statistics.hits_6}</td>
-                        <td class="text-center">${statistics.hits_7}</td>
-                        <td class="text-center">${statistics.hits_8}</td>
-                        <td class="text-center">${statistics.hits_9}</td>
+                        <td class="text-center">${history.starting_score == 25 ? "-" : statistics.hits_7}</td>
+                        <td class="text-center">${history.starting_score == 25 ? "-" : statistics.hits_8}</td>
+                        <td class="text-center">${history.starting_score == 25 ? "-" : statistics.hits_9}</td>
                     </else-if>
                     <else-if(input.type == types.AROUND_THE_CLOCK)>
                         <td class="text-center">${statistics.score}</td>
