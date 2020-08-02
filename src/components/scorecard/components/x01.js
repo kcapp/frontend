@@ -57,7 +57,7 @@ exports.confirmThrow = function (external) {
     this.state.player.current_score -= scored;
     if (!external) {
         // If an external event triggered the update don't emit a throw
-        this.emit('possible-throw', isCheckout, isBust, this.state.currentDart - 1, dart.getScore(), dart.getMultiplier(), false);
+        this.emit('possible-throw', isCheckout, isBust, this.state.currentDart - 1, dart.getScore(), dart.getMultiplier(), false, false);
     }
     return submitting;
 }

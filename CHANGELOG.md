@@ -1,6 +1,13 @@
 # Changelog
 
+A preview of major changes can be found in the Wiki ([Latest Changes](https://github.com/kcapp/frontend/wiki/Latest_Changes))
+
 ## [unreleased] - TBD
+#### Feature
+- Added new game type `Tic-Tac-Toe`
+
+#### Fixed
+- Starting score resetting when changing attribute on match create page
 
 
 ## [1.1.0] - 2020-07-18

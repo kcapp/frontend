@@ -1,0 +1,27 @@
+$ var statistic = input.statistic;
+$ var player = input.player;
+<if(input.header)>
+  <div class="block-container-header-center">
+    <a href=`/players/${player.id}/statistics`>${player.name}</a>
+  </div>
+</if>
+<div class="block-container-with-header">
+  <div class="player-card-match">
+    <div style="padding-bottom: 20px;">
+      <div class="player-pic-cutout" style="margin: 0 auto;">
+        <player-profile-picture player=player/>
+      </div>
+    </div>
+    <statistics-row heading="Darts Thrown" value=statistic.darts_thrown />
+    <statistics-row heading="Score" value=statistic.score />
+    <statistics-row heading="Numbers Closed" value=statistic.numbers_closed />
+    <statistics-row heading="Highest Closed" value=statistic.highest_closed />
+
+    <if(input.isWinner)>
+        <div class="label-winner">WINNER</div>
+    </if>
+    <else>
+        <div class="label-loser">&nbsp;</div>
+    </else>
+  </div>
+</div>

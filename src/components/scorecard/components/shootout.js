@@ -6,7 +6,7 @@ exports.removeLast = function(dart, external) {
 
     this.emit('score-change', value, this.state.player.player_id);
     if (!external) {
-        this.emit('possible-throw', false, false, this.state.currentDart, dart.getScore(), dart.getMultiplier(), true);
+        this.emit('possible-throw', false, false, this.state.currentDart, dart.getScore(), dart.getMultiplier(), true, false);
     }
 }
 
@@ -36,7 +36,7 @@ exports.confirmThrow = function (external) {
     this.state.player.current_score += scored;
 
     if (!external) {
-        this.emit('possible-throw', isCheckout, false, this.state.currentDart - 1, dart.getScore(), dart.getMultiplier(), false);
+        this.emit('possible-throw', isCheckout, false, this.state.currentDart - 1, dart.getScore(), dart.getMultiplier(), false, false);
     }
 
     return submitting;

@@ -97,9 +97,8 @@ module.exports = {
                 this.onGameTypeChanged('game_type', component.state.index);
                 break;
             case '*':
-                // Don't allow cycling of score when 9 Dart Shootout or Cricket is selected
+                var component = this.getComponent('starting-score');
                 if (this.state.options.game_type === types.X01 || this.state.options.game_type === types.X01HANDICAP) {
-                    var component = this.getComponent('starting-score');
                     var score = this.cycleValues(this.state.input.scores, this.state.options.starting_score);
                     if (score === 0) {
                         // Don't allow cycling to 0 as starting score
@@ -107,8 +106,7 @@ module.exports = {
                     }
                     component.state.index = score
                     this.state.options.starting_score = component.state.index;
-                } else if (this.state.options.game_type === types.DARTS_AT_X) {
-                    var component = this.getComponent('starting-score');
+                } else if (this.state.options.game_type === types.DARTS_AT_X || this.state.options.game_type === types.TIC_TAC_TOE) {
                     var score = this.cycleValues(component.state.values, component.state.index);
                     component.state.index = score
                     this.state.options.starting_score = component.state.index;
@@ -147,6 +145,10 @@ module.exports = {
                 this.state.options.game_type === types.AROUND_THE_WORLD || this.state.options.game_type === types.SHANGHAI || this.state.options.game_type === types.AROUND_THE_CLOCK) {
                 scoreComponent.state.index = 0;
                 scoreComponent.state.enabled = false;
+            } else if (this.state.options.game_type == types.TIC_TAC_TOE) {
+                scoreComponent.updateOptions([ { id: 10, name: '+10' }, { id: 20, name: '+20' }, { id: 30, name: '+30' }, { id: 40, name: '+40' }, { id: 60, name: '+60' } ]);
+                scoreComponent.state.index = 30;
+                scoreComponent.state.enabled = true;
             } else if (this.state.options.game_type == types.DARTS_AT_X) {
                 scoreComponent.updateOptions([
                     { id: 20, name: 20 },  { id: 19, name: 19 }, { id: 18, name: 18 }, { id: 17, name: 17 },
@@ -163,7 +165,6 @@ module.exports = {
                 scoreComponent.state.index = scoreComponent.state.defaultValue;
                 scoreComponent.state.enabled = true;
             }
-
             this.state.options.starting_score = scoreComponent.state.index
 
             var selectedPlayers = this.getComponents('players');

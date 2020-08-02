@@ -71,6 +71,9 @@ $ var types = require('../../../../components/scorecard/components/match_types')
 <else-if(state.type == types.SHANGHAI)>
   <statistics-table-shanghai statistics=state.statistics players=input.players />
 </else-if>
+<else-if(state.type == types.TIC_TAC_TOE)>
+  <statistics-table-tic-tac-toe statistics=state.statistics players=input.players />
+</else-if>
 <else-if(state.type == state.GLOBAL)>
   <statistics-table-global statistics=state.statistics players=input.players/>
 </else-if>

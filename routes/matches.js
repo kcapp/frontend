@@ -6,6 +6,7 @@ var router = express.Router();
 var axios = require('axios');
 var _ = require('underscore');
 var skill = require('kcapp-bot/bot-skill');
+var types = require('../src/components/scorecard/components/match_types');
 
 var bracket = require('./lib/bracket_generator');
 
@@ -307,24 +308,52 @@ router.post('/new', function (req, res, next) {
                 isPractice = player.is_bot;
             }
 
+            var numbers = [];
+            if (req.body.match_type == types.TIC_TAC_TOE) {
+                var min = 21 + req.body.starting_score;
+
+                // Get 9 random numbers between the given range
+                var iteration = 1;
+                while (numbers.length < 9) {
+                    var min = 21 + req.body.starting_score + (10 * (iteration - 1));
+                    var max = min + 10;
+                    var num = Math.floor(Math.random() * (max - min + 1) + min);
+                    // Make sure we don't select duplicates, and don't select bogey numbers
+                    if (!numbers.includes(num) && ![169, 168, 166, 165, 163, 162, 159].includes(num)) {
+                        numbers[numbers.length] = num;
+                        if (numbers.length % 3 == 0) {
+                            iteration++;
+                        }
+                    }
+                }
+                numbers = _.shuffle(numbers);
+
+                // The middle number should be more difficult, so we make sure it's odd, and increase it's value
+                var iteration = 0;
+                do {
+                    var newMiddle = numbers[4] + iteration;
+                    newMiddle = (newMiddle % 2 == 0 ? req.body.starting_score + 1 : req.body.starting_score) + newMiddle;
+                    iteration++;
+                } while(numbers.includes(newMiddle) || [169, 168, 166, 165, 163, 162, 159].includes(newMiddle));
+                numbers[4] = newMiddle
+            }
+
             var body = {
                 owe_type_id: req.body.match_stake == -1 ? null : req.body.match_stake,
                 venue_id: req.body.venue,
-                match_type: {
-                    id: req.body.match_type
-                },
-                match_mode: {
-                    id: req.body.match_mode
-                },
+                match_type: { id: req.body.match_type },
+                match_mode: { id: req.body.match_mode },
                 players: players.map(Number),
                 player_handicaps: req.body.player_handicaps,
                 bot_player_config: req.body.bot_player_config,
-                legs: [{
-                    starting_score: req.body.starting_score
-                }],
+                legs: [ {
+                    starting_score: req.body.starting_score,
+                    parameters: { numbers: numbers }
+                } ],
                 office_id: req.body.office_id,
                 is_practice: isPractice
             }
+
             axios.post(req.app.locals.kcapp.api + '/match', body)
                 .then(response => {
                     var match = response.data;

@@ -80,7 +80,8 @@ module.exports = {
             }
             else {
                 if (match.match_type.id == types.SHOOTOUT || match.match_type.id == types.DARTS_AT_X || match.match_type.id === types.CRICKET ||
-                    match.match_type.id == types.AROUND_THE_CLOCK || match.match_type.id == types.AROUND_THE_WORLD || match.match_type.id == types.SHANGHAI) {
+                    match.match_type.id == types.AROUND_THE_CLOCK || match.match_type.id == types.AROUND_THE_WORLD || match.match_type.id == types.SHANGHAI ||
+                    match.match_type.id == types.TIC_TAC_TOE) {
                     current = current + visit.score;
                     values[visit.player_id].push(current);
                     if (current > chartMaxValue) {

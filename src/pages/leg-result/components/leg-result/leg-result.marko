@@ -1,7 +1,7 @@
 $ var types = require("../../../../components/scorecard/components/match_types");
 
 $ var leg = state.leg;
-$ var isFinished = leg.winner_player_id !== null;
+$ var isFinished = leg.is_finished;
 $ var matchType = input.match.match_type.id;
 <page-header heading=`Leg Result (${leg.id})` style="block-container" icon="fa-crosshairs" subheadings=[
   [
@@ -84,6 +84,12 @@ $ var matchType = input.match.match_type.id;
           </tr>
         </tbody>
       </table>
+      <if(input.match.match_type.id == types.TIC_TAC_TOE)>
+        <div class="block-container-header-center">Board</div>
+        <div class="block-container-with-header">
+          <tic-tac-toe-board style="width: 70%;" parameters=state.leg.parameters players=input.players/>
+        </div>
+      </if>
     </if>
   </div>
   <div class="tab-pane" role="tabpanel" id="visits">

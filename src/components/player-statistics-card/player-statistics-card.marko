@@ -24,6 +24,9 @@ $ var startingScore = input.player.starting_score || 0;
 <else-if(match.match_type.id == type.AROUND_THE_CLOCK)>
   <statistics-around-the-clock isWinner=state.isWinner player=input.player statistic=input.statistic />
 </else-if>
+<else-if(match.match_type.id == type.TIC_TAC_TOE)>
+  <statistics-tic-tac-toe isWinner=state.isWinner player=input.player statistic=input.statistic />
+</else-if>
 <else>
   <div class="block-container-with-header">
     <div class="player-card-match">

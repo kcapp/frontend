@@ -198,7 +198,7 @@ module.exports = {
         }
     },
 
-    onPossibleThrow(isCheckout, isBust, dartsThrown, score, multiplier, isUndo) {
+    onPossibleThrow(isCheckout, isBust, dartsThrown, score, multiplier, isUndo, submit) {
         var component = this.findActive(this.getComponents('players'));
         if (isCheckout) {
             component.confirmLegFinish();
@@ -214,6 +214,10 @@ module.exports = {
             is_undo: isUndo,
             origin: "web"
         });
+        if (submit) {
+            this.state.submitting = true;
+            this.state.socket.emit('throw', JSON.stringify(component.getPayload()));
+        }
     },
 
     onConfirmCheckout(actualThrown) {
