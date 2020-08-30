@@ -4,6 +4,9 @@ module.exports = {
     onCreate(input) {
         this.state = this.updateState(input.leg.parameters);
     },
+    onMount() {
+        this.updateBoard();
+    },
     updateState(params) {
         var closed = [];
         for (var i = 0; i < params.numbers.length; i++) {
@@ -26,9 +29,9 @@ module.exports = {
             var cell = cells[i];
             cell.reset();
         }
-        this.setStateDirty("parameters");
+        this.updateBoard();
     },
-    updateBoard(score, multiplier, isUndo) {
+    updateBoard(score = 0, multiplier = 1, isUndo = false) {
         var cells = this.getComponents("tic-tac-toe-cell");
         for (var i = 0; i < cells.length; i++) {
             var cell = cells[i];
