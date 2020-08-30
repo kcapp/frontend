@@ -33,7 +33,6 @@ module.exports = {
             }
             visit.score_str = scores;
         }
-
         this.state = {
             leg: leg,
             matchId: leg.match_id,
