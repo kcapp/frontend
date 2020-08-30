@@ -45,7 +45,7 @@ $ var types = require('../../../../components/scorecard/components/match_types')
   <if(input.match.match_type.id == types.TIC_TAC_TOE)>
     <div class="block-container-header-center">Board</div>
     <div class="block-container-with-header">
-      <tic-tac-toe-board key='tic-tac-toe-board' leg=state.leg players=input.players/>
+      <tic-tac-toe-board key='tic-tac-toe-board' leg=state.leg players=input.players tableStyle=(state.venueConfig.has_dual_monitor ? 'float: right' : '')/>
     </div>
   </if>
 </div>
