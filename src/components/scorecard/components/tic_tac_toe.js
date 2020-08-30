@@ -1,9 +1,23 @@
-const scorecardComponent = require("../scorecard.component");
+const WINNING_COMBOS = [
+    // Horizontally
+    [0, 1, 2],
+    [3, 4, 5],
+    [6, 7, 8],
+
+    // Diagonally
+    [0, 4, 8],
+    [2, 4, 6],
+
+    // Vertically
+    [0, 3, 6],
+    [1, 4, 7],
+    [2, 5, 8]
+]
 
 exports.removeLast = function(dart, external) {
-    var value = dart.getValue();
-    this.state.player.current_score -= value;
-    this.emit('score-change', value, this.state.player.player_id);
+    var scored = dart.getValue();
+    this.state.player.current_score -= scored;
+    this.emit('score-change', scored, this.state.player.player_id);
 
     if (dart.getMultiplier() === 2) {
         var total = this.getDart(1).getValue() + this.getDart(2).getValue() + this.getDart(3).getValue();
@@ -33,25 +47,9 @@ exports.isCheckout = (leg, player) => {
 
     var playerId = player.player_id;
 
-    var winningCombos = [
-        // Horizontally
-        [0, 1, 2],
-        [3, 4, 5],
-        [6, 7, 8],
-
-        // Diagonally
-        [0, 4, 8],
-        [2, 4, 6],
-
-        // Vertically
-        [0, 3, 6],
-        [1, 4, 7],
-        [2, 5, 8]
-    ]
-
     var draw = true;
-    for (var i = 0; i < winningCombos.length; i++) {
-        var combo = winningCombos[i];
+    for (var i = 0; i < WINNING_COMBOS.length; i++) {
+        var combo = WINNING_COMBOS[i];
         if (isHit(combo[0], playerId) && isHit(combo[1], playerId) && isHit(combo[2], playerId)) {
             return true;
         }
@@ -98,7 +96,7 @@ exports.confirmThrow = function (external) {
             var num = this.state.leg.parameters.numbers[i];
             if (total === num) {
                 this.state.leg.parameters.hits[num] = this.state.player.player_id;
-                submit = true;
+                //submit = true;
                 break;
             }
         }
@@ -109,9 +107,11 @@ exports.confirmThrow = function (external) {
         submit = false;
         submitting = true;
     }
+
     if (!external) {
         // If an external event triggered the update don't emit a throw
         this.emit('possible-throw', isCheckout, false, this.state.currentDart - 1, dart.getScore(), dart.getMultiplier(), false, submit);
     }
+
     return submitting;
 }

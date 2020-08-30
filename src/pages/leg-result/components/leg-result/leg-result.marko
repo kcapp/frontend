@@ -47,7 +47,7 @@ $ var matchType = input.match.match_type.id;
   </div>
   <div style="float: right; padding-top: 4px;">
     <ul class="nav nav-pills">
-      <if(!input.match.tournament_id)>
+      <if(!input.match.tournament_id && input.match.match_type.id !== types.TIC_TAC_TOE)>
         <li role="presentation">
           <a on-click("rematch")>Rematch</a>
         </li>

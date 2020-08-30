@@ -166,7 +166,7 @@ module.exports = {
             .then(response => {
                 location.href = '/legs/' + response.data.current_leg_id
             }).catch(error => {
-                alert('Unable to undo leg, see log for details (' + error.statusText + ')');
+                alert('Unable to rematch, see log for details (' + error.statusText + ')');
             });
     }
 }

@@ -203,6 +203,10 @@ module.exports = {
         if (isCheckout) {
             component.confirmLegFinish();
         }
+        if (this.input.match.match_type.id == types.TIC_TAC_TOE) {
+            this.getComponent("tic-tac-toe-board").updateBoard(score, multiplier, isUndo);
+        }
+
         this.state.socket.emit('possible_throw', {
             uuid: this.state.uuid,
             current_player_id: component.state.playerId,

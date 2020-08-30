@@ -58,6 +58,8 @@ exports.onScoreUpdate = (data, thiz) => {
             var msg = alertify.notify(getFishNChipsHTML(totalFishNChips - 1, globalFish - 1), 'fish-n-chips', 5, () => { });
             setInterval(() => { msg.setContent(getFishNChipsHTML(totalFishNChips, globalFish)); }, 1000);
         }
+    } else if (thiz.state.type == types.TIC_TAC_TOE) {
+        thiz.getComponent("tic-tac-toe-board").resetBoard(leg.parameters);
     }
 
     thiz.state.leg = leg;
