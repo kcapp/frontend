@@ -1,3 +1,5 @@
+$ var types = require("../../../scorecard/components/match_types");
+
 $ var statistic = input.statistic;
 $ var player = input.player;
 <if(input.header)>
@@ -12,35 +14,25 @@ $ var player = input.player;
         <player-profile-picture player=player/>
       </div>
     </div>
-    <statistics-row heading="Score" value=statistic.score/>
-    <statistics-row heading="Darts Thrown" value=statistic.darts_thrown/>
-    <statistics-row heading="Longest Streak" value=statistic.longest_streak/>
+    <statistics-row heading="Score" value=statistic.score />
+    <statistics-row heading="Highest Score" value=statistic.highest_score_reached />
+    <statistics-row heading="MPR" value=statistic.mpr.toFixed(2) />
     <statistics-row heading="Total Hitrate" value=`${(statistic.total_hit_rate * 100).toFixed(2)} %`/>
 
     <statistics-row heading="Hitrates" clazz="pt-20" />
     <table>
       $ var num = 0;
-      <for|row| from=1 to=7>
+      <for|row| from=1 to=4>
         <tr>
           <for|i| from=1 to=3>
             $ num = 3 * (row - 1) + i;
-            <if(statistic.score >= num)>
-              <score-pill text=`${num}s` value=`${(statistic.hitrates[num] * 100).toFixed(2)} %`/>
-            </if>
-            <else>
-              <score-pill text=`${num}s` value=`- %`/>
-            </else>
+            <score-pill text=`${types.TARGET_BERMUDA_TRIANGLE[num].label}` value=`${(statistic.hitrates[num] * 100).toFixed(2)} %`/>
           </for>
         </tr>
       </for>
       <tr>
-          <td/>
-          <if(statistic.score >= num)>
-            <score-pill text="Bulls" value=`${(statistic.hitrates[25] * 100).toFixed(2)} %`/>
-          </if>
-          <else>
-            <score-pill text=`Bulls` value=`- %`/>
-          </else>
+        <td/>
+        <score-pill text=`${types.TARGET_BERMUDA_TRIANGLE[13].label}` value=`${(statistic.hitrates[13] * 100).toFixed(2)} %`/>
       </tr>
     </table>
 

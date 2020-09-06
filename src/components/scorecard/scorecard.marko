@@ -130,6 +130,24 @@ $ var cricket = require("./components/cricket");
           </td>
         </tr>
       </if>
+      <if(state.type === types.BERMUDA_TRIANGLE)>
+        <tr>
+          <td colspan="3">
+            <table id='table-dartsatx-scores' class='table-striped'>
+              <thead>
+                <tr>
+                  <td class="text-center">Target</td>
+                </tr>
+              </thead>
+              <tbody>
+                  <tr>
+                    <td class="text-center" style="font-size: 19pt; font-weight: 400;">${types.TARGET_BERMUDA_TRIANGLE[input.leg.round].label}</td>
+                  </tr>
+              </tbody>
+            </table>
+          </td>
+        </tr>
+      </if>
     </tbody>
   </table>
 </td>
