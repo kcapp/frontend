@@ -49,7 +49,7 @@ module.exports = {
 
     typeChanged(typeId) {
         if (typeId == GLOBAL) {
-            axios.get(this.input.locals.kcapp.api_external + '/statistics/global')
+            axios.get(`${window.location.protocol}//${window.location.hostname}${this.input.locals.kcapp.api_path}/statistics/global`)
                 .then(response => {
                     this.state.statistics = response.data;
                     this.state.all = this.state.statistics;
@@ -61,7 +61,7 @@ module.exports = {
                     console.log('Error when getting statistics data ' + error);
                 });
         } else {
-            axios.get(this.input.locals.kcapp.api_external + '/statistics/' + typeId + '/' + this.state.from + '/' + this.state.to.split(' ')[0])
+            axios.get(`${window.location.protocol}//${window.location.hostname}${this.input.locals.kcapp.api_path}/statistics/${typeId}/${this.state.from}/${this.state.to.split(' ')[0]}`)
                 .then(response => {
                     this.state.statistics = response.data;
                     this.state.all = this.state.statistics;

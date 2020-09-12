@@ -11,7 +11,7 @@ module.exports = {
     },
     handlePlayerChange(statistics, playerId) {
         axios.all([
-            axios.get(this.input.locals.kcapp.api_external + '/player/' + playerId + '/statistics')
+            axios.get(`${window.location.protocol}//${window.location.hostname}${this.input.locals.kcapp.api_path}/player/${playerId}/statistics`)
         ]).then(axios.spread((staisticsData) => {
             this.state[statistics] = staisticsData.data.x01;
             this.setStateDirty(statistics);
