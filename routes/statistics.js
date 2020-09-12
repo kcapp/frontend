@@ -34,7 +34,7 @@ function getStatistics(from, to, req, res, next) {
             players: players.data,
             offices: offices.data,
             statistics_x01: x01.data,
-            office_statistics: office.data,
+            checkout_statistics: office.data,
             from: from, to: to,
             locals: req.app.locals
         });

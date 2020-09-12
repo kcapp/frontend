@@ -6,12 +6,16 @@ var GLOBAL = 0;
 
 module.exports = {
     onCreate(input) {
+        input.checkout_statistics = _.reject(input.checkout_statistics, (stats) => {
+            return input.players[stats.player_id].is_bot ;
+        });
+
         this.state = {
             type: types.X01,
             officeId: 0,
             statistics: input.x01,
             all: input.x01,
-            office_statistics: input.office_statistics,
+            checkout_statistics: input.checkout_statistics,
             from: input.from,
             to: input.to,
             GLOBAL: 0
@@ -36,10 +40,13 @@ module.exports = {
         } else {
             if (officeId == 0) {
                 this.state.statistics = this.state.all;
+                this.state.checkout_statistics = this.input.checkout_statistics;
             } else {
-                var players = this.input.players;
                 this.state.statistics = _.reject(this.state.all, (stats) => {
-                    return players[stats.player_id].office_id != officeId ;
+                    return stats.office_id != officeId ;
+                });
+                this.state.checkout_statistics = _.reject(this.input.checkout_statistics, (stats) => {
+                    return stats.office_id != officeId ;
                 });
             }
         }

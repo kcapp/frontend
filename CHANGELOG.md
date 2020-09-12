@@ -6,6 +6,9 @@ A preview of major changes can be found in the Wiki ([Latest Changes](https://gi
 #### Feature
 - Added new game type `Tic-Tac-Toe`
 
+#### Changed
+- Statistics grouped by office of match instead of player
+
 #### Fixed
 - Starting score resetting when changing attribute on match create page
 - Using origin of request to make sure requests towards backend work from multiple hosts/IPs

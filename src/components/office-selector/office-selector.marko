@@ -6,7 +6,9 @@ $ var margin = input.margin || "0px";
         <button class=`btn btn-${state.officeId == 0 ? "primary" : "secondary"}` on-click("changeOfficeEvent") value=0>All</button>
         <for|id, office| in=input.offices>
             <if(office.is_active)>
-                <button class=`btn btn-${state.officeId == id ? "primary" : "secondary"}` on-click("changeOfficeEvent") value=id>${office.name}</button>
+                <if(!office.is_global || (office.is_global && input.showGlobal))>
+                    <button class=`btn btn-${state.officeId == id ? "primary" : "secondary"}` on-click("changeOfficeEvent") value=id>${office.name}</button>
+                </if>
             </if>
         </for>
     </div>

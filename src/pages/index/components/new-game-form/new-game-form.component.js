@@ -30,7 +30,7 @@ module.exports = {
                 localStorageUtil.remove("office_id");
                 localStorageUtil.remove("venue");
             } else {
-                this.changeOffice(officeId);
+                this.changeOffice(officeId, this.input.offices[officeId]);
             }
         }
         document.addEventListener("keydown", this.onKeyDown.bind(this), false);
@@ -139,7 +139,7 @@ module.exports = {
     onGameTypeChanged(attribute, value) {
         if (attribute == 'game_type') {
             // If this is 9 Dart Shootout or Cricket, make sure to set score to 0 and disable the selector
-            var scoreComponent = this.getComponent('starting-score')
+            var scoreComponent = this.getComponent('starting-score');
             scoreComponent.updateOptions(this.input.scores);
             if (this.state.options.game_type === types.SHOOTOUT || this.state.options.game_type == types.CRICKET ||
                 this.state.options.game_type === types.AROUND_THE_WORLD || this.state.options.game_type === types.SHANGHAI || this.state.options.game_type === types.AROUND_THE_CLOCK) {
@@ -250,16 +250,22 @@ module.exports = {
         location.href = '/tournaments/current#unplayed';
         event.preventDefault();
     },
-    changeOffice(officeId) {
+    changeOffice(officeId, office) {
         this.state.officeId = officeId;
 
         if (officeId == 0) {
             this.state.players =  _.reject(this.input.players, (player) => { return player.is_bot; });
             this.state.venues = this.input.venues;
         } else {
-            this.state.players = _.reject(this.input.players, (player) => { return player.office_id != officeId || player.is_bot; });
+            if (office.is_global) {
+                this.state.players =  _.reject(this.input.players, (player) => { return player.is_bot; });
+            } else {
+                this.state.players = _.reject(this.input.players, (player) => { return player.office_id != officeId || player.is_bot; });
+            }
             this.state.venues = _.reject(this.input.venues, (venue) => { return venue.office_id != officeId; });
         }
+        this.getComponent('venue').updateOptions(this.state.venues);
+
         // Remove any players already selected
         this.state.players = _.reject(this.state.players, (player) => {
             for (var i = 0; i < this.state.selected.length; i++) {
