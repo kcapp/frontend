@@ -158,6 +158,10 @@ module.exports = {
                     { id: 4, name: 4 }, { id: 3, name: 3 }, { id: 2, name: 2 }, { id: 1, name: 1 }, { id: 25, name: 'Bull' } ]);
                 scoreComponent.state.index = 20;
                 scoreComponent.state.enabled = true;
+            } else if (this.state.options.game_type === types.FOUR_TWENTY) {
+                scoreComponent.updateOptions([ { id: 420, name: 420 } ]);
+                scoreComponent.state.index = 420;
+                scoreComponent.state.enabled = false;
             } else if (this.state.options.starting_score === 0) {
                 scoreComponent.state.index = scoreComponent.state.defaultValue;
                 scoreComponent.state.enabled = true;

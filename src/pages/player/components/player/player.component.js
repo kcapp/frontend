@@ -328,7 +328,7 @@ module.exports = {
     typeChanged(typeId) {
         axios.all([
             axios.get(`${window.location.protocol}//${window.location.hostname}${this.input.locals.kcapp.api_path}/player/${this.input.player.id}/statistics/${typeId}`),
-            axios.get(`${window.location.protocol}//${window.location.hostname}${this.input.locals.kcapp.api_path}/player${this.input.player.id}/statistics/${typeId}/history/${this.state.limit}`)
+            axios.get(`${window.location.protocol}//${window.location.hostname}${this.input.locals.kcapp.api_path}/player/${this.input.player.id}/statistics/${typeId}/history/${this.state.limit}`)
         ]).then(axios.spread((statistics, history) => {
             this.state.statistics = statistics.data;
             this.setStateDirty('statistics');

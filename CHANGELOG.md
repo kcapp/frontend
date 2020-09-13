@@ -4,7 +4,7 @@ A preview of major changes can be found in the Wiki ([Latest Changes](https://gi
 
 ## [unreleased] - TBD
 #### Feature
-- Added new game type `Tic-Tac-Toe`
+- Added new game types `Tic-Tac-Toe`, `Bermuda Triangle`, and `420`
 
 #### Changed
 - Statistics grouped by office of match instead of player

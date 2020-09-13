@@ -79,6 +79,14 @@ $ var types = require('../../../../../../components/scorecard/components/match_t
                             <statistics-card label="Avg. Score" value=`${input.statistics.legs_played ? input.statistics.score : "-"}` icon="far fa-star"/>
                         </td>
                     </else-if>
+                    <else-if(input.type == types.FOUR_TWENTY)>
+                        <td style="width: 25%;">
+                            <statistics-card label="Hit Rate" value=`${(input.statistics.total_hit_rate).toFixed(2)}` icon="fas fa-bullseye"/>
+                        </td>
+                        <td style="width: 25%;">
+                            <statistics-card label="Avg. Score" value=`${input.statistics.legs_played ? input.statistics.score : "-"}` icon="far fa-star"/>
+                        </td>
+                    </else-if>
                     <else>
                         <div>TODO</div>
                     </else>
@@ -87,7 +95,7 @@ $ var types = require('../../../../../../components/scorecard/components/match_t
             <tr>
                 $ var hasStatistics = input.statistics && input.statistics.legs_played;
                 <td colspan="100%" style=`display: ${hasStatistics && (input.type == types.DARTS_AT_X || input.type == types.AROUND_THE_CLOCK || input.type == types.AROUND_THE_WORLD ||
-                    input.type == types.SHANGHAI || input.type == types.BERMUDA_TRIANGLE) ? '' : 'none'};`>
+                    input.type == types.SHANGHAI || input.type == types.BERMUDA_TRIANGLE || input.type == types.FOUR_TWENTY) ? '' : 'none'};`>
                     <div class="block-container" style='padding: 0;'>
                         <canvas id="canvas-hit-rates"></canvas>
                     </div>
@@ -162,6 +170,10 @@ $ var types = require('../../../../../../components/scorecard/components/match_t
                     <th class="text-center">Hit Rate</th>
                     <th class="text-center">Highest Score</th>
                     <th class="text-center">Hits</th>
+                </else-if>
+                <else-if(input.type == types.FOUR_TWENTY)>
+                    <th class="text-center">Score</th>
+                    <th class="text-center">Hit Rate</th>
                 </else-if>
                 <th class="text-center"/>
             </tr>
@@ -239,9 +251,13 @@ $ var types = require('../../../../../../components/scorecard/components/match_t
                     <else-if(input.type == types.BERMUDA_TRIANGLE)>
                         <td class="text-center">${statistics.score}</td>
                         <td class="text-center">${statistics.mpr.toFixed(2)}</td>
-                        <td class="text-center">${statistics.total_hit_rate.toFixed(2)}</td>
+                        <td class="text-center">${(statistics.total_hit_rate * 100).toFixed(2)}%</td>
                         <td class="text-center">${statistics.highest_score_reached}</td>
                         <td class="text-center">${statistics.hit_count}</td>
+                    </else-if>
+                    <else-if(input.type == types.FOUR_TWENTY)>
+                        <td class="text-center">${statistics.score}</td>
+                        <td class="text-center">${(statistics.total_hit_rate * 100).toFixed(2)}%</td>
                     </else-if>
                     <td>
                         <a href=`/legs/${history.id}/result`>

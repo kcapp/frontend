@@ -13,7 +13,8 @@ module.exports = {
                 { id: types.SHANGHAI, name: "Shanghai" },
                 { id: types.AROUND_THE_CLOCK, name: "Around The Clock" },
                 { id: types.TIC_TAC_TOE, name: "Tic Tac Toe" },
-                { id: types.BERMUDA_TRIANGLE, name: "Bermuda Triangle" }
+                { id: types.BERMUDA_TRIANGLE, name: "Bermuda Triangle" },
+                { id: types.FOUR_TWENTY, name: "420" }
             ]
         }
     },

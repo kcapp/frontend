@@ -114,7 +114,7 @@ $ var cricket = require("./components/cricket");
         <tr>
           <td colspan="3">
             $ var number = state.leg.starting_score;
-            <table id='table-dartsatx-scores' class='table-striped'>
+            <table id='table-aroundthe-scores' class='table-striped'>
               <thead>
                 <tr>
                   <td class="text-center">Target</td>
@@ -133,7 +133,7 @@ $ var cricket = require("./components/cricket");
       <if(state.type === types.BERMUDA_TRIANGLE)>
         <tr>
           <td colspan="3">
-            <table id='table-dartsatx-scores' class='table-striped'>
+            <table id='table-bermudatriangle-scores' class='table-striped'>
               <thead>
                 <tr>
                   <td class="text-center">Target</td>
@@ -142,6 +142,24 @@ $ var cricket = require("./components/cricket");
               <tbody>
                   <tr>
                     <td class="text-center" style="font-size: 19pt; font-weight: 400;">${types.TARGET_BERMUDA_TRIANGLE[input.leg.round].label}</td>
+                  </tr>
+              </tbody>
+            </table>
+          </td>
+        </tr>
+      </if>
+      <if(state.type === types.FOUR_TWENTY)>
+        <tr>
+          <td colspan="3">
+            <table id='table-fourtwenty-scores' class='table-striped'>
+              <thead>
+                <tr>
+                  <td class="text-center">Target</td>
+                </tr>
+              </thead>
+              <tbody>
+                  <tr>
+                    <td class="text-center" style="font-size: 19pt; font-weight: 400;">${types.TARGET_FOUR_TWENTY[input.leg.round].label}</td>
                   </tr>
               </tbody>
             </table>
