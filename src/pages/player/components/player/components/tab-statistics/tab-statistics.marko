@@ -81,7 +81,7 @@ $ var types = require('../../../../../../components/scorecard/components/match_t
                     </else-if>
                     <else-if(input.type == types.FOUR_TWENTY)>
                         <td style="width: 25%;">
-                            <statistics-card label="Hit Rate" value=`${(input.statistics.total_hit_rate).toFixed(2)}` icon="fas fa-bullseye"/>
+                            <statistics-card label="Hit Rate" value=`${(input.statistics.total_hit_rate * 100).toFixed(2)} %` icon="fas fa-bullseye"/>
                         </td>
                         <td style="width: 25%;">
                             <statistics-card label="Avg. Score" value=`${input.statistics.legs_played ? input.statistics.score : "-"}` icon="far fa-star"/>
