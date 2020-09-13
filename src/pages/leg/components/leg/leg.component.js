@@ -302,6 +302,12 @@ module.exports = {
                 if (target.value !== -1) {
                     value = target.value;
                 }
+            } else if (this.input.match.match_type.id === types.FOUR_TWENTY) {
+                value = types.TARGET_FOUR_TWENTY[this.state.leg.round].value;
+                if (e.keyCode !== KEY_ARROW_DOWN) {
+                    value = 0;
+                    multiplier = 1;
+                }
             }
             if (!multiplier) {
                 multiplier = 1;

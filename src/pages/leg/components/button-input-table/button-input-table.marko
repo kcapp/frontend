@@ -216,6 +216,20 @@ $ var types = require("../../../../components/scorecard/components/match_types")
         </tr>
       </else>
     </else-if>
+    <else-if(input.type === types.FOUR_TWENTY)>
+      $ var target = types.TARGET_FOUR_TWENTY[input.leg.round];
+      <tr class='row'>
+        <td rowspan='2'>
+          <score-button text="Miss" value=0 multiplier=1 clazz='fill-button' on-button-press("onButtonPress")/>
+        </td>
+        <td rowspan='2' style="width: 100%;">
+          <score-button text=`Double (${target.label})` value=target.value multiplier=2 clazz='btn-double fill-button' on-button-press("onButtonPress")/>
+        </td>
+        <td rowspan='2' style="width: 5%;">
+          <score-button icon="fas fa-long-arrow-alt-left" clazz='fill-button' isUndo=true on-button-press("onButtonPress")/>
+        </td>
+      </tr>
+    </else-if>
     <else>
       <all-buttons-input on-button-press("onButtonPress")/>
     </else>
