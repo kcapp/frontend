@@ -1,0 +1,43 @@
+$ var types = require("../../../scorecard/components/match_types");
+
+$ var statistic = input.statistic;
+$ var player = input.player;
+<if(input.header)>
+  <div class="block-container-header-center">
+    <a href=`/players/${player.id}/statistics`>${player.name}</a>
+  </div>
+</if>
+<div class="block-container-with-header">
+  <div class="player-card-match">
+    <div style="padding-bottom: 20px;">
+      <div class="player-pic-cutout" style="margin: 0 auto;">
+        <player-profile-picture player=player/>
+      </div>
+    </div>
+    <statistics-row heading="Score" value=statistic.score />
+    <statistics-row heading="Total Hitrate" value=`${(statistic.total_hit_rate * 100).toFixed(2)} %`/>
+
+    <statistics-row heading="Hitrates" clazz="pt-20" />
+    <table>
+      $ var num = 0;
+      <for|row| from=1 to=7>
+        <tr>
+          <for|i| from=1 to=3>
+            $ num = 3 * (row - 1) + i;
+            $ var target = types.TARGET_FOUR_TWENTY[num];
+            <if(target)>
+              <score-pill text=`${num}` value=`${(statistic.hitrates[num] * 100).toFixed(2)} %`/>
+            </if>
+          </for>
+        </tr>
+      </for>
+    </table>
+
+    <if(input.isWinner)>
+        <div class="label-winner">WINNER</div>
+    </if>
+    <else>
+        <div class="label-loser">&nbsp;</div>
+    </else>
+  </div>
+</div>
