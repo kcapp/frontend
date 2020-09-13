@@ -182,7 +182,8 @@ module.exports = (io, app) => {
                                         axios.get(app.locals.kcapp.api + '/match/' + leg.match_id)
                                             .then((response) => {
                                                 var match = response.data;
-                                                announceLegFinished(currentPlayer, match)
+                                                var winnerPlayer = _.findWhere(players, { player_id: leg.winner_player_id });
+                                                announceLegFinished(winnerPlayer, match)
 
                                                 _this.io.of('/active').emit('leg_finished', { leg: leg, match: match, throw: body });
                                                 nsp.emit('score_update', { leg: leg, players: players, match: match });

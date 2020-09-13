@@ -19,16 +19,15 @@ $ var player = input.player;
     <statistics-row heading="Hitrates" clazz="pt-20" />
     <table>
       $ var num = 0;
-      <for|row| from=1 to=4>
+      <for|row| from=1 to=7>
         <tr>
-          <for|i| from=1 to=5>
-            $ num = 5 * (row - 1) + i;
+          <for|i| from=1 to=3>
+            $ num = 3 * (row - 1) + i;
             <score-pill text=`${num}s` value=`${(statistic.hitrates[num] * 100).toFixed(2)} %`/>
           </for>
         </tr>
       </for>
       <tr>
-          <td/>
           <td/>
           <score-pill text="Bulls" value=`${(statistic.hitrates[25] * 100).toFixed(2)} %`/>
       </tr>

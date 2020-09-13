@@ -283,65 +283,47 @@ module.exports = {
             component.removeLast();
             e.preventDefault();
         } else if (types.SUPPORT_SIMPLE_INPUT.includes(this.input.match.match_type.id) && simplified.includes(e.keyCode)) {
+            var value = 0;
+
+            var multiplier = undefined;
             if (this.input.match.match_type.id === types.DARTS_AT_X) {
-                var value = this.state.leg.starting_score
-
-                var multiplier = 1;
-                if (e.keyCode === KEY_PAGE_DOWN && value !== 25) {
-                    multiplier = 3;
-                } else if (e.keyCode === KEY_ARROW_DOWN) {
-                    multiplier = 2;
-                }
-
-                if (e.keyCode === KEY_INSERT || e.keyCode === KEY_DELETE) {
-                    value = 0;
-                }
-
-                component.setDart(value, multiplier);
-                var dartsThrown = component.getDartsThrown();
-                if (dartsThrown > 2) {
-                    this.state.submitting = true;
-                    this.state.socket.emit('throw', JSON.stringify(component.getPayload()));
-                } else {
-                    this.state.submitting = component.confirmThrow(false);
-                }
+                value = this.state.leg.starting_score
             } else if (this.input.match.match_type.id === types.AROUND_THE_CLOCK) {
-                var value = component.state.player.current_score + 1;
+                value = component.state.player.current_score + 1;
                 value = value === 21 ? 25 : value;
                 if (e.keyCode !== KEY_END) {
                     value = 0;
                 }
-                var multiplier = 1;
-
-                component.setDart(value, multiplier);
-                var dartsThrown = component.getDartsThrown();
-                if (dartsThrown > 2) {
-                    this.state.submitting = true;
-                    this.state.socket.emit('throw', JSON.stringify(component.getPayload()));
-                } else {
-                    this.state.submitting = component.confirmThrow(false);
-                }
+                multiplier = 1;
             } else if (this.input.match.match_type.id === types.AROUND_THE_WORLD || this.input.match.match_type.id === types.SHANGHAI) {
-                var value = this.state.leg.round === 21 ? 25 : this.state.leg.round;
-                var multiplier = 1;
+                value = this.state.leg.round === 21 ? 25 : this.state.leg.round;
+            } else if (this.input.match.match_type.id === types.BERMUDA_TRIANGLE) {
+                var target = types.TARGET_BERMUDA_TRIANGLE[this.state.leg.round];
+                if (target.value !== -1) {
+                    value = target.value;
+                }
+            }
+            if (!multiplier) {
+                multiplier = 1;
                 if (e.keyCode === KEY_PAGE_DOWN && value !== 25) {
                     multiplier = 3;
                 } else if (e.keyCode === KEY_ARROW_DOWN) {
                     multiplier = 2;
                 }
-                if (e.keyCode === KEY_INSERT || e.keyCode === KEY_DELETE) {
-                    value = 0;
-                }
-
-                component.setDart(value, multiplier);
-                var dartsThrown = component.getDartsThrown();
-                if (dartsThrown > 2) {
-                    this.state.submitting = true;
-                    this.state.socket.emit('throw', JSON.stringify(component.getPayload()));
-                } else {
-                    this.state.submitting = component.confirmThrow(false);
-                }
             }
+
+            if (e.keyCode === KEY_INSERT || e.keyCode === KEY_DELETE) {
+                value = 0;
+            }
+            component.setDart(value, multiplier);
+            var dartsThrown = component.getDartsThrown();
+            if (dartsThrown > 2) {
+                this.state.submitting = true;
+                this.state.socket.emit('throw', JSON.stringify(component.getPayload()));
+            } else {
+                this.state.submitting = component.confirmThrow(false);
+            }
+
             e.preventDefault();
         }
         return;

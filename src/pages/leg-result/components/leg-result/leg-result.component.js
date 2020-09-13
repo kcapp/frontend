@@ -29,7 +29,11 @@ module.exports = {
             var scores = visit.scores[order[0]];
             for (var j = 1; j < order.length; j++) {
                 var id = order[j];
-                scores += " : " + (visit.scores[id] ? visit.scores[id] : _.find(input.leg_players, (player) => { return player.player_id === id }).current_score);
+                if (leg.is_finished) {
+                    scores += " : " + visit.scores[id];
+                } else {
+                    scores += " : " + (visit.scores[id] ? visit.scores[id] : 0);
+                }
             }
             visit.score_str = scores;
         }
@@ -80,7 +84,7 @@ module.exports = {
             else {
                 if (match.match_type.id == types.SHOOTOUT || match.match_type.id == types.DARTS_AT_X || match.match_type.id === types.CRICKET ||
                     match.match_type.id == types.AROUND_THE_CLOCK || match.match_type.id == types.AROUND_THE_WORLD || match.match_type.id == types.SHANGHAI ||
-                    match.match_type.id == types.TIC_TAC_TOE) {
+                    match.match_type.id == types.TIC_TAC_TOE || match.match_type.id == types.BERMUDA_TRIANGLE) {
                     current = current + visit.score;
                     values[visit.player_id].push(current);
                     if (current > chartMaxValue) {

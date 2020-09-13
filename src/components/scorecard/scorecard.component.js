@@ -8,6 +8,7 @@ var aroundTheWorld = require("./components/around_the_world");
 var shanghai = require("./components/shanghai");
 var aroundTheClock = require("./components/around_the_clock");
 var ticTacToe = require('./components/tic_tac_toe');
+var bermudaTriangle = require('./components/bermuda_triangle');
 var types = require("./components/match_types");
 
 const DART_CONTAINER_MAP = { 1: 'first', 2: 'second', 3: 'third' };
@@ -115,6 +116,9 @@ module.exports = {
                 case types.TIC_TAC_TOE:
                     ticTacToe.removeLast.bind(this)(dart, external);
                     break;
+                case types.BERMUDA_TRIANGLE:
+                    bermudaTriangle.removeLast.bind(this)(dart, external);
+                    break;
             }
             dart.reset();
         } else {
@@ -151,6 +155,9 @@ module.exports = {
                     break;
                 case types.TIC_TAC_TOE:
                     submitting = ticTacToe.confirmThrow.bind(this)(external);
+                    break;
+                case types.BERMUDA_TRIANGLE:
+                    submitting = bermudaTriangle.confirmThrow.bind(this)(external);
                     break;
             }
         }

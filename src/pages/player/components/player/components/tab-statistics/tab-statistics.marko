@@ -71,6 +71,14 @@ $ var types = require('../../../../../../components/scorecard/components/match_t
                             <statistics-card label="Highest Closed" value=`${input.statistics.highest_closed}` icon="fas fa-bullseye"/>
                         </td>
                     </else-if>
+                    <else-if(input.type == types.BERMUDA_TRIANGLE)>
+                        <td style="width: 25%;">
+                            <statistics-card label="MPR" value=`${(input.statistics.mpr).toFixed(2)}` icon="fas fa-circle-notch"/>
+                        </td>
+                        <td style="width: 25%;">
+                            <statistics-card label="Avg. Score" value=`${input.statistics.legs_played ? input.statistics.score : "-"}` icon="far fa-star"/>
+                        </td>
+                    </else-if>
                     <else>
                         <div>TODO</div>
                     </else>
@@ -78,7 +86,8 @@ $ var types = require('../../../../../../components/scorecard/components/match_t
             </if>
             <tr>
                 $ var hasStatistics = input.statistics && input.statistics.legs_played;
-                <td colspan="100%" style=`display: ${hasStatistics && (input.type == types.DARTS_AT_X || input.type == types.AROUND_THE_CLOCK || input.type == types.AROUND_THE_WORLD || input.type == types.SHANGHAI) ? '' : 'none'};`>
+                <td colspan="100%" style=`display: ${hasStatistics && (input.type == types.DARTS_AT_X || input.type == types.AROUND_THE_CLOCK || input.type == types.AROUND_THE_WORLD ||
+                    input.type == types.SHANGHAI || input.type == types.BERMUDA_TRIANGLE) ? '' : 'none'};`>
                     <div class="block-container" style='padding: 0;'>
                         <canvas id="canvas-hit-rates"></canvas>
                     </div>
@@ -146,6 +155,13 @@ $ var types = require('../../../../../../components/scorecard/components/match_t
                     <th class="text-center">Score</th>
                     <th class="text-center">Numbers Closed</th>
                     <th class="text-center">Highest Closed</th>
+                </else-if>
+                <else-if(input.type == types.BERMUDA_TRIANGLE)>
+                    <th class="text-center">Score</th>
+                    <th class="text-center">MPR</th>
+                    <th class="text-center">Hit Rate</th>
+                    <th class="text-center">Highest Score</th>
+                    <th class="text-center">Hits</th>
                 </else-if>
                 <th class="text-center"/>
             </tr>
@@ -219,6 +235,13 @@ $ var types = require('../../../../../../components/scorecard/components/match_t
                         <td class="text-center">${statistics.score}</td>
                         <td class="text-center">${statistics.numbers_closed}</td>
                         <td class="text-center">${statistics.highest_closed}</td>
+                    </else-if>
+                    <else-if(input.type == types.BERMUDA_TRIANGLE)>
+                        <td class="text-center">${statistics.score}</td>
+                        <td class="text-center">${statistics.mpr.toFixed(2)}</td>
+                        <td class="text-center">${statistics.total_hit_rate.toFixed(2)}</td>
+                        <td class="text-center">${statistics.highest_score_reached}</td>
+                        <td class="text-center">${statistics.hit_count}</td>
                     </else-if>
                     <td>
                         <a href=`/legs/${history.id}/result`>

@@ -177,7 +177,7 @@ module.exports = {
                 title: {
                     display: true,
                     fontSize: 16,
-                    text: 'Hit Rate Per Number'
+                    text: 'Hit Rates'
                 },
                 elements: {
                     line: { tension: 0, borderWidth: 3 }
@@ -337,13 +337,24 @@ module.exports = {
 
             if (this.state.statistics.hitrates) {
                 var data = [];
-                for (var i = 0; i < 20; i++) {
-                    data.push((this.state.statistics.hitrates[DARTBOARD[i]] * 100).toFixed(2));
-                }
 
                 var chart = this.state.chart_hitrates;
-                chart.data.datasets[0].data = data;
-                chart.data.datasets[1].data = [(this.state.statistics.hitrates[25] * 100).toFixed(2)]
+                if (typeId == types.BERMUDA_TRIANGLE) {
+                    var labels = [];
+                    for (var i = 1; i <= 13; i++) {
+                        data.push((this.state.statistics.hitrates[i] * 100).toFixed(2));
+                        labels.push(types.TARGET_BERMUDA_TRIANGLE[i].label);
+                    }
+                    chart.data.labels = labels;
+                    chart.data.datasets[0].data = data;
+                } else {
+                    for (var i = 0; i < 20; i++) {
+                        data.push((this.state.statistics.hitrates[DARTBOARD[i]] * 100).toFixed(2));
+                    }
+                    chart.data.labels = DARTBOARD;
+                    chart.data.datasets[0].data = data;
+                    chart.data.datasets[1].data = [(this.state.statistics.hitrates[25] * 100).toFixed(2)]
+                }
                 chart.update();
             }
             this.state.type = typeId;

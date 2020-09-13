@@ -27,6 +27,9 @@ $ var startingScore = input.player.starting_score || 0;
 <else-if(match.match_type.id == type.TIC_TAC_TOE)>
   <statistics-tic-tac-toe isWinner=state.isWinner player=input.player statistic=input.statistic />
 </else-if>
+<else-if(match.match_type.id == type.BERMUDA_TRIANGLE)>
+  <statistics-bermuda-triangle isWinner=state.isWinner player=input.player statistic=input.statistic />
+</else-if>
 <else>
   <div class="block-container-with-header">
     <div class="player-card-match">
