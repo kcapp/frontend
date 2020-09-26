@@ -3,34 +3,20 @@ $ var types = require("../../../../components/scorecard/components/match_types")
 $ var leg = state.leg;
 $ var isFinished = leg.is_finished;
 $ var matchType = input.match.match_type.id;
-<page-header heading=`Leg Result (${leg.id})` style="block-container" icon="fa-crosshairs" subheadings=[
+$ var subheadings = [
   [
-    {
-      heading: `Started   ${leg.started}`,
-      icon: "fa-clock",
-      type: "far",
-      style: "white-space: pre;"
-    },
-    {
-      heading: `Finished ${leg.finished}`,
-      icon: "fa-clock"
-    },
-    {
-      heading: `Duration ${leg.duration} minutes`,
-      icon: "fa-stopwatch"
-    }
+    { heading: `Started   ${leg.started}`, icon: "fa-clock", type: "far", style: "white-space: pre;" },
+    { heading: `Finished ${leg.finished}`, icon: "fa-clock" },
+    { heading: `Duration ${leg.duration} minutes`, icon: "fa-stopwatch" }
   ],
   [
-    {
-      heading: `${input.match.match_type.name}`,
-      icon: "fa-bullseye"
-    },
-    {
-      heading: `Rounds: ${leg.round - 1}`,
-      icon: "fa-play"
-    }
+    { heading: `${input.match.match_type.name}`, icon: "fa-bullseye" },
+    { heading: `Rounds: ${leg.round - 1}`, icon: "fa-play" }
   ]
-]/>
+];
+$ if (leg.parameters && leg.parameters.outshot_type) subheadings[1].push({ heading: `Outshot: ${leg.parameters.outshot_type.name}`, icon: "fa-sign-out-alt" });
+
+<page-header heading=`Leg Result (${leg.id})` style="block-container" icon="fa-crosshairs" subheadings=subheadings/>
 <div class="block-container-options" style="overflow: visible;">
   <div class="float-left">
     <ul class="nav nav-pills">
@@ -47,11 +33,9 @@ $ var matchType = input.match.match_type.id;
   </div>
   <div style="float: right; padding-top: 4px;">
     <ul class="nav nav-pills">
-      <if(!input.match.tournament_id && input.match.match_type.id !== types.TIC_TAC_TOE)>
-        <li role="presentation">
-          <a on-click("rematch")>Rematch</a>
-        </li>
-      </if>
+      <li role="presentation">
+        <a on-click("rematch")>Rematch</a>
+      </li>
       <li role="presentation">
         <a on-click("undoLegFinish")>Undo leg finish</a>
       </li>

@@ -59,13 +59,12 @@ module.exports = (io, app) => {
                 return;
             }
             var namespace = '/legs/' + legId;
-            var chatHistory = [];
             if (this.io.nsps[namespace] === undefined) {
                 var nsp = this.io.of(namespace);
 
                 // To not spam the API with too many requests, we add a short limit to the requests here
                 limiter.schedule(() => {
-                    axios.get(app.locals.kcapp.api + '/leg/' + legId + '/players')
+                    axios.get(`${app.locals.kcapp.api}/leg/${legId}/players`)
                         .then((response) => {
                             var legPlayers = response.data;
                             for (var id in legPlayers) {
@@ -94,8 +93,8 @@ module.exports = (io, app) => {
                     log('connection', namespace);
                     client.on('join', function () {
                         axios.all([
-                            axios.get(app.locals.kcapp.api + '/leg/' + legId),
-                            axios.get(app.locals.kcapp.api + '/leg/' + legId + '/players')
+                            axios.get(`${app.locals.kcapp.api}/leg/${legId}`),
+                            axios.get(`${app.locals.kcapp.api}/leg/${legId}/players`)
                         ]).then(axios.spread((legData, playersData) => {
                             var leg = legData.data;
                             var players = playersData.data;
@@ -165,13 +164,12 @@ module.exports = (io, app) => {
                     client.on('throw', function (data) {
                         var body = JSON.parse(data);
                         log('throw', data);
-                        axios.post(app.locals.kcapp.api + '/visit', body)
+                        axios.post(`${app.locals.kcapp.api}/visit`, body)
                             .then((response) => {
-                                var visit = response.data;
                                 axios.all([
-                                    axios.get(app.locals.kcapp.api + '/leg/' + body.leg_id),
-                                    axios.get(app.locals.kcapp.api + '/leg/' + body.leg_id + '/players'),
-                                    axios.get(app.locals.kcapp.api + '/statistics/global/fnc')
+                                    axios.get(`${app.locals.kcapp.api}/leg/${body.leg_id}`),
+                                    axios.get(`${app.locals.kcapp.api}/leg/${body.leg_id}/players`),
+                                    axios.get(`${app.locals.kcapp.api}/statistics/global/fnc`)
                                 ]).then(axios.spread((legData, playersData, globalData) => {
                                     var leg = legData.data;
                                     var players = playersData.data;
@@ -179,7 +177,7 @@ module.exports = (io, app) => {
                                     var globalstat = globalData.data[0];
 
                                     if (leg.is_finished) {
-                                        axios.get(app.locals.kcapp.api + '/match/' + leg.match_id)
+                                        axios.get(`${app.locals.kcapp.api}/match/${leg.match_id}`)
                                             .then((response) => {
                                                 var match = response.data;
                                                 var winnerPlayer = _.findWhere(players, { player_id: leg.winner_player_id });
@@ -219,12 +217,12 @@ module.exports = (io, app) => {
 
                     client.on('undo_visit', function (data) {
                         log('undo_visit');
-                        axios.delete(app.locals.kcapp.api + '/visit/' + legId + '/last')
+                        axios.delete(`${app.locals.kcapp.api}/visit/${legId}/last`)
                             .then(() => {
                                 axios.all([
-                                    axios.get(app.locals.kcapp.api + '/leg/' + legId),
-                                    axios.get(app.locals.kcapp.api + '/leg/' + legId + '/players'),
-                                    axios.get(app.locals.kcapp.api + '/statistics/global/fnc')
+                                    axios.get(`${app.locals.kcapp.api}/leg/${legId}`),
+                                    axios.get(`${app.locals.kcapp.api}/leg/${legId}/players`),
+                                    axios.get(`${app.locals.kcapp.api}/statistics/global/fnc`)
                                 ]).then(axios.spread((leg, players, globalstat) => {
                                     nsp.emit('undo_visit', {});
                                     nsp.emit('score_update', { leg: leg.data, players: players.data, globalstat: globalstat.data[0], is_undo: true });
@@ -268,7 +266,10 @@ module.exports = (io, app) => {
                 }
 
                 function announceLegFinished(player, match) {
-                    var name = player.player.vocal_name === null ? player.player.first_name : player.player.vocal_name;
+                    var name = "DRAW";
+                    if (player) {
+                        name = player.player.vocal_name === null ? player.player.first_name : player.player.vocal_name;
+                    }
                     if (match.is_finished) {
                         if (match.winner_id === null) {
                             announce(`Game shot, in the ${match.current_leg_num} leg, ${name}. The match a DRAW!!!`, 'game_shot');

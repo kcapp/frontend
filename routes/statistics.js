@@ -25,10 +25,10 @@ router.get('/weekly', function (req, res, next) {
 
 function getStatistics(from, to, req, res, next) {
     axios.all([
-        axios.get(req.app.locals.kcapp.api + '/player'),
-        axios.get(req.app.locals.kcapp.api + '/office'),
-        axios.get(req.app.locals.kcapp.api + '/statistics/1/' + from + '/' + to),
-        axios.get(req.app.locals.kcapp.api + '/statistics/office/' + from + '/' + to)
+        axios.get(`${req.app.locals.kcapp.api}/player`),
+        axios.get(`${req.app.locals.kcapp.api}/office`),
+        axios.get(`${req.app.locals.kcapp.api}/statistics/1/${from}/${to}`),
+        axios.get(`${req.app.locals.kcapp.api}/statistics/office/${from}/${to}`)
     ]).then(axios.spread((players, offices, x01, office) => {
         res.marko(statisticsTemplate, {
             players: players.data,

@@ -11,9 +11,9 @@ var eloTemplate = require('../src/pages/elo/elo-template.marko');
 /** Get elo */
 router.get('/', function (req, res, next) {
     axios.all([
-        axios.get(req.app.locals.kcapp.api + '/player'),
-        axios.get(req.app.locals.kcapp.api + '/tournament/standings'),
-        axios.get(req.app.locals.kcapp.api + '/office')
+        axios.get(`${req.app.locals.kcapp.api}/player`),
+        axios.get(`${req.app.locals.kcapp.api}/tournament/standings`),
+        axios.get(`${req.app.locals.kcapp.api}/office`)
     ]).then(axios.spread((players, standings, offices) => {
         var general = JSON.parse(JSON.stringify(standings.data));
         general.sort(function (a, b) {

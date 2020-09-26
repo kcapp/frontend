@@ -1,3 +1,4 @@
+var types = require("./match_types");
 const WINNING_COMBOS = [
     // Horizontally
     [0, 1, 2],
@@ -19,7 +20,10 @@ exports.removeLast = function(dart, external) {
     this.state.player.current_score -= scored;
     this.emit('score-change', scored, this.state.player.player_id);
 
-    if (dart.getMultiplier() === 2) {
+    var outshotTypeId = this.state.leg.parameters.outshot_type.id;
+    if ((outshotTypeId == types.OUTSHOT_ANY) ||
+        (outshotTypeId == types.OUTSHOT_DOUBLE && dart.getMultiplier() == 2) ||
+        (outshotTypeId == types.OUTSHOT_MASTER && (dart.getMultiplier() == 2 || dart.getMultiplier() == 3))) {
         var total = this.getDart(1).getValue() + this.getDart(2).getValue() + this.getDart(3).getValue();
 
         for (var i = 0; i < this.state.leg.parameters.numbers.length; i++) {
@@ -88,15 +92,16 @@ exports.confirmThrow = function (external) {
 
     this.emit('score-change', scored, this.state.player.player_id);
 
-    var submit = false;
-    if (dart.getMultiplier() === 2) {
+    var outshotTypeId = this.state.leg.parameters.outshot_type.id;
+    if ((outshotTypeId == types.OUTSHOT_ANY) ||
+        (outshotTypeId == types.OUTSHOT_DOUBLE && dart.getMultiplier() == 2) ||
+        (outshotTypeId == types.OUTSHOT_MASTER && (dart.getMultiplier() == 2 || dart.getMultiplier() == 3))) {
         var total = this.getDart(1).getValue() + this.getDart(2).getValue() + this.getDart(3).getValue();
 
         for (var i = 0; i < this.state.leg.parameters.numbers.length; i++) {
             var num = this.state.leg.parameters.numbers[i];
             if (total === num) {
                 this.state.leg.parameters.hits[num] = this.state.player.player_id;
-                //submit = true;
                 break;
             }
         }
@@ -104,13 +109,12 @@ exports.confirmThrow = function (external) {
 
     var isCheckout = module.exports.isCheckout(this.state.leg, this.state.player);
     if (isCheckout) {
-        submit = false;
         submitting = true;
     }
 
     if (!external) {
         // If an external event triggered the update don't emit a throw
-        this.emit('possible-throw', isCheckout, false, this.state.currentDart - 1, dart.getScore(), dart.getMultiplier(), false, submit);
+        this.emit('possible-throw', isCheckout, false, this.state.currentDart - 1, dart.getScore(), dart.getMultiplier(), false, false);
     }
 
     return submitting;

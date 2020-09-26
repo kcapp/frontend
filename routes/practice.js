@@ -11,12 +11,12 @@ var _ = require('underscore');
 /* GET practice page. */
 router.get('/', function (req, res, next) {
     axios.all([
-        axios.get(req.app.locals.kcapp.api + '/player/active'),
-        axios.get(req.app.locals.kcapp.api + '/match/modes'),
-        axios.get(req.app.locals.kcapp.api + '/owetype'),
-        axios.get(req.app.locals.kcapp.api + '/match/types'),
-        axios.get(req.app.locals.kcapp.api + '/venue'),
-        axios.get(req.app.locals.kcapp.api + '/office'),
+        axios.get(`${req.app.locals.kcapp.api}/player/active`),
+        axios.get(`${req.app.locals.kcapp.api}/match/modes`),
+        axios.get(`${req.app.locals.kcapp.api}/owetype`),
+        axios.get(`${req.app.locals.kcapp.api}/match/types`),
+        axios.get(`${req.app.locals.kcapp.api}/venue`),
+        axios.get(`${req.app.locals.kcapp.api}/office`),
     ]).then(axios.spread((players, matchModes, oweTypes, matchTypes, venues, offices) => {
         res.marko(practiceTemplate, {
             players: _.sortBy(players.data, (player) => player.name),

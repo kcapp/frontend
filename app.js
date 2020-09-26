@@ -59,9 +59,6 @@ var elo = require('./routes/elo');
 var venues = require('./routes/venues')(app, socketHandler);
 socketHandler.addNamespace('/active');
 
-// view engine setup
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'pug');
 app.locals.moment = require('moment');
 app.locals._ = require('underscore');
 

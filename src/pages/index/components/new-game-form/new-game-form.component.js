@@ -13,8 +13,9 @@ module.exports = {
             venues: input.venues,
             options: {
                 starting_score: 501,
-                game_type: 1,
+                game_type: types.X01,
                 game_mode: 1,
+                outshot_type: types.OUTSHOT_DOUBLE,
                 stake: null,
                 venue: null
             },
@@ -146,8 +147,8 @@ module.exports = {
                 scoreComponent.state.index = 0;
                 scoreComponent.state.enabled = false;
             } else if (this.state.options.game_type == types.TIC_TAC_TOE) {
-                scoreComponent.updateOptions([ { id: 10, name: '+10' }, { id: 20, name: '+20' }, { id: 30, name: '+30' }, { id: 40, name: '+40' }, { id: 60, name: '+60' } ]);
-                scoreComponent.state.index = 30;
+                scoreComponent.updateOptions([ { id: 0, name: '+0' }, { id: 10, name: '+10' }, { id: 20, name: '+20' }, { id: 25, name: '+25' }, { id: 30, name: '+30' }, { id: 40, name: '+40' }, { id: 50, name: '+50' } ]);
+                scoreComponent.state.index = 20;
                 scoreComponent.state.enabled = true;
             } else if (this.state.options.game_type == types.DARTS_AT_X) {
                 scoreComponent.updateOptions([
@@ -175,6 +176,7 @@ module.exports = {
             for (var i = 0; i < selectedPlayers.length; i++) {
                 selectedPlayers[i].handleTypeChange(this.state.options.game_type);
             }
+            this.setStateDirty("options");
         }
     },
     addPlayer(event, selected) {
@@ -229,6 +231,7 @@ module.exports = {
             match_type: this.state.options.game_type,
             match_mode: this.state.options.game_mode,
             match_stake: this.state.options.stake,
+            outshot_type: this.state.options.outshot_type,
             venue: venueId,
             players: this.state.selected.map(player => player.id),
             office_id: officeId,

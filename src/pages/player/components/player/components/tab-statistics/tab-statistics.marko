@@ -73,7 +73,7 @@ $ var types = require('../../../../../../components/scorecard/components/match_t
                     </else-if>
                     <else-if(input.type == types.BERMUDA_TRIANGLE)>
                         <td style="width: 25%;">
-                            <statistics-card label="MPR" value=`${(input.statistics.mpr).toFixed(2)}` icon="fas fa-circle-notch"/>
+                            <statistics-card label="MPR" value=`${input.statistics.legs_played ? (input.statistics.mpr).toFixed(2) : "-"}` icon="fas fa-circle-notch"/>
                         </td>
                         <td style="width: 25%;">
                             <statistics-card label="Avg. Score" value=`${input.statistics.legs_played ? input.statistics.score : "-"}` icon="far fa-star"/>

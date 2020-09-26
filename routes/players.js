@@ -14,8 +14,8 @@ var head2headTemplate = require('../src/pages/player-head2head/player-head2head-
 /* Get a list of all players */
 router.get('/', function (req, res, next) {
     axios.all([
-        axios.get(req.app.locals.kcapp.api + '/player/active'),
-        axios.get(req.app.locals.kcapp.api + '/office')
+        axios.get(`${req.app.locals.kcapp.api}/player/active`),
+        axios.get(`${req.app.locals.kcapp.api}/office`)
     ]).then(axios.spread((playersResponse, officesResponse) => {
         var players = playersResponse.data;
         players = _.sortBy(players, (player) => player.name)
@@ -28,7 +28,7 @@ router.get('/', function (req, res, next) {
 
 /* Add a new player */
 router.post('/', function (req, res, next) {
-    axios.post(req.app.locals.kcapp.api + '/player', req.body)
+    axios.post(`${req.app.locals.kcapp.api}/player`, req.body)
         .then(() => {
             res.redirect('/players');
         }).catch(error => {
@@ -39,7 +39,7 @@ router.post('/', function (req, res, next) {
 
 /* Edit player */
 router.put('/:id', function (req, res, next) {
-    axios.put(req.app.locals.kcapp.api + '/player/' + req.params.id, req.body)
+    axios.put(`${req.app.locals.kcapp.api}/player/${req.params.id}`, req.body)
         .then(() => {
             res.redirect(303, '/players');
         }).catch(error => {
@@ -52,13 +52,13 @@ router.put('/:id', function (req, res, next) {
 router.get('/:id/statistics', function (req, res, next) {
     var playerId = req.params.id;
     axios.all([
-        axios.get(req.app.locals.kcapp.api + '/player'),
-        axios.get(req.app.locals.kcapp.api + '/player/' + playerId),
-        axios.get(req.app.locals.kcapp.api + '/player/' + playerId + '/statistics'),
-        axios.get(req.app.locals.kcapp.api + '/player/' + playerId + '/statistics/previous'),
-        axios.get(req.app.locals.kcapp.api + '/player/' + playerId + '/progression'),
-        axios.get(req.app.locals.kcapp.api + '/player/' + playerId + '/checkouts'),
-        axios.get(req.app.locals.kcapp.api + '/player/' + playerId + '/tournament')
+        axios.get(`${req.app.locals.kcapp.api}/player`),
+        axios.get(`${req.app.locals.kcapp.api}/player/${playerId}`),
+        axios.get(`${req.app.locals.kcapp.api}/player/${playerId}/statistics`),
+        axios.get(`${req.app.locals.kcapp.api}/player/${playerId}/statistics/previous`),
+        axios.get(`${req.app.locals.kcapp.api}/player/${playerId}/progression`),
+        axios.get(`${req.app.locals.kcapp.api}/player/${playerId}/checkouts`),
+        axios.get(`${req.app.locals.kcapp.api}/player/${playerId}/tournament`)
     ]).then(axios.spread((players, player, statistics, previous_statistics, progression, checkouts, tournament) => {
         res.marko(playerTemplate, {
             players: players.data,
@@ -78,14 +78,14 @@ router.get('/:id/statistics', function (req, res, next) {
 
 /* Get comparable statistics for players */
 router.get('/compare', function (req, res, next) {
-    var requests = [ axios.get(req.app.locals.kcapp.api + '/player/active') ];
+    var requests = [ axios.get(`${req.app.locals.kcapp.api}/player/active`) ];
 
     var playerIds = req.query.player_id;
     if (playerIds) {
         if (!Array.isArray(playerIds)) {
             playerIds = [playerIds]
         }
-        requests.push(axios.get(req.app.locals.kcapp.api + '/player/compare?id=' + playerIds.join("&id=")));
+        requests.push(axios.get(`${req.app.locals.kcapp.api}/player/compare?id=${playerIds.join("&id=")}`));
     }
     axios.all(requests).then(axios.spread((playersResponse, statisticsData) => {
         var statistics = statisticsData ? statisticsData.data : [];
@@ -109,8 +109,8 @@ router.get('/:player1/vs/:player2', function (req, res, next) {
     var player2 = req.params.player2;
 
     axios.all([
-        axios.get(req.app.locals.kcapp.api + '/player'),
-        axios.get(req.app.locals.kcapp.api + '/player/' + player1 + '/vs/' + player2)
+        axios.get(`${req.app.locals.kcapp.api}/player`),
+        axios.get(`${req.app.locals.kcapp.api}/player/${player1}/vs/${player2}`)
     ]).then(axios.spread((response1, response2) => {
         var players = response1.data;
 

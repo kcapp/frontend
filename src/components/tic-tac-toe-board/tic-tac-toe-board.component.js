@@ -23,12 +23,6 @@ module.exports = {
     },
     resetBoard(parameters) {
         this.state = this.updateState(parameters);
-
-        var cells = this.getComponents("tic-tac-toe-cell");
-        for (var i = 0; i < cells.length; i++) {
-            var cell = cells[i];
-            cell.reset();
-        }
         this.updateBoard();
     },
     updateBoard(score = 0, multiplier = 1, isUndo = false) {

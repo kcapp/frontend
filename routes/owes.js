@@ -10,8 +10,8 @@ var owesTemplate = require('../src/pages/owes/owes-template.marko');
 /* Method to get overview over who owes who what */
 router.get('/', function (req, res, next) {
     axios.all([
-        axios.get(req.app.locals.kcapp.api + '/player'),
-        axios.get(req.app.locals.kcapp.api + '/owe')
+        axios.get(`${req.app.locals.kcapp.api}/player`),
+        axios.get(`${req.app.locals.kcapp.api}/owe`)
     ]).then(axios.spread((players, owes) => {
         res.marko(owesTemplate, {
             owes: owes.data,
@@ -26,7 +26,7 @@ router.get('/', function (req, res, next) {
 
 /* Method to register a payback between two players */
 router.put('/payback', function (req, res) {
-    axios.put(req.app.locals.kcapp.api + '/owe/payback', req.body)
+    axios.put(`${req.app.locals.kcapp.api}/owe/payback`, req.body)
         .then(() => {
             res.status(200).send().end();
         }).catch(error => {
