@@ -4,6 +4,7 @@ var axios = require('axios');
 var moment = require('moment');
 var bottleneck = require("bottleneck/es5");
 var skill = require('kcapp-bot/bot-skill');
+var types = require('../../src/components/scorecard/components/match_types');
 
 var _this = this;
 
@@ -176,32 +177,33 @@ module.exports = (io, app) => {
                                     var currentPlayer = _.findWhere(players, { is_current_player: true });
                                     var globalstat = globalData.data[0];
 
-                                    if (leg.is_finished) {
-                                        axios.get(`${app.locals.kcapp.api}/match/${leg.match_id}`)
-                                            .then((response) => {
-                                                var match = response.data;
+                                    axios.get(`${app.locals.kcapp.api}/match/${leg.match_id}`)
+                                        .then((response) => {
+                                            var match = response.data;
+
+                                            if (leg.is_finished) {
                                                 var winnerPlayer = _.findWhere(players, { player_id: leg.winner_player_id });
                                                 announceLegFinished(winnerPlayer, match)
 
                                                 _this.io.of('/active').emit('leg_finished', { leg: leg, match: match, throw: body });
                                                 nsp.emit('score_update', { leg: leg, players: players, match: match });
                                                 nsp.emit('leg_finished', { leg: leg, match: match, throw: body });
-                                            }).catch(error => {
-                                                var message = error.message + ' (' + error + ')'
-                                                debug(`[${legId}] Error when getting match: ${message}`);
-                                                nsp.emit('error', { message: error.message, code: error.code });
-                                            });
-                                    } else {
-                                        if (leg.visits.length === 1) {
-                                            _this.io.of('/active').emit('first_throw', { leg: leg, players: players, globalstat: globalstat });
-                                        }
-                                        announceScored(leg.visits[leg.visits.length - 1]);
-                                        setTimeout(() => {
-                                            // There is a race between these two announcements, so delay the one slightly
-                                            announceScoreRemaining(currentPlayer);
-                                        }, 300);
-                                        nsp.emit('score_update', { leg: leg, players: players, globalstat: globalstat });
-                                    }
+                                            } else {
+                                                if (leg.visits.length === 1) {
+                                                    _this.io.of('/active').emit('first_throw', { leg: leg, players: players, globalstat: globalstat });
+                                                }
+                                                announceScored(leg.visits[leg.visits.length - 1], match.match_type.id);
+                                                setTimeout(() => {
+                                                    // There is a race between these two announcements, so delay the one slightly
+                                                    announceScoreRemaining(currentPlayer);
+                                                }, 300);
+                                                nsp.emit('score_update', { leg: leg, players: players, globalstat: globalstat });
+                                            }
+                                        }).catch(error => {
+                                            var message = error.message + ' (' + error + ')'
+                                            debug(`[${legId}] Error when getting match: ${message}`);
+                                            nsp.emit('error', { message: error.message, code: error.code });
+                                        });
                                 })).catch(error => {
                                     var message = error.message + ' (' + error + ')'
                                     debug(`[${legId}] Error when getting leg: ${message}`);
@@ -248,10 +250,10 @@ module.exports = (io, app) => {
                     }
                 });
 
-                function announceScored(visit) {
+                function announceScored(visit, matchType) {
                     var score = visit.score;
                     var text = '' + score;
-                    if (visit.is_bust) {
+                    if (visit.is_bust || (score === 0 && matchType === types.TIC_TAC_TOE)) {
                         text = 'Noscore';
                     }
                     announce(text, 'score');

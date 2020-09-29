@@ -96,7 +96,7 @@ $ var cricket = require("./components/cricket");
                     $ var singles = hits['1'] ? hits['1'] : 0;
                     $ var doubles = hits['2'] ? hits['2'] : 0;
                     $ var triples = hits['3'] ? hits['3'] : 0;
-                    <td class="text-center" style="font-size: 19pt; font-weight: 400;">${number === 25 ? "Bull" : number}</td>
+                    <td class="text-center target-text">${number === 25 ? "Bull" : number}</td>
                     <td class="text-center">${singles}</td>
                     <td class="text-center">${doubles}</td>
                     <if(number !== 25)>
@@ -123,7 +123,7 @@ $ var cricket = require("./components/cricket");
               <tbody>
                   <tr>
                     $ var value = state.type === types.AROUND_THE_CLOCK ? state.player.current_score + 1 : input.leg.round;
-                    <td class="text-center" style="font-size: 19pt; font-weight: 400;">${value === 21 ? "Bull" : value}</td>
+                    <td class="text-center target-text">${value === 21 ? "Bull" : value}</td>
                   </tr>
               </tbody>
             </table>
@@ -141,7 +141,7 @@ $ var cricket = require("./components/cricket");
               </thead>
               <tbody>
                   <tr>
-                    <td class="text-center" style="font-size: 19pt; font-weight: 400;">${types.TARGET_BERMUDA_TRIANGLE[input.leg.round].label}</td>
+                    <td class="text-center target-text">${types.TARGET_BERMUDA_TRIANGLE[input.leg.round].label}</td>
                   </tr>
               </tbody>
             </table>
@@ -159,7 +159,7 @@ $ var cricket = require("./components/cricket");
               </thead>
               <tbody>
                   <tr>
-                    <td class="text-center" style="font-size: 19pt; font-weight: 400;">${types.TARGET_FOUR_TWENTY[input.leg.round].label}</td>
+                    <td class="text-center target-text">${types.TARGET_FOUR_TWENTY[input.leg.round].label}</td>
                   </tr>
               </tbody>
             </table>
