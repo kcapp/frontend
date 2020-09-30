@@ -53,6 +53,12 @@ module.exports = {
         this.getComponent(DART_CONTAINER_MAP[1]).reset();
         this.getComponent(DART_CONTAINER_MAP[2]).reset();
         this.getComponent(DART_CONTAINER_MAP[3]).reset();
+
+        switch (this.state.type) {
+            case types.TIC_TAC_TOE:
+                ticTacToe.reset.bind(this)();
+                break;
+        }
     },
 
     setLeg(leg) {

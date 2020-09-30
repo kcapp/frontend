@@ -15,6 +15,12 @@ const WINNING_COMBOS = [
     [2, 5, 8]
 ]
 
+var hit = null;
+
+exports.reset = function() {
+    hit = null;
+}
+
 exports.removeLast = function(dart, external) {
     var scored = dart.getValue();
     this.state.player.current_score -= scored;
@@ -102,6 +108,10 @@ exports.confirmThrow = function (external) {
             var num = this.state.leg.parameters.numbers[i];
             if (total === num) {
                 this.state.leg.parameters.hits[num] = this.state.player.player_id;
+                if (hit && hit !== num) {
+                    delete this.state.leg.parameters.hits[hit]
+                }
+                hit = num
                 break;
             }
         }
