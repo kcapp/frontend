@@ -6,12 +6,16 @@ var GLOBAL = 0;
 
 module.exports = {
     onCreate(input) {
+        input.checkout_statistics = _.reject(input.checkout_statistics, (stats) => {
+            return input.players[stats.player_id].is_bot ;
+        });
+
         this.state = {
             type: types.X01,
             officeId: 0,
             statistics: input.x01,
             all: input.x01,
-            office_statistics: input.office_statistics,
+            checkout_statistics: input.checkout_statistics,
             from: input.from,
             to: input.to,
             GLOBAL: 0
@@ -36,10 +40,13 @@ module.exports = {
         } else {
             if (officeId == 0) {
                 this.state.statistics = this.state.all;
+                this.state.checkout_statistics = this.input.checkout_statistics;
             } else {
-                var players = this.input.players;
                 this.state.statistics = _.reject(this.state.all, (stats) => {
-                    return players[stats.player_id].office_id != officeId ;
+                    return stats.office_id != officeId ;
+                });
+                this.state.checkout_statistics = _.reject(this.input.checkout_statistics, (stats) => {
+                    return stats.office_id != officeId ;
                 });
             }
         }
@@ -49,7 +56,7 @@ module.exports = {
 
     typeChanged(typeId) {
         if (typeId == GLOBAL) {
-            axios.get(this.input.locals.kcapp.api_external + '/statistics/global')
+            axios.get(`${window.location.protocol}//${window.location.hostname}${this.input.locals.kcapp.api_path}/statistics/global`)
                 .then(response => {
                     this.state.statistics = response.data;
                     this.state.all = this.state.statistics;
@@ -61,7 +68,7 @@ module.exports = {
                     console.log('Error when getting statistics data ' + error);
                 });
         } else {
-            axios.get(this.input.locals.kcapp.api_external + '/statistics/' + typeId + '/' + this.state.from + '/' + this.state.to.split(' ')[0])
+            axios.get(`${window.location.protocol}//${window.location.hostname}${this.input.locals.kcapp.api_path}/statistics/${typeId}/${this.state.from}/${this.state.to.split(' ')[0]}`)
                 .then(response => {
                     this.state.statistics = response.data;
                     this.state.all = this.state.statistics;

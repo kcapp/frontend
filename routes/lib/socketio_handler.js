@@ -4,6 +4,7 @@ var axios = require('axios');
 var moment = require('moment');
 var bottleneck = require("bottleneck/es5");
 var skill = require('kcapp-bot/bot-skill');
+var types = require('../../src/components/scorecard/components/match_types');
 
 var _this = this;
 
@@ -59,13 +60,12 @@ module.exports = (io, app) => {
                 return;
             }
             var namespace = '/legs/' + legId;
-            var chatHistory = [];
             if (this.io.nsps[namespace] === undefined) {
                 var nsp = this.io.of(namespace);
 
                 // To not spam the API with too many requests, we add a short limit to the requests here
                 limiter.schedule(() => {
-                    axios.get(app.locals.kcapp.api + '/leg/' + legId + '/players')
+                    axios.get(`${app.locals.kcapp.api}/leg/${legId}/players`)
                         .then((response) => {
                             var legPlayers = response.data;
                             for (var id in legPlayers) {
@@ -94,8 +94,8 @@ module.exports = (io, app) => {
                     log('connection', namespace);
                     client.on('join', function () {
                         axios.all([
-                            axios.get(app.locals.kcapp.api + '/leg/' + legId),
-                            axios.get(app.locals.kcapp.api + '/leg/' + legId + '/players')
+                            axios.get(`${app.locals.kcapp.api}/leg/${legId}`),
+                            axios.get(`${app.locals.kcapp.api}/leg/${legId}/players`)
                         ]).then(axios.spread((legData, playersData) => {
                             var leg = legData.data;
                             var players = playersData.data;
@@ -165,44 +165,45 @@ module.exports = (io, app) => {
                     client.on('throw', function (data) {
                         var body = JSON.parse(data);
                         log('throw', data);
-                        axios.post(app.locals.kcapp.api + '/visit', body)
+                        axios.post(`${app.locals.kcapp.api}/visit`, body)
                             .then((response) => {
-                                var visit = response.data;
                                 axios.all([
-                                    axios.get(app.locals.kcapp.api + '/leg/' + body.leg_id),
-                                    axios.get(app.locals.kcapp.api + '/leg/' + body.leg_id + '/players'),
-                                    axios.get(app.locals.kcapp.api + '/statistics/global/fnc')
+                                    axios.get(`${app.locals.kcapp.api}/leg/${body.leg_id}`),
+                                    axios.get(`${app.locals.kcapp.api}/leg/${body.leg_id}/players`),
+                                    axios.get(`${app.locals.kcapp.api}/statistics/global/fnc`)
                                 ]).then(axios.spread((legData, playersData, globalData) => {
                                     var leg = legData.data;
                                     var players = playersData.data;
                                     var currentPlayer = _.findWhere(players, { is_current_player: true });
                                     var globalstat = globalData.data[0];
 
-                                    if (leg.is_finished) {
-                                        axios.get(app.locals.kcapp.api + '/match/' + leg.match_id)
-                                            .then((response) => {
-                                                var match = response.data;
-                                                announceLegFinished(currentPlayer, match)
+                                    axios.get(`${app.locals.kcapp.api}/match/${leg.match_id}`)
+                                        .then((response) => {
+                                            var match = response.data;
+
+                                            if (leg.is_finished) {
+                                                var winnerPlayer = _.findWhere(players, { player_id: leg.winner_player_id });
+                                                announceLegFinished(winnerPlayer, match)
 
                                                 _this.io.of('/active').emit('leg_finished', { leg: leg, match: match, throw: body });
                                                 nsp.emit('score_update', { leg: leg, players: players, match: match });
                                                 nsp.emit('leg_finished', { leg: leg, match: match, throw: body });
-                                            }).catch(error => {
-                                                var message = error.message + ' (' + error + ')'
-                                                debug(`[${legId}] Error when getting match: ${message}`);
-                                                nsp.emit('error', { message: error.message, code: error.code });
-                                            });
-                                    } else {
-                                        if (leg.visits.length === 1) {
-                                            _this.io.of('/active').emit('first_throw', { leg: leg, players: players, globalstat: globalstat });
-                                        }
-                                        announceScored(leg.visits[leg.visits.length - 1]);
-                                        setTimeout(() => {
-                                            // There is a race between these two announcements, so delay the one slightly
-                                            announceScoreRemaining(currentPlayer);
-                                        }, 300);
-                                        nsp.emit('score_update', { leg: leg, players: players, globalstat: globalstat });
-                                    }
+                                            } else {
+                                                if (leg.visits.length === 1) {
+                                                    _this.io.of('/active').emit('first_throw', { leg: leg, players: players, globalstat: globalstat });
+                                                }
+                                                announceScored(leg.visits[leg.visits.length - 1], match.match_type.id);
+                                                setTimeout(() => {
+                                                    // There is a race between these two announcements, so delay the one slightly
+                                                    announceScoreRemaining(currentPlayer);
+                                                }, 300);
+                                                nsp.emit('score_update', { leg: leg, players: players, globalstat: globalstat });
+                                            }
+                                        }).catch(error => {
+                                            var message = error.message + ' (' + error + ')'
+                                            debug(`[${legId}] Error when getting match: ${message}`);
+                                            nsp.emit('error', { message: error.message, code: error.code });
+                                        });
                                 })).catch(error => {
                                     var message = error.message + ' (' + error + ')'
                                     debug(`[${legId}] Error when getting leg: ${message}`);
@@ -218,12 +219,12 @@ module.exports = (io, app) => {
 
                     client.on('undo_visit', function (data) {
                         log('undo_visit');
-                        axios.delete(app.locals.kcapp.api + '/visit/' + legId + '/last')
+                        axios.delete(`${app.locals.kcapp.api}/visit/${legId}/last`)
                             .then(() => {
                                 axios.all([
-                                    axios.get(app.locals.kcapp.api + '/leg/' + legId),
-                                    axios.get(app.locals.kcapp.api + '/leg/' + legId + '/players'),
-                                    axios.get(app.locals.kcapp.api + '/statistics/global/fnc')
+                                    axios.get(`${app.locals.kcapp.api}/leg/${legId}`),
+                                    axios.get(`${app.locals.kcapp.api}/leg/${legId}/players`),
+                                    axios.get(`${app.locals.kcapp.api}/statistics/global/fnc`)
                                 ]).then(axios.spread((leg, players, globalstat) => {
                                     nsp.emit('undo_visit', {});
                                     nsp.emit('score_update', { leg: leg.data, players: players.data, globalstat: globalstat.data[0], is_undo: true });
@@ -249,10 +250,10 @@ module.exports = (io, app) => {
                     }
                 });
 
-                function announceScored(visit) {
+                function announceScored(visit, matchType) {
                     var score = visit.score;
                     var text = '' + score;
-                    if (visit.is_bust) {
+                    if (visit.is_bust || (score === 0 && matchType === types.TIC_TAC_TOE)) {
                         text = 'Noscore';
                     }
                     announce(text, 'score');
@@ -267,7 +268,10 @@ module.exports = (io, app) => {
                 }
 
                 function announceLegFinished(player, match) {
-                    var name = player.player.vocal_name === null ? player.player.first_name : player.player.vocal_name;
+                    var name = "DRAW";
+                    if (player) {
+                        name = player.player.vocal_name === null ? player.player.first_name : player.player.vocal_name;
+                    }
                     if (match.is_finished) {
                         if (match.winner_id === null) {
                             announce(`Game shot, in the ${match.current_leg_num} leg, ${name}. The match a DRAW!!!`, 'game_shot');

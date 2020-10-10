@@ -42,7 +42,7 @@ app.io = io;
 // Set application variables
 app.locals.kcapp = {};
 app.locals.kcapp.api = process.env.KCAPP_API || 'http://localhost:8001';
-app.locals.kcapp.api_external = process.env.KCAPP_API || app.locals.kcapp.api;
+app.locals.kcapp.api_path = process.env.KCAPP_API_PATH || ':8001';
 
 // Create all routes
 var socketHandler = require('./routes/lib/socketio_handler')(io, app);
@@ -59,9 +59,6 @@ var elo = require('./routes/elo');
 var venues = require('./routes/venues')(app, socketHandler);
 socketHandler.addNamespace('/active');
 
-// view engine setup
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'pug');
 app.locals.moment = require('moment');
 app.locals._ = require('underscore');
 

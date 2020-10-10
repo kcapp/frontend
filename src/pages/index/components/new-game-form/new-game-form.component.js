@@ -13,8 +13,9 @@ module.exports = {
             venues: input.venues,
             options: {
                 starting_score: 501,
-                game_type: 1,
+                game_type: types.X01,
                 game_mode: 1,
+                outshot_type: types.OUTSHOT_DOUBLE,
                 stake: null,
                 venue: null
             },
@@ -30,7 +31,7 @@ module.exports = {
                 localStorageUtil.remove("office_id");
                 localStorageUtil.remove("venue");
             } else {
-                this.changeOffice(officeId);
+                this.changeOffice(officeId, this.input.offices[officeId]);
             }
         }
         document.addEventListener("keydown", this.onKeyDown.bind(this), false);
@@ -97,9 +98,8 @@ module.exports = {
                 this.onGameTypeChanged('game_type', component.state.index);
                 break;
             case '*':
-                // Don't allow cycling of score when 9 Dart Shootout or Cricket is selected
+                var component = this.getComponent('starting-score');
                 if (this.state.options.game_type === types.X01 || this.state.options.game_type === types.X01HANDICAP) {
-                    var component = this.getComponent('starting-score');
                     var score = this.cycleValues(this.state.input.scores, this.state.options.starting_score);
                     if (score === 0) {
                         // Don't allow cycling to 0 as starting score
@@ -107,8 +107,7 @@ module.exports = {
                     }
                     component.state.index = score
                     this.state.options.starting_score = component.state.index;
-                } else if (this.state.options.game_type === types.DARTS_AT_X) {
-                    var component = this.getComponent('starting-score');
+                } else if (this.state.options.game_type === types.DARTS_AT_X || this.state.options.game_type === types.TIC_TAC_TOE) {
                     var score = this.cycleValues(component.state.values, component.state.index);
                     component.state.index = score
                     this.state.options.starting_score = component.state.index;
@@ -141,12 +140,16 @@ module.exports = {
     onGameTypeChanged(attribute, value) {
         if (attribute == 'game_type') {
             // If this is 9 Dart Shootout or Cricket, make sure to set score to 0 and disable the selector
-            var scoreComponent = this.getComponent('starting-score')
+            var scoreComponent = this.getComponent('starting-score');
             scoreComponent.updateOptions(this.input.scores);
-            if (this.state.options.game_type === types.SHOOTOUT || this.state.options.game_type == types.CRICKET ||
-                this.state.options.game_type === types.AROUND_THE_WORLD || this.state.options.game_type === types.SHANGHAI || this.state.options.game_type === types.AROUND_THE_CLOCK) {
+            if (this.state.options.game_type === types.SHOOTOUT || this.state.options.game_type == types.CRICKET || this.state.options.game_type === types.AROUND_THE_WORLD ||
+                this.state.options.game_type === types.SHANGHAI || this.state.options.game_type === types.AROUND_THE_CLOCK || this.state.options.game_type === types.BERMUDA_TRIANGLE) {
                 scoreComponent.state.index = 0;
                 scoreComponent.state.enabled = false;
+            } else if (this.state.options.game_type == types.TIC_TAC_TOE) {
+                scoreComponent.updateOptions([ { id: 0, name: '+0' }, { id: 10, name: '+10' }, { id: 20, name: '+20' }, { id: 25, name: '+25' }, { id: 30, name: '+30' }, { id: 40, name: '+40' }, { id: 50, name: '+50' } ]);
+                scoreComponent.state.index = 20;
+                scoreComponent.state.enabled = true;
             } else if (this.state.options.game_type == types.DARTS_AT_X) {
                 scoreComponent.updateOptions([
                     { id: 20, name: 20 },  { id: 19, name: 19 }, { id: 18, name: 18 }, { id: 17, name: 17 },
@@ -156,6 +159,10 @@ module.exports = {
                     { id: 4, name: 4 }, { id: 3, name: 3 }, { id: 2, name: 2 }, { id: 1, name: 1 }, { id: 25, name: 'Bull' } ]);
                 scoreComponent.state.index = 20;
                 scoreComponent.state.enabled = true;
+            } else if (this.state.options.game_type === types.FOUR_TWENTY) {
+                scoreComponent.updateOptions([ { id: 420, name: 420 } ]);
+                scoreComponent.state.index = 420;
+                scoreComponent.state.enabled = false;
             } else if (this.state.options.starting_score === 0) {
                 scoreComponent.state.index = scoreComponent.state.defaultValue;
                 scoreComponent.state.enabled = true;
@@ -163,13 +170,13 @@ module.exports = {
                 scoreComponent.state.index = scoreComponent.state.defaultValue;
                 scoreComponent.state.enabled = true;
             }
-
             this.state.options.starting_score = scoreComponent.state.index
 
             var selectedPlayers = this.getComponents('players');
             for (var i = 0; i < selectedPlayers.length; i++) {
                 selectedPlayers[i].handleTypeChange(this.state.options.game_type);
             }
+            this.setStateDirty("options");
         }
     },
     addPlayer(event, selected) {
@@ -224,6 +231,7 @@ module.exports = {
             match_type: this.state.options.game_type,
             match_mode: this.state.options.game_mode,
             match_stake: this.state.options.stake,
+            outshot_type: this.state.options.outshot_type,
             venue: venueId,
             players: this.state.selected.map(player => player.id),
             office_id: officeId,
@@ -249,16 +257,22 @@ module.exports = {
         location.href = '/tournaments/current#unplayed';
         event.preventDefault();
     },
-    changeOffice(officeId) {
+    changeOffice(officeId, office) {
         this.state.officeId = officeId;
 
         if (officeId == 0) {
             this.state.players =  _.reject(this.input.players, (player) => { return player.is_bot; });
             this.state.venues = this.input.venues;
         } else {
-            this.state.players = _.reject(this.input.players, (player) => { return player.office_id != officeId || player.is_bot; });
+            if (office.is_global) {
+                this.state.players =  _.reject(this.input.players, (player) => { return player.is_bot; });
+            } else {
+                this.state.players = _.reject(this.input.players, (player) => { return player.office_id != officeId || player.is_bot; });
+            }
             this.state.venues = _.reject(this.input.venues, (venue) => { return venue.office_id != officeId; });
         }
+        this.getComponent('venue').updateOptions(this.state.venues);
+
         // Remove any players already selected
         this.state.players = _.reject(this.state.players, (player) => {
             for (var i = 0; i < this.state.selected.length; i++) {

@@ -1,7 +1,7 @@
 var localStorageUtil = require("../../util/localstorage");
 
 module.exports = {
-    onInput(input) {
+    onCreate(input) {
         this.state = {
             values: input.values,
             attribute: input.attribute,

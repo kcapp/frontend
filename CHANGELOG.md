@@ -1,5 +1,21 @@
 # Changelog
 
+A preview of major changes can be found in the Wiki ([Latest Changes](https://github.com/kcapp/frontend/wiki/Latest_Changes))
+
+## [1.2.0] - 2020-10-10
+#### Feature
+- Added new game types `Tic-Tac-Toe`, `Bermuda Triangle`, and `420`
+
+#### Changed
+- Statistics grouped by office of match instead of player
+
+#### Fixed
+- Starting score resetting when changing attribute on match create page
+- Using origin of request to make sure requests towards backend work from multiple hosts/IPs
+- Removed some old unused methods
+- Lots of minor fixes and improvements
+
+
 ## [1.1.0] - 2020-07-18
 #### Feature
 - New game types for `Around The World`, `Around The Clock`, and `Shanghai`
@@ -28,5 +44,6 @@
 - Multiple score entry methods
     - Including [Unicorn Smartboard](https://github.com/kcapp/smartboard)
 
-[1.1.0]: https://github.com/kcapp/frontend/compare/v1.0.0...v1.0.1
+[1.2.0]: https://github.com/kcapp/frontend/compare/v1.1.0...v1.2.0
+[1.1.0]: https://github.com/kcapp/frontend/compare/v1.0.0...v1.1.0
 [1.0.0]: https://github.com/kcapp/frontend/releases/tag/v1.0.0

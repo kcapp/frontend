@@ -1,0 +1,33 @@
+import Table from "../statistics-table/statistics-table-template.marko"
+
+<${Table} statistics=input.statistics>
+      <@headers>
+            <tr>
+                  <th class="text-right">Rank</th>
+                  <th>Player</th>
+                  <th class="text-center">Played</th>
+                  <th class="text-center">Won</th>
+                  <th class="text-right">Win %</th>
+                  <th class="text-center">Avg. Darts Thown</th>
+                  <th class="text-center">Avg. Numbers Closed</th>
+                  <th class="text-center">Highest Closed</th>
+            </tr>
+      </@headers>
+      <@body>
+            <for|stats, idx| of=input.statistics>
+                  $ var player = input.players[stats.player_id];
+                  <tr>
+                        <td class="text-right">${idx + 1}</td>
+                        <td class="col-sm-2">
+                              <a href=`/players/${player.id}/statistics`>${player.name}</a>
+                        </td>
+                        <td class="text-center">${stats.matches_played}</td>
+                        <td class="text-center">${stats.matches_won ? stats.matches_won : 0}</td>
+                        <td class="text-right">${stats.matches_won ? ((stats.matches_won / stats.matches_played) * 100).toFixed(2) + "" : "0.00"}%</td>
+                        <td class="text-center">${(stats.darts_thrown / stats.legs_played).toFixed(2)}</td>
+                        <td class="text-center">${(stats.numbers_closed / stats.legs_played).toFixed(2)}</td>
+                        <td class="text-center">${stats.highest_closed}</td>
+                  </tr>
+            </for>
+      </@body>
+</>

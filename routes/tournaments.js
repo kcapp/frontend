@@ -20,8 +20,8 @@ var tournamentPlayerMatchesTemplate = require('../src/pages/tournament-player-ma
 /** Get all tournaments */
 router.get('/', function (req, res, next) {
     axios.all([
-        axios.get(req.app.locals.kcapp.api + '/tournament'),
-        axios.get(req.app.locals.kcapp.api + '/office')
+        axios.get(`${req.app.locals.kcapp.api}/tournament`),
+        axios.get(`${req.app.locals.kcapp.api}/office`)
     ]).then(axios.spread((tournaments, offices) => {
         res.marko(tournamentsTemplate, {
             tournaments: tournaments.data,
@@ -35,7 +35,7 @@ router.get('/', function (req, res, next) {
 
 /* Get current active tournament */
 router.get('/current', function (req, res, next) {
-    axios.get(req.app.locals.kcapp.api + '/tournament/current')
+    axios.get(`${req.app.locals.kcapp.api}/tournament/current`)
         .then((response) => {
              res.redirect("/tournaments/" + response.data.id);
         }).catch(error => {
@@ -51,12 +51,12 @@ router.get('/current', function (req, res, next) {
 /* Get current active tournament */
 router.get('/admin', function (req, res, next) {
     axios.all([
-        axios.get(req.app.locals.kcapp.api + '/tournament/groups'),
-        axios.get(req.app.locals.kcapp.api + '/player'),
-        axios.get(req.app.locals.kcapp.api + '/office'),
-        axios.get(req.app.locals.kcapp.api + '/venue'),
-        axios.get(req.app.locals.kcapp.api + '/match/modes'),
-        axios.get(req.app.locals.kcapp.api + '/match/types'),
+        axios.get(`${req.app.locals.kcapp.api}/tournament/groups`),
+        axios.get(`${req.app.locals.kcapp.api}/player`),
+        axios.get(`${req.app.locals.kcapp.api}/office`),
+        axios.get(`${req.app.locals.kcapp.api}/venue`),
+        axios.get(`${req.app.locals.kcapp.api}/match/modes`),
+        axios.get(`${req.app.locals.kcapp.api}/match/types`),
     ]).then(axios.spread((groups, players, offices, venues, modes, types) => {
         res.marko(tournamentsAdminTemplate, {
             groups: groups.data,
@@ -75,13 +75,13 @@ router.get('/admin', function (req, res, next) {
 /* Get tournament with the given ID */
 router.get('/:id/admin', function (req, res, next) {
     axios.all([
-        axios.get(req.app.locals.kcapp.api + '/player'),
-        axios.get(req.app.locals.kcapp.api + '/tournament/' + req.params.id),
-        axios.get(req.app.locals.kcapp.api + '/tournament/' + req.params.id + '/matches'),
-        axios.get(req.app.locals.kcapp.api + '/tournament/' + req.params.id + '/metadata'),
-        axios.get(req.app.locals.kcapp.api + '/tournament/groups'),
-        axios.get(req.app.locals.kcapp.api + '/match/modes'),
-        axios.get(req.app.locals.kcapp.api + '/venue'),
+        axios.get(`${req.app.locals.kcapp.api}/player`),
+        axios.get(`${req.app.locals.kcapp.api}/tournament/${req.params.id}`),
+        axios.get(`${req.app.locals.kcapp.api}/tournament/${req.params.id}/matches`),
+        axios.get(`${req.app.locals.kcapp.api}/tournament/${req.params.id}/metadata`),
+        axios.get(`${req.app.locals.kcapp.api}/tournament/groups`),
+        axios.get(`${req.app.locals.kcapp.api}/match/modes`),
+        axios.get(`${req.app.locals.kcapp.api}/venue`),
     ]).then(axios.spread((playersResponse, tournamentResponse, matchesData, metadataResponse, groups, modes, venue) => {
         var matches = matchesData.data;
         var metadata = _.sortBy(metadataResponse.data, 'order_of_play');
@@ -153,7 +153,7 @@ router.post('/admin', function (req, res, next) {
         players: tournamentPlayers,
         office_id: req.body.office_id
     };
-    axios.post(req.app.locals.kcapp.api + '/tournament', tournamentBody)
+    axios.post(`${req.app.locals.kcapp.api}/tournament`, tournamentBody)
         .then(response => {
             var tournament = response.data;
 
@@ -192,12 +192,12 @@ router.post('/admin', function (req, res, next) {
 /* Get tournament with the given ID */
 router.get('/:id', function (req, res, next) {
     axios.all([
-        axios.get(req.app.locals.kcapp.api + '/player'),
-        axios.get(req.app.locals.kcapp.api + '/tournament/' + req.params.id),
-        axios.get(req.app.locals.kcapp.api + '/tournament/' + req.params.id + '/overview'),
-        axios.get(req.app.locals.kcapp.api + '/tournament/' + req.params.id + '/matches'),
-        axios.get(req.app.locals.kcapp.api + '/tournament/' + req.params.id + '/statistics'),
-        axios.get(req.app.locals.kcapp.api + '/tournament/' + req.params.id + '/metadata')
+        axios.get(`${req.app.locals.kcapp.api}/player`),
+        axios.get(`${req.app.locals.kcapp.api}/tournament/${req.params.id}`),
+        axios.get(`${req.app.locals.kcapp.api}/tournament/${req.params.id}/overview`),
+        axios.get(`${req.app.locals.kcapp.api}/tournament/${req.params.id}/matches`),
+        axios.get(`${req.app.locals.kcapp.api}/tournament/${req.params.id}/statistics`),
+        axios.get(`${req.app.locals.kcapp.api}/tournament/${req.params.id}/metadata`)
     ]).then(axios.spread((playersResponse, tournamentResponse, overviewData, matchesData, statisticsResponse, metadataResponse) => {
         var statistics = statisticsResponse.data;
         if (!_.isEmpty(statistics)) {
@@ -222,8 +222,8 @@ router.get('/:id', function (req, res, next) {
 
         if (tournament.playoffs_tournament_id !== null) {
             axios.all([
-                axios.get(req.app.locals.kcapp.api + '/tournament/' + tournament.playoffs_tournament_id + '/matches'),
-                axios.get(req.app.locals.kcapp.api + '/tournament/' + tournament.playoffs_tournament_id + '/metadata')
+                axios.get(`${req.app.locals.kcapp.api}/tournament/${tournament.playoffs_tournament_id}/matches`),
+                axios.get(`${req.app.locals.kcapp.api}/tournament/${tournament.playoffs_tournament_id}/metadata`)
             ]).then(axios.spread((matchesResponse, metadataResponse) => {
                 bracket.generateNew(metadataResponse.data, matchesResponse.data, players, '', (err, brackets) => {
                     res.marko(tournamentTemplate, {
@@ -260,10 +260,10 @@ router.get('/:id', function (req, res, next) {
 /* Get tournament with the given ID */
 router.get('/:id/schedule', function (req, res, next) {
     axios.all([
-        axios.get(req.app.locals.kcapp.api + '/player'),
-        axios.get(req.app.locals.kcapp.api + '/tournament/' + req.params.id),
-        axios.get(req.app.locals.kcapp.api + '/tournament/' + req.params.id + '/metadata'),
-        axios.get(req.app.locals.kcapp.api + '/tournament/' + req.params.id + '/matches')
+        axios.get(`${req.app.locals.kcapp.api}/player`),
+        axios.get(`${req.app.locals.kcapp.api}/tournament/${req.params.id}`),
+        axios.get(`${req.app.locals.kcapp.api}/tournament/${req.params.id}/metadata`),
+        axios.get(`${req.app.locals.kcapp.api}/tournament/${req.params.id}/matches`)
     ]).then(axios.spread((players, tournament, metadataData, matchesData) => {
         var matches = matchesData.data;
         var metadata = metadataData.data;
@@ -292,11 +292,11 @@ router.get('/:id/schedule', function (req, res, next) {
 /* Get player tournament matches */
 router.get('/:id/player/:player_id', function (req, res, next) {
     axios.all([
-        axios.get(req.app.locals.kcapp.api + '/player'),
-        axios.get(req.app.locals.kcapp.api + '/tournament/' + req.params.id),
-        axios.get(req.app.locals.kcapp.api + '/tournament/' + req.params.id + '/overview'),
-        axios.get(req.app.locals.kcapp.api + '/tournament/' + req.params.id + '/statistics'),
-        axios.get(req.app.locals.kcapp.api + '/tournament/' + req.params.id + '/player/' + req.params.player_id)
+        axios.get(`${req.app.locals.kcapp.api}/player`),
+        axios.get(`${req.app.locals.kcapp.api}/tournament/${req.params.id}`),
+        axios.get(`${req.app.locals.kcapp.api}/tournament/${req.params.id}/overview`),
+        axios.get(`${req.app.locals.kcapp.api}/tournament/${req.params.id}/statistics`),
+        axios.get(`${req.app.locals.kcapp.api}/tournament/${req.params.id}/player/${req.params.player_id}`)
     ]).then(axios.spread((playersData, tournament, overviewData, statistics, matchesData) => {
         var matches = matchesData.data;
         var players = playersData.data;
@@ -353,7 +353,7 @@ function sortTournamentOverview(overview) {
 function createMatch(req, body) {
     // To not spam the API with too many requests, we add a short limit to the requests here
     limiter.schedule(() => {
-        axios.post(req.app.locals.kcapp.api + '/match', body)
+        axios.post(`${req.app.locals.kcapp.api}/match`, body)
             .then(response => {
                 var match = response.data;
                 this.socketHandler.setupLegsNamespace(match.current_leg_id);

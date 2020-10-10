@@ -1,3 +1,5 @@
+$ var types = require('../../../../components/scorecard/components/match_types');
+
 <div class="alert alert-danger" id="cancel-leg-failed-alert" role="alert" hidden="true">Unable to cancel leg</div>
 <div class="pt-20"/>
 <leg-header leg=state.leg match=input.match experimental=input.experimental
@@ -40,6 +42,12 @@
       </else>
     </tbody>
   </table>
+  <if(input.match.match_type.id == types.TIC_TAC_TOE)>
+    <div class="block-container-header-center">Board</div>
+    <div class="block-container-with-header">
+      <tic-tac-toe-board key='tic-tac-toe-board' leg=state.leg players=input.players tableStyle=(state.venueConfig.has_dual_monitor ? 'float: right' : '')/>
+    </div>
+  </if>
 </div>
 <player-order players=input.leg_players match=input.match legId=state.leg.id on-warmup-started("onWarmupStarted") on-smartboard-reconnect('onSmartboardReconnect')/>
 <qr-code-modal/>

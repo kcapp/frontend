@@ -1,0 +1,8 @@
+$ var number = state.number;
+$ var isClosed = state.clean && input.parameters.hits[number];
+$ var player = isClosed ? input.players[input.parameters.hits[number]] : {};
+
+<td style=`line-height: ${isClosed ? "1" : "2"}` class=`${input.clazz}`>
+    <div class='player-name'>${isClosed ? player.first_name : ""}</div>
+    <div style=`text-decoration: ${isClosed ? 'line-through' : ''}; color: ${isClosed ? player.color : ""}`>${number}</div>
+</td>

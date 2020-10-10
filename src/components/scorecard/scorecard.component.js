@@ -7,7 +7,12 @@ var dartsAtX = require("./components/darts_at_x");
 var aroundTheWorld = require("./components/around_the_world");
 var shanghai = require("./components/shanghai");
 var aroundTheClock = require("./components/around_the_clock");
+var ticTacToe = require('./components/tic_tac_toe');
+var bermudaTriangle = require('./components/bermuda_triangle');
+var fourTwenty = require('./components/four_twenty');
+
 var types = require("./components/match_types");
+
 
 const DART_CONTAINER_MAP = { 1: 'first', 2: 'second', 3: 'third' };
 
@@ -48,6 +53,12 @@ module.exports = {
         this.getComponent(DART_CONTAINER_MAP[1]).reset();
         this.getComponent(DART_CONTAINER_MAP[2]).reset();
         this.getComponent(DART_CONTAINER_MAP[3]).reset();
+
+        switch (this.state.type) {
+            case types.TIC_TAC_TOE:
+                ticTacToe.reset.bind(this)();
+                break;
+        }
     },
 
     setLeg(leg) {
@@ -94,7 +105,7 @@ module.exports = {
                     this.state.totalScore -= value;
                     this.state.player.current_score += value;
                     this.emit('score-change', -value, this.state.player.player_id);
-                    this.emit('possible-throw', false, false, this.state.currentDart, -dart.getScore(), dart.getMultiplier(), true);
+                    this.emit('possible-throw', false, false, this.state.currentDart, -dart.getScore(), dart.getMultiplier(), true, false);
                     break;
                 case types.CRICKET:
                     cricket.removeLast.bind(this)(dart, external);
@@ -110,6 +121,15 @@ module.exports = {
                     break;
                 case types.AROUND_THE_CLOCK:
                     aroundTheClock.removeLast.bind(this)(dart, external);
+                    break;
+                case types.TIC_TAC_TOE:
+                    ticTacToe.removeLast.bind(this)(dart, external);
+                    break;
+                case types.BERMUDA_TRIANGLE:
+                    bermudaTriangle.removeLast.bind(this)(dart, external);
+                    break;
+                case types.FOUR_TWENTY:
+                    fourTwenty.removeLast.bind(this)(dart, external);
                     break;
             }
             dart.reset();
@@ -144,6 +164,15 @@ module.exports = {
                     break;
                 case types.AROUND_THE_CLOCK:
                     submitting = aroundTheClock.confirmThrow.bind(this)(external);
+                    break;
+                case types.TIC_TAC_TOE:
+                    submitting = ticTacToe.confirmThrow.bind(this)(external);
+                    break;
+                case types.BERMUDA_TRIANGLE:
+                    submitting = bermudaTriangle.confirmThrow.bind(this)(external);
+                    break;
+                case types.FOUR_TWENTY:
+                    submitting = fourTwenty.confirmThrow.bind(this)(external);
                     break;
             }
         }

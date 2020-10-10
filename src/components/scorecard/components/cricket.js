@@ -28,7 +28,7 @@ exports.removeLast = function(dart, external) {
         }
     }
     if (!external) {
-        this.emit('possible-throw', false, false, this.state.currentDart, -dart.getScore(), dart.getMultiplier(), true);
+        this.emit('possible-throw', false, false, this.state.currentDart, -dart.getScore(), dart.getMultiplier(), true, false);
     }
 }
 
@@ -117,7 +117,7 @@ exports.confirmThrow = function (external) {
     }
     if (!external) {
         // If an external event triggered the update don't emit a throw
-        this.emit('possible-throw', isCheckout, false, this.state.currentDart - 1, dart.getScore(), dart.getMultiplier(), false);
+        this.emit('possible-throw', isCheckout, false, this.state.currentDart - 1, dart.getScore(), dart.getMultiplier(), false, false);
     }
     return submitting;
 }

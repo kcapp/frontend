@@ -6,6 +6,7 @@ var router = express.Router();
 var axios = require('axios');
 var _ = require('underscore');
 var skill = require('kcapp-bot/bot-skill');
+var types = require('../src/components/scorecard/components/match_types');
 
 var bracket = require('./lib/bracket_generator');
 
@@ -26,10 +27,10 @@ router.get('/page/:page', function (req, res, next) {
     var start = (req.params.page - 1) * limit;
 
     axios.all([
-        axios.get(req.app.locals.kcapp.api + '/player'),
-        axios.get(req.app.locals.kcapp.api + '/match'),
-        axios.get(req.app.locals.kcapp.api + '/office'),
-        axios.get(req.app.locals.kcapp.api + '/match/' + start + '/' + limit)
+        axios.get(`${req.app.locals.kcapp.api}/player`),
+        axios.get(`${req.app.locals.kcapp.api}/match`),
+        axios.get(`${req.app.locals.kcapp.api}/office`),
+        axios.get(`${req.app.locals.kcapp.api}/match/${start}/${limit}`)
     ]).then(axios.spread((players, matches, offices, matchPage) => {
         res.marko(matchesTemplate, {
             matches: matchPage.data,
@@ -46,10 +47,10 @@ router.get('/page/:page', function (req, res, next) {
 
 /** Continue the given match */
 router.get('/:id', function (req, res, next) {
-    axios.get(req.app.locals.kcapp.api + '/match/' + req.params.id)
+    axios.get(`${req.app.locals.kcapp.api}/match/${req.params.id}`)
         .then(response => {
             var match = response.data
-            axios.put(req.app.locals.kcapp.api + '/match/' + req.params.id + '/continue')
+            axios.put(`${req.app.locals.kcapp.api}/match/${req.params.id}/continue`)
                 .then(response => {
                     var leg = response.data;
                     if (leg.visits.length === 0) {
@@ -74,20 +75,20 @@ router.get('/:id', function (req, res, next) {
 
 /* Preview */
 router.get('/:id/preview', function (req, res, next) {
-    axios.get(req.app.locals.kcapp.api + '/match/' + req.params.id)
+    axios.get(`${req.app.locals.kcapp.api}/match/${req.params.id}`)
         .then(response => {
             var match = response.data
             var player1 = match.players[0];
             var player2 = match.players[1];
             axios.all([
-                axios.get(req.app.locals.kcapp.api + '/player'),
-                axios.get(req.app.locals.kcapp.api + '/player/' + player1 + '/vs/' + player2),
-                axios.get(req.app.locals.kcapp.api + '/player/' + player1 + '/statistics'),
-                axios.get(req.app.locals.kcapp.api + '/player/' + player2 + '/statistics'),
-                axios.get(req.app.locals.kcapp.api + '/match/' + match.id + '/metadata'),
-                axios.get(req.app.locals.kcapp.api + '/tournament/' + match.tournament_id + '/metadata'),
-                axios.get(req.app.locals.kcapp.api + '/tournament/standings'),
-                axios.get(req.app.locals.kcapp.api + '/tournament/' + match.tournament_id + '/matches')
+                axios.get(`${req.app.locals.kcapp.api}/player`),
+                axios.get(`${req.app.locals.kcapp.api}/player/${player1}/vs/${player2}`),
+                axios.get(`${req.app.locals.kcapp.api}/player/${player1}/statistics`),
+                axios.get(`${req.app.locals.kcapp.api}/player/${player2}/statistics`),
+                axios.get(`${req.app.locals.kcapp.api}/match/${match.id}/metadata`),
+                axios.get(`${req.app.locals.kcapp.api}/tournament/${match.tournament_id}/metadata`),
+                axios.get(`${req.app.locals.kcapp.api}/tournament/standings`),
+                axios.get(`${req.app.locals.kcapp.api}/tournament/${match.tournament_id}/matches`)
             ]).then(axios.spread((response1, response2, p1stats, p2stats, metadataResponse, tournamentMetadataResponse, standingsresponse, tournamentMatchesResponse) => {
                 var players = response1.data;
                 p1stats = p1stats.data;
@@ -148,16 +149,16 @@ router.get('/:id/preview', function (req, res, next) {
 /* Spectate the given match */
 router.get('/:id/spectate', function (req, res, next) {
     axios.all([
-        axios.get(req.app.locals.kcapp.api + '/player'),
-        axios.get(req.app.locals.kcapp.api + '/match/' + req.params.id)
+        axios.get(`${req.app.locals.kcapp.api}/player`),
+        axios.get(`${req.app.locals.kcapp.api}/match/${req.params.id}`)
     ]).then(axios.spread((players, response) => {
         var match = response.data;
         if (match.is_finished) {
             return res.redirect('/matches/' + req.params.id + "/result");
         } else {
             axios.all([
-                axios.get(req.app.locals.kcapp.api + '/leg/' + match.current_leg_id),
-                axios.get(req.app.locals.kcapp.api + '/leg/' + match.current_leg_id + '/players')
+                axios.get(`${req.app.locals.kcapp.api}/leg/${match.current_leg_id}`),
+                axios.get(`${req.app.locals.kcapp.api}/leg/${match.current_leg_id}/players`)
             ]).then(axios.spread((leg, legPlayers) => {
                 legPlayers = _.sortBy(legPlayers.data, (player) => player.order)
                 res.marko(spectateTemplate, {
@@ -180,16 +181,16 @@ router.get('/:id/spectate', function (req, res, next) {
 /* Spectate the given match */
 router.get('/:id/spectate/compact', function (req, res, next) {
     axios.all([
-        axios.get(req.app.locals.kcapp.api + '/player'),
-        axios.get(req.app.locals.kcapp.api + '/match/' + req.params.id)
+        axios.get(`${req.app.locals.kcapp.api}/player`),
+        axios.get(`${req.app.locals.kcapp.api}/match/${req.params.id}`)
     ]).then(axios.spread((players, response) => {
         var match = response.data;
         if (match.is_finished) {
             return res.redirect('/matches/' + req.params.id + "/result");
         } else {
             axios.all([
-                axios.get(req.app.locals.kcapp.api + '/leg/' + match.current_leg_id),
-                axios.get(req.app.locals.kcapp.api + '/leg/' + match.current_leg_id + '/players')
+                axios.get(`${req.app.locals.kcapp.api}/leg/${match.current_leg_id}`),
+                axios.get(`${req.app.locals.kcapp.api}/leg/${match.current_leg_id}/players`)
             ]).then(axios.spread((leg, legPlayers) => {
                 legPlayers = _.sortBy(legPlayers.data, (player) => player.order)
                 res.render('leg/spectate_compact', {
@@ -212,14 +213,14 @@ router.get('/:id/spectate/compact', function (req, res, next) {
 /* Render the leg view */
 router.get('/:id/obs', function (req, res, next) {
     axios.all([
-        axios.get(req.app.locals.kcapp.api + '/player'),
-        axios.get(req.app.locals.kcapp.api + '/match/' + req.params.id),
-        axios.get(req.app.locals.kcapp.api + '/match/' + req.params.id + '/metadata')
+        axios.get(`${req.app.locals.kcapp.api}/player`),
+        axios.get(`${req.app.locals.kcapp.api}/match/${req.params.id}`),
+        axios.get(`${req.app.locals.kcapp.api}/match/${req.params.id}/metadata`)
     ]).then(axios.spread((players, matchData, metadata) => {
         var match = matchData.data;
         axios.all([
-            axios.get(req.app.locals.kcapp.api + '/leg/' + match.current_leg_id),
-            axios.get(req.app.locals.kcapp.api + '/leg/' + match.current_leg_id + '/players')
+            axios.get(`${req.app.locals.kcapp.api}/leg/${match.current_leg_id}`),
+            axios.get(`${req.app.locals.kcapp.api}/leg/${match.current_leg_id}/players`)
         ]).then(axios.spread((leg, legPlayers) => {
             legPlayers = _.sortBy(legPlayers.data, (player) => player.order)
             res.marko(obsTemplate, {
@@ -244,16 +245,16 @@ router.get('/:id/result', function (req, res, next) {
     var id = req.params.id;
 
     axios.all([
-        axios.get(req.app.locals.kcapp.api + '/player'),
-        axios.get(req.app.locals.kcapp.api + '/office'),
-        axios.get(req.app.locals.kcapp.api + '/match/' + id),
-        axios.get(req.app.locals.kcapp.api + '/match/' + id + '/statistics')
+        axios.get(`${req.app.locals.kcapp.api}/player`),
+        axios.get(`${req.app.locals.kcapp.api}/office`),
+        axios.get(`${req.app.locals.kcapp.api}/match/${id}`),
+        axios.get(`${req.app.locals.kcapp.api}/match/${id}/statistics`)
     ]).then(axios.spread((playerResponse, office, matchData, statisticsResponse) => {
         var players = playerResponse.data;
         var statistics = statisticsResponse.data;
         var match = matchData.data;
 
-        axios.get(req.app.locals.kcapp.api + '/leg/' + match.legs[0].id + '/players')
+        axios.get(`${req.app.locals.kcapp.api}/leg/${match.legs[0].id}/players`)
             .then(response => {
                 var botConfigs = _.object(_.map(response.data, (player) => { return [player.player_id, player.bot_config] }));
                 _.each(statistics, stats => {
@@ -294,7 +295,7 @@ router.post('/new', function (req, res, next) {
         return;
     }
 
-    axios.get(req.app.locals.kcapp.api + '/player')
+    axios.get(`${req.app.locals.kcapp.api}/player`)
         .then(response => {
             var playerMap = response.data;
 
@@ -310,22 +311,20 @@ router.post('/new', function (req, res, next) {
             var body = {
                 owe_type_id: req.body.match_stake == -1 ? null : req.body.match_stake,
                 venue_id: req.body.venue,
-                match_type: {
-                    id: req.body.match_type
-                },
-                match_mode: {
-                    id: req.body.match_mode
-                },
+                match_type: { id: req.body.match_type },
+                match_mode: { id: req.body.match_mode },
                 players: players.map(Number),
                 player_handicaps: req.body.player_handicaps,
                 bot_player_config: req.body.bot_player_config,
-                legs: [{
-                    starting_score: req.body.starting_score
-                }],
+                legs: [ {
+                    starting_score: req.body.starting_score,
+                    parameters: { outshot_type: { id: req.body.outshot_type } }
+                } ],
                 office_id: req.body.office_id,
                 is_practice: isPractice
             }
-            axios.post(req.app.locals.kcapp.api + '/match', body)
+
+            axios.post(`${req.app.locals.kcapp.api}/match`, body)
                 .then(response => {
                     var match = response.data;
                     this.socketHandler.setupLegsNamespace(match.current_leg_id);
@@ -354,7 +353,7 @@ router.post('/new', function (req, res, next) {
 
 /* Method for starting a new match */
 router.post('/:id/rematch', function (req, res, next) {
-    axios.post(req.app.locals.kcapp.api + '/match/' + req.params.id + '/rematch', null)
+    axios.post(`${req.app.locals.kcapp.api}/match/${req.params.id}/rematch`, null)
         .then(response => {
             var match = response.data;
             this.socketHandler.setupLegsNamespace(match.current_leg_id);

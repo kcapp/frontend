@@ -160,6 +160,76 @@ $ var types = require("../../../../components/scorecard/components/match_types")
         </td>
       </tr>
     </else-if>
+    <else-if(input.type === types.BERMUDA_TRIANGLE)>
+      $ var target = types.TARGET_BERMUDA_TRIANGLE[input.leg.round];
+      <if(target.value === -1)>
+        $ var multiplier = target.multipliers[0];
+        $ var clazz = multiplier == 3 ? "btn-triple" : "btn-double";
+        <tr class='row'>
+          <td style="width: 10%;">
+              <score-button text="Miss" value=0 multiplier=1 on-button-press("onButtonPress")/>
+          </td>
+          <button-row numbers=[ 20, 19, 18, 17, 16, 15, 14 ] multiplier=multiplier on-button-press("onButtonPress")/>
+          <td rowspan='2' style="width: 5%;">
+              <score-button icon="fas fa-long-arrow-alt-left" clazz='fill-button' isUndo=true on-button-press("onButtonPress")/>
+          </td>
+        </tr>
+        <tr class='row'>
+          <if(multiplier == 2)>
+            <td rowspan='2'>
+              <score-button text="Bull" value=25 multiplier=multiplier clazz='btn-double fill-button' on-button-press("onButtonPress")/>
+            </td>
+          </if>
+          <else>
+            <td style="border: 0;" rowspan='2'/>
+          </else>
+          <button-row numbers=[ 13, 12, 11, 10, 9, 8, 7 ] multiplier=multiplier on-button-press("onButtonPress")/>
+        </tr>
+        <tr class='row'>
+          <button-row numbers=[ 6, 5, 4, 3, 2, 1 ] multiplier=multiplier on-button-press("onButtonPress")/>
+        </tr>
+      </if>
+      <else>
+        <tr class='row'>
+          $ var value = target.score ? target.score : target.value;
+          $ var label = target.value === 25 ? "Bull" : target.label;
+          <td rowspan='2'>
+            <score-button text="Miss" value=0 multiplier=1 clazz='fill-button' on-button-press("onButtonPress")/>
+          </td>
+          <td rowspan='2' style="width: 25%;">
+            <score-button text=`Single (${label})` value=value multiplier=1 clazz='fill-button' on-button-press("onButtonPress")/>
+          </td>
+          <td rowspan='2' style="width: 25%;">
+            <score-button text=`Double (${label})` value=value multiplier=2 clazz='btn-double fill-button' on-button-press("onButtonPress")/>
+          </td>
+          <if(target.value !== 25)>
+            <td rowspan='2' style="width: 25%;">
+              <score-button text=`Triple (${label})` value=value multiplier=3 clazz='btn-triple fill-button' on-button-press("onButtonPress")/>
+            </td>
+          </if>
+          <else>
+            <td rowspan='2' style="width: 25%;"/>
+          </else>
+          <td rowspan='2' style="width: 5%;">
+            <score-button icon="fas fa-long-arrow-alt-left" clazz='fill-button' isUndo=true on-button-press("onButtonPress")/>
+          </td>
+        </tr>
+      </else>
+    </else-if>
+    <else-if(input.type === types.FOUR_TWENTY)>
+      $ var target = types.TARGET_FOUR_TWENTY[input.leg.round];
+      <tr class='row'>
+        <td rowspan='2'>
+          <score-button text="Miss" value=0 multiplier=1 clazz='fill-button' on-button-press("onButtonPress")/>
+        </td>
+        <td rowspan='2' style="width: 75%;">
+          <score-button text=`Double (${target.label})` value=target.value multiplier=2 clazz='btn-double fill-button' on-button-press("onButtonPress")/>
+        </td>
+        <td rowspan='2' style="width: 5%;">
+          <score-button icon="fas fa-long-arrow-alt-left" clazz='fill-button' isUndo=true on-button-press("onButtonPress")/>
+        </td>
+      </tr>
+    </else-if>
     <else>
       <all-buttons-input on-button-press("onButtonPress")/>
     </else>

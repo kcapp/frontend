@@ -7,7 +7,7 @@ var axios = require('axios');
 
 /* Add a new venue */
 router.post('/', function (req, res, next) {
-    axios.post(req.app.locals.kcapp.api + '/venue', req.body)
+    axios.post(`${req.app.locals.kcapp.api}/venue`, req.body)
         .then(() => {
             res.redirect('/offices');
         }).catch(error => {
@@ -18,7 +18,7 @@ router.post('/', function (req, res, next) {
 
 /* Edit venue */
 router.put('/:id', function (req, res, next) {
-    axios.put(req.app.locals.kcapp.api + '/venue/' + req.params.id, req.body)
+    axios.put(`${req.app.locals.kcapp.api}/venue/${req.params.id}`, req.body)
         .then(() => {
             res.redirect(303, '/offices');
         }).catch(error => {
@@ -30,8 +30,8 @@ router.put('/:id', function (req, res, next) {
 /** Spectate a given venue */
 router.get('/:id/spectate', function (req, res, next) {
     axios.all([
-        axios.get(req.app.locals.kcapp.api + '/venue/' + req.params.id),
-        axios.get(req.app.locals.kcapp.api + '/venue/' + req.params.id + '/spectate')
+        axios.get(`${req.app.locals.kcapp.api}/venue/${req.params.id}`),
+        axios.get(`${req.app.locals.kcapp.api}/venue/${req.params.id}/spectate`)
     ]).then(axios.spread((venueResponse, spectateResponse) => {
         var venue = venueResponse.data;
         var match = spectateResponse.data;
@@ -40,9 +40,9 @@ router.get('/:id/spectate', function (req, res, next) {
             match = match[0];
 
             axios.all([
-                axios.get(req.app.locals.kcapp.api + '/player'),
-                axios.get(req.app.locals.kcapp.api + '/leg/' + match.current_leg_id),
-                axios.get(req.app.locals.kcapp.api + '/leg/' + match.current_leg_id + '/players')
+                axios.get(`${req.app.locals.kcapp.api}/player`),
+                axios.get(`${req.app.locals.kcapp.api}/leg/${match.current_leg_id}`),
+                axios.get(`${req.app.locals.kcapp.api}/leg/${match.current_leg_id}/players`)
             ]).then(axios.spread((playerResponse, legResponse, legPlayersResponse) => {
                 res.render('venue_spectate', {
                     live_match: true, venue: venue, match: match,

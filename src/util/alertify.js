@@ -1,16 +1,16 @@
 const TITLE = 'kcapp';
 var alertify;
 
-function setTheme(alertify) {
-    alertify.defaults.theme.ok = "btn btn-primary";
-    alertify.defaults.theme.cancel = "btn btn-basic";
-    alertify.defaults.theme.input = "form-control";
+function setTheme() {
+    this.alertify.defaults.theme.ok = "btn btn-primary";
+    this.alertify.defaults.theme.cancel = "btn btn-basic";
+    this.alertify.defaults.theme.input = "form-control";
 }
 
 function bootstrap() {
     if (!this.alertify) {
         this.alertify = require('alertifyjs');
-        setTheme(this.alertify);
+        setTheme();
     }
     return this.alertify;
 }

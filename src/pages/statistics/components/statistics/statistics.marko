@@ -3,7 +3,7 @@ $ var types = require('../../../../components/scorecard/components/match_types')
 <office-selector offices=input.offices clazz="float-right" on-office-changed("officeChanged")/>
 <statistics-selector addGlobal=true on-type-changed("typeChanged")/>
 <if(state.type == types.X01)>
-  <if(state.office_statistics.length !== 0)>
+  <if(state.checkout_statistics.length !== 0)>
     <div class="block-container-red">Highest Checkouts</div>
     <div class="block-container no-padding">
       <div class="table table-responsive">
@@ -18,10 +18,10 @@ $ var types = require('../../../../components/scorecard/components/match_types')
           </thead>
           <tbody>
             <for|idx| from=0 to=4>
-              $ var stats = state.office_statistics[idx]
+              $ var stats = state.checkout_statistics[idx]
               <tr>
                 <td class="text-right">${idx + 1}</td>
-                <if(idx < state.office_statistics.length)>
+                <if(idx < state.checkout_statistics.length)>
                   $ var player = input.players[stats.player_id];
                   <td class="col-sm-3">
                     <a href=`/players/${player.id}/statistics`>${player.name}</a>
@@ -70,6 +70,15 @@ $ var types = require('../../../../components/scorecard/components/match_types')
 </else-if>
 <else-if(state.type == types.SHANGHAI)>
   <statistics-table-shanghai statistics=state.statistics players=input.players />
+</else-if>
+<else-if(state.type == types.TIC_TAC_TOE)>
+  <statistics-table-tic-tac-toe statistics=state.statistics players=input.players />
+</else-if>
+<else-if(state.type == types.BERMUDA_TRIANGLE)>
+  <statistics-table-bermuda-triangle statistics=state.statistics players=input.players />
+</else-if>
+<else-if(state.type == types.FOUR_TWENTY)>
+  <statistics-table-420 statistics=state.statistics players=input.players />
 </else-if>
 <else-if(state.type == state.GLOBAL)>
   <statistics-table-global statistics=state.statistics players=input.players/>

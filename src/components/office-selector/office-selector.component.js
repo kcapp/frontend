@@ -2,7 +2,7 @@ var localStorageUtil = require("../../util/localstorage");
 
 module.exports = {
     onCreate(input) {
-        this.state = { 
+        this.state = {
             officeId: 0
         }
     },
@@ -20,7 +20,7 @@ module.exports = {
     },
     changeOffice(officeId) {
         this.state.officeId = officeId;
-        this.emit('office-changed', officeId);
+        this.emit('office-changed', officeId, this.input.offices[officeId]);
     }
-    
+
 }

@@ -7,6 +7,7 @@
                 <thead>
                 <tr>
                     <th class="text-left">Name</th>
+                    <th>Global</th>
                     <th>Active</th>
                     <th>Options</th>
                     <th>Venues</th>
@@ -16,6 +17,11 @@
                 <for|key, office| in=input.offices>
                     <tr>
                     <td class="text-left">${office.name}</td>
+                    <td>
+                        <if(office.is_global)>
+                            <i class="fas fa-check"></i>
+                        </if>
+                    </td>
                     <td>
                         <if(office.is_active)>
                             <i class="fas fa-check"></i>
