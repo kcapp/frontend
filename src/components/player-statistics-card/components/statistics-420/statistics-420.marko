@@ -26,7 +26,12 @@ $ var player = input.player;
             $ num = 3 * (row - 1) + i;
             $ var target = types.TARGET_FOUR_TWENTY[num];
             <if(target)>
-              <score-pill text=`${num}` value=`${(statistic.hitrates[num] * 100).toFixed(2)} %`/>
+              <if(num === 21)>
+                <score-pill text=`Bull` value=`${(statistic.hitrates[25] * 100).toFixed(2)} %`/>
+              </if>
+              <else>
+                <score-pill text=`${num}` value=`${(statistic.hitrates[num] * 100).toFixed(2)} %`/>
+              </else>
             </if>
           </for>
         </tr>

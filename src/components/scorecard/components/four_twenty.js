@@ -16,7 +16,7 @@ exports.isCheckout = (leg, currentDart) => {
     if (currentDart > 3) {
         visits++;
     }
-    return visits > 0 && ((visits * 3) % (60 * leg.players.length) === 0);
+    return visits > 0 && ((visits * 3) % (63 * leg.players.length) === 0);
 }
 
 exports.confirmThrow = function (external) {
