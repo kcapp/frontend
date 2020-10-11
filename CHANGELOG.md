@@ -4,6 +4,10 @@ A preview of major changes can be found in the Wiki ([Latest Changes](https://gi
 
 ## [unreleased] - TBD
 #### Feature
+-  Added new game type `Kill Bull`
+
+#### Changed
+- Updated all dependencies to latest version
 
 
 ## [1.2.0] - 2020-10-10

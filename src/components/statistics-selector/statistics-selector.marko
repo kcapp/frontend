@@ -3,11 +3,13 @@ $ var addGlobal = input.addGlobal || false;
 $ var GLOBAL = 0;
 <div class="block-container-with-header" style=`margin-bottom: 0px; padding: 5px 0px 5px 0px;`>
     <div class='float-right'>
-        <for|idx, type| in=state.types>
-            <button class=`btn btn-${state.type == type.id ? "primary" : "secondary"}` on-click("changeType") value=type.id>${type.name}</button>
-        </for>
+        <div>
+            <for|idx, type| in=state.types>
+                <button class=`btn btn-${state.type == type.id ? "primary" : "secondary"}` on-click("changeType") value=type.id>${type.name}</button>
+            </for>
+        </div>
         <if(addGlobal)>
-        <button class=`btn btn-${state.type == GLOBAL ? "primary" : "secondary"} ml-20` on-click("changeType") value=GLOBAL>Global</button>
+            <button id="global-btn" class=`btn btn-${state.type == GLOBAL ? "primary" : "secondary"}` on-click("changeType") value=GLOBAL>Global</button>
         </if>
     </div>
 </div>

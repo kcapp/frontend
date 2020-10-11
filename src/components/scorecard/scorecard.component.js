@@ -10,6 +10,7 @@ var aroundTheClock = require("./components/around_the_clock");
 var ticTacToe = require('./components/tic_tac_toe');
 var bermudaTriangle = require('./components/bermuda_triangle');
 var fourTwenty = require('./components/four_twenty');
+var killBull = require('./components/kill_bull');
 
 var types = require("./components/match_types");
 
@@ -131,6 +132,9 @@ module.exports = {
                 case types.FOUR_TWENTY:
                     fourTwenty.removeLast.bind(this)(dart, external);
                     break;
+                case types.KILL_BULL:
+                    killBull.removeLast.bind(this)(dart, external);
+                    break;
             }
             dart.reset();
         } else {
@@ -173,6 +177,9 @@ module.exports = {
                     break;
                 case types.FOUR_TWENTY:
                     submitting = fourTwenty.confirmThrow.bind(this)(external);
+                    break;
+                case types.KILL_BULL:
+                    submitting = killBull.confirmThrow.bind(this)(external);
                     break;
             }
         }

@@ -15,6 +15,12 @@ $ var statistics = input.statistics;
       <score-pill text="Doubles" value=statistics.doubles/>
       <score-pill text="Triples" value=statistics.triples/>
     </else-if>
+    <else-if(input.type === types.KILL_BULL)>
+      <score-pill text="3 Marks" value=statistics.marks_3/>
+      <score-pill text="4 Marks" value=statistics.marks_4/>
+      <score-pill text="5 Marks" value=statistics.marks_5/>
+      <score-pill text="6 Marks" value=statistics.marks_6/>
+    </else-if>
     <else>
       <score-pill text="60+" value=statistics.scores_60s_plus/>
       <score-pill text="100+" value=statistics.scores_100s_plus/>

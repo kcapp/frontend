@@ -1,7 +1,7 @@
 var debug = require('debug')('kcapp:app');
 
 require('marko/node-require').install();
-require('marko/express'); //enable res.marko
+require('marko/express');
 
 var express = require('express');
 
@@ -64,7 +64,7 @@ app.locals._ = require('underscore');
 
 // Write access log to a daily rotated file in /log
 var logDirectory = path.join(__dirname, 'log')
-var accessLogStream = rfs('access.log', { interval: '1d', path: logDirectory });
+var accessLogStream = rfs.createStream(`${logDirectory}/access.log`, { interval: "1d", compress: "gzip" });
 app.use(logger('combined', { stream: accessLogStream }));
 
 app.use(bodyParser.json());

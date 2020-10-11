@@ -90,8 +90,14 @@ module.exports = {
                     if (current > chartMaxValue) {
                         chartMaxValue = current;
                     }
-                }
-                else {
+                } else if (match.match_type.id == types.KILL_BULL) {
+                    if (visit.score === 0) {
+                        current = leg.starting_score;
+                    } else {
+                        current = current - visit.score;
+                    }
+                    values[visit.player_id].push(current);
+                } else {
                     values[visit.player_id].push(current - visit.score);
                 }
             }

@@ -163,6 +163,10 @@ module.exports = {
                 scoreComponent.updateOptions([ { id: 420, name: 420 } ]);
                 scoreComponent.state.index = 420;
                 scoreComponent.state.enabled = false;
+            } else if (this.state.options.game_type === types.KILL_BULL) {
+                scoreComponent.updateOptions([ { id: 150, name: '150' }, { id: 200, name: '200' }, { id: 250, name: '250' }, { id: 300, name: '300' }, { id: 500, name: '500' } ]);
+                scoreComponent.state.index = 150;
+                scoreComponent.state.enabled = true;
             } else if (this.state.options.starting_score === 0) {
                 scoreComponent.state.index = scoreComponent.state.defaultValue;
                 scoreComponent.state.enabled = true;
