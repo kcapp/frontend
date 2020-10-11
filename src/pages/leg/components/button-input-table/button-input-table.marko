@@ -230,6 +230,22 @@ $ var types = require("../../../../components/scorecard/components/match_types")
         </td>
       </tr>
     </else-if>
+    <else-if(input.type === types.KILL_BULL)>
+      <tr class='row'>
+        <td rowspan='2'>
+          <score-button text="Miss" value=0 multiplier=1 clazz='fill-button' on-button-press("onButtonPress")/>
+        </td>
+        <td rowspan='2' style="width: 40%;">
+          <score-button text=`Bull` value=25 multiplier=1 clazz='fill-button' on-button-press("onButtonPress")/>
+        </td>
+        <td rowspan='2' style="width: 40%;">
+          <score-button text=`Double Bull` value=25 multiplier=2 clazz='btn-double fill-button' on-button-press("onButtonPress")/>
+        </td>
+        <td rowspan='2' style="width: 5%;">
+          <score-button icon="fas fa-long-arrow-alt-left" clazz='fill-button' isUndo=true on-button-press("onButtonPress")/>
+        </td>
+      </tr>
+    </else-if>
     <else>
       <all-buttons-input on-button-press("onButtonPress")/>
     </else>

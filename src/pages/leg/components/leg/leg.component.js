@@ -9,7 +9,7 @@ module.exports = {
     onCreate(input) {
         var venue = input.match.venue;
         this.state = {
-            uuid: uuidv4(),
+            uuid: uuidv4().split('-')[0],
             leg: input.leg,
             players: input.leg_players,
             roundNumber: input.leg.round,
@@ -308,6 +308,8 @@ module.exports = {
                     value = 0;
                     multiplier = 1;
                 }
+            } else if (this.input.match.match_type.id === types.KILL_BULL) {
+                value = 25;
             }
             if (!multiplier) {
                 multiplier = 1;
