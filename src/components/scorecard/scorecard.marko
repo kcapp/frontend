@@ -182,8 +182,8 @@ $ var cricket = require("./components/cricket");
                     <td class="text-center" style="padding-top: 10px;">
                       <for|bull| from=1 to=bulls>
                         $ var isHit = hits >= bull ? true : false;
-                        <i style=`padding-right: 10px; ${isHit ? "color: green;" : ""}` class=`fa fa-bullseye`/>
-                        <if(bull == 10)>
+                        <i style=`padding-rght: 10px; ${isHit ? "color: green;" : ""}` class=`fa fa-bullseye`/>
+                        <if(bulls > 10 && (bulls / 2 == bull))>
                           <br/>
                         </if>
                       </for>
