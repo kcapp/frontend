@@ -74,23 +74,27 @@ exports.onScoreUpdate = (data, thiz) => {
 exports.say = (data, thiz) => {
     // Check if an audio clip is currently playing, if it is we don't want to wait until it is finished, before saying anything else
     if ((thiz.state.type !== types.X01 && thiz.state.type !== types.X01HANDICAP) && data.type === 'remaining_score') {
-        // Skip announcement of remaining score for 9 Dart Shootout and Cricket
+        // Skip announcement of remaining score for non-x01 game types
         return;
     }
 
     var oldPlayer = thiz.state.audioAnnouncer;
     var isAudioAnnouncement = (oldPlayer.duration > 0 && !oldPlayer.paused);
     if (data.type === 'score' && ['100', '140', '180'].includes(data.text)) {
-        var newPlayer = new Audio('/audio/' + data.text + '.mp3');
+        var newPlayer = new Audio(`/audio/${data.text}.mp3`);
         if (isAudioAnnouncement) {
-            oldPlayer.addEventListener("ended", () => { newPlayer.play(); }, false);
+            oldPlayer.addEventListener("ended", () => {
+                newPlayer.play();
+            }, false);
         } else {
             newPlayer.play();
         }
         thiz.state.audioAnnouncer = newPlayer;
     } else {
         if (isAudioAnnouncement) {
-            oldPlayer.addEventListener("ended", () => { speaker.speak(data); }, false);
+            oldPlayer.addEventListener("ended", () => {
+                speaker.speak(data);
+            }, false);
         }
         else {
             speaker.speak(data);

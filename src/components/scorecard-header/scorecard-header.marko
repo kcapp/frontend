@@ -6,4 +6,14 @@
       <label>${state.wins}</label>
     </div>
   </div>
+  <if(input.isPlayerBoardCam)>
+    <div>
+      <if(state.player.player.board_stream_url)>
+        <iframe id=`iframe-player-cam-${state.player.player_id}` src=`${state.player.player.board_stream_url}` class="camera" style="position: relative;"/>
+      </if>
+      <else>
+        <div class="camera" style=`clear: both;`/>
+      </else>
+    </div>
+  </if>
 </td>

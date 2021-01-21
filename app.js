@@ -1,4 +1,5 @@
 var debug = require('debug')('kcapp:app');
+var compression = require('compression');
 
 require('marko/node-require').install();
 require('marko/express');
@@ -29,7 +30,7 @@ var logger = require('morgan');
 var rfs = require('rotating-file-stream')
 
 var app = express();
-
+app.use(compression());
 app.use(require('lasso/middleware').serveStatic());
 
 // Make sure we get correct user IP when running behind a reverse proxy

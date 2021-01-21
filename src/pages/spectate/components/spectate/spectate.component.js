@@ -58,14 +58,7 @@ module.exports = {
 
     onPossibleThrow(data) {
         var component = this.findActive(this.getComponents('players'));
-        if (this.input.match.match_type.id == types.CRICKET) {
-            if (data.is_undo) {
-                component.removeLast();
-            } else {
-                component.setDart(data.score, data.multiplier, data.darts_thrown);
-                component.confirmThrow();
-            }
-        } else {
+        if (this.input.match.match_type.id === types.X01) {
             // Set current dart
             if (data.is_undo) {
                 component.getDart(data.darts_thrown).reset();
@@ -76,9 +69,16 @@ module.exports = {
             component.state.totalScore += data.score * data.multiplier;
 
             // Update player score
-            var header = this.getComponent('player-' + data.current_player_id);
+            var header = this.getComponent(`player-${data.current_player_id}`);
             header.state.player.current_score -= (data.score * data.multiplier)
             header.setStateDirty('player');
+        } else {
+            if (data.is_undo) {
+                component.removeLast();
+            } else {
+                component.setDart(data.score, data.multiplier, data.darts_thrown);
+                component.confirmThrow();
+            }
         }
     },
 

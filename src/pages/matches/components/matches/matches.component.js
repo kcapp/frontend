@@ -15,7 +15,7 @@ module.exports = {
                 prevText: '<span aria-hidden="true">&laquo;</span>',
                 nextText: '<span aria-hidden="true">&raquo;</span>',
                 onPageClick: function (event, page) {
-                    location.href = '/matches/page/' + page;
+                    location.href = `/matches/page/${page}`;
                 }
             });
         });

@@ -5,15 +5,14 @@ $ var types = require('../../../../components/scorecard/components/match_types')
 <leg-header leg=state.leg match=input.match experimental=input.experimental
   on-enable-button-input("onEnableButtonInput")
   on-enable-compact-mode("onEnableCompactMode")
-  on-enable-all-buttons-mode("onEnableAllButtonsMode")
-  on-enable-stream('onEnableStream')/>
+  on-enable-all-buttons-mode("onEnableAllButtonsMode")/>
 <div style={ display: state.compactMode ? "none" : "" }>
   <table>
     <tbody>
       <if(input.leg.players.length % 2 != 0 && state.venueConfig.has_dual_monitor)>
         <for|player| of=input.leg_players>
           <tr>
-            <scorecard-header key=`player-${player.player_id}` player=player players=input.players/>
+            <scorecard-header key=`player-${player.player_id}` player=player players=input.players isPlayerBoardCam=state.isPlayerBoardCam/>
             <scorecard key="players[]" uuid=state.uuid leg=state.leg submitting=state.submitting player=player type=input.match.match_type.id
                 on-possible-throw("onPossibleThrow")
                 on-score-change("onScoreChange")
@@ -26,7 +25,7 @@ $ var types = require('../../../../components/scorecard/components/match_types')
       <else>
         <tr>
           <for|player| of=input.leg_players>
-            <scorecard-header key=`player-${player.player_id}` player=player players=input.players/>
+            <scorecard-header key=`player-${player.player_id}` player=player players=input.players isPlayerBoardCam=state.isPlayerBoardCam/>
           </for>
         </tr>
         <tr>
@@ -54,8 +53,4 @@ $ var types = require('../../../../components/scorecard/components/match_types')
 <confirm-checkout on-confirm-checkout("onConfirmCheckout")/>
 <if(state.enableButtonInput)>
   <button-input-table key="compact-input" type=state.type leg=state.leg compactMode=state.compactMode allButtonsMode=state.allButtonsMode players=state.players on-score-button-pressed("onScoreButtonPressed")/>
-</if>
-<if(input.experimental)>
-  <video autoplay id='cam-board-preview'/>
-  <img id='img-board-remote' style='float: right;' src=""/>
 </if>

@@ -1,13 +1,11 @@
 var axios = require('axios');
 var alertify = require("../../../../util/alertify");
-var types = require("../../../../components/scorecard/components/match_types");
 
 module.exports = {
     onCreate(input) {
         this.state = {
             leg: input.leg,
             isOfficial: input.match.tournament_id !== null,
-            streamEnabled: false,
             buttonInputEnabled: input.buttonsEnabled,
             compactMode: input.compactMode,
             allButtonsMode : false
@@ -28,21 +26,14 @@ module.exports = {
         this.emit('enable-compact-mode', this.state.compactMode);
 
         if (isMobile || isTablet) {
-            $(function() { window.scrollTo(0,document.body.scrollHeight); });
+            $(function() {
+                window.scrollTo(0,document.body.scrollHeight);
+            });
         }
     },
 
     changeOrder(event) {
         // Modal is displayed, and code is handled in player-order component
-    },
-
-    enableBoardStream(id, event) {
-        var data = {
-            board: id,
-            enabled: !this.state.streamEnabled
-        };
-        this.emit('enable-stream', data);
-        this.state.streamEnabled = !this.state.streamEnabled;
     },
 
     enableButtonInput() {
@@ -65,7 +56,7 @@ module.exports = {
 
     cancelLeg(event) {
         alertify.confirm('Leg will be cancelled.', () => {
-            axios.delete(window.location.origin + '/legs/' + this.state.leg.id + '/cancel')
+            axios.delete(`${window.location.origin}/legs/${this.state.leg.id}/cancel`)
                 .then(response => {
                     location.href = '/matches';
                 }).catch(error => {

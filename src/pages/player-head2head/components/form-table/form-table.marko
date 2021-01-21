@@ -10,7 +10,9 @@
                     <td>
                         <span class="fa-stack">
                             <i class="fa fa-circle fa-stack-2x col-grey"></i>
-                            <strong class="fa-stack-1x text-primary col-white">D</strong>
+                            <strong class="fa-stack-1x">
+                                <a class="text-primary col-white" href=`/matches/${match.id}`>D</a>
+                            </strong>
                         </span>
                     </td>
                 </if>
@@ -18,7 +20,9 @@
                     <td>
                         <span class="fa-stack">
                             <i class="fa fa-circle fa-stack-2x col-green"></i>
-                            <strong class="fa-stack-1x text-primary col-white">W</strong>
+                            <strong class="fa-stack-1x">
+                                <a class="text-primary col-white" href=`/matches/${match.id}`>W</a>
+                            </strong>
                         </span>
                     </td>
                 </else-if>
@@ -26,7 +30,9 @@
                     <td>
                         <span class="fa-stack">
                             <i class="fa fa-circle fa-stack-2x col-dead-red"></i>
-                            <strong class="fa-stack-1x text-primary col-white">L</strong>
+                            <strong class="fa-stack-1x">
+                                <a class="text-primary col-white" href=`/matches/${match.id}`>L</a>
+                            </strong>
                         </span>
                     </td>
                 </else>

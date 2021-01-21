@@ -16,7 +16,7 @@ $ var types = require('../../../../../../components/scorecard/components/match_t
                             <statistics-card label="Three Dart Avg." value=`${(input.statistics.three_dart_avg).toFixed(2)} / ${(input.statistics.first_nine_three_dart_avg).toFixed(2)}` icon="fas fa-circle-notch"/>
                         </td>
                         <td style="width: 25%;">
-                            <statistics-card label="Checkout %" value=`${input.statistics.checkout_percentage.toFixed(2)} %` icon="fas fa-star"/>
+                            <statistics-card label="Checkout %" value=`${input.statistics.checkout_percentage ? input.statistics.checkout_percentage.toFixed(2) : "-"} %` icon="fas fa-star"/>
                         </td>
                     </if>
                     <else-if(input.type == types.SHOOTOUT)>
@@ -70,7 +70,7 @@ $ var types = require('../../../../../../components/scorecard/components/match_t
                             <statistics-card label="Avg. Numbers Closed" value=`${input.statistics.legs_played ? (input.statistics.numbers_closed / input.statistics.legs_played).toFixed(2) : "-    "}` icon="fas fa-bullseye"/>
                         </td>
                         <td style="width: 25%;">
-                            <statistics-card label="Highest Closed" value=`${input.statistics.highest_closed}` icon="fas fa-bullseye"/>
+                            <statistics-card label="Highest Closed" value=`${input.statistics.highest_closed === 0 ? "-" : input.statistics.highest_closed}` icon="fas fa-bullseye"/>
                         </td>
                     </else-if>
                     <else-if(input.type == types.BERMUDA_TRIANGLE)>
@@ -172,6 +172,7 @@ $ var types = require('../../../../../../components/scorecard/components/match_t
                     <th class="text-center">MPR</th>
                 </else-if>
                 <else-if(input.type == types.TIC_TAC_TOE)>
+                    <th class="text-center">Outshot Type</th>
                     <th class="text-center">Darts Thrown</th>
                     <th class="text-center">Score</th>
                     <th class="text-center">Numbers Closed</th>
@@ -265,6 +266,7 @@ $ var types = require('../../../../../../components/scorecard/components/match_t
                         <td class="text-center">${statistics.mpr.toFixed(2)}</td>
                     </else-if>
                     <else-if(input.type == types.TIC_TAC_TOE)>
+                        <td class="text-center">${history.parameters.outshot_type.name}</td>
                         <td class="text-center">${statistics.darts_thrown}</td>
                         <td class="text-center">${statistics.score}</td>
                         <td class="text-center">${statistics.numbers_closed}</td>

@@ -4,10 +4,18 @@ A preview of major changes can be found in the Wiki ([Latest Changes](https://gi
 
 ## [unreleased] - TBD
 #### Feature
--  Added new game type `Kill Bull`
+- Added new game type `Kill Bull`
+- Added support for stream of board for each player using external stream URLs
+- `Elo Changelog` page for player
 
 #### Changed
+- Added `Outshot Type` and `Tic-Tac-Toe` board to Spectate page
+- Added `Bull` to `420` game type
 - Updated all dependencies to latest version
+
+#### Fixed
+- Issue causing new-leg announcements to be played twice
+- Misc fixes and improvements
 
 
 ## [1.2.0] - 2020-10-10

@@ -14,6 +14,7 @@ $ var player = input.player;
         <player-profile-picture player=player/>
       </div>
     </div>
+    <statistics-row heading="Darts Thrown" value=statistic.darts_thrown/>
     <statistics-row heading="Longest Streak" value=statistic.longest_streak/>
     <statistics-row heading="Times Busted" value=statistic.times_busted/>
     <statistics-row heading="Total Hitrate" value=`${(statistic.total_hit_rate * 100).toFixed(2)} %`/>
