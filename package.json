@@ -11,7 +11,7 @@
     "dependencies": {
         "@lasso/marko-taglib": "^1.0.15",
         "alertifyjs": "^1.13.1",
-        "axios": "^0.19.2",
+        "axios": "^0.21.1",
         "body-parser": "^1.19.0",
         "bottleneck": "^2.18.0",
         "browser-refresh": "^1.7.3",
