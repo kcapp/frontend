@@ -11,9 +11,10 @@ A preview of major changes can be found in the Wiki ([Latest Changes](https://gi
 #### Changed
 - Added `Outshot Type` and `Tic-Tac-Toe` board to Spectate page
 - Added `Bull` to `420` game type
-- Updated all dependencies to latest version
+- Correctly handle leg finish when multiple people are connected
 
 #### Fixed
+- Score input for `X01 Handicap`
 - Issue causing new-leg announcements to be played twice
 - Misc fixes and improvements
 

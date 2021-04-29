@@ -143,6 +143,10 @@ exports.onPossibleThrow = function (data, thiz) {
         }
         header.setStateDirty('player');
     } else {
+        if (type == types.TIC_TAC_TOE) {
+            thiz.getComponent("tic-tac-toe-board").updateBoard(data.score, data.multiplier, data.is_undo);
+        }
+
         if (data.is_undo) {
             component.removeLast(true);
         } else {

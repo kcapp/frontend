@@ -26,7 +26,7 @@ router.get('/', function (req, res, next) {
             general: general,
         });
     })).catch(error => {
-        debug('Error when getting data for elo ' + error);
+        debug(`Error when getting data for elo ${error}`);
         next(error);
     });
 });

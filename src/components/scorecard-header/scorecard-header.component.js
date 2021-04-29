@@ -1,4 +1,4 @@
-var skill = require('kcapp-bot/bot-skill');
+const skill = require('kcapp-bot/bot-skill');
 
 module.exports = {
     onCreate(input) {
@@ -16,7 +16,8 @@ module.exports = {
             player: player,
             name: name,
             isCurrentPlayer: player.is_current_player,
-            wins: player.wins ? player.wins : 0
+            wins: player.wins ? player.wins : 0,
+            cameraEnabled: false
         }
     },
     onMount() {

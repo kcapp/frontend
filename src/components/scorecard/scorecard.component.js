@@ -101,6 +101,7 @@ module.exports = {
                 case types.SHOOTOUT:
                     shootout.removeLast.bind(this)(dart, external);
                     break;
+                case types.X01HANDICAP:
                 case types.X01:
                     var value = dart.getValue();
                     this.state.totalScore -= value;
@@ -151,6 +152,7 @@ module.exports = {
                 case types.SHOOTOUT:
                     submitting = shootout.confirmThrow.bind(this)(external);
                     break;
+                case types.X01HANDICAP:
                 case types.X01:
                     submitting = x01.confirmThrow.bind(this)(external);
                     break;
@@ -193,7 +195,7 @@ module.exports = {
         } else {
             dart = this.getCurrentDart();
         }
-        var newValue = parseInt(dart.state.value + '' + value);
+        var newValue = parseInt(`${dart.state.value}${value}`);
         if (newValue > 20 && newValue !== 25) {
             alertify.alert('Invalid Value', () => { });
             return;

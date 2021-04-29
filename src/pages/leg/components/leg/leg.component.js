@@ -46,7 +46,7 @@ module.exports = {
                 if (match.is_finished) {
                     location.href = `${window.location.origin}/matches/${match.id}/result`;
                 } else {
-                    location.href = `${window.location.origin}/matches/${match.id}`;
+                    location.href = `${window.location.origin}/legs/${match.current_leg_id}`;
                 }
             }, 2000);
         });

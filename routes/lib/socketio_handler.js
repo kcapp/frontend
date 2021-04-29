@@ -17,7 +17,7 @@ const limiter = new bottleneck({ minTime: 51 });
 
 module.exports = (io, app) => {
     this.io = io;
-    return {
+    this.config = {
         emitMessage: (namespace, type, message) => {
             var nsp = this.io.of(namespace);
             nsp.emit(type, message);
@@ -26,7 +26,7 @@ module.exports = (io, app) => {
             if (legId === undefined) {
                 return;
             }
-            var namespace = '/legs/' + legId;
+            var namespace = `/legs/${legId}`;
             delete this.io.nsps[namespace];
             debug(`[${namespace}] removed`);
         },
@@ -41,7 +41,7 @@ module.exports = (io, app) => {
             }
         },
         setupVenueNamespace: (venueId) => {
-            var namespace = '/venue/' + venueId;
+            var namespace = `/venue/${venueId}`;
             if (this.io.nsps[namespace] === undefined) {
                 var nsp = this.io.of(namespace);
                 nsp.on('connection', function (client) {
@@ -59,7 +59,7 @@ module.exports = (io, app) => {
             if (legId === undefined) {
                 return;
             }
-            var namespace = '/legs/' + legId;
+            var namespace = `/legs/${legId}`;
             if (this.io.nsps[namespace] === undefined) {
                 var nsp = this.io.of(namespace);
 
@@ -84,7 +84,7 @@ module.exports = (io, app) => {
                                 }
                             }
                         }).catch(error => {
-                            var message = error.message + ' (' + error + ')'
+                            var message = `${error.message} (${error})`;
                             debug(`[${legId}] Error when getting players for leg: ${message}`);
                         });
                 });
@@ -101,7 +101,7 @@ module.exports = (io, app) => {
                             var players = playersData.data;
                             client.emit('connected', { leg: leg, players: players });
                         })).catch(error => {
-                            var message = error.message + ' (' + error + ')'
+                            var message = `${error.message}(${error})`;
                             debug(`[${legId}] Error when getting leg: ${message}`);
                             nsp.emit('error', { message: error.message, code: error.code });
                         });
@@ -134,7 +134,7 @@ module.exports = (io, app) => {
 
                     client.on('chat_message', function (data) {
                         log('chat_message', data);
-                        var message = '[' + moment().format('HH:mm') + '] ' + ip + ': ' + data + '\r\n';
+                        var message = `[${moment().format('HH:mm')}] ${ip}: ${data}\r\n`;
                         chatHistory.push(message);
                         nsp.emit('chat_message', message);
                     });
@@ -143,7 +143,7 @@ module.exports = (io, app) => {
                         log('warmup_started');
                         _this.io.of('/active').emit('warmup_started', { leg: data.leg, match: data.match });
                         if (data.match.venue) {
-                            _this.io.of('/venue/' + data.match.venue.id).emit('venue_new_match', { leg: data.leg });
+                            _this.io.of(`/venue/${data.match.venue.id}`).emit('venue_new_match', { leg: data.leg });
                         }
                     });
 
@@ -185,6 +185,9 @@ module.exports = (io, app) => {
                                                 var winnerPlayer = _.findWhere(players, { player_id: leg.winner_player_id });
                                                 announceLegFinished(winnerPlayer, match)
 
+                                                if (!match.is_finished) {
+                                                    _this.config.setupLegsNamespace(match.current_leg_id);
+                                                }
                                                 _this.io.of('/active').emit('leg_finished', { leg: leg, match: match, throw: body });
                                                 nsp.emit('score_update', { leg: leg, players: players, match: match });
                                                 nsp.emit('leg_finished', { leg: leg, match: match, throw: body });
@@ -200,12 +203,12 @@ module.exports = (io, app) => {
                                                 nsp.emit('score_update', { leg: leg, players: players, globalstat: globalstat });
                                             }
                                         }).catch(error => {
-                                            var message = error.message + ' (' + error + ')'
+                                            var message = `${error.message}(${error})`;
                                             debug(`[${legId}] Error when getting match: ${message}`);
                                             nsp.emit('error', { message: error.message, code: error.code });
                                         });
                                 })).catch(error => {
-                                    var message = error.message + ' (' + error + ')'
+                                    var message = `${error.message} (${error})`;
                                     debug(`[${legId}] Error when getting leg: ${message}`);
                                     nsp.emit('error', { message: error.message, code: error.code });
                                 });
@@ -229,19 +232,18 @@ module.exports = (io, app) => {
                                     nsp.emit('undo_visit', {});
                                     nsp.emit('score_update', { leg: leg.data, players: players.data, globalstat: globalstat.data[0], is_undo: true });
                                 })).catch(error => {
-                                    var message = error.message + ' (' + error.response.data.trim() + ')'
+                                    var message = `${error.message}(${error.response.data.trim()})`;
                                     debug(`[${legId}] Error when getting leg: ${message}`);
                                     nsp.emit('error', { message: error.message, code: error.code });
                                 });
                             }).catch(error => {
-                                var message = error.message + ' (' + error.response.data.trim() + ')'
+                                var message = `${error.message}(${error.response.data.trim()})`;
                                 debug(`[${legId}] Error when undoing visit: ${message}`);
                                 nsp.emit('error', { message: message, code: error.code });
                             });
                     });
 
                     client.on('stream', (data) => {
-                        //log ('frame', JSON.stringify(data));
                         nsp.emit('board2', data);
                     });
 
@@ -252,7 +254,7 @@ module.exports = (io, app) => {
 
                 function announceScored(visit, matchType) {
                     var score = visit.score;
-                    var text = '' + score;
+                    var text = `${score}`;
                     if (visit.is_bust || (score === 0 && matchType === types.TIC_TAC_TOE)) {
                         text = 'Noscore';
                     }
@@ -263,7 +265,7 @@ module.exports = (io, app) => {
                     var score = player.current_score;
                     if (score < 171 && ![169, 168, 166, 165, 163, 162, 159].includes(score)) {
                         var name = player.player.vocal_name === null ? player.player.first_name : player.player.vocal_name;
-                        announce(name + " you require " + score, 'remaining_score');
+                        announce(`${name} you require ${score}`, 'remaining_score');
                     }
                 }
 
@@ -292,4 +294,5 @@ module.exports = (io, app) => {
             }
         }
     };
+    return this.config;
 };
