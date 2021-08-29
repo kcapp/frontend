@@ -40,9 +40,9 @@ import Table from "../statistics-table/statistics-table-template.marko"
                         $ var singleHitRate = stats.singles === 0 ? "-" : ((stats.singles / (99 * stats.legs_played)) * 100).toFixed(2);
                         $ var doubleHitRate = stats.doubles === 0 ? "-" : ((stats.doubles / (99 * stats.legs_played)) * 100).toFixed(2);
                         $ var tripleHitRate = stats.triples === 0 ? "-" : ((stats.triples / (99 * stats.legs_played)) * 100).toFixed(2);
-                        <statistic-cell value=stats.singles defaultValue="-" decimals=0 played=stats.matches_played postfix=" (${singleHitRate}%)"/>
-                        <statistic-cell value=stats.doubles defaultValue="-" decimals=0 played=stats.matches_played postfix=" (${doubleHitRate}%)"/>
-                        <statistic-cell value=stats.triples defaultValue="-" decimals=0 played=stats.matches_played postfix=" (${tripleHitRate}%)"/>
+                        <statistic-cell value=stats.singles defaultValue="-" decimals=0 played=stats.matches_played postfix=` (${singleHitRate}%)`/>
+                        <statistic-cell value=stats.doubles defaultValue="-" decimals=0 played=stats.matches_played postfix=` (${doubleHitRate}%)`/>
+                        <statistic-cell value=stats.triples defaultValue="-" decimals=0 played=stats.matches_played postfix=` (${tripleHitRate}%)`/>
                         <statistic-cell value=stats.hits_5 played=stats.matches_played/>
                         <statistic-cell value=stats.hits_6 played=stats.matches_played/>
                         <statistic-cell value=stats.hits_7 played=stats.matches_played/>
