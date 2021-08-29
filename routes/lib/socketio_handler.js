@@ -277,14 +277,16 @@ module.exports = (io, app) => {
                     if (player) {
                         name = player.player.vocal_name === null ? player.player.first_name : player.player.vocal_name;
                     }
+                    const legNum = match.legs.length;
+                    const currentLeg = legNum - 1 + ["", "st", "nd", "rd", "th"][legNum > 4 ? 4 : legNum - 1];
                     if (match.is_finished) {
                         if (match.winner_id === null) {
-                            announce(`Game shot, in the ${match.current_leg_num} leg, ${name}. The match a DRAW!!!`, 'game_shot');
+                            announce(`Game shot, in the ${currentLeg} leg, ${name}. The match a DRAW!!!`, 'game_shot');
                         } else {
                             announce(`Game shot, AND THE MATCH!!!, ${name}!`, 'game_shot');
                         }
                     } else {
-                        announce(`Game shot in the ${match.current_leg_num} leg!, ${name}!`, 'game_shot');
+                        announce(`Game shot in the ${currentLeg} leg!, ${name}!`, 'game_shot');
                     }
                 }
 
