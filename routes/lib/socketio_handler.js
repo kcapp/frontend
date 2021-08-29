@@ -187,6 +187,9 @@ module.exports = (io, app) => {
 
                                                 if (!match.is_finished) {
                                                     _this.config.setupLegsNamespace(match.current_leg_id);
+
+                                                    // Forward all spectating clients to next leg
+                                                    nsp.emit('new_leg', { match: match, leg: leg });
                                                 }
                                                 _this.io.of('/active').emit('leg_finished', { leg: leg, match: match, throw: body });
                                                 nsp.emit('score_update', { leg: leg, players: players, match: match });
