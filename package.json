@@ -23,6 +23,7 @@
         "debug": "^4.3.2",
         "express": "^5.0.0-alpha.8",
         "kcapp-bot": "github:kcapp/bot",
+        "kcapp-sio-client": "github:kcapp/kcapp-sio-client",
         "lasso": "^3.4.3",
         "lasso-less": "^4.0.1",
         "lasso-marko": "^3.1.0",
