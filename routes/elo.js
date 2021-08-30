@@ -6,7 +6,8 @@ var router = express.Router();
 var axios = require('axios');
 var _ = require('underscore');
 
-var eloTemplate = require('../src/pages/elo/elo-template.marko');
+const template = require('marko');
+var eloTemplate = template.load(require.resolve('../src/pages/elo/elo-template.marko'));
 
 /** Get elo */
 router.get('/', function (req, res, next) {

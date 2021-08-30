@@ -204,7 +204,7 @@ module.exports = {
     },
 
     getChartConfig(title, type, xAxisLabel, yAxisLabel, lables, datasets) {
-        var config = {
+        return {
             type: type,
             data: {
                 labels: lables,
@@ -212,8 +212,10 @@ module.exports = {
             },
             options: {
                 responsive: true,
-                title: { display: true, text: title },
-                tooltips: { mode: 'index', intersect: false, },
+                plugins: {
+                    title: { display: true, text: title },
+                    tooltips: { mode: 'index', intersect: false, }
+                },
                 hover: { mode: 'nearest', intersect: true },
                 scales: {
                     xAxes: [{ display: true, scaleLabel: { display: true, labelString: xAxisLabel } }],
@@ -222,12 +224,11 @@ module.exports = {
                 elements: { line: { tension: 0 } }
             }
         }
-        return config;
     },
 
     getPercentageChartConfig(value, chartTitle, type, label, displayLegend) {
         var fillValue = (100 - value).toFixed(2);
-        var config = {
+        return {
             type: type,
             data: {
                 datasets: [{
@@ -245,13 +246,15 @@ module.exports = {
             options: {
                 cutoutPercentage: 80,
                 responsive: true,
-                legend: {
-                    position: 'top',
-                    display: displayLegend
-                },
-                title: {
-                    display: true,
-                    text: chartTitle
+                plugins: {
+                    legend: {
+                        position: 'top',
+                        display: displayLegend
+                    },
+                    title: {
+                        display: true,
+                        text: chartTitle
+                    },
                 },
                 animation: {
                     animateScale: true,
@@ -259,16 +262,12 @@ module.exports = {
                 }
             }
         };
-
-        return config;
     },
 
     getPolarChartConfig(value1, value2, chartTitle1, chartTitle2, canvasTitle) {
-        var fillValue1 = 100 - value1;
-        var fillValue2 = 100 - value2;
         var lowerMargin = Math.min(value1, value2) * 0.8;
         var higherMargin = Math.ceil(Math.max(value1, value2) / 10) * 10;
-        var config = {
+        return {
             type: 'polarArea',
             data: {
                 datasets: [
@@ -300,29 +299,29 @@ module.exports = {
                         min: lowerMargin
                     }
                 },
-                responsive: true,
-                legend: {
-                    position: 'left'
-                },
-                title: {
-                    display: true,
-                    text: canvasTitle
+                responsive: false,
+                plugins: {
+                    legend: {
+                        position: 'left'
+                    },
+                    title: {
+                        display: true,
+                        text: canvasTitle
+                    },
+                    tooltips: {
+                        callbacks: {
+                            label: function (item, data) {
+                                return data.labels[item.index];
+                            }
+                        }
+                    }
                 },
                 animation: {
                     animateScale: true,
                     animateRotate: true
-                },
-                tooltips: {
-                    callbacks: {
-                        label: function (item, data) {
-                            return data.labels[item.index];
-                        }
-                    }
                 }
             }
         };
-
-        return config;
     },
 
     typeChanged(typeId) {

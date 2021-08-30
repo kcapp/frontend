@@ -3,7 +3,8 @@ var debug = require('debug')('kcapp:practice');
 var express = require('express');
 var router = express.Router();
 
-var practiceTemplate = require('../src/pages/practice/practice-template.marko');
+const template = require('marko');
+var practiceTemplate = template.load(require.resolve('../src/pages/practice/practice-template.marko'));
 
 var axios = require('axios');
 var _ = require('underscore');

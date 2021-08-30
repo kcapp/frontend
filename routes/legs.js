@@ -10,9 +10,10 @@ var skill = require('kcapp-bot/bot-skill');
 
 var axios = require('axios');
 
-var x01InputTemplate = require('../src/pages/leg/leg-template.marko');
-var spectateTemplate = require('../src/pages/spectate/spectate-template.marko');
-var legResultTemplate = require('../src/pages/leg-result/leg-result-template.marko');
+const template = require('marko');
+var x01InputTemplate = template.load(require.resolve('../src/pages/leg/leg-template.marko'));
+var spectateTemplate = template.load(require.resolve('../src/pages/spectate/spectate-template.marko'));
+var legResultTemplate = template.load(require.resolve('../src/pages/leg-result/leg-result-template.marko'));
 
 /* Render the leg view */
 router.get('/:id/beta', function (req, res, next) {

@@ -6,15 +6,15 @@ var router = express.Router();
 var axios = require('axios');
 var _ = require('underscore');
 var skill = require('kcapp-bot/bot-skill');
-var types = require('../src/components/scorecard/components/match_types');
 
 var bracket = require('./lib/bracket_generator');
 
-var matchesTemplate = require('../src/pages/matches/matches-template.marko');
-var matchResultTemplate = require('../src/pages/match-result/match-result-template.marko');
-var spectateTemplate = require('../src/pages/spectate/spectate-template.marko');
-var previewTemplate = require('../src/pages/match-preview/match-preview-template.marko');
-var obsTemplate = require('../src/pages/obs/obs-template.marko');
+const template = require('marko');
+var matchesTemplate = template.load(require.resolve('../src/pages/matches/matches-template.marko'));
+var matchResultTemplate = template.load(require.resolve('../src/pages/match-result/match-result-template.marko'));
+var spectateTemplate = template.load(require.resolve('../src/pages/spectate/spectate-template.marko'));
+var previewTemplate = template.load(require.resolve('../src/pages/match-preview/match-preview-template.marko'));
+var obsTemplate = template.load(require.resolve('../src/pages/obs/obs-template.marko'));
 
 /* Redirect requests to /matches to /matches/page/1 */
 router.get('/', function (req, res) {

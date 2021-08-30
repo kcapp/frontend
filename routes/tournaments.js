@@ -10,12 +10,13 @@ var axios = require('axios');
 var _ = require('underscore');
 var bracket = require('./lib/bracket_generator');
 
-var tournamentTemplate = require('../src/pages/tournament/tournament-template.marko');
-var tournamentsTemplate = require('../src/pages/tournaments/tournaments-template.marko');
-var tournamentAdminTemplate = require('../src/pages/tournament-admin/tournament-admin-template.marko');
-var tournamentsAdminTemplate = require('../src/pages/tournaments-admin/tournaments-admin-template.marko');
-var tournamentScheduleTemplate = require('../src/pages/tournament-schedule/tournament-schedule-template.marko');
-var tournamentPlayerMatchesTemplate = require('../src/pages/tournament-player-matches/tournament-player-matches-template.marko');
+const template = require('marko');
+var tournamentTemplate = template.load(require.resolve('../src/pages/tournament/tournament-template.marko'));
+var tournamentsTemplate = template.load(require.resolve('../src/pages/tournaments/tournaments-template.marko'));
+var tournamentAdminTemplate = template.load(require.resolve('../src/pages/tournament-admin/tournament-admin-template.marko'));
+var tournamentsAdminTemplate = template.load(require.resolve('../src/pages/tournaments-admin/tournaments-admin-template.marko'));
+var tournamentScheduleTemplate = template.load(require.resolve('../src/pages/tournament-schedule/tournament-schedule-template.marko'));
+var tournamentPlayerMatchesTemplate = template.load(require.resolve('../src/pages/tournament-player-matches/tournament-player-matches-template.marko'));
 
 /** Get all tournaments */
 router.get('/', function (req, res, next) {

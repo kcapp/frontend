@@ -4,7 +4,9 @@ var express = require('express');
 var router = express.Router();
 
 var axios = require('axios');
-var officeTemplate = require('../src/pages/offices/offices-template.marko');
+
+const template = require('marko');
+var officeTemplate = template.load(require.resolve('../src/pages/offices/offices-template.marko'));
 
 /* Add a new office */
 router.post('/', function (req, res, next) {

@@ -71,7 +71,7 @@ module.exports = function (app, socketHandler) {
     this.socketHandler = socketHandler;
 
     // Create socket.io namespaces for all venues
-    axios.get(app.locals.kcapp.api + '/venue')
+    axios.get(`${app.locals.kcapp.api}/venue`)
         .then(response => {
             var venues = response.data;
             for (var i = 0; i < venues.length; i++) {

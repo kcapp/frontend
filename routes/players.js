@@ -6,10 +6,11 @@ var router = express.Router();
 var axios = require('axios');
 var _ = require('underscore');
 
-var playerTemplate = require('../src/pages/player/player-template.marko');
-var playersTemplate = require('../src/pages/players/players-template.marko');
-var playerComparisonTemplate = require('../src/pages/player-comparison/player-comparison-template.marko');
-var head2headTemplate = require('../src/pages/player-head2head/player-head2head-template.marko');
+const template = require('marko');
+var playerTemplate = template.load(require.resolve('../src/pages/player/player-template.marko'));
+var playersTemplate = template.load(require.resolve('../src/pages/players/players-template.marko'));
+var playerComparisonTemplate = template.load(require.resolve('../src/pages/player-comparison/player-comparison-template.marko'));
+var head2headTemplate = template.load(require.resolve('../src/pages/player-head2head/player-head2head-template.marko'));
 
 /* Get a list of all players */
 router.get('/', function (req, res, next) {
