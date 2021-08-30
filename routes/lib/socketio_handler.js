@@ -27,11 +27,11 @@ module.exports = (io, app) => {
                 return;
             }
             var namespace = `/legs/${legId}`;
-            delete this.io.nsps[namespace];
+            delete this.io._nsps[namespace];
             debug(`[${namespace}] removed`);
         },
         addNamespace: (namespace) => {
-            if (this.io.nsps[namespace] === undefined) {
+            if (this.io._nsps[namespace] === undefined) {
                 var nsp = this.io.of(namespace);
                 nsp.on('connection', function (client) {
                     var ip = getClientIP(client);
@@ -42,7 +42,7 @@ module.exports = (io, app) => {
         },
         setupVenueNamespace: (venueId) => {
             var namespace = `/venue/${venueId}`;
-            if (this.io.nsps[namespace] === undefined) {
+            if (this.io._nsps[namespace] === undefined) {
                 var nsp = this.io.of(namespace);
                 nsp.on('connection', function (client) {
                     var ip = getClientIP(client);
@@ -60,7 +60,7 @@ module.exports = (io, app) => {
                 return;
             }
             var namespace = `/legs/${legId}`;
-            if (this.io.nsps[namespace] === undefined) {
+            if (this.io._nsps[namespace] === undefined) {
                 var nsp = this.io.of(namespace);
 
                 // To not spam the API with too many requests, we add a short limit to the requests here

@@ -283,7 +283,7 @@ router.post('/new', function (req, res, next) {
         .then(response => {
             var playerMap = response.data;
 
-            var isPractice = players.length == 1;
+            var isPractice = players.length === 1;
             for (var i = 0; i < players.length; i++) {
                 if (isPractice) {
                     break;
@@ -294,7 +294,7 @@ router.post('/new', function (req, res, next) {
 
             var body = {
                 owe_type_id: req.body.match_stake == -1 ? null : req.body.match_stake,
-                venue_id: req.body.venue,
+                venue_id: req.body.venue === -1 ? null : req.body.venue,
                 match_type: { id: req.body.match_type },
                 match_mode: { id: req.body.match_mode },
                 players: players.map(Number),

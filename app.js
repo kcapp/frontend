@@ -23,7 +23,6 @@ lasso.configure({
 
 var path = require('path');
 var cookieParser = require('cookie-parser');
-var bodyParser = require('body-parser');
 var lessMiddleware = require('less-middleware');
 
 var app = express();
@@ -83,10 +82,8 @@ const accessLogStream = rfs.createStream(generator, {
 });
 app.use(logger('combined', { stream: accessLogStream }));
 
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({
-    extended: false
-}));
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
 app.use(lessMiddleware(path.join(__dirname, 'public')));
@@ -146,8 +143,7 @@ app.use(function (err, req, res, next) {
     } else {
         if (err.response !== undefined) {
             debug(`Axios error message: ${err.response.data.trim()}`);
-        }
-        if (err.stack !== undefined) {
+        } else if (err.stack !== undefined) {
             debug(err.stack);
         }
         res.marko(errorTemplate, {
