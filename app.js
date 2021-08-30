@@ -25,8 +25,6 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var lessMiddleware = require('less-middleware');
-var logger = require('morgan');
-var rfs = require('rotating-file-stream')
 
 var app = express();
 
@@ -67,14 +65,23 @@ app.locals.moment = require('moment');
 app.locals._ = require('underscore');
 
 // Write access log to a daily rotated file in /log
-var logDirectory = path.join(__dirname, 'log')
-var accessLogStream = rfs.createStream(`${logDirectory}/access.log`, {
+const pad = num => (num > 9 ? "" : "0") + num;
+const generator = (time, index) => {
+  if (!time) {
+    return "access.log";
+  }
+  const date = `${time.getFullYear()}-${pad(time.getMonth() + 1)}-${pad(time.getDate())}-${index}`;
+  return `access.${date}.log.gz`;
+};
+
+var logger = require('morgan');
+var rfs = require('rotating-file-stream')
+const accessLogStream = rfs.createStream(generator, {
     interval: "1d",
-    compress: "gzip"
+    compress: true,
+    path: path.join(__dirname, 'log')
 });
-app.use(logger('combined', {
-    stream: accessLogStream
-}));
+app.use(logger('combined', { stream: accessLogStream }));
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({

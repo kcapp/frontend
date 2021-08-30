@@ -60,12 +60,12 @@ router.get('/:id/statistics', function (req, res, next) {
         axios.get(`${req.app.locals.kcapp.api}/player/${playerId}/progression`),
         axios.get(`${req.app.locals.kcapp.api}/player/${playerId}/checkouts`),
         axios.get(`${req.app.locals.kcapp.api}/player/${playerId}/tournament`)
-    ]).then(axios.spread((players, player, statistics, previous_statistics, progression, checkouts, tournament) => {
+    ]).then(axios.spread((players, player, statistics, previous, progression, checkouts, tournament) => {
         res.marko(playerTemplate, {
             players: players.data,
             player: player.data,
             statistics: statistics.data,
-            previous_statistics: previous_statistics.data,
+            previous_statistics: previous.data,
             progression: progression.data,
             checkouts: checkouts.data,
             tournament_standings: tournament.data,
