@@ -1,5 +1,3 @@
-const alertify = require("../../util/alertify");
-
 const CLASS_DART_SINGLE = 'dart-score-single';
 const CLASS_DART_DOUBLE = 'dart-score-double';
 const CLASS_DART_TRIPLE = 'dart-score-triple';

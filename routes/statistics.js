@@ -7,7 +7,8 @@ var axios = require('axios');
 var moment = require('moment');
 var _ = require('underscore');
 
-var statisticsTemplate = require('../src/pages/statistics/statistics-template.marko');
+const template = require('marko');
+var statisticsTemplate = template.load(require.resolve('../src/pages/statistics/statistics-template.marko'));
 
 /** Get statistics for all players during the given time */
 router.get('/:from/:to', function (req, res, next) {

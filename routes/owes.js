@@ -5,7 +5,8 @@ var router = express.Router();
 
 var axios = require('axios');
 
-var owesTemplate = require('../src/pages/owes/owes-template.marko');
+const template = require('marko');
+var owesTemplate = template.load(require.resolve('../src/pages/owes/owes-template.marko'));
 
 /* Method to get overview over who owes who what */
 router.get('/', function (req, res, next) {

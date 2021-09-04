@@ -46,7 +46,7 @@ exports.onScoreUpdate = (data, thiz) => {
         component.state.player = player;
         component.state.players = players;
 
-        var headerComponent = thiz.getComponent('player-' + player.player_id);
+        var headerComponent = thiz.getComponent(`player-${player.player_id}`);
         headerComponent.state.player = player;
         headerComponent.state.isCurrentPlayer = player.player_id === leg.current_player_id;
 
@@ -77,19 +77,28 @@ exports.say = (data, thiz) => {
         // Skip announcement of remaining score for non-x01 game types
         return;
     }
-
-    var oldPlayer = thiz.state.audioAnnouncer;
-    var isAudioAnnouncement = (oldPlayer.duration > 0 && !oldPlayer.paused);
-    if (data.type === 'score' && ['100', '140', '180'].includes(data.text)) {
-        var newPlayer = new Audio(`/audio/${data.text}.mp3`);
+    const oldPlayer = thiz.state.audioAnnouncer;
+    const isAudioAnnouncement = (oldPlayer.duration > 0 && !oldPlayer.paused) || (!isNaN(oldPlayer.duration) && !oldPlayer.ended && oldPlayer.paused);
+    if (data.audios) {
+        const audioPlayers = [ ];
+        for (const file of data.audios) {
+            audioPlayers.push(new Audio(file));
+        }
+        for (let i = 0; i < audioPlayers.length; i++) {
+            const current = audioPlayers[i];
+            const next = audioPlayers[i + 1];
+            if (next) {
+                current.addEventListener("ended", () => { next.play(); }, false);
+            }
+        }
         if (isAudioAnnouncement) {
             oldPlayer.addEventListener("ended", () => {
-                newPlayer.play();
+                audioPlayers[0].play();
             }, false);
         } else {
-            newPlayer.play();
+            audioPlayers[0].play();
         }
-        thiz.state.audioAnnouncer = newPlayer;
+        thiz.state.audioAnnouncer = audioPlayers[audioPlayers.length - 1];
     } else {
         if (isAudioAnnouncement) {
             oldPlayer.addEventListener("ended", () => {
@@ -134,7 +143,7 @@ exports.onPossibleThrow = function (data, thiz) {
         component.state.totalScore += data.score * data.multiplier;
 
         // Update player score
-        var header = thiz.getComponent('player-' + data.current_player_id);
+        var header = thiz.getComponent(`player-${data.current_player_id}`);
         if (thiz.state.type == types.SHOOTOUT) {
             header.state.player.current_score += (data.score * data.multiplier);
         } else {

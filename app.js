@@ -1,8 +1,7 @@
+require("@marko/compiler/register");
+
 var debug = require('debug')('kcapp:app');
 var compression = require('compression');
-
-require('marko/node-require').install();
-require('marko/express');
 
 var express = require('express');
 
@@ -15,7 +14,7 @@ lasso.configure({
         'lasso-marko', // Allow Marko templates to be compiled and transported to the browser
         'lasso-less'
     ],
-    outputDir: __dirname + '/static', // Place all generated JS/CSS/etc. files into the "static" dir
+    outputDir: `${__dirname}/static`, // Place all generated JS/CSS/etc. files into the "static" dir
     bundlingEnabled: isProduction, // Only enable bundling in production
     minify: isProduction, // Only minify JS and CSS code in production
     fingerprintsEnabled: isProduction, // Only add fingerprints to URLs in production
@@ -24,20 +23,21 @@ lasso.configure({
 
 var path = require('path');
 var cookieParser = require('cookie-parser');
-var bodyParser = require('body-parser');
 var lessMiddleware = require('less-middleware');
-var logger = require('morgan');
-var rfs = require('rotating-file-stream')
 
 var app = express();
+
+var marko = require("@marko/express").default;
+app.use(marko());
+
 app.use(compression());
 app.use(require('lasso/middleware').serveStatic());
 
 // Make sure we get correct user IP when running behind a reverse proxy
 app.enable('trust proxy');
 
-var socket_io = require("socket.io");
-var io = socket_io();
+var socketIo = require("socket.io");
+var io = socketIo();
 app.io = io;
 
 // Set application variables
@@ -64,13 +64,28 @@ app.locals.moment = require('moment');
 app.locals._ = require('underscore');
 
 // Write access log to a daily rotated file in /log
-var logDirectory = path.join(__dirname, 'log')
-var accessLogStream = rfs.createStream(`${logDirectory}/access.log`, { interval: "1d", compress: "gzip" });
+const pad = num => (num > 9 ? "" : "0") + num;
+const generator = (time, index) => {
+  if (!time) {
+    return "access.log";
+  }
+  const date = `${time.getFullYear()}-${pad(time.getMonth() + 1)}-${pad(time.getDate())}-${index}`;
+  return `access.${date}.log.gz`;
+};
+
+var logger = require('morgan');
+var rfs = require('rotating-file-stream')
+const accessLogStream = rfs.createStream(generator, {
+    interval: "1d",
+    compress: true,
+    path: path.join(__dirname, 'log')
+});
 app.use(logger('combined', { stream: accessLogStream }));
 
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
+
 app.use(lessMiddleware(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, 'public')));
 
@@ -94,8 +109,10 @@ app.use(function (req, res, next) {
 });
 
 // Error Handler
-var notFoundTemplate = require('./src/pages/404/404.marko');
-var errorTemplate = require('./src/pages/error/error.marko');
+const template = require('marko');
+var notFoundTemplate = template.load(require.resolve('./src/pages/404/404.marko'));
+var errorTemplate = template.load(require.resolve('./src/pages/404/404.marko'));
+
 app.use(function (err, req, res, next) {
     // set locals, only providing error in development
     res.locals.message = err.message;
@@ -104,16 +121,20 @@ app.use(function (err, req, res, next) {
     // render the error page
     res.status(err.status || 500);
 
-    if (err.status == 404 || ( err.response && err.response.status == 404)) {
+    if (err.status == 404 || (err.response && err.response.status == 404)) {
         // respond with html page
         if (req.accepts('html')) {
-            res.marko(notFoundTemplate, { url: req.url });
+            res.marko(notFoundTemplate, {
+                url: req.url
+            });
             return;
         }
 
         // respond with json
         if (req.accepts('json')) {
-            res.send({ error: 'Not found' });
+            res.send({
+                error: 'Not found'
+            });
             return;
         }
 
@@ -121,9 +142,13 @@ app.use(function (err, req, res, next) {
         res.type('txt').send('Not found');
     } else {
         if (err.response !== undefined) {
-            debug("Axios error message: " + err.response.data.trim());
+            debug(`Axios error message: ${err.response.data.trim()}`);
+        } else if (err.stack !== undefined) {
+            debug(err.stack);
         }
-        res.marko(errorTemplate, { error: err });
+        res.marko(errorTemplate, {
+            error: err
+        });
     }
 });
 

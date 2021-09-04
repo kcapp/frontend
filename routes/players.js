@@ -6,10 +6,11 @@ var router = express.Router();
 var axios = require('axios');
 var _ = require('underscore');
 
-var playerTemplate = require('../src/pages/player/player-template.marko');
-var playersTemplate = require('../src/pages/players/players-template.marko');
-var playerComparisonTemplate = require('../src/pages/player-comparison/player-comparison-template.marko');
-var head2headTemplate = require('../src/pages/player-head2head/player-head2head-template.marko');
+const template = require('marko');
+var playerTemplate = template.load(require.resolve('../src/pages/player/player-template.marko'));
+var playersTemplate = template.load(require.resolve('../src/pages/players/players-template.marko'));
+var playerComparisonTemplate = template.load(require.resolve('../src/pages/player-comparison/player-comparison-template.marko'));
+var head2headTemplate = template.load(require.resolve('../src/pages/player-head2head/player-head2head-template.marko'));
 
 /* Get a list of all players */
 router.get('/', function (req, res, next) {
@@ -59,12 +60,12 @@ router.get('/:id/statistics', function (req, res, next) {
         axios.get(`${req.app.locals.kcapp.api}/player/${playerId}/progression`),
         axios.get(`${req.app.locals.kcapp.api}/player/${playerId}/checkouts`),
         axios.get(`${req.app.locals.kcapp.api}/player/${playerId}/tournament`)
-    ]).then(axios.spread((players, player, statistics, previous_statistics, progression, checkouts, tournament) => {
+    ]).then(axios.spread((players, player, statistics, previous, progression, checkouts, tournament) => {
         res.marko(playerTemplate, {
             players: players.data,
             player: player.data,
             statistics: statistics.data,
-            previous_statistics: previous_statistics.data,
+            previous_statistics: previous.data,
             progression: progression.data,
             checkouts: checkouts.data,
             tournament_standings: tournament.data,

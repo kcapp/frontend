@@ -122,8 +122,10 @@ module.exports = {
             },
             options: {
                 responsive: true,
-                title: { display: true, text: 'Scores' },
-                tooltips: { mode: 'index', intersect: false, },
+                plugins: {
+                    title: { display: true, text: 'Scores' },
+                    tooltips: { mode: 'index', intersect: false, }
+                },
                 hover: { mode: 'nearest', intersect: true },
                 scales: {
                     xAxes: [{ display: true, scaleLabel: { display: true, labelString: 'Round' } }],

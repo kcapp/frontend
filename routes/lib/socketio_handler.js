@@ -1,4 +1,6 @@
 var debug = require('debug')('kcapp:socketio-handler');
+const fs = require('fs');
+
 var _ = require('underscore');
 var axios = require('axios');
 var moment = require('moment');
@@ -7,6 +9,17 @@ var skill = require('kcapp-bot/bot-skill');
 var types = require('../../src/components/scorecard/components/match_types');
 
 var _this = this;
+
+const audios = 'public/audio/announcer/scores/';
+const scoreFiles = {};
+fs.readdirSync(audios).forEach(file => {
+    const num = file.split("_")[0];
+    if (scoreFiles[num]) {
+        scoreFiles[num].push(file);
+    } else {
+        scoreFiles[num] = [ file ];
+    }
+});
 
 function getClientIP(client) {
     var realIP = client.handshake.headers["x-real-ip"]
@@ -27,11 +40,11 @@ module.exports = (io, app) => {
                 return;
             }
             var namespace = `/legs/${legId}`;
-            delete this.io.nsps[namespace];
+            delete this.io._nsps[namespace];
             debug(`[${namespace}] removed`);
         },
         addNamespace: (namespace) => {
-            if (this.io.nsps[namespace] === undefined) {
+            if (this.io._nsps[namespace] === undefined) {
                 var nsp = this.io.of(namespace);
                 nsp.on('connection', function (client) {
                     var ip = getClientIP(client);
@@ -42,7 +55,7 @@ module.exports = (io, app) => {
         },
         setupVenueNamespace: (venueId) => {
             var namespace = `/venue/${venueId}`;
-            if (this.io.nsps[namespace] === undefined) {
+            if (this.io._nsps[namespace] === undefined) {
                 var nsp = this.io.of(namespace);
                 nsp.on('connection', function (client) {
                     var ip = getClientIP(client);
@@ -60,7 +73,7 @@ module.exports = (io, app) => {
                 return;
             }
             var namespace = `/legs/${legId}`;
-            if (this.io.nsps[namespace] === undefined) {
+            if (this.io._nsps[namespace] === undefined) {
                 var nsp = this.io.of(namespace);
 
                 // To not spam the API with too many requests, we add a short limit to the requests here
@@ -261,7 +274,11 @@ module.exports = (io, app) => {
                     if (visit.is_bust || (score === 0 && matchType === types.TIC_TAC_TOE)) {
                         text = 'Noscore';
                     }
-                    announce(text, 'score');
+                    let audios = scoreFiles[text.toLowerCase()];
+                    if (audios) {
+                        audios = [ `/audio/announcer/scores/${audios[Math.floor(Math.random() * audios.length)]}` ];
+                    }
+                    announce(text, 'score', audios);
                 }
 
                 function announceScoreRemaining(player) {
@@ -290,8 +307,8 @@ module.exports = (io, app) => {
                     }
                 }
 
-                function announce(text, type) {
-                    var data = { text: text, type: type }
+                function announce(text, type, audios) {
+                    var data = { text: text, type: type, audios: audios }
                     debug(`[${legId}] say ${JSON.stringify(data)}`);
                     nsp.emit('say', data);
                 }
