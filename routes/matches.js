@@ -40,7 +40,7 @@ router.get('/page/:page', function (req, res, next) {
             page_num: req.params.page
         });
     })).catch(error => {
-        debug('Error when getting data for matches ' + error);
+        debug(`Error when getting data for matches ${error}`);
         next(error);
     });
 });
@@ -50,7 +50,7 @@ router.get('/:id', function (req, res, next) {
     axios.get(`${req.app.locals.kcapp.api}/match/${req.params.id}`)
         .then(response => {
             var match = response.data
-            res.redirect('/legs/' + match.current_leg_id);
+            res.redirect(`/legs/${match.current_leg_id}`);
         }).catch(error => {
             debug(`Error when getting match: ${error}`);
             next(error)
@@ -121,11 +121,11 @@ router.get('/:id/preview', function (req, res, next) {
                     });
                 }));
             })).catch(error => {
-                debug('Error when getting data for head to head ' + error);
+                debug(`Error when getting data for head to head ${error}`);
                 next(error);
             });
         }).catch(error => {
-            debug('Error when getting match: ' + error);
+            debug(`Error when getting match: ${error}`);
             next(error)
         });
 });
@@ -138,7 +138,7 @@ router.get('/:id/spectate', function (req, res, next) {
     ]).then(axios.spread((players, response) => {
         var match = response.data;
         if (match.is_finished) {
-            return res.redirect('/matches/' + req.params.id + "/result");
+            res.redirect(`/matches/${req.params.id}/result`);
         } else {
             axios.all([
                 axios.get(`${req.app.locals.kcapp.api}/leg/${match.current_leg_id}`),
@@ -152,12 +152,12 @@ router.get('/:id/spectate', function (req, res, next) {
                     match: match
                 });
             })).catch(error => {
-                debug('Error when getting data for matches ' + error);
+                debug(`Error when getting data for matches ${error}`);
                 next(error);
             });
         }
     })).catch(error => {
-        debug('Error when getting data for match ' + error);
+        debug(`Error when getting data for match ${error}`);
         next(error);
     });
 });
@@ -170,7 +170,7 @@ router.get('/:id/spectate/compact', function (req, res, next) {
     ]).then(axios.spread((players, response) => {
         var match = response.data;
         if (match.is_finished) {
-            return res.redirect('/matches/' + req.params.id + "/result");
+            res.redirect(`/matches/${req.params.id}/result`);
         } else {
             axios.all([
                 axios.get(`${req.app.locals.kcapp.api}/leg/${match.current_leg_id}`),
@@ -184,12 +184,12 @@ router.get('/:id/spectate/compact', function (req, res, next) {
                     match: match
                 });
             })).catch(error => {
-                debug('Error when getting data for matches ' + error);
+                debug(`Error when getting data for matches ${error}`);
                 next(error);
             });
         }
     })).catch(error => {
-        debug('Error when getting data for match ' + error);
+        debug(`Error when getting data for match ${error}`);
         next(error);
     });
 });
@@ -215,11 +215,11 @@ router.get('/:id/obs', function (req, res, next) {
                 matchMetadata: metadata.data
             });
         })).catch(error => {
-            debug('Error when getting data for match ' + error);
+            debug(`Error when getting data for match ${error}`);
             next(error);
         });
     })).catch(error => {
-        debug('Error when getting data for match ' + error);
+        debug(`Error when getting data for match ${error}`);
         next(error);
     });
 });
@@ -240,16 +240,18 @@ router.get('/:id/result', function (req, res, next) {
 
         axios.get(`${req.app.locals.kcapp.api}/leg/${match.legs[0].id}/players`)
             .then(response => {
-                var botConfigs = _.object(_.map(response.data, (player) => { return [player.player_id, player.bot_config] }));
+                var botConfigs = _.object(_.map(response.data, (player) => {
+                    return [player.player_id, player.bot_config]
+                }));
                 _.each(statistics, stats => {
                     var name = players[stats.player_id].name;
 
                     var botConfig = botConfigs[stats.player_id];
                     if (botConfig) {
                         if (botConfig.player_id) {
-                            name = name + " as " + players[botConfig.player_id].name;
+                            name = `${name} as ${players[botConfig.player_id].name}`;
                         } else {
-                            name = name + " (" + skill.fromInt(botConfig.skill_level).name + ")";
+                            name = `${name} (${skill.fromInt(botConfig.skill_level).name})`;
                         }
                     }
                     stats.player_name = name;
@@ -261,11 +263,11 @@ router.get('/:id/result', function (req, res, next) {
                     statistics: statistics
                 });
             }).catch(error => {
-                debug('Error when getting data for match result ' + error);
+                debug(`Error when getting data for match result ${error}`);
                 next(error);
             });
     })).catch(error => {
-        debug('Error when getting data for match result ' + error);
+        debug(`Error when getting data for match result ${error}`);
         next(error);
     });
 });
@@ -315,7 +317,7 @@ router.post('/new', function (req, res, next) {
 
                     // Forward all spectating clients to next leg
                     if (match.venue) {
-                        this.socketHandler.emitMessage('/venue/' + match.venue.id, 'venue_new_match', {
+                        this.socketHandler.emitMessage(`/venue/${match.venue.id}`, 'venue_new_match', {
                             match_id: match.id,
                             leg_id: match.current_leg_id
                         });
@@ -325,11 +327,11 @@ router.post('/new', function (req, res, next) {
                     }
                     res.status(200).send(match).end();
                 }).catch(error => {
-                    debug('Error when starting new match: ' + error);
+                    debug(`Error when starting new match: ${error}`);
                     next(error);
                 });
         }).catch(error => {
-            debug('Error when starting new match: ' + error);
+            debug(`Error when starting new match: ${error}`);
             next(error);
         });
 
@@ -343,7 +345,7 @@ router.post('/:id/rematch', function (req, res, next) {
             this.socketHandler.setupLegsNamespace(match.current_leg_id);
             // Forward all spectating clients to next leg
             if (match.venue) {
-                this.socketHandler.emitMessage('/venue/' + match.venue.id, 'venue_new_match', {
+                this.socketHandler.emitMessage(`/venue/${match.venue.id}`, 'venue_new_match', {
                     match_id: match.id,
                     leg_id: match.current_leg_id
                 });
@@ -353,7 +355,7 @@ router.post('/:id/rematch', function (req, res, next) {
             }
             res.status(200).send(match).end();
         }).catch(error => {
-            debug('Error when starting new match: ' + error);
+            debug(`Error when starting new match: ${error}`);
             next(error);
         });
 });
