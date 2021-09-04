@@ -20,7 +20,7 @@ router.get('/', function (req, res, next) {
             items: [ { id: 1, name: "Cake" }, { id: 2, name: "Beer" } ]
         });
     })).catch(error => {
-        debug('Error when getting data for owes ' + error);
+        debug(`Error when getting data for owes ${error}`);
         next(error);
     });
 });
@@ -31,7 +31,7 @@ router.put('/payback', function (req, res) {
         .then(() => {
             res.status(200).send().end();
         }).catch(error => {
-            debug('Error when getting owes: ' + error);
+            debug(`Error when getting owes: ${error}`);
             res.status(500).send().end();
         });
 });

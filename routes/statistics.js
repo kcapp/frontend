@@ -40,7 +40,7 @@ function getStatistics(from, to, req, res, next) {
             locals: req.app.locals
         });
     })).catch(error => {
-        debug('Error when getting data for statistics ' + error);
+        debug(`Error when getting data for statistics ${error}`);
         next(error);
     });
 }

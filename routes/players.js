@@ -22,7 +22,7 @@ router.get('/', function (req, res, next) {
         players = _.sortBy(players, (player) => player.name)
         res.marko(playersTemplate, { players: players, offices: officesResponse.data });
     })).catch(error => {
-        debug('Error when getting players: ' + error);
+        debug(`Error when getting players: ${error}`);
         next(error);
     });
 });
@@ -33,7 +33,7 @@ router.post('/', function (req, res, next) {
         .then(() => {
             res.redirect('/players');
         }).catch(error => {
-            debug('Error when adding new player: ' + error);
+            debug(`Error when adding new player: ${error}`);
             next(error);
         });
 });
@@ -44,7 +44,7 @@ router.put('/:id', function (req, res, next) {
         .then(() => {
             res.redirect(303, '/players');
         }).catch(error => {
-            debug('Error when editing player: ' + error);
+            debug(`Error when editing player: ${error}`);
             next(error);
         });
 });
@@ -72,7 +72,7 @@ router.get('/:id/statistics', function (req, res, next) {
             locals: req.app.locals
         });
     })).catch(error => {
-        debug('Error when getting data for player ' + error);
+        debug(`Error when getting data for player ${error}`);
         next(error);
     });
 });
@@ -99,7 +99,7 @@ router.get('/compare', function (req, res, next) {
             locals: req.app.locals
         });
     })).catch(error => {
-        debug('Error when getting data for player comparison ' + error);
+        debug(`Error when getting data for player comparison ${error}`);
         next(error);
     });
 });
@@ -124,7 +124,7 @@ router.get('/:player1/vs/:player2', function (req, res, next) {
 
         res.marko(head2headTemplate, { player1: players[player1], player2: players[player2], head2head: head2head });
     })).catch(error => {
-        debug('Error when getting data for head to head ' + error);
+        debug(`Error when getting data for head to head ${error}`);
         next(error);
     });
 });

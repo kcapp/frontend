@@ -29,7 +29,7 @@ router.get('/', function (req, res, next) {
             offices: offices.data
         });
     })).catch(error => {
-        debug('Error when getting data for / ' + error);
+        debug(`Error when getting data for / ${error}`);
         next(error);
     });
 });
