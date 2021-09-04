@@ -7,6 +7,7 @@ A preview of major changes can be found in the Wiki ([Latest Changes](https://gi
 - Added new game type `Kill Bull`
 - Added support for stream of board for each player using external stream URLs
 - `Elo Changelog` page for player
+- Custom announcer voice for scores `100` to `180`
 
 #### Changed
 - Added `Outshot Type` and `Tic-Tac-Toe` board to Spectate page
