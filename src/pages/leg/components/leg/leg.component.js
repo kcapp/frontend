@@ -48,7 +48,7 @@ module.exports = {
                 } else {
                     location.href = `${window.location.origin}/legs/${match.current_leg_id}`;
                 }
-            }, 2000);
+            }, 5000);
         });
         socket.on('error', this.onError.bind(this));
         this.state.socket = socket;

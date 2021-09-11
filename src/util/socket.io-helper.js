@@ -82,19 +82,26 @@ exports.say = (data, thiz) => {
     if (data.audios) {
         const audioPlayers = [ ];
         for (const file of data.audios) {
-            audioPlayers.push(new Audio(file));
+            audioPlayers.push(file.file ? new Audio(file.file) : speaker.getUtterance(file));
         }
+
         for (let i = 0; i < audioPlayers.length; i++) {
             const current = audioPlayers[i];
             const next = audioPlayers[i + 1];
             if (next) {
-                current.addEventListener("ended", () => { next.play(); }, false);
+                current.addEventListener("ended", () => {
+                    next.play();
+                }, false);
+                current.onend = () => {
+                    next.play();
+                };
             }
         }
+
         if (isAudioAnnouncement) {
             oldPlayer.addEventListener("ended", () => {
                 audioPlayers[0].play();
-            }, false);
+            });
         } else {
             audioPlayers[0].play();
         }

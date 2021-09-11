@@ -1,25 +1,37 @@
-var debug = require('debug')('kcapp:socketio-handler');
+const debug = require('debug')('kcapp:socketio-handler');
 const fs = require('fs');
 
-var _ = require('underscore');
-var axios = require('axios');
-var moment = require('moment');
-var bottleneck = require("bottleneck/es5");
-var skill = require('kcapp-bot/bot-skill');
-var types = require('../../src/components/scorecard/components/match_types');
+const _ = require('underscore');
+const axios = require('axios');
+const moment = require('moment');
+const bottleneck = require("bottleneck/es5");
+const skill = require('kcapp-bot/bot-skill');
+const types = require('../../src/components/scorecard/components/match_types');
 
-var _this = this;
+const _this = this;
 
-const audios = 'public/audio/announcer/scores/';
-const scoreFiles = {};
-fs.readdirSync(audios).forEach(file => {
-    const num = file.split("_")[0];
-    if (scoreFiles[num]) {
-        scoreFiles[num].push(file);
-    } else {
-        scoreFiles[num] = [ file ];
-    }
-});
+function readFiles(src) {
+    const map = {};
+    fs.readdirSync(src).forEach(file => {
+        const num = file.split("_")[0];
+        if (map[num]) {
+            map[num].push(file);
+        } else {
+            map[num] = [ file ];
+        }
+    });
+    return map;
+}
+
+function randomAudio(audios, path) {
+    return { file: `/audio/announcer/${path}/${audios[Math.floor(Math.random() * audios.length)]}` };
+}
+
+const AUDIO_SCORES = readFiles('public/audio/announcer/scores/');
+const AUDIO_NUMBERS = readFiles('public/audio/announcer/numbers/');
+const AUDIO_NAMES = readFiles('public/audio/announcer/names/');
+const AUDIO_SENTENCES = readFiles('public/audio/announcer/sentences/');
+const AUDIO_GAMESHOT = readFiles('public/audio/announcer/sentences/gameshot');
 
 function getClientIP(client) {
     var realIP = client.handshake.headers["x-real-ip"]
@@ -268,24 +280,35 @@ module.exports = (io, app) => {
                     }
                 });
 
+                function getNameAnnouncement(player) {
+                    const name = player.player.vocal_name === null ? player.player.first_name : player.player.vocal_name;
+                    const spokenName = AUDIO_NAMES[player.player.first_name.toLowerCase()];
+                    return spokenName ? randomAudio(spokenName, "names") : { text: `${name}` };
+                }
+
                 function announceScored(visit, matchType) {
-                    var score = visit.score;
-                    var text = `${score}`;
+                    const score = visit.score;
+                    let text = `${score}`;
                     if (visit.is_bust || (score === 0 && matchType === types.TIC_TAC_TOE)) {
                         text = 'Noscore';
                     }
-                    let audios = scoreFiles[text.toLowerCase()];
+                    let audios = AUDIO_SCORES[text.toLowerCase()];
                     if (audios) {
-                        audios = [ `/audio/announcer/scores/${audios[Math.floor(Math.random() * audios.length)]}` ];
+                        audios = [ randomAudio(audios, "scores") ];
                     }
                     announce(text, 'score', audios);
                 }
 
                 function announceScoreRemaining(player) {
-                    var score = player.current_score;
+                    const score = player.current_score;
                     if (score < 171 && ![169, 168, 166, 165, 163, 162, 159].includes(score)) {
-                        var name = player.player.vocal_name === null ? player.player.first_name : player.player.vocal_name;
-                        announce(`${name} you require ${score}`, 'remaining_score');
+                        const name = player.player.vocal_name === null ? player.player.first_name : player.player.vocal_name;
+                        const sentence = [
+                            getNameAnnouncement(player),
+                            randomAudio(AUDIO_SENTENCES["yourequire"], "sentences"),
+                            randomAudio(AUDIO_NUMBERS[score], "numbers")
+                        ];
+                        announce(`${name} you require ${score}`, 'remaining_score', sentence);
                     }
                 }
 
@@ -295,15 +318,29 @@ module.exports = (io, app) => {
                         name = player.player.vocal_name === null ? player.player.first_name : player.player.vocal_name;
                     }
                     const legNum = match.legs.length;
-                    const currentLeg = legNum - 1 + ["", "st", "nd", "rd", "th"][legNum > 4 ? 4 : legNum - 1];
                     if (match.is_finished) {
                         if (match.winner_id === null) {
-                            announce(`Game shot, in the ${currentLeg} leg, ${name}. The match a DRAW!!!`, 'game_shot');
+                            const currentLeg = legNum + ["", "st", "nd", "rd", "th"][legNum > 4 ? 4 : legNum];
+                            const sentence = [
+                                randomAudio(AUDIO_GAMESHOT[currentLeg], "sentences/gameshot"),
+                                getNameAnnouncement(player),
+                                randomAudio(AUDIO_SENTENCES["matchdraw"], "sentences")
+                            ];
+                            announce(`Game shot, in the ${currentLeg} leg, ${name}. The match a DRAW!!!`, 'game_shot', sentence);
                         } else {
-                            announce(`Game shot, AND THE MATCH!!!, ${name}!`, 'game_shot');
+                            const sentence = [
+                                randomAudio(AUDIO_SENTENCES["matchwon"], "sentences"),
+                                getNameAnnouncement(player)
+                            ];
+                            announce(`Game shot, AND THE MATCH!!!, ${name}!`, 'game_shot', sentence);
                         }
                     } else {
-                        announce(`Game shot in the ${currentLeg} leg!, ${name}!`, 'game_shot');
+                        const currentLeg = legNum - 1 + ["", "st", "nd", "rd", "th"][legNum > 4 ? 4 : legNum - 1];
+                        const sentence = [
+                            randomAudio(AUDIO_GAMESHOT[currentLeg], "sentences/gameshot"),
+                            getNameAnnouncement(player)
+                        ];
+                        announce(`Game shot in the ${currentLeg} leg!, ${name}!`, 'game_shot', sentence);
                     }
                 }
 
