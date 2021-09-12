@@ -16,6 +16,7 @@ module.exports = {
                 { id: types.BERMUDA_TRIANGLE, name: "Bermuda Triangle" },
                 { id: types.FOUR_TWENTY, name: "420" },
                 { id: types.KILL_BULL, name: "Kill Bull" },
+                { id: types.GOTCHA, name: "Gotcha" },
             ]
         }
     },

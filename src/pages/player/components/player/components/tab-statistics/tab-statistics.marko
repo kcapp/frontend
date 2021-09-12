@@ -100,6 +100,14 @@ $ var types = require('../../../../../../components/scorecard/components/match_t
                             <statistics-card label="Longest Streak" value=`${input.statistics.legs_played ? input.statistics.longest_streak : "-"}` icon="fas fa-arrow-up"/>
                         </td>
                     </else-if>
+                    <else-if(input.type == types.GOTCHA)>
+                        <td style="width: 25%;">
+                            <statistics-card label="Avg. Score" value=`${input.statistics.legs_played ? input.statistics.score : "-"}` icon="far fa-star"/>
+                        </td>
+                        <td style="width: 25%;">
+                            <statistics-card label="Others Reset" value=`${input.statistics.legs_played ? input.statistics.others_reset : "-"}` icon="fas fa-redo"/>
+                        </td>
+                    </else-if>
                     <else>
                         <div>TODO</div>
                     </else>
@@ -198,6 +206,13 @@ $ var types = require('../../../../../../components/scorecard/components/match_t
                     <th class="text-center">Marks 6</th>
                     <th class="text-center">Hit Rate</th>
                 </else-if>
+                <else-if(input.type == types.GOTCHA)>
+                    <th class="text-center">Score</th>
+                    <th class="text-center">Darts Thrown</th>
+                    <th class="text-center">Highest Score</th>
+                    <th class="text-center">Times Reset</th>
+                    <th class="text-center">Others Reset</th>
+                </else-if>
                 <th class="text-center"/>
             </tr>
         </thead>
@@ -291,6 +306,13 @@ $ var types = require('../../../../../../components/scorecard/components/match_t
                         <td class="text-center">${statistics.marks_5}</td>
                         <td class="text-center">${statistics.marks_6}</td>
                         <td class="text-center">${(statistics.total_hit_rate * 100).toFixed(2)}%</td>
+                    </else-if>
+                    <else-if(input.type == types.GOTCHA)>
+                        <td class="text-center">${statistics.score}</td>
+                        <td class="text-center">${statistics.darts_thrown}</td>
+                        <td class="text-center">${statistics.highest_score}</td>
+                        <td class="text-center">${statistics.times_reset}</td>
+                        <td class="text-center">${statistics.others_reset}</td>
                     </else-if>
                     <td>
                         <a href=`/legs/${history.id}/result`>

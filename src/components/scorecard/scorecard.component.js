@@ -1,19 +1,19 @@
 const alertify = require("../../util/alertify");
 
-var x01 = require("./components/x01");
-var shootout = require("./components/shootout");
-var cricket = require("./components/cricket");
-var dartsAtX = require("./components/darts_at_x");
-var aroundTheWorld = require("./components/around_the_world");
-var shanghai = require("./components/shanghai");
-var aroundTheClock = require("./components/around_the_clock");
-var ticTacToe = require('./components/tic_tac_toe');
-var bermudaTriangle = require('./components/bermuda_triangle');
-var fourTwenty = require('./components/four_twenty');
-var killBull = require('./components/kill_bull');
+const x01 = require("./components/x01");
+const shootout = require("./components/shootout");
+const cricket = require("./components/cricket");
+const dartsAtX = require("./components/darts_at_x");
+const aroundTheWorld = require("./components/around_the_world");
+const shanghai = require("./components/shanghai");
+const aroundTheClock = require("./components/around_the_clock");
+const ticTacToe = require('./components/tic_tac_toe');
+const bermudaTriangle = require('./components/bermuda_triangle');
+const fourTwenty = require('./components/four_twenty');
+const killBull = require('./components/kill_bull');
+const gotcha = require('./components/gotcha');
 
-var types = require("./components/match_types");
-
+const types = require("./components/match_types");
 
 const DART_CONTAINER_MAP = { 1: 'first', 2: 'second', 3: 'third' };
 
@@ -136,6 +136,9 @@ module.exports = {
                 case types.KILL_BULL:
                     killBull.removeLast.bind(this)(dart, external);
                     break;
+                case types.GOTCHA:
+                    gotcha.removeLast.bind(this)(dart, external);
+                    break;
             }
             dart.reset();
         } else {
@@ -182,6 +185,9 @@ module.exports = {
                     break;
                 case types.KILL_BULL:
                     submitting = killBull.confirmThrow.bind(this)(external);
+                    break;
+                case types.GOTCHA:
+                    submitting = gotcha.confirmThrow.bind(this)(external);
                     break;
             }
         }

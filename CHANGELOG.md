@@ -6,6 +6,7 @@ A preview of major changes can be found in the Wiki ([Latest Changes](https://gi
 #### Feature
 - Custom announcer for scores, match finishes, and more!
 - Added new game type `Kill Bull`
+- Added new game type `Gotcha`
 - Added support for stream of board for each player using external stream URLs
 - `Elo Changelog` page for player
 

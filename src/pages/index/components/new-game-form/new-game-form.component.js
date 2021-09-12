@@ -170,6 +170,10 @@ module.exports = {
             } else if (this.state.options.starting_score === 0) {
                 scoreComponent.state.index = scoreComponent.state.defaultValue;
                 scoreComponent.state.enabled = true;
+            } else if (this.state.options.game_type === types.GOTCHA) {
+                scoreComponent.updateOptions([ { id: 200, name: '200' }, { id: 300, name: '300' }, { id: 500, name: '500' } ]);
+                scoreComponent.state.index = 200;
+                scoreComponent.state.enabled = true;
             } else {
                 scoreComponent.state.index = scoreComponent.state.defaultValue;
                 scoreComponent.state.enabled = true;

@@ -24,7 +24,11 @@ function readFiles(src) {
 }
 
 function randomAudio(audios, path) {
-    return { file: `/audio/announcer/${path}/${audios[Math.floor(Math.random() * audios.length)]}` };
+    if (audios) {
+        return { file: `/audio/announcer/${path}/${audios[Math.floor(Math.random() * audios.length)]}` };
+    } else {
+        return { text: "" }
+    }
 }
 
 const AUDIO_SCORES = readFiles('public/audio/announcer/scores/');
@@ -34,7 +38,7 @@ const AUDIO_SENTENCES = readFiles('public/audio/announcer/sentences/');
 const AUDIO_GAMESHOT = readFiles('public/audio/announcer/sentences/gameshot');
 
 function getClientIP(client) {
-    var realIP = client.handshake.headers["x-real-ip"]
+    const realIP = client.handshake.headers["x-real-ip"]
     return realIP ? realIP : client.handshake.address;
 }
 
@@ -44,33 +48,37 @@ module.exports = (io, app) => {
     this.io = io;
     this.config = {
         emitMessage: (namespace, type, message) => {
-            var nsp = this.io.of(namespace);
+            const nsp = this.io.of(namespace);
             nsp.emit(type, message);
         },
         removeNamespace: (legId) => {
             if (legId === undefined) {
                 return;
             }
-            var namespace = `/legs/${legId}`;
+            const namespace = `/legs/${legId}`;
+
+            const nsp = io.of(namespace);
+            nsp.removeAllListeners();
+
             delete this.io._nsps[namespace];
             debug(`[${namespace}] removed`);
         },
         addNamespace: (namespace) => {
             if (this.io._nsps[namespace] === undefined) {
-                var nsp = this.io.of(namespace);
+                const nsp = this.io.of(namespace);
                 nsp.on('connection', function (client) {
-                    var ip = getClientIP(client);
+                    const ip = getClientIP(client);
                     debug(`[${namespace}] connection from ${ip}`);
                 });
                 debug(`[${namespace}] created`);
             }
         },
         setupVenueNamespace: (venueId) => {
-            var namespace = `/venue/${venueId}`;
+            const namespace = `/venue/${venueId}`;
             if (this.io._nsps[namespace] === undefined) {
-                var nsp = this.io.of(namespace);
+                const nsp = this.io.of(namespace);
                 nsp.on('connection', function (client) {
-                    var ip = getClientIP(client);
+                    const ip = getClientIP(client);
                     debug("Client %s connected to '%s'", ip, namespace);
 
                     client.on('get_next_match', function () {
@@ -84,49 +92,49 @@ module.exports = (io, app) => {
             if (legId === undefined) {
                 return;
             }
-            var namespace = `/legs/${legId}`;
+            const namespace = `/legs/${legId}`;
             if (this.io._nsps[namespace] === undefined) {
-                var nsp = this.io.of(namespace);
+                const nsp = this.io.of(namespace);
 
                 // To not spam the API with too many requests, we add a short limit to the requests here
                 limiter.schedule(() => {
                     axios.get(`${app.locals.kcapp.api}/leg/${legId}/players`)
                         .then((response) => {
-                            var legPlayers = response.data;
-                            for (var id in legPlayers) {
-                                var player = legPlayers[id].player;
+                            const legPlayers = response.data;
+                            for (let id in legPlayers) {
+                                const player = legPlayers[id].player;
                                 if (player.is_bot) {
                                     // TODO Make sure this works correctly
                                     debug(`[${legId}] Adding bot ${player.id}/${player.name}`);
-                                    var config = legPlayers[id].bot_config;
-                                    var bot = require('kcapp-bot/kcapp-bot')(player.id, "localhost", 3000);
+                                    const config = legPlayers[id].bot_config;
+                                    const bot = require('kcapp-bot/kcapp-bot')(player.id, "localhost", 3000);
                                     if (config && config.skill_level === 0) {
                                         bot.replayLeg(legId, config.player_id);
                                     } else {
-                                        var botSkill = config ? skill.fromInt(config.skill_level) : skill.MEDIUM;
+                                        const botSkill = config ? skill.fromInt(config.skill_level) : skill.MEDIUM;
                                         bot.playLeg(legId, botSkill);
                                     }
                                 }
                             }
                         }).catch(error => {
-                            var message = `${error.message} (${error})`;
+                            const message = `${error.message} (${error})`;
                             debug(`[${legId}] Error when getting players for leg: ${message}`);
                         });
                 });
 
                 nsp.on('connection', function (client) {
-                    var ip = getClientIP(client);
+                    const ip = getClientIP(client);
                     log('connection', namespace);
                     client.on('join', function () {
                         axios.all([
                             axios.get(`${app.locals.kcapp.api}/leg/${legId}`),
                             axios.get(`${app.locals.kcapp.api}/leg/${legId}/players`)
                         ]).then(axios.spread((legData, playersData) => {
-                            var leg = legData.data;
-                            var players = playersData.data;
+                            const leg = legData.data;
+                            const players = playersData.data;
                             client.emit('connected', { leg: leg, players: players });
                         })).catch(error => {
-                            var message = `${error.message}(${error})`;
+                            const message = `${error.message}(${error})`;
                             debug(`[${legId}] Error when getting leg: ${message}`);
                             nsp.emit('error', { message: error.message, code: error.code });
                         });
@@ -159,7 +167,7 @@ module.exports = (io, app) => {
 
                     client.on('chat_message', function (data) {
                         log('chat_message', data);
-                        var message = `[${moment().format('HH:mm')}] ${ip}: ${data}\r\n`;
+                        const message = `[${moment().format('HH:mm')}] ${ip}: ${data}\r\n`;
                         chatHistory.push(message);
                         nsp.emit('chat_message', message);
                     });
@@ -188,7 +196,7 @@ module.exports = (io, app) => {
                     });
 
                     client.on('throw', function (data) {
-                        var body = JSON.parse(data);
+                        const body = JSON.parse(data);
                         log('throw', data);
                         axios.post(`${app.locals.kcapp.api}/visit`, body)
                             .then((response) => {
@@ -197,17 +205,17 @@ module.exports = (io, app) => {
                                     axios.get(`${app.locals.kcapp.api}/leg/${body.leg_id}/players`),
                                     axios.get(`${app.locals.kcapp.api}/statistics/global/fnc`)
                                 ]).then(axios.spread((legData, playersData, globalData) => {
-                                    var leg = legData.data;
-                                    var players = playersData.data;
-                                    var currentPlayer = _.findWhere(players, { is_current_player: true });
-                                    var globalstat = globalData.data[0];
+                                    const leg = legData.data;
+                                    const players = playersData.data;
+                                    const currentPlayer = _.findWhere(players, { is_current_player: true });
+                                    const globalstat = globalData.data[0];
 
                                     axios.get(`${app.locals.kcapp.api}/match/${leg.match_id}`)
                                         .then((response) => {
-                                            var match = response.data;
+                                            const match = response.data;
 
                                             if (leg.is_finished) {
-                                                var winnerPlayer = _.findWhere(players, { player_id: leg.winner_player_id });
+                                                const winnerPlayer = _.findWhere(players, { player_id: leg.winner_player_id });
                                                 announceLegFinished(winnerPlayer, match)
 
                                                 if (!match.is_finished) {
@@ -219,6 +227,7 @@ module.exports = (io, app) => {
                                                 _this.io.of('/active').emit('leg_finished', { leg: leg, match: match, throw: body });
                                                 nsp.emit('score_update', { leg: leg, players: players, match: match });
                                                 nsp.emit('leg_finished', { leg: leg, match: match, throw: body });
+                                                _this.config.removeNamespace(leg.id);
                                             } else {
                                                 if (leg.visits.length === 1) {
                                                     _this.io.of('/active').emit('first_throw', { leg: leg, players: players, globalstat: globalstat });
@@ -231,18 +240,18 @@ module.exports = (io, app) => {
                                                 nsp.emit('score_update', { leg: leg, players: players, globalstat: globalstat });
                                             }
                                         }).catch(error => {
-                                            var message = `${error.message}(${error})`;
+                                            const message = `${error.message}(${error})`;
                                             debug(`[${legId}] Error when getting match: ${message}`);
                                             nsp.emit('error', { message: error.message, code: error.code });
                                         });
                                 })).catch(error => {
-                                    var message = `${error.message} (${error})`;
+                                    const message = `${error.message} (${error})`;
                                     debug(`[${legId}] Error when getting leg: ${message}`);
                                     nsp.emit('error', { message: error.message, code: error.code });
                                 });
                             }).catch(error => {
-                                var message = error.response.data.trim();
-                                var status = error.response.status;
+                                const message = error.response.data.trim();
+                                const status = error.response.status;
                                 debug(`[${legId}] Error when adding visit: (${status}) ${message}`);
                                 nsp.emit('error', { message: message, code: status });
                             });
@@ -260,12 +269,12 @@ module.exports = (io, app) => {
                                     nsp.emit('undo_visit', {});
                                     nsp.emit('score_update', { leg: leg.data, players: players.data, globalstat: globalstat.data[0], is_undo: true });
                                 })).catch(error => {
-                                    var message = `${error.message}(${error.response.data.trim()})`;
+                                    const message = `${error.message}(${error.response.data.trim()})`;
                                     debug(`[${legId}] Error when getting leg: ${message}`);
                                     nsp.emit('error', { message: error.message, code: error.code });
                                 });
                             }).catch(error => {
-                                var message = `${error.message}(${error.response.data.trim()})`;
+                                const message = `${error.message}(${error.response.data.trim()})`;
                                 debug(`[${legId}] Error when undoing visit: ${message}`);
                                 nsp.emit('error', { message: message, code: error.code });
                             });
@@ -282,7 +291,7 @@ module.exports = (io, app) => {
 
                 function getNameAnnouncement(player) {
                     const name = player.player.vocal_name === null ? player.player.first_name : player.player.vocal_name;
-                    const spokenName = AUDIO_NAMES[player.player.first_name.toLowerCase()];
+                    const spokenName = player.player.vocal_name.includes(".wav") ? AUDIO_NAMES[player.player.first_name.toLowerCase()] : undefined;
                     return spokenName ? randomAudio(spokenName, "names") : { text: `${name}` };
                 }
 
@@ -313,7 +322,7 @@ module.exports = (io, app) => {
                 }
 
                 function announceLegFinished(player, match) {
-                    var name = "DRAW";
+                    let name = "DRAW";
                     if (player) {
                         name = player.player.vocal_name === null ? player.player.first_name : player.player.vocal_name;
                     }
@@ -345,7 +354,7 @@ module.exports = (io, app) => {
                 }
 
                 function announce(text, type, audios) {
-                    var data = { text: text, type: type, audios: audios }
+                    const data = { text: text, type: type, audios: audios }
                     debug(`[${legId}] say ${JSON.stringify(data)}`);
                     nsp.emit('say', data);
                 }

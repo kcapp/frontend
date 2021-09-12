@@ -5,7 +5,7 @@ var speaker = require('./speaker');
 var types = require('../components/scorecard/components/match_types');
 
 exports.connect = (url) => {
-    var socket = io(url);
+    const socket = io(url);
 
     socket.on('connect', (data) => {
         socket.emit('join', 'Client Connecting');
@@ -14,7 +14,6 @@ exports.connect = (url) => {
     socket.on('error', (data) => {
         console.log(data);
     });
-
     return socket;
 }
 

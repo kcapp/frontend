@@ -10,6 +10,7 @@ exports.TIC_TAC_TOE = 9;
 exports.BERMUDA_TRIANGLE = 10;
 exports.FOUR_TWENTY = 11;
 exports.KILL_BULL = 12;
+exports.GOTCHA = 13;
 
 exports.OUTSHOT_DOUBLE = 1;
 exports.OUTSHOT_MASTER = 2;
