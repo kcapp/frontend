@@ -40,16 +40,17 @@ module.exports = {
         socket.on('say', this.onSay.bind(this));
         socket.on('announce', io.onAnnounce.bind(this));
         socket.on('leg_finished', (data) => {
-            setTimeout(() => {
-                // Wait until moving forward so we get leg finished announcement
-                var match = data.match;
+            socket.on('say_finish', () => {
+                // Wait for announcement to finish before moving on
+                const match = data.match;
                 if (match.is_finished) {
                     location.href = `${window.location.origin}/matches/${match.id}/result`;
                 } else {
                     location.href = `${window.location.origin}/legs/${match.current_leg_id}`;
                 }
-            }, 5000);
+            });
         });
+
         socket.on('error', this.onError.bind(this));
         this.state.socket = socket;
         this.state.audioAnnouncer = new Audio();

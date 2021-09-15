@@ -94,6 +94,13 @@ exports.say = (data, thiz) => {
                 current.onend = () => {
                     next.play();
                 };
+            } else {
+                current.addEventListener("ended", () => {
+                    thiz.state.socket.emit("speak_finish");
+                }, false);
+                current.onend = () => {
+                    thiz.state.socket.emit("speak_finish");
+                };
             }
         }
 
@@ -108,11 +115,15 @@ exports.say = (data, thiz) => {
     } else {
         if (isAudioAnnouncement) {
             oldPlayer.addEventListener("ended", () => {
-                speaker.speak(data);
+                speaker.speak(data, () => {
+                    thiz.state.socket.emit("speak_finish");
+                });
             }, false);
         }
         else {
-            speaker.speak(data);
+            speaker.speak(data, () => {
+                thiz.state.socket.emit("speak_finish");
+            });
         }
     }
 }

@@ -203,6 +203,10 @@ module.exports = (io, app) => {
                         });
                     });
 
+                    client.on('speak_finish', function (data) {
+                        nsp.emit('say_finish');
+                    });
+
                     client.on('throw', function (data) {
                         const body = JSON.parse(data);
                         log('throw', data);
@@ -235,7 +239,10 @@ module.exports = (io, app) => {
                                                 _this.io.of('/active').emit('leg_finished', { leg: leg, match: match, throw: body });
                                                 nsp.emit('score_update', { leg: leg, players: players, match: match });
                                                 nsp.emit('leg_finished', { leg: leg, match: match, throw: body });
-                                                _this.config.removeNamespace(leg.id);
+                                                setTimeout(() => {
+                                                    // Remove the namespace in a bit, once announcements are finished
+                                                    _this.config.removeNamespace(leg.id);
+                                                }, 15000);
                                             } else {
                                                 if (leg.visits.length === 1) {
                                                     _this.io.of('/active').emit('first_throw', { leg: leg, players: players, globalstat: globalstat });
