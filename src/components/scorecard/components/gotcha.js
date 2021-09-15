@@ -11,10 +11,8 @@ exports.removeLast = function(dart, external) {
         if (player.player_id === this.state.player.player_id) {
             continue;
         }
-        if (player.current_score === this.state.player.current_score) {
-            player.current_score = player.previous_score;
-            this.emit('score-change', player.previous_score, player.player_id);
-        }
+        player.current_score = player.previous_score ? player.previous_score : player.current_score;
+        this.emit('score-change', player.previous_score, player.player_id);
     }
 
     if (!external) {

@@ -1,5 +1,3 @@
-
-
 module.exports = {
     getSuggestion(score) {
         switch (score) {

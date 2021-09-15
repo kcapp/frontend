@@ -197,6 +197,38 @@ $ var cricket = require("./components/cricket");
           </td>
         </tr>
       </if>
+      <if(state.type === types.GOTCHA)>
+        <tr>
+          <td colspan="3">
+            <table id='table-gotcha' class='table-striped'>
+              <thead>
+                <tr>
+                  <th class="text-center">Player</th>
+                  <th class="text-center">Score to Reset</th>
+                </tr>
+              </thead>
+              <tbody>
+                <for|player| of=state.players>
+                  <if(player.player_id !== state.playerId)>
+                    <tr>
+                      <td class="text-center" style="font-size: 1.5em;">${player.player.first_name}</td>
+                      <td class="text-center" style="font-size: 1.5em;">
+                        $ var score = player.current_score - state.player.current_score;
+                        <if(score > 0)>
+                          ${score}
+                        </if>
+                        <else>
+                          -
+                        </else>
+                      </td>
+                    </tr>
+                  </if>
+                </for>
+              </tbody>
+            </table>
+          </td>
+        </tr>
+      </if>
     </tbody>
   </table>
 </td>
