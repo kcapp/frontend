@@ -61,10 +61,9 @@ module.exports = {
             document.getElementById('change-player-order').click();
         } else {
             if (this.input.leg.visits.length === 0) {
-                var currentPlayer = this.input.players[this.input.leg.current_player_id];
-                var name = currentPlayer.vocal_name ? currentPlayer.vocal_name : currentPlayer.first_name;
+                const currentPlayer = this.input.players[this.input.leg.current_player_id];
                 setTimeout(() => {
-                    socket.emit('speak', { text: `${this.input.match.current_leg_num} leg, ${name} to throw first. Game on!`, type: 'leg_start' });
+                    socket.emit('announce', { leg_num: this.input.match.current_leg_num, player: currentPlayer, type: 'match_start' });
                 }, 900);
             }
         }
