@@ -1,8 +1,8 @@
-var _ = require("underscore");
-var io = require('socket.io-client');
-var alertify = require('./alertify');
-var speaker = require('./speaker');
-var types = require('../components/scorecard/components/match_types');
+const _ = require("underscore");
+const io = require('socket.io-client');
+const alertify = require('./alertify');
+const speaker = require('./speaker');
+const types = require('../components/scorecard/components/match_types');
 
 exports.connect = (url) => {
     const socket = io(url);

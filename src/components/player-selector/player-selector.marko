@@ -41,9 +41,8 @@ style {
         padding-bottom: 10px;
     }
 }
-$ var types = require("../scorecard/components/match_types.js")
-
-$ var player = input.player;
+$ const types = require("../scorecard/components/match_types.js")
+$ const player = input.player;
 <div>
   <input class="form-check-input" type="checkbox" value=player.id/>
   <label class="player-name-label form-check-label btn btn-primary" on-click('handlePlayerClick')>${player.name}</label>

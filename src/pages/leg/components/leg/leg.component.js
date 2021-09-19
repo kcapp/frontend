@@ -1,9 +1,10 @@
-var _ = require("underscore");
-var moment = require('moment');
-var io = require('../../../../util/socket.io-helper.js');
-var alertify = require("../../../../util/alertify");
-var types = require('../../../../components/scorecard/components/match_types');
-var { v4: uuidv4 } = require('uuid');
+const _ = require("underscore");
+const moment = require('moment');
+const io = require('../../../../util/socket.io-helper.js');
+const alertify = require('../../../../util/alertify.js');
+const localStorage = require('../../../../util/localstorage.js');
+const types = require('../../../../components/scorecard/components/match_types');
+const { v4: uuidv4 } = require('uuid');
 
 module.exports = {
     onCreate(input) {
@@ -40,6 +41,10 @@ module.exports = {
         socket.on('say', this.onSay.bind(this));
         socket.on('announce', io.onAnnounce.bind(this));
         socket.on('leg_finished', (data) => {
+            if (localStorage.get('controller')) {
+                // If this is a controller, forward back to start page
+                location.href = '/controller';
+            }
             socket.on('say_finish', () => {
                 // Wait for announcement to finish before moving on
                 const match = data.match;

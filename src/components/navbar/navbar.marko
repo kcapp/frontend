@@ -8,7 +8,7 @@
           <span class="icon-bar"/>
           <span class="icon-bar"/>
         </button>
-        <a class="navbar-brand" href="/">Darts Scorer</a>
+        <a class="navbar-brand" href=`${state.homePage}`>Darts Scorer</a>
       </div>
       <div class="navbar-collapse collapse" id="navbar">
         <ul class="nav navbar-nav">
@@ -31,6 +31,13 @@
             <a href="/matches">Matches</a>
           </li>
         </ul>
+        <if(state.isController)>
+          <ul class="nav navbar-nav" style="float: right;">
+            <li>
+              <a href="/controller" style="font-weight: 800;">New Match</a>
+            </li>
+          </ul>
+        </if>
       </div>
     </div>
   </div>

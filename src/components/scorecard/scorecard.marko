@@ -211,8 +211,8 @@ $ var cricket = require("./components/cricket");
                 <for|player| of=state.players>
                   <if(player.player_id !== state.playerId)>
                     <tr>
-                      <td class="text-center" style="font-size: 1.5em;">${player.player.first_name}</td>
-                      <td class="text-center" style="font-size: 1.5em;">
+                      <td class="text-center target-text-gotcha">${player.player.first_name}</td>
+                      <td class="text-center target-text-gotcha">
                         $ var score = player.current_score - state.player.current_score;
                         <if(score > 0)>
                           ${score}
@@ -224,6 +224,10 @@ $ var cricket = require("./components/cricket");
                     </tr>
                   </if>
                 </for>
+                <tr>
+                  <td class="text-center target-text-gotcha" style="font-weight: 600">Remaining</td>
+                  <td class="text-center target-text-gotcha" style="font-weight: 600">${input.leg.starting_score - state.player.current_score}</td>
+                </tr>
               </tbody>
             </table>
           </td>

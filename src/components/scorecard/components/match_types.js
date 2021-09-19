@@ -58,3 +58,20 @@ exports.TARGET_FOUR_TWENTY = [
     { label: "D5", value: 5, multipliers: [ 2 ] },
     { label: "D20", value: 20, multipliers: [ 2 ] },
     { label: "Double Bull", value: 25, multipliers: [ 2 ] } ];
+
+exports.SCORES_x01 = [ { id: 301, name: '301' }, { id: 501, name: '501' }, { id: 701, name: '701' } ];
+exports.SCORES_TIC_TAC_TOE = [
+    { id: 0, name: '+0' }, { id: 10, name: '+10' },
+    { id: 20, name: '+20' }, { id: 25, name: '+25' }, { id: 30, name: '+30' },
+    { id: 40, name: '+40' }, { id: 50, name: '+50' } ];
+exports.SCORES_DARTS_AT_X = [
+        { id: 20, name: 20 },  { id: 19, name: 19 }, { id: 18, name: 18 }, { id: 17, name: 17 },
+        { id: 16, name: 16 }, { id: 15, name: 15 }, { id: 14, name: 14 }, { id: 13, name: 13 },
+        { id: 12, name: 12 }, { id: 11, name: 11 }, { id: 10, name: 10 }, { id: 9, name: 9 },
+        { id: 8, name: 8 }, { id: 7, name: 7 }, { id: 6, name: 6 }, { id: 5, name: 5 },
+        { id: 4, name: 4 }, { id: 3, name: 3 }, { id: 2, name: 2 }, { id: 1, name: 1 }, { id: 25, name: 'Bull' } ];
+exports.SCORES_GOTCHA = [ { id: 200, name: '200' }, { id: 300, name: '300' }, { id: 500, name: '500' } ];
+exports.SCORES_KILL_BULL = [
+    { id: 150, name: '150' }, { id: 200, name: '200' },
+    { id: 250, name: '250' }, { id: 300, name: '300' }, { id: 500, name: '500' } ];
+exports.SCORES_FOUR_TWENTY = [ { id: 420, name: 420 } ];

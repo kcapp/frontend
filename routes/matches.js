@@ -194,7 +194,7 @@ router.get('/:id/spectate/compact', function (req, res, next) {
     });
 });
 
-/* Render the leg view */
+/* Render the match obs view */
 router.get('/:id/obs', function (req, res, next) {
     axios.all([
         axios.get(`${req.app.locals.kcapp.api}/player`),

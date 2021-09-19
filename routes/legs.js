@@ -47,6 +47,7 @@ router.get('/:id/beta', function (req, res, next) {
     });
 });
 
+/* Render the leg view */
 router.get('/:id', function (req, res, next) {
     axios.all([
         axios.get(`${req.app.locals.kcapp.api}/player`),
@@ -54,10 +55,10 @@ router.get('/:id', function (req, res, next) {
         axios.get(`${req.app.locals.kcapp.api}/leg/${req.params.id}/players`),
         axios.get(`${req.app.locals.kcapp.api}/statistics/global`)
     ]).then(axios.spread((players, legResponse, legPlayers, globalStatistics) => {
-        var leg = legResponse.data;
+        const leg = legResponse.data;
         axios.get(`${req.app.locals.kcapp.api}/match/${leg.match_id}`)
             .then(response => {
-                var match = response.data;
+                const match = response.data;
                 // Sort players based on order
                 legPlayers = _.sortBy(legPlayers.data, (player) => player.order)
                 res.marko(x01InputTemplate, {

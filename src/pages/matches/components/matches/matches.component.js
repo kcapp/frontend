@@ -1,7 +1,6 @@
 module.exports = {
     onMount() {
-        // TODO Improve this to not use jquery twbsPagination
-        document.write('<script type="text/javascript" src="javascripts/jquery.twbsPagination-1.4.1.min.js"><\/script>');
+        document.write('<script type="text/javascript" src="/javascripts/jquery.twbsPagination-1.4.1.min.js"><\/script>');
 
         var total = this.input.total_pages;
         var currentPage = parseInt(this.input.page_num);

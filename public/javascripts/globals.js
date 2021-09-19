@@ -9,3 +9,13 @@ document.addEventListener("keydown", (event) => {
         location.href = "/";
     }
 });
+
+window.onload = () => {
+    const isController = localStorage.getItem("kcapp:controller");
+    if (isController && !location.href.includes('screensaver')) {
+        // Forward controller to screensaver
+        setTimeout(() => {
+            location.href = "/screensaver";
+        }, 10*60*1000);
+    }
+}

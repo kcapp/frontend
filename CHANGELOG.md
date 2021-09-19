@@ -9,6 +9,7 @@ A preview of major changes can be found in the Wiki ([Latest Changes](https://gi
 - Added new game type `Gotcha`
 - Added support for stream of board for each player using external stream URLs
 - `Elo Changelog` page for player
+- New `Controller` page optimized for tablets for easier starting of matches
 
 #### Changed
 - Added `Outshot Type` and `Tic-Tac-Toe` board to Spectate page

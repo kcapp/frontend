@@ -1,8 +1,8 @@
-var _ = require("underscore");
+const _ = require("underscore");
 
 module.exports = {
     onCreate(input) {
-        var columns = {
+        let columns = {
             start_time: true, status: true, venue: true, office: true,
             type: true, mode: true, players: true, results: true, options: true
         }
