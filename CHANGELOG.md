@@ -2,7 +2,7 @@
 
 A preview of major changes can be found in the Wiki ([Latest Changes](https://github.com/kcapp/frontend/wiki/Latest_Changes))
 
-## [unreleased] - TBD
+## [2.0.0] - 2021-09-19
 #### Feature
 - Custom announcer for scores, match finishes, and more!
 - Added new game type `Kill Bull`
@@ -68,7 +68,7 @@ A preview of major changes can be found in the Wiki ([Latest Changes](https://gi
     - Including [Unicorn Smartboard](https://github.com/kcapp/smartboard)
 
 
-[unreleased]: https://github.com/kcapp/frontend/compare/v1.2.0...develop
+[2.0.0]: https://github.com/kcapp/frontend/compare/v1.2.0...v2.0.0
 [1.2.0]: https://github.com/kcapp/frontend/compare/v1.1.0...v1.2.0
 [1.1.0]: https://github.com/kcapp/frontend/compare/v1.0.0...v1.1.0
 [1.0.0]: https://github.com/kcapp/frontend/releases/tag/v1.0.0
