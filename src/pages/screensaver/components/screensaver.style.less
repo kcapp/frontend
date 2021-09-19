@@ -1,0 +1,38 @@
+// https://codepen.io/scottkellum/pen/BoZvjR
+@size: 200px;
+
+html {
+  height: 100%;
+  overflow: hidden;
+}
+
+body {
+  height: 100%;
+  margin: 0;
+  background: black;
+}
+
+img, div {
+  width: @size;
+  height: @size;
+}
+
+.x {
+  animation: x 33s linear infinite alternate;
+}
+
+.y {
+  animation: y 27s linear infinite alternate;
+}
+
+@keyframes x {
+  100% {
+    transform: translateX( calc(100vw - @size) );
+  }
+}
+
+@keyframes y {
+  100% {
+    transform: translateY( calc(100vh - @size) );
+  }
+}

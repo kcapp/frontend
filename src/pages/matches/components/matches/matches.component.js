@@ -1,6 +1,5 @@
 module.exports = {
     onMount() {
-        // TODO Improve this to not use jquery twbsPagination
         document.write('<script type="text/javascript" src="/javascripts/jquery.twbsPagination-1.4.1.min.js"><\/script>');
 
         var total = this.input.total_pages;
@@ -15,7 +14,7 @@ module.exports = {
                 prevText: '<span aria-hidden="true">&laquo;</span>',
                 nextText: '<span aria-hidden="true">&raquo;</span>',
                 onPageClick: function (event, page) {
-                    location.href = '/matches/page/' + page;
+                    location.href = `/matches/page/${page}`;
                 }
             });
         });

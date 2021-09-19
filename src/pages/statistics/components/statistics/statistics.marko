@@ -80,6 +80,12 @@ $ var types = require('../../../../components/scorecard/components/match_types')
 <else-if(state.type == types.FOUR_TWENTY)>
   <statistics-table-420 statistics=state.statistics players=input.players />
 </else-if>
+<else-if(state.type == types.KILL_BULL)>
+  <statistics-table-kill-bull statistics=state.statistics players=input.players />
+</else-if>
+<else-if(state.type == types.GOTCHA)>
+  <statistics-table-gotcha statistics=state.statistics players=input.players />
+</else-if>
 <else-if(state.type == state.GLOBAL)>
   <statistics-table-global statistics=state.statistics players=input.players/>
 </else-if>

@@ -1,11 +1,11 @@
-var _ = require("underscore");
-var io = require('socket.io-client');
-var alertify = require('./alertify');
-var speaker = require('./speaker');
-var types = require('../components/scorecard/components/match_types');
+const _ = require("underscore");
+const io = require('socket.io-client');
+const alertify = require('./alertify');
+const speaker = require('./speaker');
+const types = require('../components/scorecard/components/match_types');
 
 exports.connect = (url) => {
-    var socket = io(url);
+    const socket = io(url);
 
     socket.on('connect', (data) => {
         socket.emit('join', 'Client Connecting');
@@ -14,7 +14,6 @@ exports.connect = (url) => {
     socket.on('error', (data) => {
         console.log(data);
     });
-
     return socket;
 }
 
@@ -46,7 +45,7 @@ exports.onScoreUpdate = (data, thiz) => {
         component.state.player = player;
         component.state.players = players;
 
-        var headerComponent = thiz.getComponent('player-' + player.player_id);
+        var headerComponent = thiz.getComponent(`player-${player.player_id}`);
         headerComponent.state.player = player;
         headerComponent.state.isCurrentPlayer = player.player_id === leg.current_player_id;
 
@@ -74,26 +73,57 @@ exports.onScoreUpdate = (data, thiz) => {
 exports.say = (data, thiz) => {
     // Check if an audio clip is currently playing, if it is we don't want to wait until it is finished, before saying anything else
     if ((thiz.state.type !== types.X01 && thiz.state.type !== types.X01HANDICAP) && data.type === 'remaining_score') {
-        // Skip announcement of remaining score for 9 Dart Shootout and Cricket
+        // Skip announcement of remaining score for non-x01 game types
         return;
     }
-
-    var oldPlayer = thiz.state.audioAnnouncer;
-    var isAudioAnnouncement = (oldPlayer.duration > 0 && !oldPlayer.paused);
-    if (data.type === 'score' && ['100', '140', '180'].includes(data.text)) {
-        var newPlayer = new Audio('/audio/' + data.text + '.mp3');
-        if (isAudioAnnouncement) {
-            oldPlayer.addEventListener("ended", () => { newPlayer.play(); }, false);
-        } else {
-            newPlayer.play();
+    const oldPlayer = thiz.state.audioAnnouncer;
+    const isAudioAnnouncement = (oldPlayer.duration > 0 && !oldPlayer.paused) || (!isNaN(oldPlayer.duration) && !oldPlayer.ended && oldPlayer.paused);
+    if (data.audios) {
+        const audioPlayers = [ ];
+        for (const file of data.audios) {
+            audioPlayers.push(file.file ? new Audio(file.file) : speaker.getUtterance(file));
         }
-        thiz.state.audioAnnouncer = newPlayer;
+
+        for (let i = 0; i < audioPlayers.length; i++) {
+            const current = audioPlayers[i];
+            const next = audioPlayers[i + 1];
+            if (next) {
+                current.addEventListener("ended", () => {
+                    next.play();
+                }, false);
+                current.onend = () => {
+                    next.play();
+                };
+            } else {
+                current.addEventListener("ended", () => {
+                    thiz.state.socket.emit("speak_finish");
+                }, false);
+                current.onend = () => {
+                    thiz.state.socket.emit("speak_finish");
+                };
+            }
+        }
+
+        if (isAudioAnnouncement) {
+            oldPlayer.addEventListener("ended", () => {
+                audioPlayers[0].play();
+            });
+        } else {
+            audioPlayers[0].play();
+        }
+        thiz.state.audioAnnouncer = audioPlayers[audioPlayers.length - 1];
     } else {
         if (isAudioAnnouncement) {
-            oldPlayer.addEventListener("ended", () => { speaker.speak(data); }, false);
+            oldPlayer.addEventListener("ended", () => {
+                speaker.speak(data, () => {
+                    thiz.state.socket.emit("speak_finish");
+                });
+            }, false);
         }
         else {
-            speaker.speak(data);
+            speaker.speak(data, () => {
+                thiz.state.socket.emit("speak_finish");
+            });
         }
     }
 }
@@ -130,7 +160,7 @@ exports.onPossibleThrow = function (data, thiz) {
         component.state.totalScore += data.score * data.multiplier;
 
         // Update player score
-        var header = thiz.getComponent('player-' + data.current_player_id);
+        var header = thiz.getComponent(`player-${data.current_player_id}`);
         if (thiz.state.type == types.SHOOTOUT) {
             header.state.player.current_score += (data.score * data.multiplier);
         } else {
@@ -139,6 +169,10 @@ exports.onPossibleThrow = function (data, thiz) {
         }
         header.setStateDirty('player');
     } else {
+        if (type == types.TIC_TAC_TOE) {
+            thiz.getComponent("tic-tac-toe-board").updateBoard(data.score, data.multiplier, data.is_undo);
+        }
+
         if (data.is_undo) {
             component.removeLast(true);
         } else {

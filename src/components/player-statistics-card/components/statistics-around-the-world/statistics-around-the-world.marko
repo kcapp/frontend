@@ -23,14 +23,15 @@ $ var player = input.player;
         <tr>
           <for|i| from=1 to=3>
             $ num = 3 * (row - 1) + i;
-            <score-pill text=`${num}s` value=`${(statistic.hitrates[num] * 100).toFixed(2)} %`/>
+            <if(num === 21)>
+              <score-pill text=`Bull` value=`${(statistic.hitrates[25] * 100).toFixed(2)} %`/>
+            </if>
+            <else>
+              <score-pill text=`${num}` value=`${(statistic.hitrates[num] * 100).toFixed(2)} %`/>
+            </else>
           </for>
         </tr>
       </for>
-      <tr>
-          <td/>
-          <score-pill text="Bulls" value=`${(statistic.hitrates[25] * 100).toFixed(2)} %`/>
-      </tr>
     </table>
 
     <if(input.isWinner)>

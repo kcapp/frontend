@@ -1,0 +1,56 @@
+<div class="block-container no-padding no-border">
+    <div style='padding-top: 10px;'>
+        <table style="width: 100%;">
+            <td style="width: 25%;">
+                <statistics-card label="Current" value=`${input.player.current_elo}` icon="fas fa-sort-amount-up-alt"/>
+            </td>
+            <td style="width: 25%;">
+                <statistics-card label="Tournament" value=`${input.player.tournament_elo}` icon="fas fa-sort-amount-up-alt"/>
+            </td>
+        </table>
+    </div>
+
+    <div class="block-container">
+        <canvas id="canvas-elo-changes"/>
+    </div>
+
+    <div class="float-right">
+        <ul class="sync-pagination" style="padding: 0; margin: 0;"/>
+    </div>
+    <table id="table-player-elo-changelog">
+        <thead>
+            <tr>
+                <th class="text-center">Finished</th>
+                <th class="text-center">Type</th>
+                <th class="text-center">Mode</th>
+                <th class="text-center">Players</th>
+                <th class="text-center"/>
+            </tr>
+        </thead>
+        <tbody>
+            <for|changelog| of=state.changelog>
+                $ var home = changelog.home_player;
+                $ var away = changelog.away_player;
+                <tr>
+                    <td class="text-left">
+                        <if(changelog.is_official)>
+                            <status-label type="label-warning" text="Official"/>
+                        </if>
+                        <div style={ 'white-space': 'nowrap', 'overflow': 'hidden' }>${changelog.finished_at}</div>
+                    </td>
+                    <td class="text-center">${changelog.match_type}</td>
+                    <td class="text-center">${changelog.match_mode}</td>
+                    <td class="text-center">
+                        <player-elo player=home players=input.players winner_id=changelog.winner_id side='left' />
+                        <player-elo player=away players=input.players winner_id=changelog.winner_id side='right' />
+                    </td>
+                    <td>
+                        <a href=`/matches/${changelog.match_id}/result`>
+                            <i class=`fas fa-eye fas-option-button` data-toggle="tooltip" data-placement="top" title=`View`/>
+                        </a>
+                    </td>
+                </tr>
+            </for>
+        </tbody>
+    </table>
+</div>

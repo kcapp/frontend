@@ -2,15 +2,6 @@ $ var player1 = input.player1;
 $ var player2 = input.player2;
 $ var head2head = input.head2head;
 
-/*block scripts
-    script.
-        $(function () {
-            $('.table-player-form td').click(function () {
-                location.href = '/matches/' + $(this).data('match-id') + '/result';
-            });
-        });
-*/
-
 <div class="pt-20"></div>
 <div class="block-container">
     <table style="width: 100%;">
@@ -34,7 +25,7 @@ $ var head2head = input.head2head;
     <table class="table-vs">
         <tr>
             <td></td>
-            <td>Matches</td>
+            <td><strong>Matches</strong></td>
             <td></td>
         </tr>
         <tr>
@@ -54,7 +45,7 @@ $ var head2head = input.head2head;
         </tr>
         <tr>
             <td></td>
-            <td>Legs</td>
+            <td><strong>Legs</strong></td>
             <td></td>
         </tr>
         <tr>
@@ -170,13 +161,13 @@ $ var head2head = input.head2head;
                 <tr>
                     <td>
                         <if(p1checkouts[round].completed)>
-                            <visit-container visits=p1checkouts[round].visits round=round/>
+                            <visit-container visit=p1checkouts[round].visits[0] round=round/>
                         </if>
                     </td>
                     <td></td>
                     <td>
                         <if(p2checkouts[round].completed)>
-                            <visit-container visits=p2checkouts[round].visits round=round/>
+                            <visit-container visit=p2checkouts[round].visits[0] round=round/>
                         </if>
                     </td>
                 </tr>

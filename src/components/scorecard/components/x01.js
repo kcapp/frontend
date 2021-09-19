@@ -1,4 +1,4 @@
-var alertify = require("../../../util/alertify");
+const alertify = require("../../../util/alertify");
 
 exports.isBust = (currentScore, thrown) => {
     if (currentScore - thrown < 2) {

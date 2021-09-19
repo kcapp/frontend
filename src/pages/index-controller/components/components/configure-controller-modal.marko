@@ -1,0 +1,45 @@
+<div id="modal-configure-controller" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modal-configure-controller-title" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Configure Controller</h4>
+      </div>
+      <div class="modal-body">
+        <div>
+          <div class="block-container-header">
+            <span>Offices</span>
+          </div>
+          <div class="block-container-with-header">
+            <div class="form-group form-check players-all">
+              <for|id| in=input.offices>
+                $ const office = input.offices[id];
+                <selector-button key="offices[]" data=office on-click("officeSelected") selected=state.office/>
+              </for>
+            </div>
+          </div>
+          <div class="block-container-header">
+            <span>Venues</span>
+          </div>
+          <div class="block-container-with-header">
+            <div class="form-group form-check players-all">
+              <if(state.office)>
+                <for|venue| of=state.venues>
+                  <selector-button key="venues[]" data=venue on-click("venueSelected") selected=state.venue/>
+                </for>
+                <if(state.venues.length === 0)>
+                  No venues for ${input.offices[state.office].name}
+                </if>
+              </if>
+              <else>
+                Select office first...
+              </else>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-primary" type="button" on-click("onSave") data-dismiss="modal" disabled=!state.office>Save</button>
+      </div>
+    </div>
+  </div>
+</div>

@@ -157,6 +157,12 @@ module.exports = {
         this.setStateDirty('players');
     },
     newGame(event) {
+        if (this.state.selected.length === 0) {
+            alert("Cannot start match without any players selected");
+            event.preventDefault();
+            return;
+        }
+
         var officeId = this.state.officeId;
         if (officeId <= 0) {
             if (officeId == 0 && this.state.options.venue && this.state.options.venue !== -1) {

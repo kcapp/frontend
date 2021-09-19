@@ -10,9 +10,10 @@ var skill = require('kcapp-bot/bot-skill');
 
 var axios = require('axios');
 
-var x01InputTemplate = require('../src/pages/leg/leg-template.marko');
-var spectateTemplate = require('../src/pages/spectate/spectate-template.marko');
-var legResultTemplate = require('../src/pages/leg-result/leg-result-template.marko');
+const template = require('marko');
+var x01InputTemplate = template.load(require.resolve('../src/pages/leg/leg-template.marko'));
+var spectateTemplate = template.load(require.resolve('../src/pages/spectate/spectate-template.marko'));
+var legResultTemplate = template.load(require.resolve('../src/pages/leg-result/leg-result-template.marko'));
 
 /* Render the leg view */
 router.get('/:id/beta', function (req, res, next) {
@@ -37,15 +38,16 @@ router.get('/:id/beta', function (req, res, next) {
                     experimental: true
                 });
             }).catch(error => {
-                debug('Error when getting match: ' + error);
+                debug(`Error when getting match: ${error}`);
                 next(error);
             });
     })).catch(error => {
-        debug('Error when getting data for leg ' + error);
+        debug(`Error when getting data for leg ${error}`);
         next(error);
     });
 });
 
+/* Render the leg view */
 router.get('/:id', function (req, res, next) {
     axios.all([
         axios.get(`${req.app.locals.kcapp.api}/player`),
@@ -53,10 +55,10 @@ router.get('/:id', function (req, res, next) {
         axios.get(`${req.app.locals.kcapp.api}/leg/${req.params.id}/players`),
         axios.get(`${req.app.locals.kcapp.api}/statistics/global`)
     ]).then(axios.spread((players, legResponse, legPlayers, globalStatistics) => {
-        var leg = legResponse.data;
+        const leg = legResponse.data;
         axios.get(`${req.app.locals.kcapp.api}/match/${leg.match_id}`)
             .then(response => {
-                var match = response.data;
+                const match = response.data;
                 // Sort players based on order
                 legPlayers = _.sortBy(legPlayers.data, (player) => player.order)
                 res.marko(x01InputTemplate, {
@@ -67,11 +69,11 @@ router.get('/:id', function (req, res, next) {
                     global_statistics: globalStatistics.data
                 });
             }).catch(error => {
-                debug('Error when getting match: ' + error);
+                debug(`Error when getting match: ${error}`);
                 next(error);
             });
     })).catch(error => {
-        debug('Error when getting data for leg ' + error);
+        debug(`Error when getting data for leg ${error}`);
         next(error);
     });
 });
@@ -98,11 +100,11 @@ router.get('/:id/spectate', function (req, res, next) {
                     options: { socketio_url: req.app.locals.socketio_url }
                 });
             }).catch(error => {
-                debug('Error when getting match: ' + error);
+                debug(`Error when getting match: ${error}`);
                 next(error);
             });
     })).catch(error => {
-        debug('Error when getting data for leg spectate ' + error);
+        debug(`Error when getting data for leg spectate ${error}`);
         next(error);
     });
 });
@@ -126,11 +128,11 @@ router.get('/:id/umpire', function (req, res, next) {
                     leg_players: legPlayers.data
                 });
             }).catch(error => {
-                debug('Error when getting match: ' + error);
+                debug(`Error when getting match: ${error}`);
                 next(error);
             });
     })).catch(error => {
-        debug('Error when getting data for umpire ' + error);
+        debug(`Error when getting data for umpire ${error}`);
         next(error);
     });
 });
@@ -151,7 +153,9 @@ router.get('/:id/result', function (req, res, next) {
                 var players = playerResponse.data;
                 var legPlayers = legPlayersResponse.data;
 
-                var botConfigs = _.object(_.map(legPlayers, (player) => { return [player.player_id, player.bot_config] }));
+                var botConfigs = _.object(_.map(legPlayers, (player) => {
+                    return [player.player_id, player.bot_config];
+                }));
                 _.each(legPlayers, (player) => {
                     if (match.match_type.id == types.DARTS_AT_X) {
                         players[player.player_id].starting_score = 0;
@@ -165,9 +169,9 @@ router.get('/:id/result', function (req, res, next) {
                     var botConfig = botConfigs[player.player_id];
                     if (botConfig) {
                         if (botConfig.player_id) {
-                            name = name + " as " + players[botConfig.player_id].name;
+                            name = `${name} as ${players[botConfig.player_id].name}`;
                         } else {
-                            name = name + " (" + skill.fromInt(botConfig.skill_level).name + ")";
+                            name = `${name} (${skill.fromInt(botConfig.skill_level).name})`;
                         }
                         players[player.player_id].name = name;
                     }
@@ -180,11 +184,11 @@ router.get('/:id/result', function (req, res, next) {
                     leg_players: legPlayers
                 });
             }).catch(error => {
-                debug('Error when getting match: ' + error);
+                debug(`Error when getting match: ${error}`);
                 next(error);
             });
     })).catch(error => {
-        debug('Error when getting data for leg ' + error);
+        debug(`Error when getting data for leg ${error}`);
         next(error);
     });
 });
@@ -195,7 +199,7 @@ router.delete('/:id/visit/:visitid', function (req, res, next) {
         .then(() => {
             res.status(200).end();
         }).catch(error => {
-            debug('Unable to dlete visit: ' + error);
+            debug(`Unable to dlete visit: ${error}`);
             next(error);
         });
 });
@@ -206,7 +210,7 @@ router.post('/:id/result', function (req, res, next) {
         .then(() => {
             res.status(200).end();
         }).catch(error => {
-            debug('Error when modifying scores: ' + error);
+            debug(`Error when modifying scores: ${error}`);
             next(error);
         });
 });
@@ -216,10 +220,10 @@ router.delete('/:id/cancel', function (req, res, next) {
     var legId = req.params.id;
     axios.delete(`${req.app.locals.kcapp.api}/leg/${legId}`)
         .then(() => {
-            this.socketHandler.emitMessage('/legs/' + legId, 'cancelled', { });
+            this.socketHandler.emitMessage(`/legs/${legId}`, 'cancelled', { });
             res.status(204).end();
         }).catch(error => {
-            debug('Error when modifying scores: ' + error);
+            debug(`Error when modifying scores: ${error}`);
             next(error);
         });
 });
@@ -252,7 +256,7 @@ module.exports = function (app, socketHandler) {
     this.socketHandler = socketHandler;
 
     // Create socket.io namespaces for all legs which are currently active
-    axios.get(app.locals.kcapp.api + '/leg/active')
+    axios.get(`${app.locals.kcapp.api}/leg/active`)
         .then(response => {
             var legs = response.data;
             for (var i = 0; i < legs.length; i++) {

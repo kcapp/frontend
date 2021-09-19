@@ -166,6 +166,73 @@ $ var cricket = require("./components/cricket");
           </td>
         </tr>
       </if>
+      <if(state.type === types.KILL_BULL)>
+        <tr>
+          <td colspan="3">
+            <table id='table-killbull' class='table-striped'>
+              <thead>
+                <tr>
+                  <td class="text-center">Target</td>
+                </tr>
+              </thead>
+              <tbody>
+                  $ var bulls = input.leg.starting_score / 25;
+                  $ var hits = (input.leg.starting_score - state.player.current_score) / 25;
+                  <tr>
+                    <td class="text-center" style="padding-top: 10px;">
+                      <for|bull| from=1 to=bulls>
+                        $ var isHit = hits >= bull ? true : false;
+                        <i style=`padding-rght: 10px; ${isHit ? "color: green;" : ""}` class=`fa fa-bullseye`/>
+                        <if(bulls > 10 && (bulls / 2 == bull))>
+                          <br/>
+                        </if>
+                      </for>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="text-center">( ${hits} / ${bulls} )</td>
+                  </tr>
+              </tbody>
+            </table>
+          </td>
+        </tr>
+      </if>
+      <if(state.type === types.GOTCHA)>
+        <tr>
+          <td colspan="3">
+            <table id='table-gotcha' class='table-striped'>
+              <thead>
+                <tr>
+                  <th class="text-center">Player</th>
+                  <th class="text-center">Score to Reset</th>
+                </tr>
+              </thead>
+              <tbody>
+                <for|player| of=state.players>
+                  <if(player.player_id !== state.playerId)>
+                    <tr>
+                      <td class="text-center target-text-gotcha">${player.player.first_name}</td>
+                      <td class="text-center target-text-gotcha">
+                        $ var score = player.current_score - state.player.current_score;
+                        <if(score > 0)>
+                          ${score}
+                        </if>
+                        <else>
+                          -
+                        </else>
+                      </td>
+                    </tr>
+                  </if>
+                </for>
+                <tr>
+                  <td class="text-center target-text-gotcha" style="font-weight: 600">Remaining</td>
+                  <td class="text-center target-text-gotcha" style="font-weight: 600">${input.leg.starting_score - state.player.current_score}</td>
+                </tr>
+              </tbody>
+            </table>
+          </td>
+        </tr>
+      </if>
     </tbody>
   </table>
 </td>

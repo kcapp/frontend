@@ -1,15 +1,17 @@
-var _ = require("underscore");
-var moment = require('moment');
-var io = require('../../../../util/socket.io-helper.js');
-var alertify = require("../../../../util/alertify");
-var types = require('../../../../components/scorecard/components/match_types');
-var { v4: uuidv4 } = require('uuid');
+const _ = require("underscore");
+const moment = require('moment');
+const io = require('../../../../util/socket.io-helper.js');
+const alertify = require('../../../../util/alertify.js');
+const localStorage = require('../../../../util/localstorage.js');
+const types = require('../../../../components/scorecard/components/match_types');
+const { v4: uuidv4 } = require('uuid');
 
 module.exports = {
     onCreate(input) {
         var venue = input.match.venue;
+
         this.state = {
-            uuid: uuidv4(),
+            uuid: uuidv4().split('-')[0],
             leg: input.leg,
             players: input.leg_players,
             roundNumber: input.leg.round,
@@ -19,10 +21,12 @@ module.exports = {
             type: input.match.match_type.id,
             socket: {},
             audioAnnouncer: undefined,
-            streamer: { interval: undefined, stream: undefined, id: 0 },
             enableButtonInput: false,
             compactMode: false,
-            allButtonsMode: false
+            allButtonsMode: false,
+            isPlayerBoardCam: input.leg_players.some(player => player.player.board_stream_url),
+            announcedStart: false
+
         }
     },
 
@@ -31,22 +35,27 @@ module.exports = {
         document.addEventListener("keypress", this.onKeyPress.bind(this), false);
 
         // Setup socket endpoints
-        const socket = io.connect(window.location.origin + '/legs/' + this.state.leg.id);
+        const socket = io.connect(`${window.location.origin}/legs/${this.state.leg.id}`);
         socket.on('score_update', this.onScoreUpdate.bind(this));
         socket.on('possible_throw', this.onPossibleThrowEvent.bind(this));
         socket.on('say', this.onSay.bind(this));
         socket.on('announce', io.onAnnounce.bind(this));
         socket.on('leg_finished', (data) => {
-            setTimeout(() => {
-                // Wait until moving forward so we get leg finished announcement
-                var match = data.match;
+            if (localStorage.get('controller')) {
+                // If this is a controller, forward back to start page
+                location.href = '/controller';
+            }
+            socket.on('say_finish', () => {
+                // Wait for announcement to finish before moving on
+                const match = data.match;
                 if (match.is_finished) {
                     location.href = `${window.location.origin}/matches/${match.id}/result`;
                 } else {
-                    location.href = `${window.location.origin}/matches/${match.id}`;
+                    location.href = `${window.location.origin}/legs/${match.current_leg_id}`;
                 }
-            }, 2000);
+            });
         });
+
         socket.on('error', this.onError.bind(this));
         this.state.socket = socket;
         this.state.audioAnnouncer = new Audio();
@@ -58,27 +67,16 @@ module.exports = {
             document.getElementById('change-player-order').click();
         } else {
             if (this.input.leg.visits.length === 0) {
-                var currentPlayer = this.input.players[this.input.leg.current_player_id];
-                var name = currentPlayer.vocal_name ? currentPlayer.vocal_name : currentPlayer.first_name;
+                const currentPlayer = this.input.players[this.input.leg.current_player_id];
                 setTimeout(() => {
-                    socket.emit('speak', { text: this.input.match.current_leg_num + " leg, " + name + " to throw first. Game on!", type: 'leg_start' });
+                    socket.emit('announce', { leg_num: this.input.match.current_leg_num, player: currentPlayer, type: 'match_start' });
                 }, 900);
             }
         }
-
-        var board = document.querySelector('#img-board-remote');
-        socket.on('board2', (data) => {
-            var data = JSON.parse(data);
-            if (this.state.streamer.stream === undefined || this.state.streamer.id !== data.id) {
-                if (!data.enabled) {
-                    board.src = '';
-                    return;
-                }
-                board.src = data.data;
-            }
-        });
         // Disable gestures on mobile devices
-        document.addEventListener('gesturestart', (e) => { e.preventDefault(); });
+        document.addEventListener('gesturestart', (e) => {
+            e.preventDefault();
+        });
     },
 
     onAnnounce(data) {
@@ -86,6 +84,11 @@ module.exports = {
     },
 
     onSay(data) {
+        if (data.type === 'leg_start' && this.state.announcedStart) {
+            return;
+        } else if (data.type === 'leg_start') {
+            this.state.announcedStart = true;
+        }
         io.say(data, this);
     },
 
@@ -99,57 +102,20 @@ module.exports = {
             return;
         }
         io.onScoreUpdate(data, this);
-        var component = this.findActive(this.getComponents('players')).setLeg(this.state.leg);
+        this.findActive(this.getComponents('players')).setLeg(this.state.leg);
     },
 
     onScoreChange(scored, playerId, component) {
         if (!playerId) {
             playerId = this.findActive(this.getComponents('players')).state.playerId;
         }
-        this.getComponent('player-' + playerId).setScored(scored);
+        this.getComponent(`player-${playerId}`).setScored(scored);
     },
 
     onError(error) {
         alertify.alert(`Error: ${error.message}. Refresh and try again`, () => {
             this.state.submitting = false;
         });
-    },
-
-    onEnableStream(data) {
-        const video = document.querySelector('#cam-board-preview');
-
-        if (data.enabled) {
-            // request access to webcam
-            navigator.mediaDevices.getUserMedia( { video: { width: 560, height: 374 } } )
-                .then((stream) => {
-                    video.srcObject = stream;
-                    this.state.streamer.stream = stream;
-                });
-
-            const getFrame = () => {
-                const canvas = document.createElement('canvas');
-                canvas.width = video.videoWidth;
-                canvas.height = video.videoHeight;
-                canvas.getContext('2d').drawImage(video, 0, 0);
-                const data = canvas.toDataURL('image/png');
-                return data;
-            }
-            const FPS = 3;
-
-            this.state.streamer.id = data.board;
-            this.state.streamer.interval = setInterval(() => {
-                var data = JSON.stringify({ data: getFrame(), enabled: true, id: this.state.streamer.id });
-                this.state.socket.emit('stream', data);
-            }, 1000 / FPS);
-        } else {
-            video.pause();
-            video.src = '';
-            this.state.streamer.stream.getTracks()[0].stop();
-            this.state.streamer.stream = undefined;
-
-            this.state.socket.emit('stream', JSON.stringify({ enabled: false } ));
-            clearInterval(this.state.streamer.interval);
-        }
     },
 
     onEnableButtonInput(enabled) {
@@ -178,7 +144,13 @@ module.exports = {
 
     onUndoThrow() {
         this.state.submitting = true;
-        alertify.confirm('Delete last Visit', () => { this.state.socket.emit('undo_visit', {}); }, () => { this.state.submitting = false; });
+        alertify.confirm('Delete last Visit',
+        () => {
+            this.state.socket.emit('undo_visit', {});
+        },
+        () => {
+            this.state.submitting = false;
+        });
     },
 
     onScoreButtonPressed(score, multiplier, isUndo) {
@@ -285,7 +257,7 @@ module.exports = {
         } else if (types.SUPPORT_SIMPLE_INPUT.includes(this.input.match.match_type.id) && simplified.includes(e.keyCode)) {
             var value = 0;
 
-            var multiplier = undefined;
+            var multiplier;
             if (this.input.match.match_type.id === types.DARTS_AT_X) {
                 value = this.state.leg.starting_score
             } else if (this.input.match.match_type.id === types.AROUND_THE_CLOCK) {
@@ -308,6 +280,8 @@ module.exports = {
                     value = 0;
                     multiplier = 1;
                 }
+            } else if (this.input.match.match_type.id === types.KILL_BULL) {
+                value = 25;
             }
             if (!multiplier) {
                 multiplier = 1;
@@ -332,7 +306,6 @@ module.exports = {
 
             e.preventDefault();
         }
-        return;
     },
 
     onKeyPress(e) {
@@ -391,16 +364,17 @@ module.exports = {
             case '8': text += '8'; break;
             case '9': text += '9'; break;
             case '0': text += '0'; break;
-            default: /* Return */; return;
+            default: /* Return */ return;
         }
         component.setDart(text, currentMultiplier);
     },
 
     findActive(components) {
-        return _.filter(components, function (component) {
+        return _.filter(components, (component) => {
             if (component.state.isCurrentPlayer) {
                 return component;
             }
+            return null;
         })[0];
     },
 

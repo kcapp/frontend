@@ -11,7 +11,7 @@ router.post('/', function (req, res, next) {
         .then(() => {
             res.redirect('/offices');
         }).catch(error => {
-            debug('Error when adding new venue: ' + error);
+            debug(`Error when adding new venue: ${error}`);
             next(error);
         });
 });
@@ -22,7 +22,7 @@ router.put('/:id', function (req, res, next) {
         .then(() => {
             res.redirect(303, '/offices');
         }).catch(error => {
-            debug('Error when editing venue: ' + error);
+            debug(`Error when editing venue: ${error}`);
             next(error);
         });
 });
@@ -51,7 +51,7 @@ router.get('/:id/spectate', function (req, res, next) {
                     leg_players: legPlayersResponse.data
                 });
             })).catch(error => {
-                debug('Error when getting data for venue spectate ' + error);
+                debug(`Error when getting data for venue spectate ${error}`);
                 next(error);
             });
         }
@@ -62,7 +62,7 @@ router.get('/:id/spectate', function (req, res, next) {
             });
         }
     })).catch(error => {
-        debug('Error when getting data for venue spectate ' + error);
+        debug(`Error when getting data for venue spectate ${error}`);
         next(error);
     });
 });
@@ -71,7 +71,7 @@ module.exports = function (app, socketHandler) {
     this.socketHandler = socketHandler;
 
     // Create socket.io namespaces for all venues
-    axios.get(app.locals.kcapp.api + '/venue')
+    axios.get(`${app.locals.kcapp.api}/venue`)
         .then(response => {
             var venues = response.data;
             for (var i = 0; i < venues.length; i++) {

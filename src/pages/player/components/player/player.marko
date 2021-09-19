@@ -20,6 +20,7 @@
         <div class="player-profile-menu-item"><i class="fas fa-check-double"></i><span><a href="#checkouts" data-toggle="tab">Checkouts</a></span></div>
         <div class="player-profile-menu-item"><i class="fas fa-chart-line"></i><span><a href="#progression" data-toggle="tab">Progression</a></span></div>
         <div class="player-profile-menu-item"><i class="fas fa-trophy"></i><span><a href="#tournament" data-toggle="tab">Tournaments</a></span></div>
+        <div class="player-profile-menu-item"><i class="fas fa-exchange-alt"></i><span><a href="#elo" data-toggle="tab">Elo</a></span></div>
     </div>
     <div class="player-profile-content tab-content" style="width: 100%;">
         <div class="tab-pane active" role="tabpanel" id="overview">
@@ -42,6 +43,9 @@
         </div>
         <div class="tab-pane" role="tabpanel" id="tournament">
             <tab-tournament tournament_standings=input.tournament_standings player=input.player />
+        </div>
+        <div class="tab-pane" role="tabpanel" id="elo">
+            <tab-elo player=input.player players=input.players locals=input.locals/>
         </div>
     </div>
     <div style="clear: both;"></div>

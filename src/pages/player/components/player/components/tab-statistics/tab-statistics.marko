@@ -1,6 +1,8 @@
 $ var types = require('../../../../../../components/scorecard/components/match_types');
 <div class="block-container no-padding no-border">
-    <statistics-selector on-type-changed("typeChanged")/>
+    <div style="margin-left: 5px">
+        <statistics-selector on-type-changed("typeChanged")/>
+    </div>
 
     <div style='padding-top: 10px;'>
         <table style="width: 100%;">
@@ -14,7 +16,7 @@ $ var types = require('../../../../../../components/scorecard/components/match_t
                             <statistics-card label="Three Dart Avg." value=`${(input.statistics.three_dart_avg).toFixed(2)} / ${(input.statistics.first_nine_three_dart_avg).toFixed(2)}` icon="fas fa-circle-notch"/>
                         </td>
                         <td style="width: 25%;">
-                            <statistics-card label="Checkout %" value=`${input.statistics.checkout_percentage.toFixed(2)} %` icon="fas fa-star"/>
+                            <statistics-card label="Checkout %" value=`${input.statistics.checkout_percentage ? input.statistics.checkout_percentage.toFixed(2) : "-"} %` icon="fas fa-star"/>
                         </td>
                     </if>
                     <else-if(input.type == types.SHOOTOUT)>
@@ -68,7 +70,7 @@ $ var types = require('../../../../../../components/scorecard/components/match_t
                             <statistics-card label="Avg. Numbers Closed" value=`${input.statistics.legs_played ? (input.statistics.numbers_closed / input.statistics.legs_played).toFixed(2) : "-    "}` icon="fas fa-bullseye"/>
                         </td>
                         <td style="width: 25%;">
-                            <statistics-card label="Highest Closed" value=`${input.statistics.highest_closed}` icon="fas fa-bullseye"/>
+                            <statistics-card label="Highest Closed" value=`${input.statistics.highest_closed === 0 ? "-" : input.statistics.highest_closed}` icon="fas fa-bullseye"/>
                         </td>
                     </else-if>
                     <else-if(input.type == types.BERMUDA_TRIANGLE)>
@@ -85,6 +87,25 @@ $ var types = require('../../../../../../components/scorecard/components/match_t
                         </td>
                         <td style="width: 25%;">
                             <statistics-card label="Avg. Score" value=`${input.statistics.legs_played ? input.statistics.score : "-"}` icon="far fa-star"/>
+                        </td>
+                    </else-if>
+                    <else-if(input.type == types.KILL_BULL)>
+                        <td style="width: 25%;">
+                            <statistics-card label="Hit Rate" value=`${(input.statistics.total_hit_rate * 100).toFixed(2)} %` icon="fas fa-bullseye"/>
+                        </td>
+                        <td style="width: 25%;">
+                            <statistics-card label="Avg. Score" value=`${input.statistics.legs_played ? input.statistics.score : "-"}` icon="far fa-star"/>
+                        </td>
+                        <td style="width: 25%;">
+                            <statistics-card label="Longest Streak" value=`${input.statistics.legs_played ? input.statistics.longest_streak : "-"}` icon="fas fa-arrow-up"/>
+                        </td>
+                    </else-if>
+                    <else-if(input.type == types.GOTCHA)>
+                        <td style="width: 25%;">
+                            <statistics-card label="Avg. Score" value=`${input.statistics.legs_played ? input.statistics.score : "-"}` icon="far fa-star"/>
+                        </td>
+                        <td style="width: 25%;">
+                            <statistics-card label="Others Reset" value=`${input.statistics.legs_played ? input.statistics.others_reset : "-"}` icon="fas fa-redo"/>
                         </td>
                     </else-if>
                     <else>
@@ -159,6 +180,7 @@ $ var types = require('../../../../../../components/scorecard/components/match_t
                     <th class="text-center">MPR</th>
                 </else-if>
                 <else-if(input.type == types.TIC_TAC_TOE)>
+                    <th class="text-center">Outshot Type</th>
                     <th class="text-center">Darts Thrown</th>
                     <th class="text-center">Score</th>
                     <th class="text-center">Numbers Closed</th>
@@ -174,6 +196,22 @@ $ var types = require('../../../../../../components/scorecard/components/match_t
                 <else-if(input.type == types.FOUR_TWENTY)>
                     <th class="text-center">Score</th>
                     <th class="text-center">Hit Rate</th>
+                </else-if>
+                <else-if(input.type == types.KILL_BULL)>
+                    <th class="text-center">Streak</th>
+                    <th class="text-center">Thrown</th>
+                    <th class="text-center">Marks 3</th>
+                    <th class="text-center">Marks 4</th>
+                    <th class="text-center">Marks 5</th>
+                    <th class="text-center">Marks 6</th>
+                    <th class="text-center">Hit Rate</th>
+                </else-if>
+                <else-if(input.type == types.GOTCHA)>
+                    <th class="text-center">Score</th>
+                    <th class="text-center">Darts Thrown</th>
+                    <th class="text-center">Highest Score</th>
+                    <th class="text-center">Times Reset</th>
+                    <th class="text-center">Others Reset</th>
                 </else-if>
                 <th class="text-center"/>
             </tr>
@@ -243,6 +281,7 @@ $ var types = require('../../../../../../components/scorecard/components/match_t
                         <td class="text-center">${statistics.mpr.toFixed(2)}</td>
                     </else-if>
                     <else-if(input.type == types.TIC_TAC_TOE)>
+                        <td class="text-center">${history.parameters.outshot_type.name}</td>
                         <td class="text-center">${statistics.darts_thrown}</td>
                         <td class="text-center">${statistics.score}</td>
                         <td class="text-center">${statistics.numbers_closed}</td>
@@ -258,6 +297,22 @@ $ var types = require('../../../../../../components/scorecard/components/match_t
                     <else-if(input.type == types.FOUR_TWENTY)>
                         <td class="text-center">${statistics.score}</td>
                         <td class="text-center">${(statistics.total_hit_rate * 100).toFixed(2)}%</td>
+                    </else-if>
+                    <else-if(input.type == types.KILL_BULL)>
+                        <td class="text-center">${statistics.longest_streak}</td>
+                        <td class="text-center">${statistics.darts_thrown}</td>
+                        <td class="text-center">${statistics.marks_3}</td>
+                        <td class="text-center">${statistics.marks_4}</td>
+                        <td class="text-center">${statistics.marks_5}</td>
+                        <td class="text-center">${statistics.marks_6}</td>
+                        <td class="text-center">${(statistics.total_hit_rate * 100).toFixed(2)}%</td>
+                    </else-if>
+                    <else-if(input.type == types.GOTCHA)>
+                        <td class="text-center">${statistics.score}</td>
+                        <td class="text-center">${statistics.darts_thrown}</td>
+                        <td class="text-center">${statistics.highest_score}</td>
+                        <td class="text-center">${statistics.times_reset}</td>
+                        <td class="text-center">${statistics.others_reset}</td>
                     </else-if>
                     <td>
                         <a href=`/legs/${history.id}/result`>

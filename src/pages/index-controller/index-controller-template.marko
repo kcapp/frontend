@@ -1,0 +1,15 @@
+import Layout from "./index-controller-layout.marko"
+
+<${Layout}>
+  <@body>
+    <index-controller
+        players=data.players
+        modes=data.modes
+        scores=data.scores
+        types=data.types
+        outshots=data.outshots
+        venues=data.venues
+        offices=data.offices
+        locals=data.locals />
+  </@body>
+</>

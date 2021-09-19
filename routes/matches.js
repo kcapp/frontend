@@ -6,15 +6,15 @@ var router = express.Router();
 var axios = require('axios');
 var _ = require('underscore');
 var skill = require('kcapp-bot/bot-skill');
-var types = require('../src/components/scorecard/components/match_types');
 
 var bracket = require('./lib/bracket_generator');
 
-var matchesTemplate = require('../src/pages/matches/matches-template.marko');
-var matchResultTemplate = require('../src/pages/match-result/match-result-template.marko');
-var spectateTemplate = require('../src/pages/spectate/spectate-template.marko');
-var previewTemplate = require('../src/pages/match-preview/match-preview-template.marko');
-var obsTemplate = require('../src/pages/obs/obs-template.marko');
+const template = require('marko');
+var matchesTemplate = template.load(require.resolve('../src/pages/matches/matches-template.marko'));
+var matchResultTemplate = template.load(require.resolve('../src/pages/match-result/match-result-template.marko'));
+var spectateTemplate = template.load(require.resolve('../src/pages/spectate/spectate-template.marko'));
+var previewTemplate = template.load(require.resolve('../src/pages/match-preview/match-preview-template.marko'));
+var obsTemplate = template.load(require.resolve('../src/pages/obs/obs-template.marko'));
 
 /* Redirect requests to /matches to /matches/page/1 */
 router.get('/', function (req, res) {
@@ -40,7 +40,7 @@ router.get('/page/:page', function (req, res, next) {
             page_num: req.params.page
         });
     })).catch(error => {
-        debug('Error when getting data for matches ' + error);
+        debug(`Error when getting data for matches ${error}`);
         next(error);
     });
 });
@@ -50,25 +50,9 @@ router.get('/:id', function (req, res, next) {
     axios.get(`${req.app.locals.kcapp.api}/match/${req.params.id}`)
         .then(response => {
             var match = response.data
-            axios.put(`${req.app.locals.kcapp.api}/match/${req.params.id}/continue`)
-                .then(response => {
-                    var leg = response.data;
-                    if (leg.visits.length === 0) {
-                        this.socketHandler.setupLegsNamespace(leg.id);
-
-                        // Forward all spectating clients to next leg
-                        this.socketHandler.emitMessage('/legs/' + match.current_leg_id, 'new_leg', {
-                            match: match,
-                            leg: leg
-                        });
-                    }
-                    res.redirect('/legs/' + leg.id);
-                }).catch(error => {
-                    debug('Unable to continue leg: ' + error);
-                    res.redirect('/matches/' + req.params.id + '/result');
-                });
+            res.redirect(`/legs/${match.current_leg_id}`);
         }).catch(error => {
-            debug('Error when getting match: ' + error);
+            debug(`Error when getting match: ${error}`);
             next(error)
         });
 });
@@ -137,11 +121,11 @@ router.get('/:id/preview', function (req, res, next) {
                     });
                 }));
             })).catch(error => {
-                debug('Error when getting data for head to head ' + error);
+                debug(`Error when getting data for head to head ${error}`);
                 next(error);
             });
         }).catch(error => {
-            debug('Error when getting match: ' + error);
+            debug(`Error when getting match: ${error}`);
             next(error)
         });
 });
@@ -154,7 +138,7 @@ router.get('/:id/spectate', function (req, res, next) {
     ]).then(axios.spread((players, response) => {
         var match = response.data;
         if (match.is_finished) {
-            return res.redirect('/matches/' + req.params.id + "/result");
+            res.redirect(`/matches/${req.params.id}/result`);
         } else {
             axios.all([
                 axios.get(`${req.app.locals.kcapp.api}/leg/${match.current_leg_id}`),
@@ -168,12 +152,12 @@ router.get('/:id/spectate', function (req, res, next) {
                     match: match
                 });
             })).catch(error => {
-                debug('Error when getting data for matches ' + error);
+                debug(`Error when getting data for matches ${error}`);
                 next(error);
             });
         }
     })).catch(error => {
-        debug('Error when getting data for match ' + error);
+        debug(`Error when getting data for match ${error}`);
         next(error);
     });
 });
@@ -186,7 +170,7 @@ router.get('/:id/spectate/compact', function (req, res, next) {
     ]).then(axios.spread((players, response) => {
         var match = response.data;
         if (match.is_finished) {
-            return res.redirect('/matches/' + req.params.id + "/result");
+            res.redirect(`/matches/${req.params.id}/result`);
         } else {
             axios.all([
                 axios.get(`${req.app.locals.kcapp.api}/leg/${match.current_leg_id}`),
@@ -200,17 +184,17 @@ router.get('/:id/spectate/compact', function (req, res, next) {
                     match: match
                 });
             })).catch(error => {
-                debug('Error when getting data for matches ' + error);
+                debug(`Error when getting data for matches ${error}`);
                 next(error);
             });
         }
     })).catch(error => {
-        debug('Error when getting data for match ' + error);
+        debug(`Error when getting data for match ${error}`);
         next(error);
     });
 });
 
-/* Render the leg view */
+/* Render the match obs view */
 router.get('/:id/obs', function (req, res, next) {
     axios.all([
         axios.get(`${req.app.locals.kcapp.api}/player`),
@@ -231,11 +215,11 @@ router.get('/:id/obs', function (req, res, next) {
                 matchMetadata: metadata.data
             });
         })).catch(error => {
-            debug('Error when getting data for match ' + error);
+            debug(`Error when getting data for match ${error}`);
             next(error);
         });
     })).catch(error => {
-        debug('Error when getting data for match ' + error);
+        debug(`Error when getting data for match ${error}`);
         next(error);
     });
 });
@@ -256,16 +240,18 @@ router.get('/:id/result', function (req, res, next) {
 
         axios.get(`${req.app.locals.kcapp.api}/leg/${match.legs[0].id}/players`)
             .then(response => {
-                var botConfigs = _.object(_.map(response.data, (player) => { return [player.player_id, player.bot_config] }));
+                var botConfigs = _.object(_.map(response.data, (player) => {
+                    return [player.player_id, player.bot_config]
+                }));
                 _.each(statistics, stats => {
                     var name = players[stats.player_id].name;
 
                     var botConfig = botConfigs[stats.player_id];
                     if (botConfig) {
                         if (botConfig.player_id) {
-                            name = name + " as " + players[botConfig.player_id].name;
+                            name = `${name} as ${players[botConfig.player_id].name}`;
                         } else {
-                            name = name + " (" + skill.fromInt(botConfig.skill_level).name + ")";
+                            name = `${name} (${skill.fromInt(botConfig.skill_level).name})`;
                         }
                     }
                     stats.player_name = name;
@@ -277,11 +263,11 @@ router.get('/:id/result', function (req, res, next) {
                     statistics: statistics
                 });
             }).catch(error => {
-                debug('Error when getting data for match result ' + error);
+                debug(`Error when getting data for match result ${error}`);
                 next(error);
             });
     })).catch(error => {
-        debug('Error when getting data for match result ' + error);
+        debug(`Error when getting data for match result ${error}`);
         next(error);
     });
 });
@@ -299,7 +285,7 @@ router.post('/new', function (req, res, next) {
         .then(response => {
             var playerMap = response.data;
 
-            var isPractice = players.length == 1;
+            var isPractice = players.length === 1;
             for (var i = 0; i < players.length; i++) {
                 if (isPractice) {
                     break;
@@ -310,7 +296,7 @@ router.post('/new', function (req, res, next) {
 
             var body = {
                 owe_type_id: req.body.match_stake == -1 ? null : req.body.match_stake,
-                venue_id: req.body.venue,
+                venue_id: req.body.venue === -1 ? null : req.body.venue,
                 match_type: { id: req.body.match_type },
                 match_mode: { id: req.body.match_mode },
                 players: players.map(Number),
@@ -331,7 +317,7 @@ router.post('/new', function (req, res, next) {
 
                     // Forward all spectating clients to next leg
                     if (match.venue) {
-                        this.socketHandler.emitMessage('/venue/' + match.venue.id, 'venue_new_match', {
+                        this.socketHandler.emitMessage(`/venue/${match.venue.id}`, 'venue_new_match', {
                             match_id: match.id,
                             leg_id: match.current_leg_id
                         });
@@ -341,11 +327,11 @@ router.post('/new', function (req, res, next) {
                     }
                     res.status(200).send(match).end();
                 }).catch(error => {
-                    debug('Error when starting new match: ' + error);
+                    debug(`Error when starting new match: ${error}`);
                     next(error);
                 });
         }).catch(error => {
-            debug('Error when starting new match: ' + error);
+            debug(`Error when starting new match: ${error}`);
             next(error);
         });
 
@@ -359,7 +345,7 @@ router.post('/:id/rematch', function (req, res, next) {
             this.socketHandler.setupLegsNamespace(match.current_leg_id);
             // Forward all spectating clients to next leg
             if (match.venue) {
-                this.socketHandler.emitMessage('/venue/' + match.venue.id, 'venue_new_match', {
+                this.socketHandler.emitMessage(`/venue/${match.venue.id}`, 'venue_new_match', {
                     match_id: match.id,
                     leg_id: match.current_leg_id
                 });
@@ -369,7 +355,7 @@ router.post('/:id/rematch', function (req, res, next) {
             }
             res.status(200).send(match).end();
         }).catch(error => {
-            debug('Error when starting new match: ' + error);
+            debug(`Error when starting new match: ${error}`);
             next(error);
         });
 });

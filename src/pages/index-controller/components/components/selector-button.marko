@@ -1,0 +1,31 @@
+class {
+    handleClick(event, selected) {
+        this.emit('click', selected);
+    }
+}
+style {
+    .name-label {
+        margin-left: 15px;
+        width: 232px;
+        height: 60px;
+        font-size: 1.4em;
+        line-height: 45px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    input[type='checkbox'] {
+        display: none;
+    }
+
+    input[type='textbox'] {
+        margin-left: 10px;
+        width: 50px;
+    }
+}
+$ const data = input.data;
+<div>
+  <input class="form-check-input" type="checkbox" value=data.id/>
+  <label class=`name-label form-check-label btn ${input.selected === data.id ? 'btn-warning' : 'btn-primary'}` on-click('handleClick')>${data.name}</label>
+  <div class="clearfix"/>
+</div>

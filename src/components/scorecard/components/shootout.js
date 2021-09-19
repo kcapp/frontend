@@ -38,7 +38,6 @@ exports.confirmThrow = function (external) {
     if (!external) {
         this.emit('possible-throw', isCheckout, false, this.state.currentDart - 1, dart.getScore(), dart.getMultiplier(), false, false);
     }
-
     return submitting;
 }
 

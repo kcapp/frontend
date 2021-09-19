@@ -1,9 +1,22 @@
 <td>
-  <div class=(state.isCurrentPlayer ? "scorecard scorecard-active" : "scorecard scorecard-inactive")>
+  <div style="position: relative" class=(state.isCurrentPlayer ? "scorecard scorecard-active" : "scorecard scorecard-inactive")>
+    <if(state.player.player.board_stream_url)>
+      <i style="position: absolute; top: 5px; right: 5px; cursor: pointer;" class="fas fa-video fa-2x" title="Toggle camera"></i>
+    </if>
     <div class="label-player-name">${state.name}</div>
     <div class="label label-block label-player-score">${state.player.current_score}</div>
     <div class="player-legs">
       <label>${state.wins}</label>
     </div>
   </div>
+  <if(input.isPlayerBoardCam)>
+    <div>
+      <if(state.player.player.board_stream_url)>
+        <iframe id=`iframe-player-cam-${state.player.player_id}` src=`${state.player.player.board_stream_url}` class="camera" style="position: relative;"/>
+      </if>
+      <else>
+        <div class="camera" style=`clear: both;`/>
+      </else>
+    </div>
+  </if>
 </td>

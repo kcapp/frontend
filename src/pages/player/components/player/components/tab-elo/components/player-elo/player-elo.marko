@@ -1,0 +1,15 @@
+$ var change = input.player.current_elo_new - input.player.current_elo;
+<if(input.player.tournament_elo_new !== null)>
+    $ change = input.player.tournament_elo_new - input.player.tournament_elo;
+</if>
+<div class="float-left">
+    <span class=`label ${input.winner_id == input.player.player_id ? "label-success" : "label-secondary"}`>
+        <if(input.side === 'left')>
+            <elo-badge change=change side=input.side/>
+        </if>
+        ${input.players[input.player.player_id].name}
+        <if(input.side === 'right')>
+            <elo-badge change=change side=input.side/>
+        </if>
+    </span>
+</div>

@@ -2,6 +2,29 @@
 
 A preview of major changes can be found in the Wiki ([Latest Changes](https://github.com/kcapp/frontend/wiki/Latest_Changes))
 
+## [2.0.0] - 2021-09-19
+#### Feature
+- Custom announcer for scores, match finishes, and more!
+- Added new game type `Kill Bull`
+- Added new game type `Gotcha`
+- Added support for stream of board for each player using external stream URLs
+- `Elo Changelog` page for player
+- New `Controller` page optimized for tablets for easier starting of matches
+
+#### Changed
+- Added `Outshot Type` and `Tic-Tac-Toe` board to Spectate page
+- Added `Bull` to `420` game type
+- Correctly handle leg finish when multiple people are connected
+- Updated to Marko 5
+- Updated all dependencies to latest version
+
+#### Fixed
+- Score input for `X01 Handicap`
+- Announce correct leg finished
+- Issue causing new-leg announcements to be played twice
+- Misc fixes and improvements
+
+
 ## [1.2.0] - 2020-10-10
 #### Feature
 - Added new game types `Tic-Tac-Toe`, `Bermuda Triangle`, and `420`
@@ -44,6 +67,8 @@ A preview of major changes can be found in the Wiki ([Latest Changes](https://gi
 - Multiple score entry methods
     - Including [Unicorn Smartboard](https://github.com/kcapp/smartboard)
 
+
+[2.0.0]: https://github.com/kcapp/frontend/compare/v1.2.0...v2.0.0
 [1.2.0]: https://github.com/kcapp/frontend/compare/v1.1.0...v1.2.0
 [1.1.0]: https://github.com/kcapp/frontend/compare/v1.0.0...v1.1.0
 [1.0.0]: https://github.com/kcapp/frontend/releases/tag/v1.0.0

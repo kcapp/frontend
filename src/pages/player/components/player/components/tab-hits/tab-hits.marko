@@ -6,7 +6,6 @@
                     <th class="text-center">Dart</th>
                     <th class="text-center">Count</th>
                     <th class="text-center">Hit %</th>
-                    <th class="text-center">Per Visit</th>
                     <th class="text-center">Per Leg</th>
                     <th class="text-center">Per Match</th>
                 </tr>
@@ -20,7 +19,6 @@
                             </td>
                             <td class="text-center">${value}</td>
                             <td class="text-center">${(value * 100 / input.statistics.darts_thrown).toFixed(2)}%</td>
-                            <td class="text-center">${(value / input.statistics.total_visits).toFixed(2)}</td>
                             <td class="text-center">${(value / input.player.legs_played).toFixed(2)}</td>
                             <td class="text-center">${(value / input.player.matches_played).toFixed(2)}</td>
                         </tr>

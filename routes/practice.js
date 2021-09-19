@@ -3,7 +3,8 @@ var debug = require('debug')('kcapp:practice');
 var express = require('express');
 var router = express.Router();
 
-var practiceTemplate = require('../src/pages/practice/practice-template.marko');
+const template = require('marko');
+var practiceTemplate = template.load(require.resolve('../src/pages/practice/practice-template.marko'));
 
 var axios = require('axios');
 var _ = require('underscore');
@@ -28,7 +29,7 @@ router.get('/', function (req, res, next) {
             offices: offices.data
         });
     })).catch(error => {
-        debug('Error when getting data for / ' + error);
+        debug(`Error when getting data for / ${error}`);
         next(error);
     });
 });

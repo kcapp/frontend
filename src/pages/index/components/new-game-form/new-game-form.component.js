@@ -1,7 +1,7 @@
-var _ = require("underscore");
-var axios = require('axios');
-var localStorageUtil = require("../../../../util/localstorage");
-var types = require("../../../../components/scorecard/components/match_types.js")
+const _ = require("underscore");
+const axios = require('axios');
+const localStorage = require("../../../../util/localstorage");
+const types = require("../../../../components/scorecard/components/match_types.js")
 
 module.exports = {
     onCreate(input) {
@@ -24,12 +24,12 @@ module.exports = {
         }
     },
     onMount() {
-        var officeId = localStorageUtil.getInt("office_id");
+        const officeId = localStorage.getInt("office_id");
         if (officeId) {
             if (!this.input.offices[officeId]) {
                 // Unset stored value if it points to a non-existing office
-                localStorageUtil.remove("office_id");
-                localStorageUtil.remove("venue");
+                localStorage.remove("office_id");
+                localStorage.remove("venue");
             } else {
                 this.changeOffice(officeId, this.input.offices[officeId]);
             }
@@ -147,24 +147,27 @@ module.exports = {
                 scoreComponent.state.index = 0;
                 scoreComponent.state.enabled = false;
             } else if (this.state.options.game_type == types.TIC_TAC_TOE) {
-                scoreComponent.updateOptions([ { id: 0, name: '+0' }, { id: 10, name: '+10' }, { id: 20, name: '+20' }, { id: 25, name: '+25' }, { id: 30, name: '+30' }, { id: 40, name: '+40' }, { id: 50, name: '+50' } ]);
+                scoreComponent.updateOptions(types.SCORES_TIC_TAC_TOE);
                 scoreComponent.state.index = 20;
                 scoreComponent.state.enabled = true;
             } else if (this.state.options.game_type == types.DARTS_AT_X) {
-                scoreComponent.updateOptions([
-                    { id: 20, name: 20 },  { id: 19, name: 19 }, { id: 18, name: 18 }, { id: 17, name: 17 },
-                    { id: 16, name: 16 }, { id: 15, name: 15 }, { id: 14, name: 14 }, { id: 13, name: 13 },
-                    { id: 12, name: 12 }, { id: 11, name: 11 }, { id: 10, name: 10 }, { id: 9, name: 9 },
-                    { id: 8, name: 8 }, { id: 7, name: 7 }, { id: 6, name: 6 }, { id: 5, name: 5 },
-                    { id: 4, name: 4 }, { id: 3, name: 3 }, { id: 2, name: 2 }, { id: 1, name: 1 }, { id: 25, name: 'Bull' } ]);
+                scoreComponent.updateOptions(types.SCORES_DARTS_AT_X);
                 scoreComponent.state.index = 20;
                 scoreComponent.state.enabled = true;
             } else if (this.state.options.game_type === types.FOUR_TWENTY) {
-                scoreComponent.updateOptions([ { id: 420, name: 420 } ]);
+                scoreComponent.updateOptions(types.SCORES_FOUR_TWENTY);
                 scoreComponent.state.index = 420;
                 scoreComponent.state.enabled = false;
+            } else if (this.state.options.game_type === types.KILL_BULL) {
+                scoreComponent.updateOptions(types.SCORES_KILL_BULL);
+                scoreComponent.state.index = 200;
+                scoreComponent.state.enabled = true;
             } else if (this.state.options.starting_score === 0) {
                 scoreComponent.state.index = scoreComponent.state.defaultValue;
+                scoreComponent.state.enabled = true;
+            } else if (this.state.options.game_type === types.GOTCHA) {
+                scoreComponent.updateOptions(types.SCORES_GOTCHA);
+                scoreComponent.state.index = 200;
                 scoreComponent.state.enabled = true;
             } else {
                 scoreComponent.state.index = scoreComponent.state.defaultValue;
@@ -240,7 +243,7 @@ module.exports = {
         axios.post(window.location.origin + '/matches/new', body)
             .then(response => {
                 // Store venue in localstorage so it doesn't have to be selected each time
-                localStorageUtil.set('venue', this.state.options.venue);
+                localStorage.set('venue', this.state.options.venue);
                 location.href = 'legs/' + response.data.current_leg_id
             }).catch(error => {
                 this.state.submitting = false;
@@ -285,6 +288,6 @@ module.exports = {
 
         this.setStateDirty('players');
         this.setStateDirty('venues');
-        localStorageUtil.set('office_id', this.state.officeId);
+        localStorage.set('office_id', this.state.officeId);
     }
 }

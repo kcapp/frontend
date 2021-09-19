@@ -1,0 +1,135 @@
+$ const types = require("../../../components/scorecard/components/match_types.js");
+<form>
+    <if(state.step === state.steps.INITIAL)>
+        <div style="height: 100vh;">
+            <img style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); opacity: 0.4;" src="https://raw.githubusercontent.com/wiki/kcapp/frontend/images/logo/logo128V.png"/>
+            <div style="text-align: center;">
+                <big-button text='New Match' margin="-40%" on-click("onNewMatch")/>
+                <big-button text='Continue Match' margin="-10%" on-click("onContinueMatch")/>
+                <big-button text='Tournament Match' margin="21%" type='btn-warning' on-click("onTournamentMatch")/>
+            </div>
+        </div>
+    </if>
+    <else-if(state.step === state.steps.SELECT_PLAYERS)>
+        <div>
+            <div class="block-container-header">
+                <i class="fas fa-users"/>
+                <span>Players</span>
+            </div>
+            <div class="block-container-with-header">
+                <button id="next-button" class="btn btn-info" disabled=(state.playersSelected.length === 0) on-click("onNext")>Next >></button>
+                <button id="prev-button" class="btn btn-info" on-click("onPrevious")><< Previous</button>
+                <div class="form-group form-check players-all">
+                    <for|player| of=state.playersSelected>
+                        <selector-button key="players[]" data=player on-click("removePlayer")/>
+                    </for>
+                </div>
+            </div>
+            <div class="block-container-header">
+                <i class="fas fa-mouse-pointer"/>
+                <span>Select players</span>
+            </div>
+            <div class="block-container-with-header">
+                <div class="form-group form-check players-all">
+                    <for|player| of=state.players>
+                        <selector-button data=player on-click("addPlayer")/>
+                    </for>
+                </div>
+                <button id="show-all-button" class="btn btn-warning" style=`display: ${state.players !== input.players ? '' : 'none'};` on-click("showAll")>Show All</button>
+            </div>
+        </div>
+    </else-if>
+    <else-if(state.step === state.steps.SELECT_GAME_TYPE)>
+        <div>
+            <div class="block-container-header">
+                <i class="fas fa-users"/>
+                <span>Game Type</span>
+            </div>
+            <div class="block-container-with-header">
+                <div class="form-group form-check players-all">
+                    <for|type| of=input.types>
+                        <selector-button key="types[]" data=type on-click("gameTypeSelected") selected=state.gameType/>
+                    </for>
+                </div>
+            </div>
+            <if(state.gameType)>
+                <if(state.scores)>
+                    <div>
+                        <div class="block-container-header">
+                            <i class="fas fa-users"/>
+                            <span>Starting Score</span>
+                        </div>
+                        <div class="block-container-with-header">
+                            <div class="form-group form-check players-all" style="overflow-x: scroll; display: flex;">
+                                <for|score| of=state.scores>
+                                    <selector-button key="scores[]" data=score on-click("scoreSelected") selected=state.startingScore/>
+                                </for>
+                            </div>
+                        </div>
+                    </div>
+                </if>
+                <if(state.gameType === types.TIC_TAC_TOE)>
+                    <div>
+                        <div class="block-container-header">
+                            <i class="fas fa-users"/>
+                            <span>Outshots</span>
+                        </div>
+                        <div class="block-container-with-header">
+                            <div class="form-group form-check players-all">
+                                <for|outshot| of=input.outshots>
+                                    <selector-button key="outshots[]" data=outshot on-click("outshotSelected") selected=state.outshotType/>
+                                </for>
+                            </div>
+                        </div>
+                    </div>
+                </if>
+                <else-if(state.gameType === types.X01HANDICAP)>
+                    <div>
+                        <div class="block-container-header">
+                            <i class="fas fa-users"/>
+                            <span>Handicaps</span>
+                        </div>
+                        <div class="block-container-with-header">
+                            <for|player| of=state.playersSelected>
+                                <div class="players-all">
+                                    <h3>${player.name}</h3>
+                                    <for|handicap| of=state.handicaps>
+                                        <selector-button key="handicaps[]" data=handicap extra=player.id on-click("handicapSelected") selected=state.playerHandicaps[player.id]/>
+                                    </for>
+                                </div>
+                                <div style="clear: both"/>
+                            </for>
+                        </div>
+                    </div>
+                </else-if>
+                <button id="next-button" class="btn btn-info" on-click("onNext")>Next >></button>
+                <button id="prev-button" class="btn btn-info" on-click("onPrevious")><< Previous</button>
+            </if>
+        </div>
+    </else-if>
+    <else-if(state.step === state.steps.SELECT_GAME_MODE)>
+        <div>
+            <div class="block-container-header">
+                <i class="fas fa-users"/>
+                <span>Game Mode</span>
+            </div>
+            <div class="block-container-with-header">
+                <div class="form-group form-check players-all">
+                    <for|mode| of=input.modes>
+                        <selector-button key="modes[]" data=mode on-click("gameModeSelected") selected=state.gameMode/>
+                    </for>
+                </div>
+            </div>
+            <if(state.gameMode)>
+                <button id="next-button" class="btn btn-info" on-click("onStart")>Start >></button>
+                <button id="prev-button" class="btn btn-info" on-click("onPrevious")><< Previous</button>
+            </if>
+        </div>
+    </else-if>
+    <else-if(state.step === state.steps.CONTINUE_MATCH)>
+        <button id="prev-button" class="btn btn-info" on-click("onPrevious", state.steps.INITIAL)><< Previous</button>
+        <div class="clearfix" />
+        <matches-table players=input.players matches=state.matches offices=input.offices columns=["start_time", "type", "mode", "players", "options"] />
+    </else-if>
+</form>
+<configure-controller-modal offices=input.offices venues=input.venues />

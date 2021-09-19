@@ -38,7 +38,9 @@ $ var match = state.match;
   ]
 ]/>
 <if(match.tournament_id)>
-  <div class="block-container-orange">${match.tournament.tournament_name} / ${match.tournament.tournament_group_name}</div>
+  <div class="block-container-orange">
+    <a style="color: white;" href=`/tournaments/${match.tournament_id}`>${match.tournament.tournament_name} / ${match.tournament.tournament_group_name}</a>
+  </div>
 </if>
 <table id="match-results-table">
   <thead>

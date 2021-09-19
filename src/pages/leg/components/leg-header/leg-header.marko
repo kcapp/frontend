@@ -31,14 +31,6 @@ $ var types = require('../../../../components/scorecard/components/match_types')
         <li>
           <a id="show-qr-code" data-toggle="modal" data-target="#modal-show-qr-code">Show QR</a>
         </li>
-        <if(input.experimental)>
-          <li>
-            <a on-click('enableBoardStream', 1)>${state.streamEnabled ? "Disable" : "Enable"} Stream 1</a>
-          </li>
-          <li>
-            <a on-click('enableBoardStream', 2)>${state.streamEnabled ? "Disable" : "Enable"} Stream 2</a>
-          </li>
-        </if>
         <if(!state.isOfficial)>
           <li class="divider" role="separator"/>
           <li>

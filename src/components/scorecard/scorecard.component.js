@@ -1,18 +1,19 @@
 const alertify = require("../../util/alertify");
 
-var x01 = require("./components/x01");
-var shootout = require("./components/shootout");
-var cricket = require("./components/cricket");
-var dartsAtX = require("./components/darts_at_x");
-var aroundTheWorld = require("./components/around_the_world");
-var shanghai = require("./components/shanghai");
-var aroundTheClock = require("./components/around_the_clock");
-var ticTacToe = require('./components/tic_tac_toe');
-var bermudaTriangle = require('./components/bermuda_triangle');
-var fourTwenty = require('./components/four_twenty');
+const x01 = require("./components/x01");
+const shootout = require("./components/shootout");
+const cricket = require("./components/cricket");
+const dartsAtX = require("./components/darts_at_x");
+const aroundTheWorld = require("./components/around_the_world");
+const shanghai = require("./components/shanghai");
+const aroundTheClock = require("./components/around_the_clock");
+const ticTacToe = require('./components/tic_tac_toe');
+const bermudaTriangle = require('./components/bermuda_triangle');
+const fourTwenty = require('./components/four_twenty');
+const killBull = require('./components/kill_bull');
+const gotcha = require('./components/gotcha');
 
-var types = require("./components/match_types");
-
+const types = require("./components/match_types");
 
 const DART_CONTAINER_MAP = { 1: 'first', 2: 'second', 3: 'third' };
 
@@ -100,6 +101,7 @@ module.exports = {
                 case types.SHOOTOUT:
                     shootout.removeLast.bind(this)(dart, external);
                     break;
+                case types.X01HANDICAP:
                 case types.X01:
                     var value = dart.getValue();
                     this.state.totalScore -= value;
@@ -131,6 +133,12 @@ module.exports = {
                 case types.FOUR_TWENTY:
                     fourTwenty.removeLast.bind(this)(dart, external);
                     break;
+                case types.KILL_BULL:
+                    killBull.removeLast.bind(this)(dart, external);
+                    break;
+                case types.GOTCHA:
+                    gotcha.removeLast.bind(this)(dart, external);
+                    break;
             }
             dart.reset();
         } else {
@@ -147,6 +155,7 @@ module.exports = {
                 case types.SHOOTOUT:
                     submitting = shootout.confirmThrow.bind(this)(external);
                     break;
+                case types.X01HANDICAP:
                 case types.X01:
                     submitting = x01.confirmThrow.bind(this)(external);
                     break;
@@ -174,6 +183,12 @@ module.exports = {
                 case types.FOUR_TWENTY:
                     submitting = fourTwenty.confirmThrow.bind(this)(external);
                     break;
+                case types.KILL_BULL:
+                    submitting = killBull.confirmThrow.bind(this)(external);
+                    break;
+                case types.GOTCHA:
+                    submitting = gotcha.confirmThrow.bind(this)(external);
+                    break;
             }
         }
         return submitting;
@@ -186,7 +201,7 @@ module.exports = {
         } else {
             dart = this.getCurrentDart();
         }
-        var newValue = parseInt(dart.state.value + '' + value);
+        var newValue = parseInt(`${dart.state.value}${value}`);
         if (newValue > 20 && newValue !== 25) {
             alertify.alert('Invalid Value', () => { });
             return;

@@ -90,8 +90,14 @@ module.exports = {
                     if (current > chartMaxValue) {
                         chartMaxValue = current;
                     }
-                }
-                else {
+                } else if (match.match_type.id == types.KILL_BULL) {
+                    if (visit.score === 0) {
+                        current = leg.starting_score;
+                    } else {
+                        current = current - visit.score;
+                    }
+                    values[visit.player_id].push(current);
+                } else {
                     values[visit.player_id].push(current - visit.score);
                 }
             }
@@ -116,8 +122,10 @@ module.exports = {
             },
             options: {
                 responsive: true,
-                title: { display: true, text: 'Scores' },
-                tooltips: { mode: 'index', intersect: false, },
+                plugins: {
+                    title: { display: true, text: 'Scores' },
+                    tooltips: { mode: 'index', intersect: false, }
+                },
                 hover: { mode: 'nearest', intersect: true },
                 scales: {
                     xAxes: [{ display: true, scaleLabel: { display: true, labelString: 'Round' } }],

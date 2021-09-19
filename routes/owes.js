@@ -5,7 +5,8 @@ var router = express.Router();
 
 var axios = require('axios');
 
-var owesTemplate = require('../src/pages/owes/owes-template.marko');
+const template = require('marko');
+var owesTemplate = template.load(require.resolve('../src/pages/owes/owes-template.marko'));
 
 /* Method to get overview over who owes who what */
 router.get('/', function (req, res, next) {
@@ -19,7 +20,7 @@ router.get('/', function (req, res, next) {
             items: [ { id: 1, name: "Cake" }, { id: 2, name: "Beer" } ]
         });
     })).catch(error => {
-        debug('Error when getting data for owes ' + error);
+        debug(`Error when getting data for owes ${error}`);
         next(error);
     });
 });
@@ -30,7 +31,7 @@ router.put('/payback', function (req, res) {
         .then(() => {
             res.status(200).send().end();
         }).catch(error => {
-            debug('Error when getting owes: ' + error);
+            debug(`Error when getting owes: ${error}`);
             res.status(500).send().end();
         });
 });

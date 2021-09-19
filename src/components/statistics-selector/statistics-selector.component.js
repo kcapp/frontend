@@ -14,7 +14,9 @@ module.exports = {
                 { id: types.AROUND_THE_CLOCK, name: "Around The Clock" },
                 { id: types.TIC_TAC_TOE, name: "Tic Tac Toe" },
                 { id: types.BERMUDA_TRIANGLE, name: "Bermuda Triangle" },
-                { id: types.FOUR_TWENTY, name: "420" }
+                { id: types.FOUR_TWENTY, name: "420" },
+                { id: types.KILL_BULL, name: "Kill Bull" },
+                { id: types.GOTCHA, name: "Gotcha" },
             ]
         }
     },
