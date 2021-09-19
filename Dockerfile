@@ -1,5 +1,5 @@
 # Create our build image
-FROM node:10-alpine AS BUILD_IMAGE
+FROM node:14-alpine AS BUILD_IMAGE
 
 # Add git and curl
 RUN apk update && apk add --no-cache git curl
@@ -8,14 +8,14 @@ RUN apk update && apk add --no-cache git curl
 WORKDIR /usr/src/kcapp
 
 # Install app dependencies
-COPY package*.json ./
+COPY package.json ./
 RUN npm install --only=production
 
 # Bundle app source
 COPY . .
 
 # Create actual image
-FROM node:10-alpine
+FROM node:14-alpine
 
 WORKDIR /usr/src/kcapp
 
