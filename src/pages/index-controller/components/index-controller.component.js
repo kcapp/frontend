@@ -6,9 +6,9 @@ const io = require('../../../util/socket.io-helper.js');
 
 module.exports = {
     onCreate(input) {
-        /*input.players = _.reject(input.players, (player) => {
-            return player.is_bot;
-        });*/
+        input.players = _.filter(input.players, (player) => {
+            return !player.is_bot;
+        });
         const steps = {
             INITIAL: 0,
             SELECT_PLAYERS: 1,

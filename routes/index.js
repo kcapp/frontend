@@ -41,7 +41,7 @@ router.get('/', function (req, res, next) {
 /* GET home page. */
 router.get('/controller', function (req, res, next) {
     axios.all([
-        axios.get(`${req.app.locals.kcapp.api}/player/active`),
+        axios.get(`${req.app.locals.kcapp.api}/player`),
         axios.get(`${req.app.locals.kcapp.api}/match/modes`),
         axios.get(`${req.app.locals.kcapp.api}/match/types`),
         axios.get(`${req.app.locals.kcapp.api}/match/outshot`),
