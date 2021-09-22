@@ -2,7 +2,6 @@ const _ = require('underscore');
 const axios = require('axios');
 const localStorage = require('../../../util/localstorage.js');
 const types = require("../../../components/scorecard/components/match_types.js")
-const io = require('../../../util/socket.io-helper.js');
 
 module.exports = {
     onCreate(input) {
@@ -53,14 +52,6 @@ module.exports = {
                 const venue = localStorage.get('venue_id');
                 if (venue) {
                     this.state.venueId = parseInt(venue);
-
-                    const socket = io.connect(`${window.location.origin}/venue/${this.state.venueId}`);
-                    socket.on('venue_new_match', (data) => {
-                        location.href = `/legs/${data.leg_id}`;
-                    });
-                    socket.on('navigation', (data) => {
-                        console.log(`Got navigation ${data}`);
-                    });
                 }
                 this.setStateDirty('players');
             }

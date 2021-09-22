@@ -301,13 +301,16 @@ module.exports = (io, app) => {
 
                     client.on('announce', (data) => {
                         if (data.type === "match_start") {
-                            const sentence = [
-                                AUDIO_SENTENCES.random(data.leg_num),
-                                getNameAnnouncement(data.player, "name"),
-                                AUDIO_SENTENCES.random("throwfirst"),
-                                AUDIO_SENTENCES.random("gameon")
-                            ];
-                            announce(`${data.leg_num} leg, ${data.player.name} to throw first. Game on!`, 'leg_start', sentence);
+                            if (!this.matchStartAnnounced) {
+                                const sentence = [
+                                    AUDIO_SENTENCES.random(data.leg_num),
+                                    getNameAnnouncement(data.player, "name"),
+                                    AUDIO_SENTENCES.random("throwfirst"),
+                                    AUDIO_SENTENCES.random("gameon")
+                                ];
+                                announce(`${data.leg_num} leg, ${data.player.name} to throw first. Game on!`, 'leg_start', sentence);
+                            }
+                            this.matchStartAnnounced = true;
                         }
                     });
 

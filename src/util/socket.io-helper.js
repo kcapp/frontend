@@ -191,6 +191,8 @@ exports.onAnnounce = function (data) {
         alertify.error(data.message);
     } else if (data.type == 'confirm_checkout') {
         $("#modal-confirm-checkout").modal();
+    } else if (data.type == 'match_start') {
+        // No need to announce anything
     } else {
         alertify.notify(data.message);
     }
