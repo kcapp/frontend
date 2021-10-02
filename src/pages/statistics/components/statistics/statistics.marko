@@ -86,6 +86,9 @@ $ var types = require('../../../../components/scorecard/components/match_types')
 <else-if(state.type == types.GOTCHA)>
   <statistics-table-gotcha statistics=state.statistics players=input.players />
 </else-if>
+<else-if(state.type == types.JDC_PRACTICE)>
+  <statistics-table-jdc-practice statistics=state.statistics players=input.players />
+</else-if>
 <else-if(state.type == state.GLOBAL)>
   <statistics-table-global statistics=state.statistics players=input.players/>
 </else-if>

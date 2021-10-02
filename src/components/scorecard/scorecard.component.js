@@ -12,6 +12,7 @@ const bermudaTriangle = require('./components/bermuda_triangle');
 const fourTwenty = require('./components/four_twenty');
 const killBull = require('./components/kill_bull');
 const gotcha = require('./components/gotcha');
+const jdcPractice = require('./components/jdc_practice');
 
 const types = require("./components/match_types");
 
@@ -95,7 +96,7 @@ module.exports = {
         }
         if (this.state.isSubmitted) {
             this.state.currentDart--;
-            var dart = this.getCurrentDart();
+            const dart = this.getCurrentDart();
 
             switch (this.state.type) {
                 case types.SHOOTOUT:
@@ -139,10 +140,13 @@ module.exports = {
                 case types.GOTCHA:
                     gotcha.removeLast.bind(this)(dart, external);
                     break;
+                case types.JDC_PRACTICE:
+                    jdcPractice.removeLast.bind(this)(dart, external);
+                    break;
             }
             dart.reset();
         } else {
-            var dart = this.getCurrentDart();
+            const dart = this.getCurrentDart();
             dart.reset();
         }
         this.state.isSubmitted = true;
@@ -188,6 +192,9 @@ module.exports = {
                     break;
                 case types.GOTCHA:
                     submitting = gotcha.confirmThrow.bind(this)(external);
+                    break;
+                case types.JDC_PRACTICE:
+                    submitting = jdcPractice.confirmThrow.bind(this)(external);
                     break;
             }
         }

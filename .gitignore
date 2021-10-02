@@ -71,9 +71,10 @@ public/stylesheets/style.css
 static/
 .cache/
 
+# Custom uploaded player pictures
+public/images/players
+
 # Geneated MarkoJS files
 *.marko.js
-
-
 
 .DS_Store

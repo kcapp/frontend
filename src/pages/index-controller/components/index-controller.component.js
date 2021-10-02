@@ -162,7 +162,8 @@ module.exports = {
         this.state.startingScore = null;
 
         if (type === types.SHOOTOUT || type === types.CRICKET || type === types.AROUND_THE_WORLD ||
-            type === types.SHANGHAI || type === types.AROUND_THE_CLOCK || type === types.BERMUDA_TRIANGLE) {
+            type === types.SHANGHAI || type === types.AROUND_THE_CLOCK || type === types.BERMUDA_TRIANGLE ||
+            type === types.JDC_PRACTICE) {
             this.state.startingScore = 0;
             this.state.scores = null;
         } else if (type === types.TIC_TAC_TOE) {

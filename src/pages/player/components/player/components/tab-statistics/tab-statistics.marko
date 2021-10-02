@@ -108,6 +108,17 @@ $ var types = require('../../../../../../components/scorecard/components/match_t
                             <statistics-card label="Others Reset" value=`${input.statistics.legs_played ? input.statistics.others_reset : "-"}` icon="fas fa-redo"/>
                         </td>
                     </else-if>
+                    <else-if(input.type == types.JDC_PRACTICE)>
+                        <td style="width: 25%;">
+                            <statistics-card label="Avg. Score" value=`${input.statistics.legs_played ? input.statistics.score : "-"}` icon="far fa-star"/>
+                        </td>
+                        <td style="width: 25%;">
+                            <statistics-card label="MPR" value=`${input.statistics.legs_played ? input.statistics.mpr.toFixed(2) : "-"}` icon="fas fa-circle-notch"/>
+                        </td>
+                        <td style="width: 25%;">
+                            <statistics-card label="Doubles Hitrate" value=`${(input.statistics.doubles_hitrate * 100).toFixed(2)} %` icon="fas fa-angle-double-right"/>
+                        </td>
+                    </else-if>
                     <else>
                         <div>TODO</div>
                     </else>
@@ -213,6 +224,12 @@ $ var types = require('../../../../../../components/scorecard/components/match_t
                     <th class="text-center">Times Reset</th>
                     <th class="text-center">Others Reset</th>
                 </else-if>
+                <else-if(input.type == types.JDC_PRACTICE)>
+                    <th class="text-center">Score</th>
+                    <th class="text-center">MPR</th>
+                    <th class="text-center">Shanghai Count</th>
+                    <th class="text-center">Doubles Hitrate</th>
+                </else-if>
                 <th class="text-center"/>
             </tr>
         </thead>
@@ -313,6 +330,12 @@ $ var types = require('../../../../../../components/scorecard/components/match_t
                         <td class="text-center">${statistics.highest_score}</td>
                         <td class="text-center">${statistics.times_reset}</td>
                         <td class="text-center">${statistics.others_reset}</td>
+                    </else-if>
+                    <else-if(input.type == types.JDC_PRACTICE)>
+                        <td class="text-center">${statistics.score}</td>
+                        <td class="text-center">${statistics.mpr.toFixed(2)}</td>
+                        <td class="text-center">${statistics.shanghai_count}</td>
+                        <td class="text-center">${(statistics.doubles_hitrate * 100).toFixed(2)}%</td>
                     </else-if>
                     <td>
                         <a href=`/legs/${history.id}/result`>

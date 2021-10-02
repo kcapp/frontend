@@ -246,6 +246,43 @@ $ var types = require("../../../../components/scorecard/components/match_types")
         </td>
       </tr>
     </else-if>
+    <else-if(input.type === types.JDC_PRACTICE)>
+      $ const target = types.TARGET_JDC_PRACTICE[input.leg.round];
+      <if(target.constructor === Array)>
+        $ const currentDart = state.currentDart;
+        $ const doubleTarget = target[currentDart];
+        <tr class='row'>
+          <td rowspan='2'>
+            <score-button text="Miss" value=0 multiplier=1 clazz='fill-button' on-button-press("onButtonPress")/>
+          </td>
+          <td rowspan='2' style="width: 50%;">
+            <score-button text=`Double (${doubleTarget.value === 25 ? "Bull" : doubleTarget.value})` value=doubleTarget.value multiplier=2 clazz='btn-double fill-button' on-button-press("onButtonPress")/>
+          </td>
+          <td rowspan='2' style="width: 5%;">
+            <score-button icon="fas fa-long-arrow-alt-left" clazz='fill-button' isUndo=true on-button-press("onButtonPress")/>
+          </td>
+        </tr>
+      </if>
+      <else>
+        <tr class='row'>
+          <td rowspan='2'>
+            <score-button text="Miss" value=0 multiplier=1 clazz='fill-button' on-button-press("onButtonPress")/>
+          </td>
+          <td rowspan='2' style="width: 25%;">
+            <score-button text=`Single (${target.value})` value=target.value multiplier=1 clazz='fill-button' on-button-press("onButtonPress")/>
+          </td>
+          <td rowspan='2' style="width: 25%;">
+            <score-button text=`Double (${target.value})` value=target.value multiplier=2 clazz='btn-double fill-button' on-button-press("onButtonPress")/>
+          </td>
+          <td rowspan='2' style="width: 25%;">
+            <score-button text=`Triple (${target.value})` value=target.value multiplier=3 clazz='btn-triple fill-button' on-button-press("onButtonPress")/>
+          </td>
+          <td rowspan='2' style="width: 5%;">
+            <score-button icon="fas fa-long-arrow-alt-left" clazz='fill-button' isUndo=true on-button-press("onButtonPress")/>
+          </td>
+        </tr>
+      </else>
+    </else-if>
     <else>
       <all-buttons-input on-button-press("onButtonPress")/>
     </else>

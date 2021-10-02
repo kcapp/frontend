@@ -251,14 +251,14 @@ module.exports = {
         const KEY_DELETE = 46;
         const simplified = [ KEY_END, KEY_ARROW_DOWN, KEY_PAGE_DOWN, KEY_INSERT, KEY_DELETE ];
 
-        var component = this.findActive(this.getComponents('players'));
+        const component = this.findActive(this.getComponents('players'));
         if (e.key === 'Backspace') {
             component.removeLast();
             e.preventDefault();
         } else if (types.SUPPORT_SIMPLE_INPUT.includes(this.input.match.match_type.id) && simplified.includes(e.keyCode)) {
-            var value = 0;
+            let value = 0;
 
-            var multiplier;
+            let multiplier;
             if (this.input.match.match_type.id === types.DARTS_AT_X) {
                 value = this.state.leg.starting_score
             } else if (this.input.match.match_type.id === types.AROUND_THE_CLOCK) {
@@ -271,7 +271,7 @@ module.exports = {
             } else if (this.input.match.match_type.id === types.AROUND_THE_WORLD || this.input.match.match_type.id === types.SHANGHAI) {
                 value = this.state.leg.round === 21 ? 25 : this.state.leg.round;
             } else if (this.input.match.match_type.id === types.BERMUDA_TRIANGLE) {
-                var target = types.TARGET_BERMUDA_TRIANGLE[this.state.leg.round];
+                const target = types.TARGET_BERMUDA_TRIANGLE[this.state.leg.round];
                 if (target.value !== -1) {
                     value = target.value;
                 }
@@ -283,7 +283,17 @@ module.exports = {
                 }
             } else if (this.input.match.match_type.id === types.KILL_BULL) {
                 value = 25;
+            } else if (this.input.match.match_type.id === types.JDC_PRACTICE) {
+                const target = types.TARGET_JDC_PRACTICE[this.state.leg.round];
+                if (target.constructor === Array) {
+                    const currentDart = component.state.currentDart;
+                    const doubleTarget = target[currentDart - 1];
+                    value = doubleTarget.value;
+                } else {
+                    value = target.value;
+                }
             }
+
             if (!multiplier) {
                 multiplier = 1;
                 if (e.keyCode === KEY_PAGE_DOWN && value !== 25) {
@@ -385,6 +395,10 @@ module.exports = {
 
     onSmartboardReconnect() {
         this.state.socket.emit('reconnect_smartboard', { leg: this.input.leg, match: this.input.match });
+    },
+
+    onToggleCamera(enabled) {
+        this.state.isPlayerBoardCam = enabled;
     }
 };
 

@@ -143,7 +143,8 @@ module.exports = {
             var scoreComponent = this.getComponent('starting-score');
             scoreComponent.updateOptions(this.input.scores);
             if (this.state.options.game_type === types.SHOOTOUT || this.state.options.game_type == types.CRICKET || this.state.options.game_type === types.AROUND_THE_WORLD ||
-                this.state.options.game_type === types.SHANGHAI || this.state.options.game_type === types.AROUND_THE_CLOCK || this.state.options.game_type === types.BERMUDA_TRIANGLE) {
+                this.state.options.game_type === types.SHANGHAI || this.state.options.game_type === types.AROUND_THE_CLOCK || this.state.options.game_type === types.BERMUDA_TRIANGLE ||
+                this.state.options.game_type === types.JDC_PRACTICE) {
                 scoreComponent.state.index = 0;
                 scoreComponent.state.enabled = false;
             } else if (this.state.options.game_type == types.TIC_TAC_TOE) {

@@ -21,31 +21,37 @@ exports.onScoreUpdate = (data, thiz) => {
     thiz.state.submitting = false;
     console.log(data);
 
-    var leg = data.leg;
-    var globalstat = data.globalstat;
+    const leg = data.leg;
+    const globalstat = data.globalstat;
 
-    var players = data.players;
-    var playersMap = _.indexBy(players, 'player_id');
+    const players = data.players;
+    const playersMap = _.indexBy(players, 'player_id');
 
-    var scorecardComponents = thiz.getComponents('players');
+    const scorecardComponents = thiz.getComponents('players');
 
-    var isLastVisitFishNChips = false;
-    var totalFishNChips = 0;
-    var globalFish = globalstat ? globalstat.fish_n_chips : 0;
-    for (var i = 0; i < scorecardComponents.length; i++) {
-        var component = scorecardComponents[i];
-        var player = playersMap[component.state.playerId]
+    let isLastVisitFishNChips = false;
+    let totalFishNChips = 0;
+    const globalFish = globalstat ? globalstat.fish_n_chips : 0;
+    const currentPlayerIdx = _.findIndex(scorecardComponents, (component) => component.state.playerId === leg.current_player_id);
+    for (let i = 0; i < scorecardComponents.length; i++) {
+        const component = scorecardComponents[i];
+        const player = playersMap[component.state.playerId]
 
-        var isCurrentPlayer = component.state.playerId === leg.current_player_id;
+        const isCurrentPlayer = component.state.playerId === leg.current_player_id;
         if (isCurrentPlayer) {
             isLastVisitFishNChips = players[i === 0 ? players.length - 1 : i - 1].modifiers.is_fish_and_chips;
             component.reset();
+            component.state.jdcDart = null;
+        } else {
+            if (currentPlayerIdx <= i) {
+                component.state.jdcDart = null;
+            }
         }
         component.state.isCurrentPlayer = isCurrentPlayer;
         component.state.player = player;
         component.state.players = players;
 
-        var headerComponent = thiz.getComponent(`player-${player.player_id}`);
+        const headerComponent = thiz.getComponent(`player-${player.player_id}`);
         headerComponent.state.player = player;
         headerComponent.state.isCurrentPlayer = player.player_id === leg.current_player_id;
 
@@ -64,7 +70,7 @@ exports.onScoreUpdate = (data, thiz) => {
     thiz.state.leg = leg;
     thiz.state.players = players;
 
-    var compactComponent = thiz.getComponent("compact-input");
+    const compactComponent = thiz.getComponent("compact-input");
     if (compactComponent) {
         compactComponent.onScoreUpdate(data);
     }

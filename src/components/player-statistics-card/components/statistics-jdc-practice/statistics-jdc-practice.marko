@@ -1,0 +1,30 @@
+$ const types = require("../../../scorecard/components/match_types");
+
+$ const statistic = input.statistic;
+$ const player = input.player;
+<if(input.header)>
+  <div class="block-container-header-center">
+    <a href=`/players/${player.id}/statistics`>${player.name}</a>
+  </div>
+</if>
+<div class="block-container-with-header">
+  <div class="player-card-match">
+    <div style="padding-bottom: 20px;">
+      <div class="player-pic-cutout" style="margin: 0 auto;">
+        <player-profile-picture player=player/>
+      </div>
+    </div>
+    <jdc-shirt score=statistic.score />
+    <statistics-row heading="Score" value=statistic.score />
+    <statistics-row heading="MPR" value=statistic.mpr.toFixed(2) />
+    <statistics-row heading="Shanghai Count" value=`${statistic.shanghai_count}`/>
+    <statistics-row heading="Double Hitrate" value=`${(statistic.doubles_hitrate * 100).toFixed(2)} %`/>
+
+    <if(input.isWinner)>
+        <div class="label-winner">WINNER</div>
+    </if>
+    <else>
+        <div class="label-loser">&nbsp;</div>
+    </else>
+  </div>
+</div>

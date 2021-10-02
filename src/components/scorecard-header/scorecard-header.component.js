@@ -17,7 +17,7 @@ module.exports = {
             name: name,
             isCurrentPlayer: player.is_current_player,
             wins: player.wins ? player.wins : 0,
-            cameraEnabled: false
+            cameraEnabled: true
         }
     },
     onMount() {
@@ -33,5 +33,9 @@ module.exports = {
     },
     setScored(scored) {
         this.setStateDirty('player');
+    },
+    toggleCamera() {
+        this.state.cameraEnabled = !this.state.cameraEnabled;
+        this.emit("toggle-camera", this.state.cameraEnabled);
     }
 };

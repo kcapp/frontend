@@ -2,6 +2,13 @@
 
 A preview of major changes can be found in the Wiki ([Latest Changes](https://github.com/kcapp/frontend/wiki/Latest_Changes))
 ## [2.1.0] - TBD
+#### Feature
+- Added new game type `JDC Practice Routine`
+
+#### Fixed
+- Toggle Camera button to remove stream when not available
+- Rendering bug when opening finished `Bermuda Triangle` matches
+- Overflow scrollbar when needed
 
 ## [2.0.0] - 2021-09-19
 #### Feature
