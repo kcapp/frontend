@@ -377,6 +377,10 @@ module.exports = {
             case '0': text += '0'; break;
             default: /* Return */ return;
         }
+        if ((currentValue + text) === "25" && currentMultiplier === 3) {
+            // Don't allow triple bull
+            currentMultiplier = 2;
+        }
         component.setDart(text, currentMultiplier);
     },
 

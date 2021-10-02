@@ -5,10 +5,14 @@ A preview of major changes can be found in the Wiki ([Latest Changes](https://gi
 #### Feature
 - Added new game type `JDC Practice Routine`
 
+#### Changed
+- Removed announcement of `0` score in `Cricket`
+
 #### Fixed
 - Toggle Camera button to remove stream when not available
 - Rendering bug when opening finished `Bermuda Triangle` matches
-- Overflow scrollbar when needed
+- Bug which allowed setting triple `Bull`
+- Overflow scrollbar on match result for matches with a lot of players
 
 ## [2.0.0] - 2021-09-19
 #### Feature
