@@ -16,6 +16,6 @@ window.onload = () => {
         // Forward controller to screensaver
         setTimeout(() => {
             location.href = "/screensaver";
-        }, 10*60*1000);
+        }, 2*60*1000);
     }
 }

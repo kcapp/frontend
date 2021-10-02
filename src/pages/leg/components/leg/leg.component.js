@@ -41,15 +41,16 @@ module.exports = {
         socket.on('say', this.onSay.bind(this));
         socket.on('announce', io.onAnnounce.bind(this));
         socket.on('leg_finished', (data) => {
-            if (localStorage.get('controller')) {
-                // If this is a controller, forward back to start page
-                location.href = '/controller';
-            }
             socket.on('say_finish', () => {
                 // Wait for announcement to finish before moving on
                 const match = data.match;
                 if (match.is_finished) {
-                    location.href = `${window.location.origin}/matches/${match.id}/result`;
+                    if (localStorage.get('controller')) {
+                        // If this is a controller, forward back to start page
+                        location.href = '/controller';
+                    } else {
+                        location.href = `${window.location.origin}/matches/${match.id}/result`;
+                    }
                 } else {
                     location.href = `${window.location.origin}/legs/${match.current_leg_id}`;
                 }

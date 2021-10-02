@@ -6,11 +6,11 @@ module.exports = {
     },
     onMount() {
         window.onclick = () =>{
-            location.href = "/controller";
+            history.back();
         }
         setTimeout(() => {
-            // Stop the screensaver after about 2.5minutes
+            // Stop the screensaver after a while
             this.state.running = false;
-        }, 148000);
+        }, 5*60*100);
     }
 }
