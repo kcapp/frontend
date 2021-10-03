@@ -61,7 +61,7 @@ $ if (leg.parameters && leg.parameters.outshot_type) subheadings[1].push({ headi
               $ var player = input.players[statistic.player_id];
               <td class="text-center" style="padding: 0px 10px 0px 10px;">
                 <div>
-                  <player-statistics-card header=true elo=false match=input.match statistic=statistic statistics=input.statistics player=player leg=leg/>
+                  <player-statistics-card header=true elo=false match=input.match statistic=statistic statistics=input.statistics player=player leg=leg isMatchResult=false/>
                 </div>
               </td>
             </for>

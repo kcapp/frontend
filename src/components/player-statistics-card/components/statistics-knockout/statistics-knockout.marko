@@ -18,7 +18,9 @@ $ var player = input.player;
     <statistics-row heading="Avg. Score" value=statistic.avg_score.toFixed(2)/>
     <statistics-row heading="Lives Lost" value=statistic.lives_lost/>
     <statistics-row heading="Lives Taken" value=statistic.lives_taken/>
-    <statistics-row heading="Final Position" value=statistic.final_position/>
+    <if(!input.isMatchResult)>
+      <statistics-row heading="Final Position" value=statistic.final_position/>
+    </if>
 
     <if(input.isWinner)>
       <div class="label-winner">WINNER</div>

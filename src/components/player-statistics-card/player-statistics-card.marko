@@ -43,7 +43,7 @@ $ var startingScore = input.player.starting_score || 0;
   <statistics-jdc-practice isWinner=state.isWinner player=input.player statistic=input.statistic />
 </else-if>
 <else-if(match.match_type.id == type.KNOCKOUT)>
-  <statistics-knockout isWinner=state.isWinner player=input.player statistic=input.statistic />
+  <statistics-knockout isWinner=state.isWinner player=input.player statistic=input.statistic isMatchResult=input.isMatchResult />
 </else-if>
 <else>
   <div class="block-container-with-header">
