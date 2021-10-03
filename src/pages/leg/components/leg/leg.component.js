@@ -405,4 +405,3 @@ module.exports = {
         this.state.isPlayerBoardCam = enabled;
     }
 };
-

@@ -1,4 +1,4 @@
-var io = require('../../../../util/socket.io-helper.js');
+const io = require('../../../../util/socket.io-helper.js');
 
 module.exports = {
     onCreate(input) {
@@ -6,10 +6,10 @@ module.exports = {
 
     onMount() {
         // Setup socket endpoints
-        var socket = io.connect(window.location.origin + '/active');
+        const socket = io.connect(`${window.location.origin}/active`);
         socket.on('warmup_started', (data) => {
             if (data.match.tournament_id !== null) {
-                location.href = '/matches/' + data.match.id + '/preview';
+                location.href = `/matches/${data.match.id}/preview`;
             }
         });
     }

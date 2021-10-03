@@ -144,7 +144,7 @@ module.exports = {
             scoreComponent.updateOptions(this.input.scores);
             if (this.state.options.game_type === types.SHOOTOUT || this.state.options.game_type == types.CRICKET || this.state.options.game_type === types.AROUND_THE_WORLD ||
                 this.state.options.game_type === types.SHANGHAI || this.state.options.game_type === types.AROUND_THE_CLOCK || this.state.options.game_type === types.BERMUDA_TRIANGLE ||
-                this.state.options.game_type === types.JDC_PRACTICE) {
+                this.state.options.game_type === types.JDC_PRACTICE || this.state.options.game_type === types.KNOCKOUT) {
                 scoreComponent.state.index = 0;
                 scoreComponent.state.enabled = false;
             } else if (this.state.options.game_type == types.TIC_TAC_TOE) {
@@ -236,16 +236,17 @@ module.exports = {
             match_mode: this.state.options.game_mode,
             match_stake: this.state.options.stake,
             outshot_type: this.state.options.outshot_type,
+            starting_lives: this.state.options.starting_lives,
             venue: venueId,
             players: this.state.selected.map(player => player.id),
             office_id: officeId,
             player_handicaps: handicaps
         }
-        axios.post(window.location.origin + '/matches/new', body)
+        axios.post(`${window.location.origin}/matches/new`, body)
             .then(response => {
                 // Store venue in localstorage so it doesn't have to be selected each time
                 localStorage.set('venue', this.state.options.venue);
-                location.href = 'legs/' + response.data.current_leg_id
+                location.href = `legs/${response.data.current_leg_id}`;
             }).catch(error => {
                 this.state.submitting = false;
 

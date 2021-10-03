@@ -66,6 +66,9 @@ $ const types = require('../../../../components/scorecard/components/match_types
           <if(state.options.game_type == types.TIC_TAC_TOE)>
             <game-option-selector values=input.outshots options=state.options key="outshot-type" label="Outshot Type" attribute="outshot_type" defaultValue=types.OUTSHOT_DOUBLE/>
           </if>
+          <if(state.options.game_type == types.KNOCKOUT)>
+            <game-option-selector values=input.lives options=state.options key="starting-lives" label="Starting Lives" attribute="starting_lives" defaultValue=5/>
+          </if>
           <game-option-selector values=input.modes options=state.options key="game-mode" label="Mode" attribute="game_mode" defaultValue=state.options.game_mode/>
           <game-option-selector values=input.stakes options=state.options key="stake" label="Stake" attribute="stake" addNull=true defaultAttrName="item"/>
           <game-option-selector values=state.venues options=state.options key="venue" label="Venue" attribute="venue" addNull=true defaultValue=state.options.venue/>

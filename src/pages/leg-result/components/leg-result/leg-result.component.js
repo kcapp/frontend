@@ -1,14 +1,14 @@
 var types = require("../../../../components/scorecard/components/match_types");
 
 var moment = require("moment");
-var axios = require("axios");
-var alertify = require("../../../../util/alertify");
-var _ = require('underscore');
-var Chart = require("chart.js");
+const axios = require("axios");
+const alertify = require("../../../../util/alertify");
+const _ = require('underscore');
+const Chart = require("chart.js");
 
 module.exports = {
     onCreate(input) {
-        var leg = input.leg;
+        const leg = input.leg;
 
         leg.started = moment(leg.created_at).format('YYYY-MM-DD HH:mm:ss');
         leg.finished = leg.end_time === null ? '-' : moment(leg.end_time).format('YYYY-MM-DD HH:mm:ss');
@@ -16,24 +16,20 @@ module.exports = {
         if (leg.visits.length > 0) {
             leg.duration = moment.duration(moment(leg.end_time).diff(leg.visits[0].created_at)).asMinutes().toFixed();
         }
-        for (var i = 0; i < leg.visits.length; i++) {
-            var visit = leg.visits[i];
+        for (let i = 0; i < leg.visits.length; i++) {
+            const visit = leg.visits[i];
 
-            var count = leg.players.length;
-            var idx = leg.players.indexOf(visit.player_id);
+            const count = leg.players.length;
+            const idx = leg.players.indexOf(visit.player_id);
 
-            var order = [ leg.players[idx] ];
-            for (var j = 1; j < leg.players.length; j++) {
+            const order = [ leg.players[idx] ];
+            for (let j = 1; j < leg.players.length; j++) {
                 order[j] = leg.players[(idx + j) < count ? idx + j : (j - (count - idx))];
             }
-            var scores = visit.scores[order[0]];
-            for (var j = 1; j < order.length; j++) {
+            let scores = visit.scores[order[0]];
+            for (let j = 1; j < order.length; j++) {
                 var id = order[j];
-                if (leg.is_finished) {
-                    scores += " : " + visit.scores[id];
-                } else {
-                    scores += " : " + (visit.scores[id] ? visit.scores[id] : 0);
-                }
+                scores += ` : ${visit.scores[id] ? visit.scores[id] : 0}`;
             }
             visit.score_str = scores;
         }

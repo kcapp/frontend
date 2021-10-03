@@ -102,6 +102,21 @@ $ const types = require("../../../components/scorecard/components/match_types.js
                         </div>
                     </div>
                 </else-if>
+                <else-if(state.gameType === types.KNOCKOUT)>
+                    <div>
+                        <div class="block-container-header">
+                            <i class="fas fa-users"/>
+                            <span>Lives</span>
+                        </div>
+                        <div class="block-container-with-header">
+                            <div class="form-group form-check players-all">
+                                <for|life| of=input.lives>
+                                    <selector-button key="lives[]" data=life on-click("livesSelected") selected=state.startingLives/>
+                                </for>
+                            </div>
+                        </div>
+                    </div>
+                </else-if>
                 <button id="next-button" class="btn btn-info" on-click("onNext")>Next >></button>
                 <button id="prev-button" class="btn btn-info" on-click("onPrevious")><< Previous</button>
             </if>

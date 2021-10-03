@@ -4,6 +4,8 @@ A preview of major changes can be found in the Wiki ([Latest Changes](https://gi
 ## [2.1.0] - TBD
 #### Feature
 - Added new game type `JDC Practice Routine`
+- Added new game type `Knockout`
+- Statistics for `X01 Handicap` type
 
 #### Changed
 - Removed announcement of `0` score in `Cricket`
@@ -12,7 +14,8 @@ A preview of major changes can be found in the Wiki ([Latest Changes](https://gi
 - Toggle Camera button to remove stream when not available
 - Rendering bug when opening finished `Bermuda Triangle` matches
 - Bug which allowed setting triple `Bull`
-- Overflow scrollbar on match result for matches with a lot of players
+- Avoid forwaring on venue matches when already on the page
+- Disable warmup button after first press
 
 ## [2.0.0] - 2021-09-19
 #### Feature

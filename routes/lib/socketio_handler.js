@@ -184,7 +184,7 @@ module.exports = (io, app) => {
                         log('warmup_started');
                         _this.io.of('/active').emit('warmup_started', { leg: data.leg, match: data.match });
                         if (data.match.venue) {
-                            _this.io.of(`/venue/${data.match.venue.id}`).emit('venue_new_match', { leg: data.leg });
+                            _this.io.of(`/venue/${data.match.venue.id}`).emit('warmup_started', { leg: data.leg });
                         }
                     });
 

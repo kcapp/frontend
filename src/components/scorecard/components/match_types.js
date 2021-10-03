@@ -12,6 +12,7 @@ exports.FOUR_TWENTY = 11;
 exports.KILL_BULL = 12;
 exports.GOTCHA = 13;
 exports.JDC_PRACTICE = 14;
+exports.KNOCKOUT = 15;
 
 // Outshots
 exports.OUTSHOT_DOUBLE = 1;

@@ -2,8 +2,8 @@ $ var types = require('../../../../components/scorecard/components/match_types')
 <page-header heading="Statistics" subheading=`${state.from} to ${state.to}` icon="fa-signal" navigation=true on-next("navigateNext") on-previous("navigatePrevious")/>
 <office-selector offices=input.offices clazz="float-right" on-office-changed("officeChanged")/>
 <statistics-selector addGlobal=true on-type-changed("typeChanged")/>
-<if(state.type == types.X01)>
-  <if(state.checkout_statistics.length !== 0)>
+<if(state.type == types.X01 || state.type == types.X01HANDICAP)>
+  <if(state.type == types.X01 && state.checkout_statistics.length !== 0)>
     <div class="block-container-red">Highest Checkouts</div>
     <div class="block-container no-padding">
       <div class="table table-responsive">
@@ -88,6 +88,9 @@ $ var types = require('../../../../components/scorecard/components/match_types')
 </else-if>
 <else-if(state.type == types.JDC_PRACTICE)>
   <statistics-table-jdc-practice statistics=state.statistics players=input.players />
+</else-if>
+<else-if(state.type == types.KNOCKOUT)>
+  <statistics-table-knockout statistics=state.statistics players=input.players />
 </else-if>
 <else-if(state.type == state.GLOBAL)>
   <statistics-table-global statistics=state.statistics players=input.players/>

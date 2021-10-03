@@ -27,6 +27,7 @@ module.exports = {
             scores: input.scores,
             startingScore: undefined,
             outshotType: undefined,
+            startingLives: undefined,
             gameMode: input.modes[0].id,
             handicaps: [ { id: 0, name: "0"}, { id: 100, name: "+100"}, { id: 200, name: "+200"}, { id: -1, name: "Custom"} ],
             playerHandicaps: {},
@@ -114,6 +115,7 @@ module.exports = {
             match_type: this.state.gameType,
             match_mode: this.state.gameMode,
             outshot_type: this.state.outshotType,
+            starting_lives: this.state.startingLives,
             venue: venueId,
             players: this.state.playersSelected.map(player => player.id),
             office_id: officeId,
@@ -185,6 +187,10 @@ module.exports = {
                 this.state.playerHandicaps[player.id] = 0;
             });
             this.setStateDirty('handicaps');
+        } else if (type === types.KNOCKOUT) {
+            this.state.startingScore = 0;
+            this.state.scores = null;
+            this.state.startingLives = this.input.lives[2].id;
         } else {
             this.state.scores = this.input.scores;
         }
@@ -215,5 +221,8 @@ module.exports = {
         }
         this.state.playerHandicaps[selected.input.extra] = handicap;
         this.setStateDirty('playerHandicaps');
-    }
+    },
+    livesSelected(event, selected) {
+        this.state.startingLives = selected.input.data.id;
+    },
 }
