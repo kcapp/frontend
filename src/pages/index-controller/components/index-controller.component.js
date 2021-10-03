@@ -5,9 +5,6 @@ const types = require("../../../components/scorecard/components/match_types.js")
 
 module.exports = {
     onCreate(input) {
-        input.players = _.filter(input.players, (player) => {
-            return !player.is_bot;
-        });
         const steps = {
             INITIAL: 0,
             SELECT_PLAYERS: 1,
@@ -31,7 +28,8 @@ module.exports = {
             gameMode: input.modes[0].id,
             handicaps: [ { id: 0, name: "0"}, { id: 100, name: "+100"}, { id: 200, name: "+200"}, { id: -1, name: "Custom"} ],
             playerHandicaps: {},
-            matches: []
+            matches: [],
+            filteredPlayers: undefined
         }
     },
     onMount() {
@@ -99,11 +97,6 @@ module.exports = {
         this.state.step++;
         e.preventDefault();
     },
-    showAll(e) {
-        this.state.players = _.sortBy(this.input.players, (player) => player.name);
-        this.setStateDirty('players');
-        e.preventDefault();
-    },
     onStart(e) {
         this.state.submitting = true;
 
@@ -136,13 +129,10 @@ module.exports = {
     addPlayer(event, selected) {
         const player = selected.input.data;
 
-        this.state.players = _.reject(this.state.players, (el) => {
-            return el.id === player.id;
-        });
-        this.setStateDirty('players');
-
-        this.state.playersSelected.push(player);
-        this.setStateDirty('playersSelected');
+        if (!this.state.playersSelected.includes(player)) {
+            this.state.playersSelected.push(player);
+            this.setStateDirty('playersSelected');
+        }
     },
     removePlayer(event, selected) {
         const player = selected.input.data;
@@ -151,11 +141,6 @@ module.exports = {
             return el.id === player.id;
         });
         this.setStateDirty('playersSelected');
-
-        const players = this.state.players;
-        players.push(player);
-        this.state.players = _.sortBy(players, 'name');
-        this.setStateDirty('players');
     },
     gameTypeSelected(event, selected) {
         const type = selected.input.data.id;
@@ -224,5 +209,18 @@ module.exports = {
     },
     livesSelected(event, selected) {
         this.state.startingLives = selected.input.data.id;
+    },
+    filterPlayers(letter, event) {
+        this.state.filteredPlayers = letter;
+
+        let players;
+        if (letter === "All") {
+            players = this.input.players;
+        } else {
+            players = _.filter(this.input.players, (player) => player.name.startsWith(letter));
+        }
+        this.state.players = _.sortBy(players, (player) => player.name);
+        this.setStateDirty('players');
+        event.preventDefault();
     },
 }

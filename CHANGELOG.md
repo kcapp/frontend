@@ -6,6 +6,7 @@ A preview of major changes can be found in the Wiki ([Latest Changes](https://gi
 - Added new game type `JDC Practice Routine`
 - Added new game type `Knockout`
 - Statistics for `X01 Handicap` type
+- Buttons to filter players by name in controller
 
 #### Changed
 - Removed announcement of `0` score in `Cricket`
@@ -16,6 +17,7 @@ A preview of major changes can be found in the Wiki ([Latest Changes](https://gi
 - Bug which allowed setting triple `Bull`
 - Avoid forwaring on venue matches when already on the page
 - Disable warmup button after first press
+- `Continue match` from Controller if any match contained a bot
 
 ## [2.0.0] - 2021-09-19
 #### Feature

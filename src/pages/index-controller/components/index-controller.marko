@@ -14,9 +14,9 @@ $ const types = require("../../../components/scorecard/components/match_types.js
         <div>
             <div class="block-container-header">
                 <i class="fas fa-users"/>
-                <span>Players</span>
+                <span class="ml-10">Players</span>
             </div>
-            <div class="block-container-with-header">
+            <div style="min-height: 112px; margin-bottom: 0px;" class="block-container-with-header">
                 <button id="next-button" class="btn btn-info" disabled=(state.playersSelected.length === 0) on-click("onNext")>Next >></button>
                 <button id="prev-button" class="btn btn-info" on-click("onPrevious")><< Previous</button>
                 <div class="form-group form-check players-all">
@@ -27,23 +27,27 @@ $ const types = require("../../../components/scorecard/components/match_types.js
             </div>
             <div class="block-container-header">
                 <i class="fas fa-mouse-pointer"/>
-                <span>Select players</span>
+                <span class="ml-10">Select players</span>
             </div>
-            <div class="block-container-with-header">
+            <div style="padding-top: 5px; min-height: 167px;" class="block-container-with-header">
+                <div style="clear: both; padding-bottom: 10px;">
+                    <for|letter| of=[ "All", "A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z","Æ","Ø","Å" ]>
+                        <button class=`btn btn-letter ${state.filteredPlayers === letter ? "btn-primary" : "btn-light"}` on-click("filterPlayers", letter)>${letter}</button>
+                    </for>
+                </div>
                 <div class="form-group form-check players-all">
                     <for|player| of=state.players>
                         <selector-button data=player on-click("addPlayer")/>
                     </for>
                 </div>
-                <button id="show-all-button" class="btn btn-warning" style=`display: ${state.players !== input.players ? '' : 'none'};` on-click("showAll")>Show All</button>
             </div>
         </div>
     </else-if>
     <else-if(state.step === state.steps.SELECT_GAME_TYPE)>
         <div>
             <div class="block-container-header">
-                <i class="fas fa-users"/>
-                <span>Game Type</span>
+                <i class="fas fa-cogs"/>
+                <span class="ml-10">Game Type</span>
             </div>
             <div class="block-container-with-header">
                 <div class="form-group form-check players-all">
@@ -56,8 +60,8 @@ $ const types = require("../../../components/scorecard/components/match_types.js
                 <if(state.scores)>
                     <div>
                         <div class="block-container-header">
-                            <i class="fas fa-users"/>
-                            <span>Starting Score</span>
+                            <i class="fas fa-star"/>
+                            <span class="ml-10">Starting Score</span>
                         </div>
                         <div class="block-container-with-header">
                             <div class="form-group form-check players-all" style="overflow-x: scroll; display: flex;">
@@ -71,8 +75,8 @@ $ const types = require("../../../components/scorecard/components/match_types.js
                 <if(state.gameType === types.TIC_TAC_TOE)>
                     <div>
                         <div class="block-container-header">
-                            <i class="fas fa-users"/>
-                            <span>Outshots</span>
+                            <i class="fas fa-list-ol"/>
+                            <span class="ml-10">Outshots</span>
                         </div>
                         <div class="block-container-with-header">
                             <div class="form-group form-check players-all">
@@ -86,8 +90,8 @@ $ const types = require("../../../components/scorecard/components/match_types.js
                 <else-if(state.gameType === types.X01HANDICAP)>
                     <div>
                         <div class="block-container-header">
-                            <i class="fas fa-users"/>
-                            <span>Handicaps</span>
+                            <i class="fas fa-not-equal"/>
+                            <span class="ml-10">Handicaps</span>
                         </div>
                         <div class="block-container-with-header">
                             <for|player| of=state.playersSelected>
@@ -105,8 +109,8 @@ $ const types = require("../../../components/scorecard/components/match_types.js
                 <else-if(state.gameType === types.KNOCKOUT)>
                     <div>
                         <div class="block-container-header">
-                            <i class="fas fa-users"/>
-                            <span>Lives</span>
+                            <i class="fas fa-heart"/>
+                            <span class="ml-10">Lives</span>
                         </div>
                         <div class="block-container-with-header">
                             <div class="form-group form-check players-all">
@@ -125,8 +129,8 @@ $ const types = require("../../../components/scorecard/components/match_types.js
     <else-if(state.step === state.steps.SELECT_GAME_MODE)>
         <div>
             <div class="block-container-header">
-                <i class="fas fa-users"/>
-                <span>Game Mode</span>
+                <i class="fas fa-bullseye"/>
+                <span class="ml-10">Game Mode</span>
             </div>
             <div class="block-container-with-header">
                 <div class="form-group form-check players-all">
