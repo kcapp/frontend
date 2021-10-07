@@ -5,7 +5,7 @@ exports.removeLast = function(dart, external) {
     const target = types.TARGET_JDC_PRACTICE[this.state.leg.round];
     if (target.constructor === Array) {
         if (dart.getScore() === target[this.state.currentDart - 1].value && dart.getMultiplier() === 2) {
-            this.state.player.current_score -= dart.getValue() + 50;
+            this.state.player.current_score -= 50;
             this.emit('score-change', this.state.player.current_score, this.state.player.player_id);
         }
     } else {
@@ -46,8 +46,11 @@ exports.confirmThrow = function (external) {
     if (target.constructor === Array) {
         // Doubles
         if (dart.getScore() === target[this.state.currentDart - 2].value && dart.getMultiplier() === 2) {
-            // 50 Bonus points for hitting a double
-            this.state.player.current_score += dart.getValue() + 50;
+            // 50 Points for hitting a double, and 100 for Bull
+            this.state.player.current_score += 50;
+            if (dart.getScore() === 50) {
+                this.state.player.current_score += 50;
+            }
             this.emit('score-change', this.state.player.current_score, this.state.player.player_id);
         }
     } else {
