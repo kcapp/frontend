@@ -17,7 +17,7 @@ function readFiles(src) {
         if (map[key]) {
             return { file: map[key][Math.floor(Math.random() * map[key].length)] };
         }
-        return { text: "" };
+        return { text: `${key}` };
     }
     fs.readdirSync(src).forEach(file => {
         const name = file.split("_")[0];
@@ -247,7 +247,7 @@ module.exports = (io, app) => {
                                                 if (leg.visits.length === 1) {
                                                     _this.io.of('/active').emit('first_throw', { leg: leg, players: players, globalstat: globalstat });
                                                 }
-                                                announceScored(leg.visits[leg.visits.length - 1], match.match_type.id);
+                                                announceScored(leg.visits[leg.visits.length - 1], leg.leg_type.id);
                                                 setTimeout(() => {
                                                     // There is a race between these two announcements, so delay the one slightly
                                                     announceScoreRemaining(currentPlayer);
