@@ -1,6 +1,6 @@
-var types = require("../../../../components/scorecard/components/match_types");
+const types = require("../../../../components/scorecard/components/match_types");
 
-var moment = require("moment");
+const moment = require("moment");
 const axios = require("axios");
 const alertify = require("../../../../util/alertify");
 const _ = require('underscore');
@@ -36,6 +36,7 @@ module.exports = {
         this.state = {
             leg: leg,
             matchId: leg.match_id,
+            matchType: input.leg.leg_type.id || input.match.match_type.id,
             legPlayers: input.leg_players,
             players: input.players
         }
@@ -49,14 +50,14 @@ module.exports = {
         var match = this.input.match;
         var visits = leg.visits;
 
-        var chartMaxValue = match.match_type.id === types.X01 || match.match_type.id === types.X01HANDICAP ? leg.starting_score : 0;
+        var chartMaxValue = this.state.matchType === types.X01 || this.state.matchType === types.X01HANDICAP ? leg.starting_score : 0;
         var labels = [];
         var values = { }
         for (let i = 0; i < legPlayers.length; i++) {
             const player = legPlayers[i];
 
             let score = leg.starting_score + player.handicap
-            if (match.match_type.id === types.DARTS_AT_X || match.match_type.id === types.GOTCHA) {
+            if (this.state.matchType === types.DARTS_AT_X || this.state.matchType === types.GOTCHA) {
                 score = 0;
             }
             values[player.player_id] = [ score ];
@@ -78,22 +79,22 @@ module.exports = {
                 values[visit.player_id].push(current);
             }
             else {
-                if (match.match_type.id === types.SHOOTOUT || match.match_type.id === types.DARTS_AT_X || match.match_type.id === types.CRICKET ||
-                    match.match_type.id === types.AROUND_THE_CLOCK || match.match_type.id === types.AROUND_THE_WORLD || match.match_type.id === types.SHANGHAI ||
-                    match.match_type.id === types.TIC_TAC_TOE || match.match_type.id === types.BERMUDA_TRIANGLE || match.match_type.id === types.JDC_PRACTICE) {
+                if (this.state.matchType === types.SHOOTOUT || this.state.matchType === types.DARTS_AT_X || this.state.matchType === types.CRICKET ||
+                    this.state.matchType === types.AROUND_THE_CLOCK || this.state.matchType === types.AROUND_THE_WORLD || this.state.matchType === types.SHANGHAI ||
+                    this.state.matchType === types.TIC_TAC_TOE || this.state.matchType === types.BERMUDA_TRIANGLE || this.state.matchType === types.JDC_PRACTICE) {
                     current = current + visit.score;
                     values[visit.player_id].push(current);
                     if (current > chartMaxValue) {
                         chartMaxValue = current;
                     }
-                } else if (match.match_type.id === types.GOTCHA) {
+                } else if (this.state.matchType === types.GOTCHA) {
                     if (visit.score === 0) {
                         current = 0
                     } else {
                         current += visit.score;
                     }
                     values[visit.player_id].push(current);
-                } else if (match.match_type.id === types.KILL_BULL) {
+                } else if (this.state.matchType === types.KILL_BULL) {
                     if (visit.score === 0) {
                         current = leg.starting_score;
                     } else {

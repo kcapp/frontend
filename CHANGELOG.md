@@ -7,6 +7,7 @@ A preview of major changes can be found in the Wiki ([Latest Changes](https://gi
 - Added new game type `Knockout`
 - Statistics for `X01 Handicap` type
 - Buttons to filter players by name in controller
+- Support for tie break game modes, with different type on last leg
 
 #### Changed
 - Removed announcement of `0` score in `Cricket`

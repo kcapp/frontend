@@ -1,16 +1,16 @@
-$ var types = require("../../../../components/scorecard/components/match_types");
+$ const types = require("../../../../components/scorecard/components/match_types");
 
-$ var leg = state.leg;
-$ var isFinished = leg.is_finished;
-$ var matchType = input.match.match_type.id;
-$ var subheadings = [
+$ const leg = state.leg;
+$ const isFinished = leg.is_finished;
+$ const matchType = leg.leg_type.id || input.match.match_type.id;
+$ const subheadings = [
   [
     { heading: `Started   ${leg.started}`, icon: "fa-clock", type: "far", style: "white-space: pre;" },
     { heading: `Finished ${leg.finished}`, icon: "fa-clock" },
     { heading: `Duration ${leg.duration} minutes`, icon: "fa-stopwatch" }
   ],
   [
-    { heading: `${input.match.match_type.name}`, icon: "fa-bullseye" },
+    { heading: `${input.leg.leg_type.name}`, icon: "fa-bullseye" },
     { heading: `Rounds: ${leg.round - 1}`, icon: "fa-play" }
   ]
 ];
@@ -68,7 +68,7 @@ $ if (leg.parameters && leg.parameters.outshot_type) subheadings[1].push({ headi
           </tr>
         </tbody>
       </table>
-      <if(input.match.match_type.id == types.TIC_TAC_TOE)>
+      <if(matchType == types.TIC_TAC_TOE)>
         <div class="block-container-header-center">Board</div>
         <div class="block-container-with-header">
           <tic-tac-toe-board style="width: 70%;" leg=state.leg players=input.players/>

@@ -276,7 +276,7 @@ $ const cricket = require("./components/cricket");
                   <tr>
                     <td class="text-center" style="padding-top: 10px;">
                       <for|life| from=1 to=state.leg.parameters.starting_lives>
-                        $ var isLost = life > state.player.lives ? true : false;
+                        $ const isLost = life > state.player.lives ? true : false;
                         <i style=`padding-right: 10px; ${isLost ? "color: black;" : "color: red;"}` class=`fa fa-heart fa-2x`/>
                       </for>
                     </td>

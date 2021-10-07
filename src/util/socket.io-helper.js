@@ -140,8 +140,8 @@ exports.say = (data, thiz) => {
 }
 
 exports.onPossibleThrow = function (data, thiz) {
-    var component = thiz.findActive(thiz.getComponents('players'));
-    var compactComponent = thiz.getComponent("compact-input");
+    const component = thiz.findActive(thiz.getComponents('players'));
+    const compactComponent = thiz.getComponent("compact-input");
     if (compactComponent) {
         compactComponent.setStateDirty("players");
     }
@@ -158,7 +158,7 @@ exports.onPossibleThrow = function (data, thiz) {
         }
     }
 
-    var type = thiz.input.match.match_type.id;
+    const type = thiz.input.match.match_type.id;
     if (type == types.X01 || type == types.X01HANDICAP) {
         // Set current dart
         if (data.is_undo) {
@@ -171,7 +171,7 @@ exports.onPossibleThrow = function (data, thiz) {
         component.state.totalScore += data.score * data.multiplier;
 
         // Update player score
-        var header = thiz.getComponent(`player-${data.current_player_id}`);
+        const header = thiz.getComponent(`player-${data.current_player_id}`);
         if (thiz.state.type == types.SHOOTOUT) {
             header.state.player.current_score += (data.score * data.multiplier);
         } else {

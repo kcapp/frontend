@@ -13,7 +13,7 @@ $ const types = require('../../../../components/scorecard/components/match_types
         <for|player| of=input.leg_players>
           <tr>
             <scorecard-header key=`player-${player.player_id}` player=player players=input.players isPlayerBoardCam=state.isPlayerBoardCam on-toggle-camera("onToggleCamera")/>
-            <scorecard key="players[]" uuid=state.uuid leg=state.leg submitting=state.submitting player=player players=input.leg_players type=input.match.match_type.id
+            <scorecard key="players[]" uuid=state.uuid leg=state.leg submitting=state.submitting player=player players=input.leg_players type=state.matchType
                 on-possible-throw("onPossibleThrow")
                 on-score-change("onScoreChange")
                 on-player-busted("onPlayerBusted")
@@ -30,7 +30,7 @@ $ const types = require('../../../../components/scorecard/components/match_types
         </tr>
         <tr>
           <for|player| of=input.leg_players>
-            <scorecard key="players[]" uuid=state.uuid leg=state.leg submitting=state.submitting player=player players=input.leg_players type=input.match.match_type.id
+            <scorecard key="players[]" uuid=state.uuid leg=state.leg submitting=state.submitting player=player players=input.leg_players type=state.matchType
                 on-possible-throw("onPossibleThrow")
                 on-score-change("onScoreChange")
                 on-player-busted("onPlayerBusted")
@@ -41,7 +41,7 @@ $ const types = require('../../../../components/scorecard/components/match_types
       </else>
     </tbody>
   </table>
-  <if(input.match.match_type.id == types.TIC_TAC_TOE)>
+  <if(state.matchType == types.TIC_TAC_TOE)>
     <div class="block-container-header-center">Board</div>
     <div class="block-container-with-header">
       <tic-tac-toe-board key='tic-tac-toe-board' leg=state.leg players=input.players tableStyle=(state.venueConfig.has_dual_monitor ? 'float: right' : '')/>
@@ -52,5 +52,5 @@ $ const types = require('../../../../components/scorecard/components/match_types
 <qr-code-modal/>
 <confirm-checkout on-confirm-checkout("onConfirmCheckout")/>
 <if(state.enableButtonInput)>
-  <button-input-table key="compact-input" type=state.type leg=state.leg compactMode=state.compactMode allButtonsMode=state.allButtonsMode players=state.players on-score-button-pressed("onScoreButtonPressed")/>
+  <button-input-table key="compact-input" type=state.matchType leg=state.leg compactMode=state.compactMode allButtonsMode=state.allButtonsMode players=state.players on-score-button-pressed("onScoreButtonPressed")/>
 </if>
