@@ -10,6 +10,12 @@ module.exports = {
     onCreate(input) {
         const venue = input.match.venue;
 
+        let compactMode = false;
+        let enableButtonInput = false
+        if (input.buttons_only) {
+            compactMode = true;
+            enableButtonInput = true;
+        }
         this.state = {
             uuid: uuidv4().split('-')[0],
             leg: input.leg,
@@ -21,13 +27,14 @@ module.exports = {
             matchType: input.leg.leg_type.id || input.match.match_type.id,
             socket: {},
             audioAnnouncer: undefined,
-            enableButtonInput: false,
-            compactMode: false,
+            enableButtonInput: enableButtonInput,
+            compactMode: compactMode,
             allButtonsMode: false,
             isPlayerBoardCam: input.leg_players.some(player => player.player.board_stream_url),
             announcedStart: false
-
         }
+
+
     },
 
     onMount() {
@@ -44,15 +51,17 @@ module.exports = {
             socket.on('say_finish', () => {
                 // Wait for announcement to finish before moving on
                 const match = data.match;
+                const isController = localStorage.get('controller');
                 if (match.is_finished) {
-                    if (localStorage.get('controller')) {
+                    if (isController) {
                         // If this is a controller, forward back to start page
                         location.href = '/controller';
                     } else {
                         location.href = `${window.location.origin}/matches/${match.id}/result`;
                     }
                 } else {
-                    location.href = `${window.location.origin}/legs/${match.current_leg_id}`;
+                    const base = `${window.location.origin}/legs/${match.current_leg_id}`;
+                    location.href = isController ? `${base}/controller` : `${base}`;
                 }
             });
         });

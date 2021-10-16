@@ -116,7 +116,7 @@ module.exports = {
         }
         axios.post(`${window.location.origin}/matches/new`, body)
             .then(response => {
-                window.location.href = `legs/${response.data.current_leg_id}`;
+                window.location.href = `legs/${response.data.current_leg_id}/controller`;
             }).catch(error => {
                 this.state.submitting = false;
 

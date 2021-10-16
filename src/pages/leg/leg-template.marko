@@ -1,7 +1,29 @@
 import Layout from "../layout.marko"
 
 <${Layout}>
-  <@body>
-    <leg leg=input.leg match=input.match players=input.players leg_players=input.leg_players global_statistics=input.global_statistics locals=input.locals experimental=input.experimental/>
-  </@body>
+  <if(input.controller)>
+      <@big_body>
+        <leg
+          leg=input.leg
+          match=input.match
+          players=input.players
+          leg_players=input.leg_players
+          global_statistics=input.global_statistics
+          locals=input.locals
+          experimental=input.experimental
+          buttons_only=true/>
+    </@big_body>
+  </if>
+  <else>
+    <@body>
+      <leg
+        leg=input.leg
+        match=input.match
+        players=input.players
+        leg_players=input.leg_players
+        global_statistics=input.global_statistics
+        locals=input.locals
+        experimental=input.experimental/>
+    </@body>
+  </else>
 </>

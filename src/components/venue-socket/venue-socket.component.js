@@ -17,17 +17,17 @@ module.exports = {
 
                 const socket = io.connect(`${window.location.origin}/venue/${this.state.venueId}`);
                 socket.on('venue_new_match', (data) => {
-                    if (location.pathname.endsWith(`/legs/${data.leg_id}`)) {
+                    if (location.pathname.endsWith(`/legs/${data.leg_id}`) || location.pathname.endsWith(`/legs/${data.leg_id}/controller`)) {
                         return;
                     }
-                    location.href = `/legs/${data.leg_id}`;
+                    location.href = isController ? `/legs/${data.leg_id}/controller` :`/legs/${data.leg_id}`;
                 });
 
                 socket.on('warmup_started', (data) => {
-                    if (location.pathname.endsWith(`/legs/${data.leg.id}`)) {
+                    if (location.pathname.endsWith(`/legs/${data.leg.id}`) || location.pathname.endsWith(`/legs/${data.leg.id}/controller`)) {
                         return;
                     }
-                    location.href = `/legs/${data.leg.id}`;
+                    location.href = isController ? `/legs/${data.leg.id}/controller` : `/legs/${data.leg.id}`;
                 });
             }
         }

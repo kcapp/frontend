@@ -2,7 +2,7 @@ $ const types = require('../../../../components/scorecard/components/match_types
 
 <div class="alert alert-danger" id="cancel-leg-failed-alert" role="alert" hidden="true">Unable to cancel leg</div>
 <div class="pt-20"/>
-<leg-header leg=state.leg match=input.match experimental=input.experimental
+<leg-header leg=state.leg match=input.match experimental=input.experimental buttons_only=input.buttons_only
   on-enable-button-input("onEnableButtonInput")
   on-enable-compact-mode("onEnableCompactMode")
   on-enable-all-buttons-mode("onEnableAllButtonsMode")/>
@@ -41,7 +41,7 @@ $ const types = require('../../../../components/scorecard/components/match_types
       </else>
     </tbody>
   </table>
-  <if(state.matchType == types.TIC_TAC_TOE)>
+  <if(state.matchType == types.TIC_TAC_TOE && !input.buttons_only)>
     <div class="block-container-header-center">Board</div>
     <div class="block-container-with-header">
       <tic-tac-toe-board key='tic-tac-toe-board' leg=state.leg players=input.players tableStyle=(state.venueConfig.has_dual_monitor ? 'float: right' : '')/>

@@ -1,4 +1,4 @@
-var localStorageUtil = require("../../util/localstorage");
+const localStorageUtil = require("../../util/localstorage");
 
 module.exports = {
     onCreate(input) {

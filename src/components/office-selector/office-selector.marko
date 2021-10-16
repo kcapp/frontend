@@ -1,6 +1,6 @@
-$ var clazz = input.clazz || "";
-$ var padding = input.padding || "5px 0px 5px 0px";
-$ var margin = input.margin || "0px";
+$ const clazz = input.clazz || "";
+$ const padding = input.padding || "5px 0px 5px 0px";
+$ const margin = input.margin || "0px";
 <div class="block-container-with-header" style=`margin-bottom: ${margin}; padding: ${padding};`>
     <div class=`${clazz}`>
         <button class=`btn btn-${state.officeId == 0 ? "primary" : "secondary"}` on-click("changeOfficeEvent") value=0>All</button>

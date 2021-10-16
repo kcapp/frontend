@@ -8,6 +8,7 @@ A preview of major changes can be found in the Wiki ([Latest Changes](https://gi
 - Statistics for `X01 Handicap` type
 - Buttons to filter players by name in controller
 - Support for tie break game modes, with different type on last leg
+- Bigger button layout mode for Tablet controllers
 
 #### Changed
 - Removed announcement of `0` score in `Cricket`
