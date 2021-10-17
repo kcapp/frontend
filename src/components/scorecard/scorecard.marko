@@ -1,7 +1,7 @@
-$ var types = require("./components/match_types");
-$ var cricket = require("./components/cricket");
+$ const types = require("./components/match_types");
+$ const cricket = require("./components/cricket");
 
-<td class=(state.isCurrentPlayer ? "visits-active" : "visits-inactive")>
+<td style=`opacity: ${state.player.lives !== null && state.player.lives <= 0 ? "35%" : "100%"};` class=(state.isCurrentPlayer ? "visits-active" : "visits-inactive")>
   <table>
     <tbody>
       <tr>
@@ -141,7 +141,10 @@ $ var cricket = require("./components/cricket");
               </thead>
               <tbody>
                   <tr>
-                    <td class="text-center target-text">${types.TARGET_BERMUDA_TRIANGLE[input.leg.round].label}</td>
+                    $ const target = types.TARGET_BERMUDA_TRIANGLE[input.leg.round];
+                    <if(target)>
+                      <td class="text-center target-text">${target.label}</td>
+                    </if>
                   </tr>
               </tbody>
             </table>
@@ -172,7 +175,7 @@ $ var cricket = require("./components/cricket");
             <table id='table-killbull' class='table-striped'>
               <thead>
                 <tr>
-                  <td class="text-center">Target</td>
+                  <td class="text-center">Bullseye</td>
                 </tr>
               </thead>
               <tbody>
@@ -182,7 +185,7 @@ $ var cricket = require("./components/cricket");
                     <td class="text-center" style="padding-top: 10px;">
                       <for|bull| from=1 to=bulls>
                         $ var isHit = hits >= bull ? true : false;
-                        <i style=`padding-rght: 10px; ${isHit ? "color: green;" : ""}` class=`fa fa-bullseye`/>
+                        <i style=`padding-right: 10px; ${isHit ? "color: green;" : ""}` class=`fa fa-bullseye`/>
                         <if(bulls > 10 && (bulls / 2 == bull))>
                           <br/>
                         </if>
@@ -228,6 +231,56 @@ $ var cricket = require("./components/cricket");
                   <td class="text-center target-text-gotcha" style="font-weight: 600">Remaining</td>
                   <td class="text-center target-text-gotcha" style="font-weight: 600">${input.leg.starting_score - state.player.current_score}</td>
                 </tr>
+              </tbody>
+            </table>
+          </td>
+        </tr>
+      </if>
+      <if(state.type === types.JDC_PRACTICE)>
+        <tr>
+          <td colspan="3">
+            <table id='table-jdcpractice-scores' class='table-striped'>
+              <thead>
+                <tr>
+                  <td class="text-center">Target</td>
+                </tr>
+              </thead>
+              <tbody>
+                  <tr>
+                    $ const target = types.TARGET_JDC_PRACTICE[input.leg.round];
+                    <if(target)>
+                      <if(target.constructor === Array)>
+                        $ const idx = state.jdcDart ? state.jdcDart : 0;
+                        <td class="text-center target-text">${target[idx > target.length - 1 ? idx - 1 : idx].label}</td>
+                      </if>
+                      <else>
+                        <td class="text-center target-text">${target.label}</td>
+                      </else>
+                    </if>
+                  </tr>
+              </tbody>
+            </table>
+          </td>
+        </tr>
+      </if>
+      <if(state.type === types.KNOCKOUT)>
+        <tr>
+          <td colspan="3">
+            <table id='table-knockout' class='table-striped'>
+              <thead>
+                <tr>
+                  <td class="text-center">Lives</td>
+                </tr>
+              </thead>
+              <tbody>
+                  <tr>
+                    <td class="text-center" style="padding-top: 10px;">
+                      <for|life| from=1 to=state.leg.parameters.starting_lives>
+                        $ const isLost = life > state.player.lives ? true : false;
+                        <i style=`padding-right: 10px; ${isLost ? "color: black;" : "color: red;"}` class=`fa fa-heart fa-2x`/>
+                      </for>
+                    </td>
+                  </tr>
               </tbody>
             </table>
           </td>

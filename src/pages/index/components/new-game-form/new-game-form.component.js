@@ -133,7 +133,9 @@ module.exports = {
     },
     cycleValues(values, current) {
         if (values.length > 0) {
-            var index = _.findIndex(values, (value) => { return value.id === current });
+            const index = _.findIndex(values, (value) => {
+                return value.id === current
+            });
             return values[(index + 1) % values.length].id;
         }
     },
@@ -143,7 +145,8 @@ module.exports = {
             var scoreComponent = this.getComponent('starting-score');
             scoreComponent.updateOptions(this.input.scores);
             if (this.state.options.game_type === types.SHOOTOUT || this.state.options.game_type == types.CRICKET || this.state.options.game_type === types.AROUND_THE_WORLD ||
-                this.state.options.game_type === types.SHANGHAI || this.state.options.game_type === types.AROUND_THE_CLOCK || this.state.options.game_type === types.BERMUDA_TRIANGLE) {
+                this.state.options.game_type === types.SHANGHAI || this.state.options.game_type === types.AROUND_THE_CLOCK || this.state.options.game_type === types.BERMUDA_TRIANGLE ||
+                this.state.options.game_type === types.JDC_PRACTICE || this.state.options.game_type === types.KNOCKOUT) {
                 scoreComponent.state.index = 0;
                 scoreComponent.state.enabled = false;
             } else if (this.state.options.game_type == types.TIC_TAC_TOE) {
@@ -205,7 +208,7 @@ module.exports = {
     newGame(event) {
         this.state.submitting = true;
 
-        var officeId = this.state.officeId;
+        let officeId = this.state.officeId;
         if (officeId <= 0) {
             if (officeId == 0 && this.state.options.venue && this.state.options.venue !== -1) {
                 officeId = this.input.venues[this.state.options.venue].office_id;
@@ -214,41 +217,43 @@ module.exports = {
             }
         }
 
-        var venueId = this.state.options.venue;
+        let venueId = this.state.options.venue;
         if (venueId <= 0) {
             venueId = null;
         }
 
-        var handicaps = {};
+        const handicaps = {};
         if (this.state.options.game_type === types.X01HANDICAP) {
-            for (var i = 0; i < this.state.selected.length; i++) {
-                var player = this.state.selected[i];
+            for (let i = 0; i < this.state.selected.length; i++) {
+                const player = this.state.selected[i];
                 if (player.handicap) {
                     handicaps[player.id] = player.handicap;
                 }
             }
         }
 
-        var body = {
+        const body = {
             starting_score: this.state.options.starting_score,
             match_type: this.state.options.game_type,
             match_mode: this.state.options.game_mode,
             match_stake: this.state.options.stake,
             outshot_type: this.state.options.outshot_type,
+            starting_lives: this.state.options.starting_lives,
             venue: venueId,
             players: this.state.selected.map(player => player.id),
             office_id: officeId,
             player_handicaps: handicaps
         }
-        axios.post(window.location.origin + '/matches/new', body)
+        axios.post(`${window.location.origin}/matches/new`, body)
             .then(response => {
                 // Store venue in localstorage so it doesn't have to be selected each time
                 localStorage.set('venue', this.state.options.venue);
-                location.href = 'legs/' + response.data.current_leg_id
+                const isController = localStorage.get("controller");
+                location.href = isController ? `/legs/${response.data.current_leg_id}/controller` : `/legs/${response.data.current_leg_id}`;
             }).catch(error => {
                 this.state.submitting = false;
 
-                var msg = error.response.data ? error.response.data : "See log for details";
+                const msg = error.response.data ? error.response.data : "See log for details";
                 alert(`Error starting match. ${msg}`);
                 console.log(error);
             });
@@ -264,15 +269,23 @@ module.exports = {
         this.state.officeId = officeId;
 
         if (officeId == 0) {
-            this.state.players =  _.reject(this.input.players, (player) => { return player.is_bot; });
+            this.state.players =  _.reject(this.input.players, (player) => {
+                return player.is_bot;
+            });
             this.state.venues = this.input.venues;
         } else {
             if (office.is_global) {
-                this.state.players =  _.reject(this.input.players, (player) => { return player.is_bot; });
+                this.state.players =  _.reject(this.input.players, (player) => {
+                    return player.is_bot;
+                });
             } else {
-                this.state.players = _.reject(this.input.players, (player) => { return player.office_id != officeId || player.is_bot; });
+                this.state.players = _.reject(this.input.players, (player) => {
+                    return player.office_id != officeId || player.is_bot;
+                });
             }
-            this.state.venues = _.reject(this.input.venues, (venue) => { return venue.office_id != officeId; });
+            this.state.venues = _.reject(this.input.venues, (venue) => {
+                return venue.office_id != officeId;
+            });
         }
         this.getComponent('venue').updateOptions(this.state.venues);
 

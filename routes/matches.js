@@ -304,7 +304,10 @@ router.post('/new', function (req, res, next) {
                 bot_player_config: req.body.bot_player_config,
                 legs: [ {
                     starting_score: req.body.starting_score,
-                    parameters: { outshot_type: { id: req.body.outshot_type } }
+                    parameters: {
+                        outshot_type: { id: req.body.outshot_type },
+                        starting_lives: req.body.starting_lives
+                    }
                 } ],
                 office_id: req.body.office_id,
                 is_practice: isPractice

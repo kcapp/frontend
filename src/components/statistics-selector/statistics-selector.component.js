@@ -7,6 +7,7 @@ module.exports = {
             types: [
                 { id: types.X01, name: "X01" },
                 { id: types.SHOOTOUT, name: "Shooutout" },
+                { id: types.X01HANDICAP, name: "X01 Handicap" },
                 { id: types.CRICKET, name: "Cricket" },
                 { id: types.DARTS_AT_X, name: "99 Darts At" },
                 { id: types.AROUND_THE_WORLD, name: "Around The World" },
@@ -17,6 +18,8 @@ module.exports = {
                 { id: types.FOUR_TWENTY, name: "420" },
                 { id: types.KILL_BULL, name: "Kill Bull" },
                 { id: types.GOTCHA, name: "Gotcha" },
+                { id: types.JDC_PRACTICE, name: "JDC Practice" },
+                { id: types.KNOCKOUT, name: "Knockout" },
             ]
         }
     },

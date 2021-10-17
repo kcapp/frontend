@@ -1,6 +1,28 @@
 # Changelog
 
 A preview of major changes can be found in the Wiki ([Latest Changes](https://github.com/kcapp/frontend/wiki/Latest_Changes))
+## [2.1.0] - 2021-10-17
+#### Feature
+- Added new game type `JDC Practice Routine`
+- Added new game type `Knockout`
+- Statistics for `X01 Handicap` type
+- Buttons to filter players by name in controller
+- Support for tie break game modes, with different type on last leg
+- Bigger button layout mode for Tablet controllers
+
+#### Changed
+- Removed announcement of `0` score in `Cricket`
+- Handle draw for 9 Dart Shootout between two players
+- Reannounce start of match after 10s
+
+#### Fixed
+- Toggle Camera button to remove stream when not available
+- Rendering bug when opening finished `Bermuda Triangle` matches
+- Bug which allowed setting triple `Bull`
+- Avoid forwaring on venue matches when already on the page
+- Disable warmup button after first press
+- `Continue match` from Controller if any match contained a bot
+- Score incorrectly shown as not reset in `Gotcha`
 
 ## [2.0.0] - 2021-09-19
 #### Feature
@@ -67,7 +89,7 @@ A preview of major changes can be found in the Wiki ([Latest Changes](https://gi
 - Multiple score entry methods
     - Including [Unicorn Smartboard](https://github.com/kcapp/smartboard)
 
-
+[2.1.0]: https://github.com/kcapp/frontend/compare/v2.0.0...v2.1.0
 [2.0.0]: https://github.com/kcapp/frontend/compare/v1.2.0...v2.0.0
 [1.2.0]: https://github.com/kcapp/frontend/compare/v1.1.0...v1.2.0
 [1.1.0]: https://github.com/kcapp/frontend/compare/v1.0.0...v1.1.0

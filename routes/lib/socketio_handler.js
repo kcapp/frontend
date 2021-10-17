@@ -17,7 +17,7 @@ function readFiles(src) {
         if (map[key]) {
             return { file: map[key][Math.floor(Math.random() * map[key].length)] };
         }
-        return { text: "" };
+        return { text: `${key}` };
     }
     fs.readdirSync(src).forEach(file => {
         const name = file.split("_")[0];
@@ -184,7 +184,7 @@ module.exports = (io, app) => {
                         log('warmup_started');
                         _this.io.of('/active').emit('warmup_started', { leg: data.leg, match: data.match });
                         if (data.match.venue) {
-                            _this.io.of(`/venue/${data.match.venue.id}`).emit('venue_new_match', { leg: data.leg });
+                            _this.io.of(`/venue/${data.match.venue.id}`).emit('warmup_started', { leg: data.leg });
                         }
                     });
 
@@ -247,7 +247,7 @@ module.exports = (io, app) => {
                                                 if (leg.visits.length === 1) {
                                                     _this.io.of('/active').emit('first_throw', { leg: leg, players: players, globalstat: globalstat });
                                                 }
-                                                announceScored(leg.visits[leg.visits.length - 1], match.match_type.id);
+                                                announceScored(leg.visits[leg.visits.length - 1], leg.leg_type.id);
                                                 setTimeout(() => {
                                                     // There is a race between these two announcements, so delay the one slightly
                                                     announceScoreRemaining(currentPlayer);
@@ -301,13 +301,20 @@ module.exports = (io, app) => {
 
                     client.on('announce', (data) => {
                         if (data.type === "match_start") {
-                            const sentence = [
-                                AUDIO_SENTENCES.random(data.leg_num),
-                                getNameAnnouncement(data.player, "name"),
-                                AUDIO_SENTENCES.random("throwfirst"),
-                                AUDIO_SENTENCES.random("gameon")
-                            ];
-                            announce(`${data.leg_num} leg, ${data.player.name} to throw first. Game on!`, 'leg_start', sentence);
+                            if (!this.matchStartAnnounced) {
+                                const sentence = [
+                                    AUDIO_SENTENCES.random(data.leg_num),
+                                    getNameAnnouncement(data.player, "name"),
+                                    AUDIO_SENTENCES.random("throwfirst"),
+                                    AUDIO_SENTENCES.random("gameon")
+                                ];
+                                announce(`${data.leg_num} leg, ${data.player.name} to throw first. Game on!`, 'leg_start', sentence);
+                            }
+                            this.matchStartAnnounced = true;
+                            setTimeout(() => {
+                                // Reset the state after 10s, incase someone opened the match without starting to play
+                                this.matchStartAnnounced = false;
+                            }, 10000);
                         }
                     });
 

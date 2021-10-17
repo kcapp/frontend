@@ -17,15 +17,15 @@ module.exports = {
     },
 
     onMount() {
-        var activeSocket = io.connect(window.location.origin + '/active');
+        const activeSocket = io.connect(`${window.location.origin}/active`);
         activeSocket.on('warmup_started', (data) => {
             if (data.match.tournament_id !== null) {
-                location.href = '/matches/' + data.match.id + '/obs';
+                location.href = `/matches/${data.match.id}/obs`;
             }
         });
 
         // Setup socket endpoints
-        const socket = io.connect(window.location.origin + '/legs/' + this.state.leg.id);
+        const socket = io.connect(`${window.location.origin}/legs/${this.state.leg.id}`);
         socket.on('score_update', this.onScoreUpdate.bind(this));
         socket.on('possible_throw',this.onPossibleThrowEvent.bind(this));
         socket.on('new_leg', (data) => {
@@ -36,7 +36,9 @@ module.exports = {
     onPossibleThrowEvent(data) {
         this.state.leg.is_finished = data.is_finished;
 
-        var player = _.find(this.state.leg_players, (player) => { return player.player_id == data.current_player_id; })
+        const player = _.find(this.state.leg_players, (player) => {
+            return player.player_id == data.current_player_id;
+        });
         if (data.is_finished) {
             player.wins++;
             return;

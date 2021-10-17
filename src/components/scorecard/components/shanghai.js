@@ -8,24 +8,33 @@ exports.removeLast = function(dart, external) {
     }
 }
 
+exports.isShanghai = (visit, target) =>  {
+    const first = visit.first_dart;
+    const second = visit.second_dart;
+    const third = visit.third_dart;
+
+    if (first.value === second.value && first.value === third.value && first.value === target) {
+        if ((first.multiplier === 1 && second.multiplier === 2 && third.multiplier === 3) ||
+            (first.multiplier === 2 && second.multiplier === 3 && third.multiplier === 1) ||
+            (first.multiplier === 3 && second.multiplier === 1 && third.multiplier === 2) ||
+            (first.multiplier === 3 && second.multiplier === 2 && third.multiplier === 1) ||
+            (first.multiplier === 1 && second.multiplier === 3 && third.multiplier === 2) ||
+            (first.multiplier === 2 && second.multiplier === 1 && third.multiplier === 3)) {
+                return true;
+        }
+    }
+    return false;
+}
+
+
 exports.isCheckout = (leg, visit, currentDart) => {
-    var visits = leg.visits.length;
+    let visits = leg.visits.length;
     if (currentDart > 3) {
         visits++;
 
-        var first = visit.first_dart;
-        var second = visit.second_dart;
-        var third = visit.third_dart;
-        // Check if player hit a "Shanghai", which is one dart in Single, Double and Triple
-        if (first.value === second.value && first.value === third.value && first.value === leg.round) {
-            if ((first.multiplier === 1 && second.multiplier === 2 && third.multiplier === 3) ||
-                (first.multiplier === 2 && second.multiplier === 3 && third.multiplier === 1) ||
-                (first.multiplier === 3 && second.multiplier === 1 && third.multiplier === 2) ||
-                (first.multiplier === 3 && second.multiplier === 2 && third.multiplier === 1) ||
-                (first.multiplier === 1 && second.multiplier === 3 && third.multiplier === 2) ||
-                (first.multiplier === 2 && second.multiplier === 1 && third.multiplier === 3)) {
-                    return true;
-            }
+        const shanghai = module.exports.isShanghai(visit, leg.round);
+        if (shanghai) {
+            return true;
         }
     }
     return visits > 0 && (visits % (20 * leg.players.length) === 0);

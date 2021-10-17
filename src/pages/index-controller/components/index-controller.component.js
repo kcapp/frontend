@@ -2,13 +2,9 @@ const _ = require('underscore');
 const axios = require('axios');
 const localStorage = require('../../../util/localstorage.js');
 const types = require("../../../components/scorecard/components/match_types.js")
-const io = require('../../../util/socket.io-helper.js');
 
 module.exports = {
     onCreate(input) {
-        /*input.players = _.reject(input.players, (player) => {
-            return player.is_bot;
-        });*/
         const steps = {
             INITIAL: 0,
             SELECT_PLAYERS: 1,
@@ -28,10 +24,12 @@ module.exports = {
             scores: input.scores,
             startingScore: undefined,
             outshotType: undefined,
+            startingLives: undefined,
             gameMode: input.modes[0].id,
             handicaps: [ { id: 0, name: "0"}, { id: 100, name: "+100"}, { id: 200, name: "+200"}, { id: -1, name: "Custom"} ],
             playerHandicaps: {},
-            matches: []
+            matches: [],
+            filteredPlayers: undefined
         }
     },
     onMount() {
@@ -53,14 +51,6 @@ module.exports = {
                 const venue = localStorage.get('venue_id');
                 if (venue) {
                     this.state.venueId = parseInt(venue);
-
-                    const socket = io.connect(`${window.location.origin}/venue/${this.state.venueId}`);
-                    socket.on('venue_new_match', (data) => {
-                        location.href = `/legs/${data.leg_id}`;
-                    });
-                    socket.on('navigation', (data) => {
-                        console.log(`Got navigation ${data}`);
-                    });
                 }
                 this.setStateDirty('players');
             }
@@ -107,11 +97,6 @@ module.exports = {
         this.state.step++;
         e.preventDefault();
     },
-    showAll(e) {
-        this.state.players = _.sortBy(this.input.players, (player) => player.name);
-        this.setStateDirty('players');
-        e.preventDefault();
-    },
     onStart(e) {
         this.state.submitting = true;
 
@@ -123,6 +108,7 @@ module.exports = {
             match_type: this.state.gameType,
             match_mode: this.state.gameMode,
             outshot_type: this.state.outshotType,
+            starting_lives: this.state.startingLives,
             venue: venueId,
             players: this.state.playersSelected.map(player => player.id),
             office_id: officeId,
@@ -130,7 +116,7 @@ module.exports = {
         }
         axios.post(`${window.location.origin}/matches/new`, body)
             .then(response => {
-                window.location.href = `legs/${response.data.current_leg_id}`;
+                window.location.href = `legs/${response.data.current_leg_id}/controller`;
             }).catch(error => {
                 this.state.submitting = false;
 
@@ -143,13 +129,10 @@ module.exports = {
     addPlayer(event, selected) {
         const player = selected.input.data;
 
-        this.state.players = _.reject(this.state.players, (el) => {
-            return el.id === player.id;
-        });
-        this.setStateDirty('players');
-
-        this.state.playersSelected.push(player);
-        this.setStateDirty('playersSelected');
+        if (!this.state.playersSelected.includes(player)) {
+            this.state.playersSelected.push(player);
+            this.setStateDirty('playersSelected');
+        }
     },
     removePlayer(event, selected) {
         const player = selected.input.data;
@@ -158,11 +141,6 @@ module.exports = {
             return el.id === player.id;
         });
         this.setStateDirty('playersSelected');
-
-        const players = this.state.players;
-        players.push(player);
-        this.state.players = _.sortBy(players, 'name');
-        this.setStateDirty('players');
     },
     gameTypeSelected(event, selected) {
         const type = selected.input.data.id;
@@ -171,7 +149,8 @@ module.exports = {
         this.state.startingScore = null;
 
         if (type === types.SHOOTOUT || type === types.CRICKET || type === types.AROUND_THE_WORLD ||
-            type === types.SHANGHAI || type === types.AROUND_THE_CLOCK || type === types.BERMUDA_TRIANGLE) {
+            type === types.SHANGHAI || type === types.AROUND_THE_CLOCK || type === types.BERMUDA_TRIANGLE ||
+            type === types.JDC_PRACTICE) {
             this.state.startingScore = 0;
             this.state.scores = null;
         } else if (type === types.TIC_TAC_TOE) {
@@ -193,6 +172,10 @@ module.exports = {
                 this.state.playerHandicaps[player.id] = 0;
             });
             this.setStateDirty('handicaps');
+        } else if (type === types.KNOCKOUT) {
+            this.state.startingScore = 0;
+            this.state.scores = null;
+            this.state.startingLives = this.input.lives[2].id;
         } else {
             this.state.scores = this.input.scores;
         }
@@ -223,5 +206,19 @@ module.exports = {
         }
         this.state.playerHandicaps[selected.input.extra] = handicap;
         this.setStateDirty('playerHandicaps');
-    }
+    },
+    livesSelected(event, selected) {
+        this.state.startingLives = selected.input.data.id;
+    },
+    filterPlayers(letter, event) {
+        this.state.filteredPlayers = letter;
+
+        const players = _.filter(this.input.players, (player) => {
+            const filtered = letter === "All" ?  true : player.name.startsWith(letter)
+            return !player.is_bot && player.name !== "" && filtered;
+        });
+        this.state.players = _.sortBy(players, (player) => player.name);
+        this.setStateDirty('players');
+        event.preventDefault();
+    },
 }

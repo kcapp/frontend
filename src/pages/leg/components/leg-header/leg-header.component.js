@@ -1,5 +1,5 @@
-var axios = require('axios');
-var alertify = require("../../../../util/alertify");
+const axios = require('axios');
+const alertify = require("../../../../util/alertify");
 
 module.exports = {
     onCreate(input) {
@@ -7,17 +7,21 @@ module.exports = {
             leg: input.leg,
             isOfficial: input.match.tournament_id !== null,
             buttonInputEnabled: input.buttonsEnabled,
-            compactMode: input.compactMode,
+            compactMode: false,
             allButtonsMode : false
         }
     },
 
     onMount() {
-        var MobileDetect = require('mobile-detect'),
-        md = new MobileDetect(window.navigator.userAgent);
+        if (this.input.buttons_only) {
+            // We only want to show buttons, so no need to try to determine otherwise
+            return;
+        }
+        const MobileDetect = require('mobile-detect'),
+            md = new MobileDetect(window.navigator.userAgent);
 
-        var isMobile = md.mobile();
-        var isTablet = md.tablet();
+        const isMobile = md.mobile();
+        const isTablet = md.tablet();
 
         this.state.buttonInputEnabled = isMobile;
         this.emit('enable-button-input', this.state.buttonInputEnabled);

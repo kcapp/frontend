@@ -21,31 +21,37 @@ exports.onScoreUpdate = (data, thiz) => {
     thiz.state.submitting = false;
     console.log(data);
 
-    var leg = data.leg;
-    var globalstat = data.globalstat;
+    const leg = data.leg;
+    const globalstat = data.globalstat;
 
-    var players = data.players;
-    var playersMap = _.indexBy(players, 'player_id');
+    const players = data.players;
+    const playersMap = _.indexBy(players, 'player_id');
 
-    var scorecardComponents = thiz.getComponents('players');
+    const scorecardComponents = thiz.getComponents('players');
 
-    var isLastVisitFishNChips = false;
-    var totalFishNChips = 0;
-    var globalFish = globalstat ? globalstat.fish_n_chips : 0;
-    for (var i = 0; i < scorecardComponents.length; i++) {
-        var component = scorecardComponents[i];
-        var player = playersMap[component.state.playerId]
+    let isLastVisitFishNChips = false;
+    let totalFishNChips = 0;
+    const globalFish = globalstat ? globalstat.fish_n_chips : 0;
+    const currentPlayerIdx = _.findIndex(scorecardComponents, (component) => component.state.playerId === leg.current_player_id);
+    for (let i = 0; i < scorecardComponents.length; i++) {
+        const component = scorecardComponents[i];
+        const player = playersMap[component.state.playerId]
 
-        var isCurrentPlayer = component.state.playerId === leg.current_player_id;
+        const isCurrentPlayer = component.state.playerId === leg.current_player_id;
         if (isCurrentPlayer) {
             isLastVisitFishNChips = players[i === 0 ? players.length - 1 : i - 1].modifiers.is_fish_and_chips;
             component.reset();
+            component.state.jdcDart = null;
+        } else {
+            if (currentPlayerIdx <= i) {
+                component.state.jdcDart = null;
+            }
         }
         component.state.isCurrentPlayer = isCurrentPlayer;
         component.state.player = player;
         component.state.players = players;
 
-        var headerComponent = thiz.getComponent(`player-${player.player_id}`);
+        const headerComponent = thiz.getComponent(`player-${player.player_id}`);
         headerComponent.state.player = player;
         headerComponent.state.isCurrentPlayer = player.player_id === leg.current_player_id;
 
@@ -64,7 +70,7 @@ exports.onScoreUpdate = (data, thiz) => {
     thiz.state.leg = leg;
     thiz.state.players = players;
 
-    var compactComponent = thiz.getComponent("compact-input");
+    const compactComponent = thiz.getComponent("compact-input");
     if (compactComponent) {
         compactComponent.onScoreUpdate(data);
     }
@@ -76,6 +82,11 @@ exports.say = (data, thiz) => {
         // Skip announcement of remaining score for non-x01 game types
         return;
     }
+    if (thiz.state.type === types.CRICKET && data.type === 'score' && data.text === "0") {
+        // Skip announcment of 0 in Cricket
+        return;
+    }
+
     const oldPlayer = thiz.state.audioAnnouncer;
     const isAudioAnnouncement = (oldPlayer.duration > 0 && !oldPlayer.paused) || (!isNaN(oldPlayer.duration) && !oldPlayer.ended && oldPlayer.paused);
     if (data.audios) {
@@ -129,8 +140,8 @@ exports.say = (data, thiz) => {
 }
 
 exports.onPossibleThrow = function (data, thiz) {
-    var component = thiz.findActive(thiz.getComponents('players'));
-    var compactComponent = thiz.getComponent("compact-input");
+    const component = thiz.findActive(thiz.getComponents('players'));
+    const compactComponent = thiz.getComponent("compact-input");
     if (compactComponent) {
         compactComponent.setStateDirty("players");
     }
@@ -147,7 +158,7 @@ exports.onPossibleThrow = function (data, thiz) {
         }
     }
 
-    var type = thiz.input.match.match_type.id;
+    const type = thiz.input.match.match_type.id;
     if (type == types.X01 || type == types.X01HANDICAP) {
         // Set current dart
         if (data.is_undo) {
@@ -160,7 +171,7 @@ exports.onPossibleThrow = function (data, thiz) {
         component.state.totalScore += data.score * data.multiplier;
 
         // Update player score
-        var header = thiz.getComponent(`player-${data.current_player_id}`);
+        const header = thiz.getComponent(`player-${data.current_player_id}`);
         if (thiz.state.type == types.SHOOTOUT) {
             header.state.player.current_score += (data.score * data.multiplier);
         } else {
@@ -191,6 +202,8 @@ exports.onAnnounce = function (data) {
         alertify.error(data.message);
     } else if (data.type == 'confirm_checkout') {
         $("#modal-confirm-checkout").modal();
+    } else if (data.type == 'match_start') {
+        // No need to announce anything
     } else {
         alertify.notify(data.message);
     }

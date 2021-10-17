@@ -8,8 +8,14 @@ const { v4: uuidv4 } = require('uuid');
 
 module.exports = {
     onCreate(input) {
-        var venue = input.match.venue;
+        const venue = input.match.venue;
 
+        let compactMode = false;
+        let enableButtonInput = false
+        if (input.buttons_only) {
+            compactMode = true;
+            enableButtonInput = true;
+        }
         this.state = {
             uuid: uuidv4().split('-')[0],
             leg: input.leg,
@@ -18,16 +24,17 @@ module.exports = {
             venueConfig: venue && venue.config ? venue.config : {},
             submitting: false,
             globalStatistics: input.global_statistics,
-            type: input.match.match_type.id,
+            matchType: input.leg.leg_type.id || input.match.match_type.id,
             socket: {},
             audioAnnouncer: undefined,
-            enableButtonInput: false,
-            compactMode: false,
+            enableButtonInput: enableButtonInput,
+            compactMode: compactMode,
             allButtonsMode: false,
             isPlayerBoardCam: input.leg_players.some(player => player.player.board_stream_url),
             announcedStart: false
-
         }
+
+
     },
 
     onMount() {
@@ -41,17 +48,20 @@ module.exports = {
         socket.on('say', this.onSay.bind(this));
         socket.on('announce', io.onAnnounce.bind(this));
         socket.on('leg_finished', (data) => {
-            if (localStorage.get('controller')) {
-                // If this is a controller, forward back to start page
-                location.href = '/controller';
-            }
             socket.on('say_finish', () => {
                 // Wait for announcement to finish before moving on
                 const match = data.match;
+                const isController = localStorage.get('controller');
                 if (match.is_finished) {
-                    location.href = `${window.location.origin}/matches/${match.id}/result`;
+                    if (isController) {
+                        // If this is a controller, forward back to start page
+                        location.href = '/controller';
+                    } else {
+                        location.href = `${window.location.origin}/matches/${match.id}/result`;
+                    }
                 } else {
-                    location.href = `${window.location.origin}/legs/${match.current_leg_id}`;
+                    const base = `${window.location.origin}/legs/${match.current_leg_id}`;
+                    location.href = isController ? `${base}/controller` : `${base}`;
                 }
             });
         });
@@ -175,7 +185,7 @@ module.exports = {
         if (isCheckout) {
             component.confirmLegFinish();
         }
-        if (this.input.match.match_type.id == types.TIC_TAC_TOE) {
+        if (this.state.matchType == types.TIC_TAC_TOE) {
             this.getComponent("tic-tac-toe-board").updateBoard(score, multiplier, isUndo);
         }
 
@@ -250,39 +260,49 @@ module.exports = {
         const KEY_DELETE = 46;
         const simplified = [ KEY_END, KEY_ARROW_DOWN, KEY_PAGE_DOWN, KEY_INSERT, KEY_DELETE ];
 
-        var component = this.findActive(this.getComponents('players'));
+        const component = this.findActive(this.getComponents('players'));
         if (e.key === 'Backspace') {
             component.removeLast();
             e.preventDefault();
-        } else if (types.SUPPORT_SIMPLE_INPUT.includes(this.input.match.match_type.id) && simplified.includes(e.keyCode)) {
-            var value = 0;
+        } else if (types.SUPPORT_SIMPLE_INPUT.includes(this.state.matchType) && simplified.includes(e.keyCode)) {
+            let value = 0;
 
-            var multiplier;
-            if (this.input.match.match_type.id === types.DARTS_AT_X) {
+            let multiplier;
+            if (this.state.matchType === types.DARTS_AT_X) {
                 value = this.state.leg.starting_score
-            } else if (this.input.match.match_type.id === types.AROUND_THE_CLOCK) {
+            } else if (this.state.matchType === types.AROUND_THE_CLOCK) {
                 value = component.state.player.current_score + 1;
                 value = value === 21 ? 25 : value;
                 if (e.keyCode !== KEY_END) {
                     value = 0;
                 }
                 multiplier = 1;
-            } else if (this.input.match.match_type.id === types.AROUND_THE_WORLD || this.input.match.match_type.id === types.SHANGHAI) {
+            } else if (this.state.matchType === types.AROUND_THE_WORLD || this.state.matchType === types.SHANGHAI) {
                 value = this.state.leg.round === 21 ? 25 : this.state.leg.round;
-            } else if (this.input.match.match_type.id === types.BERMUDA_TRIANGLE) {
-                var target = types.TARGET_BERMUDA_TRIANGLE[this.state.leg.round];
+            } else if (this.state.matchType === types.BERMUDA_TRIANGLE) {
+                const target = types.TARGET_BERMUDA_TRIANGLE[this.state.leg.round];
                 if (target.value !== -1) {
                     value = target.value;
                 }
-            } else if (this.input.match.match_type.id === types.FOUR_TWENTY) {
+            } else if (this.state.matchType === types.FOUR_TWENTY) {
                 value = types.TARGET_FOUR_TWENTY[this.state.leg.round].value;
                 if (e.keyCode !== KEY_ARROW_DOWN) {
                     value = 0;
                     multiplier = 1;
                 }
-            } else if (this.input.match.match_type.id === types.KILL_BULL) {
+            } else if (this.state.matchType === types.KILL_BULL) {
                 value = 25;
+            } else if (this.state.matchType === types.JDC_PRACTICE) {
+                const target = types.TARGET_JDC_PRACTICE[this.state.leg.round];
+                if (target.constructor === Array) {
+                    const currentDart = component.state.currentDart;
+                    const doubleTarget = target[currentDart - 1];
+                    value = doubleTarget.value;
+                } else {
+                    value = target.value;
+                }
             }
+
             if (!multiplier) {
                 multiplier = 1;
                 if (e.keyCode === KEY_PAGE_DOWN && value !== 25) {
@@ -366,6 +386,10 @@ module.exports = {
             case '0': text += '0'; break;
             default: /* Return */ return;
         }
+        if ((currentValue + text) === "25" && currentMultiplier === 3) {
+            // Don't allow triple bull
+            currentMultiplier = 2;
+        }
         component.setDart(text, currentMultiplier);
     },
 
@@ -384,6 +408,9 @@ module.exports = {
 
     onSmartboardReconnect() {
         this.state.socket.emit('reconnect_smartboard', { leg: this.input.leg, match: this.input.match });
+    },
+
+    onToggleCamera(enabled) {
+        this.state.isPlayerBoardCam = enabled;
     }
 };
-

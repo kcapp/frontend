@@ -28,6 +28,7 @@ router.get('/', function (req, res, next) {
             scores: [{ id: 0, name: 0, hidden: true }, { id: 301, name: 301 }, { id: 501, name: 501 }, { id: 701, name: 701 }],
             types: matchTypes.data,
             outshots: outshots.data,
+            lives: [{ id: 1, name: 1 }, { id: 3, name: 3 }, { id: 5, name: 5 }, { id: 7, name: 7 }, { id: 10, name: 10 }],
             venues: venues.data,
             stakes: oweTypes.data,
             offices: offices.data
@@ -41,7 +42,7 @@ router.get('/', function (req, res, next) {
 /* GET home page. */
 router.get('/controller', function (req, res, next) {
     axios.all([
-        axios.get(`${req.app.locals.kcapp.api}/player/active`),
+        axios.get(`${req.app.locals.kcapp.api}/player`),
         axios.get(`${req.app.locals.kcapp.api}/match/modes`),
         axios.get(`${req.app.locals.kcapp.api}/match/types`),
         axios.get(`${req.app.locals.kcapp.api}/match/outshot`),
@@ -54,6 +55,7 @@ router.get('/controller', function (req, res, next) {
             scores: [{ id: 0, name: 0, hidden: true }, { id: 301, name: 301 }, { id: 501, name: 501 }, { id: 701, name: 701 }],
             types: matchTypes.data,
             outshots: outshots.data,
+            lives: [{ id: 1, name: 1 }, { id: 3, name: 3 }, { id: 5, name: 5 }, { id: 7, name: 7 }, { id: 10, name: 10 }],
             venues: venues.data,
             offices: offices.data,
             locals: req.app.locals

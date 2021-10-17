@@ -1,4 +1,4 @@
-$ var types = require('../../../../components/scorecard/components/match_types');
+$ const types = require('../../../../components/scorecard/components/match_types');
 
 <div class="pt-20"/>
 <spectate-header name=state.matchName round=state.leg.round leg=input.leg match=input.match on-enable-announcement('onEnableAnnouncement')/>
@@ -12,14 +12,14 @@ $ var types = require('../../../../components/scorecard/components/match_types')
       </tr>
       <tr>
         <for|player| of=input.leg_players>
-          <scorecard key="players[]" leg=state.leg player=player players=input.leg_players type=input.match.match_type.id
+          <scorecard key="players[]" leg=state.leg player=player players=input.leg_players type=state.matchType
               on-score-change("onScoreChange")
               on-player-busted("onPlayerBusted")/>
         </for>
       </tr>
     </tbody>
   </table>
-  <if(input.match.match_type.id == types.TIC_TAC_TOE)>
+  <if(state.matchType == types.TIC_TAC_TOE)>
     <div class="block-container-header-center">Board</div>
     <div class="block-container-with-header">
       <tic-tac-toe-board key='tic-tac-toe-board' leg=state.leg players=input.players/>

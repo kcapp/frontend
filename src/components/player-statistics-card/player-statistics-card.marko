@@ -1,43 +1,49 @@
-$ var type = require("../scorecard/components/match_types");
+$ const type = require("../scorecard/components/match_types");
 
-$ var match = input.match;
-$ var leg = input.leg || input.match.legs[0];
-$ var statistic = input.statistic;
-$ var dartsThrown = input.statistic.darts_thrown || 0;
-$ var player = input.player;
-$ var startingScore = input.player.starting_score || 0;
+$ const match = input.match;
+$ const leg = input.leg || input.match.legs[0];
+$ const statistic = input.statistic;
+$ const dartsThrown = input.statistic.darts_thrown || 0;
+$ const player = input.player;
+$ const matchType = leg.leg_type.id || match.match_type.id;
 <if(input.header)>
   <div class="block-container-header-center">
     <a href=`/players/${player.id}/statistics`>${player.name}</a>
   </div>
 </if>
 
-<if(match.match_type.id == type.SHOOTOUT)>
-  <statistics-shootout isWinner=state.isWinner player=input.player statistic=input.statistic match=input.match />
+<if(matchType == type.SHOOTOUT)>
+  <statistics-shootout isWinner=state.isWinner player=input.player statistic=input.statistic matchType=matchType />
 </if>
-<else-if(match.match_type.id == type.AROUND_THE_WORLD)>
+<else-if(matchType == type.AROUND_THE_WORLD)>
   <statistics-around-the-world isWinner=state.isWinner player=input.player statistic=input.statistic />
 </else-if>
-<else-if(match.match_type.id == type.SHANGHAI)>
+<else-if(matchType == type.SHANGHAI)>
   <statistics-shanghai isWinner=state.isWinner player=input.player statistic=input.statistic />
 </else-if>
-<else-if(match.match_type.id == type.AROUND_THE_CLOCK)>
+<else-if(matchType == type.AROUND_THE_CLOCK)>
   <statistics-around-the-clock isWinner=state.isWinner player=input.player statistic=input.statistic />
 </else-if>
-<else-if(match.match_type.id == type.TIC_TAC_TOE)>
+<else-if(matchType == type.TIC_TAC_TOE)>
   <statistics-tic-tac-toe isWinner=state.isWinner player=input.player statistic=input.statistic />
 </else-if>
-<else-if(match.match_type.id == type.BERMUDA_TRIANGLE)>
+<else-if(matchType == type.BERMUDA_TRIANGLE)>
   <statistics-bermuda-triangle isWinner=state.isWinner player=input.player statistic=input.statistic />
 </else-if>
-<else-if(match.match_type.id == type.FOUR_TWENTY)>
+<else-if(matchType == type.FOUR_TWENTY)>
   <statistics-420 isWinner=state.isWinner player=input.player statistic=input.statistic />
 </else-if>
-<else-if(match.match_type.id == type.KILL_BULL)>
+<else-if(matchType == type.KILL_BULL)>
   <statistics-kill-bull isWinner=state.isWinner player=input.player statistic=input.statistic />
 </else-if>
-<else-if(match.match_type.id == type.GOTCHA)>
+<else-if(matchType == type.GOTCHA)>
   <statistics-gotcha isWinner=state.isWinner player=input.player statistic=input.statistic />
+</else-if>
+<else-if(matchType == type.JDC_PRACTICE)>
+  <statistics-jdc-practice isWinner=state.isWinner player=input.player statistic=input.statistic />
+</else-if>
+<else-if(matchType == type.KNOCKOUT)>
+  <statistics-knockout isWinner=state.isWinner player=input.player statistic=input.statistic isMatchResult=input.isMatchResult />
 </else-if>
 <else>
   <div class="block-container-with-header">
@@ -47,16 +53,16 @@ $ var startingScore = input.player.starting_score || 0;
           <player-profile-picture player=player/>
         </div>
       </div>
-      <if(match.match_type.id == type.CRICKET)>
+      <if(matchType == type.CRICKET)>
         <statistics-row heading="Marks Per Round" value=statistic.mpr.toFixed(2)/>
         <statistics-row heading="First 9 MPR" value=statistic.first_nine_mpr.toFixed(2)/>
         <if(statistic.score !== null)>
           <statistics-row heading="Score" value=statistic.score/>
         </if>
       </if>
-      <else-if(match.match_type.id == type.DARTS_AT_X)>
+      <else-if(matchType == type.DARTS_AT_X)>
         <if(leg)>
-          $ var startingScore = leg.starting_score === 25 ? "Bull" : leg.starting_score;
+          $ const startingScore = leg.starting_score === 25 ? "Bull" : leg.starting_score;
           <statistics-row heading="Number" value=startingScore/>
         </if>
         <statistics-row heading="Hit Rate" value=((statistic.hit_rate * 100).toFixed(2) + "%")/>
@@ -64,7 +70,7 @@ $ var startingScore = input.player.starting_score || 0;
           <statistics-row heading="Score" value=statistic.score/>
         </if>
       </else-if>
-      <else-if(match.match_type.id == type.X01 || match.match_type.id == type.X01HANDICAP)>
+      <else-if(matchType == type.X01 || matchType == type.X01HANDICAP)>
         <statistics-row heading="Three Dart Avg." value=`${statistic.three_dart_avg.toFixed(2)} / ${statistic.first_nine_three_dart_avg.toFixed(2)}`/>
         $ var accuracy_20 = statistic.accuracy_20 === null ? "-" : statistic.accuracy_20.toFixed(2);
         $ var accuracy_19 = statistic.accuracy_19 === null ? "-" : statistic.accuracy_19.toFixed(2);
@@ -84,19 +90,20 @@ $ var startingScore = input.player.starting_score || 0;
       </else-if>
       <div class="info">
         <div style="text-align: center;">
-          <scores-table statistics=statistic type=match.match_type.id/>
+          <scores-table statistics=statistic type=matchType/>
         </div>
       </div>
       <div style="clear: both;"/>
       <if(dartsThrown)>
-        <if(match.match_type.id == type.X01)>
+        <if(matchType == type.X01)>
           <statistics-row heading="Darts Thrown" value=dartsThrown/>
         </if>
       </if>
-      <if(match.match_type.id == type.X01HANDICAP && startingScore)>
+      <if(matchType == type.X01HANDICAP && startingScore)>
+        $ const startingScore = input.player.starting_score || 0;
         <statistics-row heading="Starting Score" value=startingScore/>
       </if>
-      <if(match.match_type.id == type.X01HANDICAP)>
+      <if(matchType == type.X01HANDICAP)>
         <if(state.isWinner)>
           <div class="label-winner">WINNER</div>
         </if>
@@ -109,7 +116,7 @@ $ var startingScore = input.player.starting_score || 0;
           </else>
         </else>
       </if>
-      <else-if(match.match_type.id == type.CRICKET || match.match_type.id == type.DARTS_AT_X)>
+      <else-if(matchType == type.CRICKET || matchType == type.DARTS_AT_X)>
         <if(state.isWinner)>
           <div class="label-winner">WINNER</div>
         </if>

@@ -1,8 +1,9 @@
-var alertify = require("../../../util/alertify");
+const alertify = require("../../../util/alertify");
 
 exports.removeLast = function(dart, external) {
-    var value = dart.getValue();
+    const value = dart.getValue();
     this.state.player.current_score -= value;
+    this.state.player.darts_thrown--;
 
     this.emit('score-change', value, this.state.player.player_id);
     if (!external) {
@@ -10,10 +11,34 @@ exports.removeLast = function(dart, external) {
     }
 }
 
+exports.isCheckout = function(leg, currentDart, players, player) {
+    let visits = leg.visits.length;
+    if (currentDart > 3) {
+        visits++;
+    }
+    let isCheckout = visits > 0 && ((visits * 3) >= (9 * leg.players.length));
+    if (isCheckout) {
+        if (currentDart <= 3) {
+            // We are in the middle of a visit, so don't finish
+            return false;
+        }
+
+        if (players.length === 2) {
+            const scores = [];
+            for (let i = 0; i < players.length; i++) {
+                scores[i] = players[i];
+            }
+            // If both players have thrown the same amount of darts, and have different scores, game is finished
+            isCheckout = scores[0].darts_thrown === scores[1].darts_thrown && scores[0].current_score !== scores[1].current_score
+        }
+    }
+    return isCheckout;
+}
+
 exports.confirmThrow = function (external) {
-    var submitting = false;
-    var dart = this.getCurrentDart();
-    var scored = dart.getValue();
+    let submitting = false;
+    const dart = this.getCurrentDart();
+    const scored = dart.getValue();
     if (scored === 0) {
         this.setDart(0, 1);
     }
@@ -21,8 +46,10 @@ exports.confirmThrow = function (external) {
     this.state.currentDart++;
     this.state.isSubmitted = true;
 
+    this.state.player.current_score += scored;
+    this.state.player.darts_thrown++;
     this.emit('score-change', -scored, this.state.player.player_id);
-    var isCheckout = module.exports.isCheckout(this.state.leg, this.state.currentDart);
+    const isCheckout = module.exports.isCheckout(this.state.leg, this.state.currentDart, this.state.players, this.state.player);
     if (isCheckout) {
         submitting = true;
         alertify.confirm('Leg will be finished.',
@@ -33,18 +60,9 @@ exports.confirmThrow = function (external) {
                 this.emit('leg-finished', false);
             });
     }
-    this.state.player.current_score += scored;
 
     if (!external) {
         this.emit('possible-throw', isCheckout, false, this.state.currentDart - 1, dart.getScore(), dart.getMultiplier(), false, false);
     }
     return submitting;
-}
-
-exports.isCheckout = function(leg, currentDart) {
-    var visits = leg.visits.length;
-    if (currentDart > 3) {
-        visits++;
-    }
-    return visits > 0 && ((visits * 3) % (9 * leg.players.length) === 0);
 }

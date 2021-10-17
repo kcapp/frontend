@@ -12,6 +12,8 @@ const bermudaTriangle = require('./components/bermuda_triangle');
 const fourTwenty = require('./components/four_twenty');
 const killBull = require('./components/kill_bull');
 const gotcha = require('./components/gotcha');
+const jdcPractice = require('./components/jdc_practice');
+const knockout = require("./components/knockout");
 
 const types = require("./components/match_types");
 
@@ -19,7 +21,7 @@ const DART_CONTAINER_MAP = { 1: 'first', 2: 'second', 3: 'third' };
 
 module.exports = {
     onCreate(input) {
-        var player = input.player;
+        const player = input.player;
         this.state = {
             uuid: input.uuid,
             players: input.players,
@@ -95,7 +97,7 @@ module.exports = {
         }
         if (this.state.isSubmitted) {
             this.state.currentDart--;
-            var dart = this.getCurrentDart();
+            const dart = this.getCurrentDart();
 
             switch (this.state.type) {
                 case types.SHOOTOUT:
@@ -139,10 +141,16 @@ module.exports = {
                 case types.GOTCHA:
                     gotcha.removeLast.bind(this)(dart, external);
                     break;
+                case types.JDC_PRACTICE:
+                    jdcPractice.removeLast.bind(this)(dart, external);
+                    break;
+                case types.KNOCKOUT:
+                    knockout.removeLast.bind(this)(dart, external);
+                    break;
             }
             dart.reset();
         } else {
-            var dart = this.getCurrentDart();
+            const dart = this.getCurrentDart();
             dart.reset();
         }
         this.state.isSubmitted = true;
@@ -189,6 +197,12 @@ module.exports = {
                 case types.GOTCHA:
                     submitting = gotcha.confirmThrow.bind(this)(external);
                     break;
+                case types.JDC_PRACTICE:
+                    submitting = jdcPractice.confirmThrow.bind(this)(external);
+                    break;
+                case types.KNOCKOUT:
+                    submitting = knockout.confirmThrow.bind(this)(external);
+                    break;
             }
         }
         return submitting;
@@ -211,9 +225,9 @@ module.exports = {
     },
 
     getPayload() {
-        var first = this.getComponent(DART_CONTAINER_MAP[1]);
-        var second = this.getComponent(DART_CONTAINER_MAP[2]);
-        var third = this.getComponent(DART_CONTAINER_MAP[3]);
+        const first = this.getComponent(DART_CONTAINER_MAP[1]);
+        const second = this.getComponent(DART_CONTAINER_MAP[2]);
+        const third = this.getComponent(DART_CONTAINER_MAP[3]);
         return {
             player_id: this.state.playerId,
             leg_id: this.state.leg.id,

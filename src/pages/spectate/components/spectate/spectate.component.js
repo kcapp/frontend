@@ -9,7 +9,7 @@ module.exports = {
             leg: input.leg,
             roundNumber: input.leg.round,
             matchName: matchName,
-            type: input.match.match_type.id,
+            type: input.leg.leg_type.id || input.match.match_type.id,
             submitting: false,
             socket: {},
             audioAnnouncer: undefined,
@@ -18,7 +18,7 @@ module.exports = {
     },
 
     onMount() {
-        var socket = io.connect(window.location.origin + '/legs/' + this.state.leg.id);
+        var socket = io.connect(`${window.location.origin}/legs/${this.state.leg.id}`);
         socket.on('score_update', this.onScoreUpdate.bind(this));
         socket.on('possible_throw', this.onPossibleThrow.bind(this));
         socket.on('leg_finished', (data) => {
@@ -58,7 +58,7 @@ module.exports = {
 
     onPossibleThrow(data) {
         var component = this.findActive(this.getComponents('players'));
-        if (this.input.match.match_type.id === types.X01) {
+        if (this.state.type === types.X01) {
             // Set current dart
             if (data.is_undo) {
                 component.getDart(data.darts_thrown).reset();

@@ -1,7 +1,6 @@
-var types = require("./match_types");
+const types = require("./match_types");
 
 exports.removeLast = function(dart, external) {
-
     var target = types.TARGET_BERMUDA_TRIANGLE[this.state.leg.round];
     if ((dart.getScore() === target.value || target.value === -1) && target.multipliers.includes(dart.getMultiplier())) {
         this.state.player.current_score -= target.score ? target.score : dart.getValue();
