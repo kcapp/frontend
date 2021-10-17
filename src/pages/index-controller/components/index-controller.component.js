@@ -213,12 +213,10 @@ module.exports = {
     filterPlayers(letter, event) {
         this.state.filteredPlayers = letter;
 
-        let players;
-        if (letter === "All") {
-            players = this.input.players;
-        } else {
-            players = _.filter(this.input.players, (player) => player.name.startsWith(letter));
-        }
+        const players = _.filter(this.input.players, (player) => {
+            const filtered = letter === "All" ?  true : player.name.startsWith(letter)
+            return !player.is_bot && player.name !== "" && filtered;
+        });
         this.state.players = _.sortBy(players, (player) => player.name);
         this.setStateDirty('players');
         event.preventDefault();
