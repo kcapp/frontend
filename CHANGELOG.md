@@ -21,6 +21,7 @@ A preview of major changes can be found in the Wiki ([Latest Changes](https://gi
 - Avoid forwaring on venue matches when already on the page
 - Disable warmup button after first press
 - `Continue match` from Controller if any match contained a bot
+- Score incorrectly shown as not reset in `Gotcha`
 
 ## [2.0.0] - 2021-09-19
 #### Feature
