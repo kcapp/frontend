@@ -311,6 +311,10 @@ module.exports = (io, app) => {
                                 announce(`${data.leg_num} leg, ${data.player.name} to throw first. Game on!`, 'leg_start', sentence);
                             }
                             this.matchStartAnnounced = true;
+                            setTimeout(() => {
+                                // Reset the state after 10s, incase someone opened the match without starting to play
+                                this.matchStartAnnounced = false;
+                            }, 10000);
                         }
                     });
 

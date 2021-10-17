@@ -13,6 +13,7 @@ A preview of major changes can be found in the Wiki ([Latest Changes](https://gi
 #### Changed
 - Removed announcement of `0` score in `Cricket`
 - Handle draw for 9 Dart Shootout between two players
+- Reannounce start of match after 10s
 
 #### Fixed
 - Toggle Camera button to remove stream when not available
