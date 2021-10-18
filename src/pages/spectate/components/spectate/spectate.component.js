@@ -4,12 +4,12 @@ const types = require('../../../../components/scorecard/components/match_types')
 
 module.exports = {
     onCreate(input) {
-        var matchName = input.match.match_mode.short_name;
+        const matchName = input.match.match_mode.short_name;
         this.state = {
             leg: input.leg,
             roundNumber: input.leg.round,
             matchName: matchName,
-            type: input.leg.leg_type.id || input.match.match_type.id,
+            matchType: input.leg.leg_type.id || input.match.match_type.id,
             submitting: false,
             socket: {},
             audioAnnouncer: undefined,
@@ -18,7 +18,7 @@ module.exports = {
     },
 
     onMount() {
-        var socket = io.connect(`${window.location.origin}/legs/${this.state.leg.id}`);
+        const socket = io.connect(`${window.location.origin}/legs/${this.state.leg.id}`);
         socket.on('score_update', this.onScoreUpdate.bind(this));
         socket.on('possible_throw', this.onPossibleThrow.bind(this));
         socket.on('leg_finished', (data) => {
@@ -57,8 +57,8 @@ module.exports = {
     },
 
     onPossibleThrow(data) {
-        var component = this.findActive(this.getComponents('players'));
-        if (this.state.type === types.X01) {
+        const component = this.findActive(this.getComponents('players'));
+        if (this.state.matchType === types.X01) {
             // Set current dart
             if (data.is_undo) {
                 component.getDart(data.darts_thrown).reset();
@@ -69,7 +69,7 @@ module.exports = {
             component.state.totalScore += data.score * data.multiplier;
 
             // Update player score
-            var header = this.getComponent(`player-${data.current_player_id}`);
+            const header = this.getComponent(`player-${data.current_player_id}`);
             header.state.player.current_score -= (data.score * data.multiplier)
             header.setStateDirty('player');
         } else {
@@ -86,7 +86,7 @@ module.exports = {
         if (!playerId) {
             playerId = this.findActive(this.getComponents('players')).state.playerId;
         }
-        this.getComponent('player-' + playerId).setScored(scored);
+        this.getComponent(`player-${playerId}`).setScored(scored);
     },
 
     findActive(components) {

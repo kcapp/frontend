@@ -78,11 +78,11 @@ exports.onScoreUpdate = (data, thiz) => {
 
 exports.say = (data, thiz) => {
     // Check if an audio clip is currently playing, if it is we don't want to wait until it is finished, before saying anything else
-    if ((thiz.state.matchType !== types.X01 && thiz.state.matchType !== types.X01HANDICAP) && data.matchType === 'remaining_score') {
+    if ((thiz.state.matchType !== types.X01 && thiz.state.matchType !== types.X01HANDICAP) && data.type === 'remaining_score') {
         // Skip announcement of remaining score for non-x01 game types
         return;
     }
-    if (thiz.state.matchType === types.CRICKET && data.matchType === 'score' && data.text === "0") {
+    if (thiz.state.matchType === types.CRICKET && data.type === 'score' && data.text === "0") {
         // Skip announcment of 0 in Cricket
         return;
     }
