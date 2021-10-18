@@ -2,7 +2,8 @@
 
 A preview of major changes can be found in the Wiki ([Latest Changes](https://github.com/kcapp/frontend/wiki/Latest_Changes))
 ## [2.2.0] - TBD
-
+#### Fixed
+- Correctly update `Tic-Tac-Toe` board between players
 
 ## [2.1.0] - 2021-10-17
 #### Feature

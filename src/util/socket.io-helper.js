@@ -58,12 +58,12 @@ exports.onScoreUpdate = (data, thiz) => {
         totalFishNChips += player.visit_statistics.fish_and_chips_counter;
     }
 
-    if (thiz.state.type == types.X01) {
+    if (thiz.state.matchType == types.X01) {
         if (isLastVisitFishNChips && !data.is_undo) {
             var msg = alertify.notify(getFishNChipsHTML(totalFishNChips - 1, globalFish - 1), 'fish-n-chips', 5, () => { });
             setInterval(() => { msg.setContent(getFishNChipsHTML(totalFishNChips, globalFish)); }, 1000);
         }
-    } else if (thiz.state.type == types.TIC_TAC_TOE) {
+    } else if (thiz.state.matchType == types.TIC_TAC_TOE) {
         thiz.getComponent("tic-tac-toe-board").resetBoard(leg.parameters);
     }
 
@@ -78,11 +78,11 @@ exports.onScoreUpdate = (data, thiz) => {
 
 exports.say = (data, thiz) => {
     // Check if an audio clip is currently playing, if it is we don't want to wait until it is finished, before saying anything else
-    if ((thiz.state.type !== types.X01 && thiz.state.type !== types.X01HANDICAP) && data.type === 'remaining_score') {
+    if ((thiz.state.matchType !== types.X01 && thiz.state.matchType !== types.X01HANDICAP) && data.matchType === 'remaining_score') {
         // Skip announcement of remaining score for non-x01 game types
         return;
     }
-    if (thiz.state.type === types.CRICKET && data.type === 'score' && data.text === "0") {
+    if (thiz.state.matchType === types.CRICKET && data.matchType === 'score' && data.text === "0") {
         // Skip announcment of 0 in Cricket
         return;
     }
@@ -172,7 +172,7 @@ exports.onPossibleThrow = function (data, thiz) {
 
         // Update player score
         const header = thiz.getComponent(`player-${data.current_player_id}`);
-        if (thiz.state.type == types.SHOOTOUT) {
+        if (thiz.state.matchType == types.SHOOTOUT) {
             header.state.player.current_score += (data.score * data.multiplier);
         } else {
             header.state.player.current_score -= (data.score * data.multiplier);
