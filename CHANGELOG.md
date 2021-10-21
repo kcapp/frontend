@@ -5,6 +5,7 @@ A preview of major changes can be found in the Wiki ([Latest Changes](https://gi
 #### Fixed
 - Correctly update `Tic-Tac-Toe` board between players
 - Set correct match type on Spectate page
+- Bug displaying results for `X01 Handicap`
 
 ## [2.1.0] - 2021-10-17
 #### Feature

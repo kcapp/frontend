@@ -99,8 +99,8 @@ $ const matchType = leg.leg_type.id || match.match_type.id;
           <statistics-row heading="Darts Thrown" value=dartsThrown/>
         </if>
       </if>
+      $ const startingScore = input.player.starting_score || 0;
       <if(matchType == type.X01HANDICAP && startingScore)>
-        $ const startingScore = input.player.starting_score || 0;
         <statistics-row heading="Starting Score" value=startingScore/>
       </if>
       <if(matchType == type.X01HANDICAP)>
