@@ -1,9 +1,13 @@
-var debug = require('debug')('kcapp:venue');
+const debug = require('debug')('kcapp:venue');
 
-var express = require('express');
-var router = express.Router();
+const express = require('express');
+const router = express.Router();
 
-var axios = require('axios');
+const _ = require('underscore');
+const axios = require('axios');
+
+const template = require('marko');
+const venueSpectateTemplate = template.load(require.resolve('../src/pages/venue-spectate/venue-spectate-template.marko'));
 
 /* Add a new venue */
 router.post('/', function (req, res, next) {
@@ -33,8 +37,8 @@ router.get('/:id/spectate', function (req, res, next) {
         axios.get(`${req.app.locals.kcapp.api}/venue/${req.params.id}`),
         axios.get(`${req.app.locals.kcapp.api}/venue/${req.params.id}/spectate`)
     ]).then(axios.spread((venueResponse, spectateResponse) => {
-        var venue = venueResponse.data;
-        var match = spectateResponse.data;
+        const venue = venueResponse.data;
+        let match = spectateResponse.data;
 
         if (match.length > 0) {
             match = match[0];
@@ -44,11 +48,13 @@ router.get('/:id/spectate', function (req, res, next) {
                 axios.get(`${req.app.locals.kcapp.api}/leg/${match.current_leg_id}`),
                 axios.get(`${req.app.locals.kcapp.api}/leg/${match.current_leg_id}/players`)
             ]).then(axios.spread((playerResponse, legResponse, legPlayersResponse) => {
-                res.render('venue_spectate', {
-                    live_match: true, venue: venue, match: match,
+                const legPlayers = _.sortBy(legPlayersResponse.data, (player) => player.order)
+                res.marko(venueSpectateTemplate, {
                     leg: legResponse.data,
+                    leg_players: legPlayers,
                     players: playerResponse.data,
-                    leg_players: legPlayersResponse.data
+                    match: match,
+                    venue: venue
                 });
             })).catch(error => {
                 debug(`Error when getting data for venue spectate ${error}`);
@@ -73,8 +79,8 @@ module.exports = function (app, socketHandler) {
     // Create socket.io namespaces for all venues
     axios.get(`${app.locals.kcapp.api}/venue`)
         .then(response => {
-            var venues = response.data;
-            for (var i = 0; i < venues.length; i++) {
+            const venues = response.data;
+            for (let i = 0; i < venues.length; i++) {
                 this.socketHandler.setupVenueNamespace(venues[i].id);
             }
         }).catch(error => {

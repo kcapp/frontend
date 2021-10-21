@@ -88,10 +88,6 @@ module.exports = (io, app) => {
                 nsp.on('connection', function (client) {
                     const ip = getClientIP(client);
                     debug("Client %s connected to '%s'", ip, namespace);
-
-                    client.on('get_next_match', function () {
-                        nsp.emit('venue_new_match', '');
-                    });
                 });
                 debug("Created socket.io namespace '%s'", namespace);
             }
@@ -182,10 +178,17 @@ module.exports = (io, app) => {
 
                     client.on('warmup_started', function (data) {
                         log('warmup_started');
-                        _this.io.of('/active').emit('warmup_started', { leg: data.leg, match: data.match });
-                        if (data.match.venue) {
-                            _this.io.of(`/venue/${data.match.venue.id}`).emit('warmup_started', { leg: data.leg });
-                        }
+                        axios.put(`${app.locals.kcapp.api}/leg/${data.leg.id}/warmup`)
+                            .then(() => {
+                                _this.io.of('/active').emit('warmup_started', { leg: data.leg, match: data.match });
+                                if (data.match.venue) {
+                                    _this.io.of(`/venue/${data.match.venue.id}`).emit('warmup_started', { leg: data.leg, match: data.match });
+                                }
+                            }).catch(error => {
+                                const message = `${error.message}(${error})`;
+                                debug(`[${legId}] Error when setting warmup: ${message}`);
+                                nsp.emit('error', { message: error.message, code: error.code });
+                            });
                     });
 
                     client.on('reconnect_smartboard', function (data) {

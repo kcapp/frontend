@@ -1,6 +1,6 @@
 const _ = require("underscore");
-const io = require('../../../../util/socket.io-helper.js');
-const types = require('../../../../components/scorecard/components/match_types');
+const io = require('../../util/socket.io-helper.js');
+const types = require('../scorecard/components/match_types');
 
 module.exports = {
     onCreate(input) {
@@ -22,22 +22,35 @@ module.exports = {
         socket.on('score_update', this.onScoreUpdate.bind(this));
         socket.on('possible_throw', this.onPossibleThrow.bind(this));
         socket.on('leg_finished', (data) => {
-            var match = data.match;
+            const match = data.match;
+            const isVenueSpectate = this.input.venue !== undefined;
             if (match.is_finished) {
+                if (isVenueSpectate) {
+                    return;
+                }
                 location.href = `${window.location.origin}/matches/${match.id}/result`;
+            } else {
+                location.href = isVenueSpectate ? `/venues/${data.match.venue.id}/spectate` : `/matches/${match.id}/spectate`;
             }
-        });
-        socket.on('new_leg', (data) => {
-            var match = data.match;
-            location.href = `${window.location.origin}/matches/${match.id}/spectate`;
         });
         socket.on('connected', (data) => {
             socket.emit('spectator_connected', '');
         });
         socket.on('say', this.onSay.bind(this));
 
-        this.state.audioAnnouncer = new Audio();
+        if (this.input.venue) {
+            const venueSocket = io.connect(`${window.location.origin}/venue/${this.input.venue.id}`);
+            const forwardFnc = (data) => {
+                if (location.pathname.endsWith(`${data.match.id}/spectate`)) {
+                    return;
+                }
+                location.href = `/venues/${data.match.venue.id}/spectate`;
+            };
+            venueSocket.on('venue_new_match', forwardFnc);
+            venueSocket.on('warmup_started', forwardFnc);
+        }
 
+        this.state.audioAnnouncer = new Audio();
         this.state.socket = socket;
     },
 

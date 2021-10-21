@@ -79,22 +79,22 @@ module.exports = {
     },
 
     startMatch(event) {
-        // Announce warmup if it's not already done
-        this.startWarmup();
-
         if (this.state.old.length !== 0) {
             alert("All players must be selected before starting");
             return;
         }
+        // Announce warmup if it's not already done
+        this.startWarmup();
 
-        var players = this.state.new;
-        var order = {};
-        for (var i = 0; i < players.length; i++) {
+        const players = this.state.new;
+        const order = {};
+        for (let i = 0; i < players.length; i++) {
             order[players[i].player_id] = i + 1;
         }
-        axios.put(window.location.origin + '/legs/' + this.state.legId + '/order', order)
+        axios.put(`${window.location.origin}/legs/${this.state.legId}/order`, order)
             .then(response => {
-                location.href = '/legs/' + this.state.legId;
+                this.emit('warmup-started');
+                location.href = `/legs/${this.state.legId}`;
             }).catch(error => {
                 alert('Error changing player order. Please reload');
                 console.log(error);

@@ -1,5 +1,11 @@
 <div class="block-container-blue">
-  <div class="float-left font-24">Spectate (${input.leg.leg_type.name})</div>
+  <if(input.venue)>
+    <div class="float-left font-24">Spectate @ ${input.venue.name} (${input.leg.leg_type.name})</div>
+  </if>
+  <else>
+    <div class="float-left font-24">Spectate (${input.leg.leg_type.name})</div>
+  </else>
+
   <div class="float-left font-24 pl-10">${input.name}/</div>
   <div class="float-left font-24">R${input.round}</div>
   <if(input.leg.parameters && input.leg.parameters.outshot_type)>

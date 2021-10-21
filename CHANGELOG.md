@@ -2,8 +2,15 @@
 
 A preview of major changes can be found in the Wiki ([Latest Changes](https://github.com/kcapp/frontend/wiki/Latest_Changes))
 ## [2.2.0] - TBD
+#### Feature
+- New page `/venues/<id>/spectate` to spectate all matches at a given venue
+
+#### Changed
+- Support for other games types in OBS view
+
 #### Fixed
 - Correctly update `Tic-Tac-Toe` board between players
+- Correctly handle `undo` in OBS view
 - Set correct match type on Spectate page
 - Bug displaying results for `X01 Handicap`
 
