@@ -7,6 +7,7 @@ A preview of major changes can be found in the Wiki ([Latest Changes](https://gi
 
 #### Changed
 - Support for other games types in OBS view
+- Filter out "placeholder"-players on tournament overview page
 
 #### Fixed
 - Correctly update `Tic-Tac-Toe` board between players
