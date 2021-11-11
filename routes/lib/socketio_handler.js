@@ -327,7 +327,7 @@ module.exports = (io, app) => {
                 });
 
                 function getNameAnnouncement(player, type) {
-                    const name = player.vocal_name === null ? player.first_name : player.vocal_name;
+                    const name = player.vocal_name === null || player.vocal_name === "" ? player.first_name : player.vocal_name;
                     if (name.includes(".wav")) {
                         const key = player.first_name.toLowerCase().replace(" ", "");
                         if (AUDIO_NAMES[key]) {
