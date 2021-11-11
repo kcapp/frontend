@@ -160,28 +160,41 @@ module.exports = {
         if (this.input.match.is_finished) {
             return;
         }
-        location.href = '/matches/' + this.state.matchId;
+        location.href = `/matches/${this.state.matchId}`;
     },
     viewMatchResult(event) {
-        location.href = '/matches/' + this.state.matchId + '/result';
+        location.href = `/matches/${this.state.matchId}/result`;
     },
     undoLegFinish(event) {
         alertify.confirm('Leg will no longer be finalized',
             () => {
-                axios.put(window.location.origin + '/legs/' + this.state.leg.id + '/undo', null)
+                axios.put(`${window.location.origin}/legs/${this.state.leg.id}/undo`, null)
                     .then(response => {
-                        location.href = '/legs/' + this.state.leg.id;
+                        location.href = `/legs/${this.state.leg.id}`;
                     }).catch(error => {
-                        alert('Unable to undo leg, see log for details (' + error.statusText + ')');
+                        alert(`Unable to undo leg, see log for details (${error.statusText})`);
                     });
             }, () => { /* NOOP */ });
     },
     rematch(event) {
-        axios.post(window.location.origin + '/matches/' + this.state.matchId + '/rematch', null)
+        axios.post(`${window.location.origin}/matches/${this.state.matchId}/rematch`, null)
             .then(response => {
-                location.href = '/legs/' + response.data.current_leg_id
+                location.href = `/legs/${response.data.current_leg_id}`;
             }).catch(error => {
-                alert('Unable to rematch, see log for details (' + error.statusText + ')');
+                alert(`Unable to rematch, see log for details (${error.statusText})`);
+            });
+    },
+    nextMatch(event) {
+        axios.get(`${window.location.origin}/tournaments/match/${this.state.matchId}/next`, null)
+            .then(response => {
+                if (response.data === 204) {
+                    location.href = `/tournaments/${this.input.match.tournament_id}`;
+                } else {
+                    const leg = response.data.legs[0];
+                    location.href = leg.is_finished ? `/legs/${leg.id}/result` : `/legs/${leg.id}`;
+                }
+            }).catch(error => {
+                alert(`Unable to get next match, see log for details (${error.statusText})`);
             });
     }
 }

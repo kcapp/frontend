@@ -33,9 +33,16 @@ $ if (leg.parameters && leg.parameters.outshot_type) subheadings[1].push({ headi
   </div>
   <div style="float: right; padding-top: 4px;">
     <ul class="nav nav-pills">
-      <li role="presentation">
-        <a on-click("rematch")>Rematch</a>
-      </li>
+      <if(input.match.tournament_id)>
+        <li role="presentation">
+          <a on-click("nextMatch")>Next Match</a>
+        </li>
+      </if>
+      <else>
+        <li role="presentation">
+          <a on-click("rematch")>Rematch</a>
+        </li>
+      </else>
       <li role="presentation">
         <a on-click("undoLegFinish")>Undo leg finish</a>
       </li>

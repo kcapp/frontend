@@ -4,10 +4,13 @@ A preview of major changes can be found in the Wiki ([Latest Changes](https://gi
 ## [2.2.0] - TBD
 #### Feature
 - New page `/venues/<id>/spectate` to spectate all matches at a given venue
+- New button for `Next Match` on official tournament matches
 
 #### Changed
 - Support for other games types in OBS view
 - Filter out "placeholder"-players on tournament overview page
+- Correctly handle empty string vocal names
+- Don't show `Rematch` button for Tournament matches
 
 #### Fixed
 - Correctly update `Tic-Tac-Toe` board between players
