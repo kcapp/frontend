@@ -5,6 +5,7 @@ A preview of major changes can be found in the Wiki ([Latest Changes](https://gi
 #### Feature
 - New page `/venues/<id>/spectate` to spectate all matches at a given venue
 - New button for `Next Match` on official tournament matches
+- Additional custom voice announcements added
 
 #### Changed
 - Support for other games types in OBS view
