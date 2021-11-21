@@ -65,7 +65,7 @@ module.exports = {
                     }).catch(error => {
                         console.log(`Error when getting recent players ${error}`);
                     });
-        }
+            }
         }
     },
     onNewMatch(e) {
