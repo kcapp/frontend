@@ -162,38 +162,6 @@ router.get('/:id/spectate', function (req, res, next) {
     });
 });
 
-/* Spectate the given match */
-router.get('/:id/spectate/compact', function (req, res, next) {
-    axios.all([
-        axios.get(`${req.app.locals.kcapp.api}/player`),
-        axios.get(`${req.app.locals.kcapp.api}/match/${req.params.id}`)
-    ]).then(axios.spread((players, response) => {
-        var match = response.data;
-        if (match.is_finished) {
-            res.redirect(`/matches/${req.params.id}/result`);
-        } else {
-            axios.all([
-                axios.get(`${req.app.locals.kcapp.api}/leg/${match.current_leg_id}`),
-                axios.get(`${req.app.locals.kcapp.api}/leg/${match.current_leg_id}/players`)
-            ]).then(axios.spread((leg, legPlayers) => {
-                legPlayers = _.sortBy(legPlayers.data, (player) => player.order)
-                res.render('leg/spectate_compact', {
-                    leg: leg.data,
-                    leg_players: legPlayers,
-                    players: players.data,
-                    match: match
-                });
-            })).catch(error => {
-                debug(`Error when getting data for matches ${error}`);
-                next(error);
-            });
-        }
-    })).catch(error => {
-        debug(`Error when getting data for match ${error}`);
-        next(error);
-    });
-});
-
 /* Render the match obs view */
 router.get('/:id/obs', function (req, res, next) {
     axios.all([

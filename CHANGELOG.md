@@ -14,6 +14,8 @@ A preview of major changes can be found in the Wiki ([Latest Changes](https://gi
 - Correctly handle empty string vocal names
 - Don't show `Rematch` button for Tournament matches
 - Sort player by recently played on `index-controller`
+- Reset screensaver timer on throw events on socket.io
+- Correctly forward `index-controller` back to  home page on finished matches
 
 #### Fixed
 - Correctly update `Tic-Tac-Toe` board between players

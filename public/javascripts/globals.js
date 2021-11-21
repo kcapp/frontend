@@ -10,12 +10,34 @@ document.addEventListener("keydown", (event) => {
     }
 });
 
+window.kcapp = {
+    value: new Date(),
+    reset() { },
+    get lastEvent() {
+        return this.value;
+    },
+    set lastEvent(value) {
+        this.value = value;
+        this.reset();
+    }
+};
+
 window.onload = () => {
     const isController = localStorage.getItem("kcapp:controller");
     if (isController && !location.href.includes('screensaver')) {
-        // Forward controller to screensaver
-        setTimeout(() => {
+        const screensaverTimeout = 1 /* minutes */ * 10 * 1000; //ms
+        const forwardToScreensaverFunc = () => {
             location.href = "/screensaver";
-        }, 2*60*1000);
+        }
+        // Forward controller to screensaver
+        let screensaverInterval = setTimeout(forwardToScreensaverFunc, screensaverTimeout);
+        window.kcapp.reset = () => {
+            clearInterval(screensaverInterval);
+            screensaverInterval = setTimeout(forwardToScreensaverFunc, screensaverTimeout);
+        }
+        window.onclick = () =>{
+            clearInterval(screensaverInterval);
+            screensaverInterval = setTimeout(forwardToScreensaverFunc, screensaverTimeout);
+        }
     }
 }
