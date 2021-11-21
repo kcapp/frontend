@@ -1,6 +1,7 @@
 const _ = require('underscore');
 const axios = require('axios');
 const localStorage = require('../../../util/localstorage.js');
+const io = require('../../../util/socket.io-helper.js');
 const types = require("../../../components/scorecard/components/match_types.js")
 
 module.exports = {
@@ -65,6 +66,17 @@ module.exports = {
                     }).catch(error => {
                         console.log(`Error when getting recent players ${error}`);
                     });
+                const socket = io.connect(`${window.location.origin}/active`);
+                socket.on('smartcard', (data) => {
+                    if (parseInt(data.venue_id) === this.state.venueId) {
+                        const player = _.find(this.input.players, (player) => {
+                            return player.smartcard_uid === data.uid;
+                        });
+                        if (player) {
+                            this.addPlayer(null, player);
+                        }
+                    }
+                });
             }
         }
     },
@@ -127,7 +139,7 @@ module.exports = {
         e.preventDefault();
     },
     addPlayer(event, selected) {
-        const player = selected.input.data;
+        const player = selected.input ? selected.input.data : selected;
 
         if (!this.state.playersSelected.includes(player)) {
             this.state.playersSelected.push(player);
