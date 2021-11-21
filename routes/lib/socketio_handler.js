@@ -71,12 +71,20 @@ module.exports = (io, app) => {
             delete this.io._nsps[namespace];
             debug(`[${namespace}] removed`);
         },
-        addNamespace: (namespace) => {
+        setupActiveNamespace: () => {
+            const namespace = "/active";
             if (this.io._nsps[namespace] === undefined) {
                 const nsp = this.io.of(namespace);
                 nsp.on('connection', function (client) {
                     const ip = getClientIP(client);
                     debug(`[${namespace}] connection from ${ip}`);
+
+                    client.on('smartcard', (data) => {
+                        debug(`[${namespace}] smartcard ${JSON.stringify(data)} from ${ip}`);
+
+                        // TODO Emit on venue namespace?
+                        nsp.emit('smartcard', data);
+                    })
                 });
                 debug(`[${namespace}] created`);
             }

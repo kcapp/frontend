@@ -11,13 +11,13 @@
 </if>
 <else>
   <div>
-    <options-panel key="options-panel" players=input.players/>
+    <options-panel key="options-panel" players=input.players on-add-player("addPlayer")/>
     <office-selector offices=input.offices clazz="float-right" on-office-changed("officeChanged")/>
     <div class="block-container no-padding">
-      <players-table key="players-table" players=state.players offices=input.offices/>
+      <players-table players=state.players offices=input.offices on-edit-player("editPlayer")/>
     </div>
     <div class='text-center'>
-      <new-player-form isAdd=true offices=input.offices/>
+      <new-player-form isAdd=true key="add-player-modal" offices=input.offices/>
     </div>
   </div>
 </else>

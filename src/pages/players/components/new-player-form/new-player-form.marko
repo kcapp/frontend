@@ -1,6 +1,6 @@
-$ var id = input.id || "add-player-modal";
-$ var heading = input.heading || "Add player";
-<div class="modal fade" id=`${id}` tabindex="-1" role="dialog" aria-labelledby=`${id}-label`>
+$ const id = "add-player-modal";
+$ const heading = state.isAdd ? "Add Player" : "Edit player";
+<div class="modal fade edit-player-modal" id=`${id}` tabindex="-1" role="dialog" aria-labelledby=`${id}-label`>
   <div class="modal-dialog" role="document">
     <div class="block-container-header">
       <i class="fas fa-user-plus"/>
@@ -40,12 +40,16 @@ $ var heading = input.heading || "Add player";
         </div>
         <div class="form-group">
           <div class="player-pic-cutout center">
-            <player-profile-picture player=input.player/>
+            <player-profile-picture profile_pic_url=state.profile_pic_url player_id=state.id/>
           </div>
         </div>
         <div class="form-group">
           <label class="control-label" for="player-profile-pic-input">Profile Picture URL</label>
           <input class="form-control" type="text" value=state.profile_pic_url on-input("profilePicChange")/>
+        </div>
+        <div class="form-group">
+          <label class="control-label" for="player-smartcard-uid-input">Smartcard UID</label>
+          <input class="form-control" type="text" value=state.smartcard_uid on-input("smartcardUIDChange")/>
         </div>
         <div class="form-group">
           <label class="control-label" for="player-office-input">Office</label>

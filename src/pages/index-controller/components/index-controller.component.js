@@ -58,9 +58,9 @@ module.exports = {
                 axios.get(`${window.location.protocol}//${window.location.hostname}${this.input.locals.kcapp.api_path}/venue/${this.state.venueId}/players`)
                     .then((ids) => {
                         const playerIds = ids.data;
-                        this.state.players = _.sortBy(_.reject(this.input.players, (player) => {
+                        this.state.players = _.reject(this.input.players, (player) => {
                             return !playerIds.includes(player.id);
-                        }), (player) => player.name);
+                        });
                         this.setStateDirty('players');
                     }).catch(error => {
                         console.log(`Error when getting recent players ${error}`);

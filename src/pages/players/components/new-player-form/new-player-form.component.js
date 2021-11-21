@@ -1,9 +1,14 @@
 const axios = require('axios');
-var speaker = require('../../../../util/speaker');
+const speaker = require('../../../../util/speaker');
+const alertify = require(`../../../../util/alertify`);
 
 module.exports = {
-    onInput(input) {
+    onCreate(input) {
+        this.reset();
+    },
+    reset() {
         this.state = {
+            id: undefined,
             first_name: undefined,
             last_name: undefined,
             vocal_name: undefined,
@@ -11,27 +16,33 @@ module.exports = {
             slack_handle: undefined,
             color: '#dfdfdf',
             profile_pic_url: undefined,
+            smartcard_uid: undefined,
             office_id: 1,
-            isAdd: input.isAdd
-        }
-        if (input.player) {
-            this.state = {
-                id: input.player.id,
-                first_name: input.player.first_name,
-                last_name: input.player.last_name,
-                vocal_name: input.player.vocal_name,
-                nickname: input.player.nickname,
-                slack_handle: input.player.slack_handle,
-                color: input.player.color,
-                profile_pic_url: input.player.profile_pic_url,
-                office_id: input.player.office_id,
-                isAdd: input.isAdd
-            }
+            isAdd: true
         }
     },
+    setPlayer(player) {
+        this.state.id = player.id;
+        this.state.first_name = player.first_name;
+        this.state.last_name = player.last_name;
+        this.state.vocal_name = player.vocal_name;
+        this.state.nickname = player.nickname;
+        this.state.slack_handle = player.slack_handle;
+        this.state.color = player.color;
+        this.state.profile_pic_url = player.profile_pic_url;
+        this.state.smartcard_uid = player.smartcard_uid;
+        this.state.office_id = player.office_id;
+        this.state.isAdd = false;
+    },
     playVoice() {
-        if (this.state.vocal_name) {
-            speaker.speak({text: this.state.vocal_name});
+        const vocalName = this.state.vocal_name;
+        if (vocalName) {
+            if (vocalName.endsWith(".wav")) {
+                const name = this.state.first_name.toLowerCase().replace(" ", "");
+                new Audio(`/audio/announcer/names/${name}/name_1.wav`).play();
+            } else {
+                speaker.speak( {text: vocalName } );
+            }
         }
     },
     firstNameChange(event) {
@@ -57,6 +68,13 @@ module.exports = {
             this.input.player = { profile_pic_url: event.target.value };
         }
     },
+    smartcardUIDChange(event) {
+        this.state.smartcard_uid = event.target.value;
+    },
+    smartcardRead(data) {
+        this.state.smartcard_uid = data.uid;
+        alertify.notify(`Smartcard Scanned ${data.uid}`, 'success', 5);
+    },
     slackHandleChange(event) {
         this.state.slack_handle = event.target.value;
     },
@@ -69,7 +87,7 @@ module.exports = {
             event.preventDefault();
             return;
         }
-        var body = {
+        const body = {
             first_name: this.state.first_name,
             last_name: this.state.last_name,
             nickname: this.state.nickname,
@@ -77,17 +95,18 @@ module.exports = {
             slack_handle: this.state.slack_handle,
             color: this.state.color,
             profile_pic_url: this.state.profile_pic_url,
+            smartcard_uid: this.state.smartcard_uid,
             office_id: this.state.office_id
         };
         if (this.state.isAdd) {
-            axios.post(window.location.origin + '/players', body)
+            axios.post(`${window.location.origin}/players`, body)
                 .then(response => {
                     location.href = 'players';
                 }).catch(error => {
                     console.log(error);
                 });
         } else {
-            axios.put(window.location.origin + '/players/' + this.state.id, body)
+            axios.put(`${window.location.origin}/players/${this.state.id}`, body)
                 .then(response => {
                     location.href = 'players';
                 }).catch(error => {

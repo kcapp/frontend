@@ -44,12 +44,10 @@
             <i class="fas fa-eye fas-option-button" data-player=player.id on-click("viewPlayer")/>
           </td>
           <td>
-            $ var modalId = `edit-player-${player.id}-modal`;
-            <button class="btn btn-primary" type="button" data-toggle="modal" data-target=`#${modalId}`>
+            <button class="btn btn-primary" type="button" data-toggle="modal" data-target=`#add-player-modal` data-player=player.id on-click('editPlayer')>
               <i class="fas fa-user-edit"/>
               <span class="ml-10">Edit</span>
             </button>
-            <new-player-form id=`${modalId}` player=player offices=input.offices heading="Edit player" isAdd=false/>
           </td>
         </tr>
       </for>

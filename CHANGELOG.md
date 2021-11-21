@@ -3,6 +3,7 @@
 A preview of major changes can be found in the Wiki ([Latest Changes](https://github.com/kcapp/frontend/wiki/Latest_Changes))
 ## [2.2.0] - TBD
 #### Feature
+- Support for reading player smartcard UIDs and adding player using smartcards
 - New page `/venues/<id>/spectate` to spectate all matches at a given venue
 - New button for `Next Match` on official tournament matches
 - Additional custom voice announcements added
@@ -12,6 +13,7 @@ A preview of major changes can be found in the Wiki ([Latest Changes](https://gi
 - Filter out "placeholder"-players on tournament overview page
 - Correctly handle empty string vocal names
 - Don't show `Rematch` button for Tournament matches
+- Sort player by recently played on `index-controller`
 
 #### Fixed
 - Correctly update `Tic-Tac-Toe` board between players

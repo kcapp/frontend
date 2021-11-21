@@ -5,16 +5,13 @@ module.exports = {
         }
     },
     comparePlayers(event) {
-        var params = '?';
-        for (var i = 0; i < this.state.selected.length; i++) {
-            params += 'player_id=' + this.state.selected[i] + '&';
+        let params = '?';
+        for (let i = 0; i < this.state.selected.length; i++) {
+            params += `player_id=${this.state.selected[i]}&`;
         }
-        location.href = '/players/compare' + params;
+        location.href = `/players/compare${params}`;
     },
     addPlayer(event) {
         this.emit('add-player');
-    },
-    editPlayer(event) {
-        this.emit('edit-player');
     }
 }
