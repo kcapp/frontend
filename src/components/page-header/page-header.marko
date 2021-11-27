@@ -52,4 +52,7 @@ $ var icon = input.icon || "fa-trophy";
   <if(input.navigation)>
     <arrow-navigation next="Next week" on-next("navigateNext") previous="Previous week" on-previous("navigatePrevious")/>
   </if>
+  <if(input.rematch_button)>
+    <button class='btn btn-primary float-right' on-click("onRematch")>Rematch</button>
+  </if>
 </div>

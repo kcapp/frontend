@@ -7,6 +7,7 @@ A preview of major changes can be found in the Wiki ([Latest Changes](https://gi
 - New page `/venues/<id>/spectate` to spectate all matches at a given venue
 - New button for `Next Match` on official tournament matches
 - Additional custom voice announcements added
+- New `Rematch`-button on match result page
 
 #### Changed
 - Support for other games types in OBS view
@@ -16,6 +17,8 @@ A preview of major changes can be found in the Wiki ([Latest Changes](https://gi
 - Sort player by recently played on `index-controller`
 - Reset screensaver timer on throw events on socket.io
 - Correctly forward `index-controller` back to  home page on finished matches
+- Prevent starting of mulitple matches from `index-controller`
+- Player `elo` is shown on tournament standings
 
 #### Fixed
 - Correctly update `Tic-Tac-Toe` board between players

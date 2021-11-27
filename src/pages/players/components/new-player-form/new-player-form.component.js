@@ -39,7 +39,12 @@ module.exports = {
         if (vocalName) {
             if (vocalName.endsWith(".wav")) {
                 const name = this.state.first_name.toLowerCase().replace(" ", "");
-                new Audio(`/audio/announcer/names/${name}/name_1.wav`).play();
+                const playPromise = new Audio(`/audio/announcer/names/${name}/name_1.wav`).play();
+                playPromise.then(() => { // Playback done
+                    }).catch((error) => {
+                        alertify.error(`No vocal name exists for ${name}`, 'error', 5);
+                        speaker.speak( {text: vocalName } );
+                    });
             } else {
                 speaker.speak( {text: vocalName } );
             }

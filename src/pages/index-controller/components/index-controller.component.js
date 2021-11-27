@@ -17,6 +17,7 @@ module.exports = {
         this.state = {
             steps: steps,
             step: steps.INITIAL,
+            submitting: false,
             officeId: undefined,
             venueId: undefined,
             playersSelected: [],

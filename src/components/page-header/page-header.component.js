@@ -4,5 +4,8 @@ module.exports = {
     },
     navigateNext() {
         this.emit("next");
+    },
+    onRematch() {
+        this.emit("rematch");
     }
 }

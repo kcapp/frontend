@@ -140,7 +140,7 @@ $ const types = require("../../../components/scorecard/components/match_types.js
                 </div>
             </div>
             <if(state.gameMode)>
-                <button id="next-button" class="btn btn-info" on-click("onStart")>Start >></button>
+                <button id="next-button" class="btn btn-info" disabled=state.submitting on-click("onStart")>Start >></button>
                 <button id="prev-button" class="btn btn-info" on-click("onPrevious")><< Previous</button>
             </if>
         </div>
