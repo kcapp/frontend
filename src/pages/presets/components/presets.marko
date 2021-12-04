@@ -1,0 +1,40 @@
+<page-header heading="Presets" icon="fa-clipboard-check"/>
+<div>
+  <options-panel key="options-panel" on-add-preset("addPreset")/>
+  <div class="block-container no-padding table table-responsive">
+    <table>
+      <thead>
+        <tr>
+          <th class="text-left">Name</th>
+          <th>Match Type</th>
+          <th>Match Mode</th>
+          <th>Starting Score</th>
+          <th>Smartcard UID</th>
+          <th>Description</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <for|preset| of=input.presets>
+          <tr>
+            <td>${preset.name}</td>
+            <td>${preset.match_type.name}</td>
+            <td>${preset.match_mode.name}</td>
+            <td>${preset.starting_score}</td>
+            <td>${preset.smartcard_uid}</td>
+            <td>${preset.description}</td>
+            <td>
+              <button class="btn btn-primary" type="button" data-toggle="modal" data-target=`#add-preset-modal` data-preset-id=preset.id on-click('editPreset')>
+                <i class="fas fa-clipboard-check"/>
+                <span class="ml-10">Edit</span>
+              </button>
+            </td>
+          </tr>
+        </for>
+      </tbody>
+    </table>
+  </div>
+  <div class='text-center'>
+    <new-preset-form isAdd=true key="add-preset-modal" match_types=input.match_types match_modes=input.match_modes/>
+  </div>
+</div>

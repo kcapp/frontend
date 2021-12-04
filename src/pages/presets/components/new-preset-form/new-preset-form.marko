@@ -1,0 +1,54 @@
+$ const id = "add-preset-modal";
+$ const heading = state.isAdd ? "Add Preset" : "Edit Preset";
+<div class="modal fade edit-preset-modal" id=`${id}` tabindex="-1" role="dialog" aria-labelledby=`${id}-label`>
+  <div class="modal-dialog" role="document">
+    <div class="block-container-header">
+      <i class="fas fa-user-plus"/>
+      <span class="ml-10">${heading}</span>
+      <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="block-container-with-header">
+      <form>
+        <div class="form-group">
+          <label class="control-label" for="preset-name-input">Name</label>
+          <input class="form-control" type="text" id='preset-name-input' value=state.name on-input("valueChanged", "name")/>
+        </div>
+        <div class="form-group">
+          <label class="control-label" for="preset-matchtype-input">Match Type</label>
+          <select class="form-control" id='preset-matchtype-input' onChange("valueChanged", "match_type_id")>
+            <for|type| of=input.match_types>
+              <option value=type.id selected=(state.match_type_id == type.id)>${type.name}</option>
+            </for>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="control-label" for="preset-matchmode-input">Match Mode</label>
+                    <select class="form-control" id='preset-matchtype-input' onChange("valueChanged", "match_mode_id")>
+            <for|mode| of=input.match_modes>
+              <option value=mode.id selected=(state.match_mode_id == mode.id)>${mode.name}</option>
+            </for>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="control-label" for="preset-starting-score-input">Starting Score</label>
+          <input class="form-control" type="text" id='preset-starting-score-input' value=state.starting_score on-input("valueChanged", "starting_score")/>
+        </div>
+        <div class="form-group">
+          <label class="control-label" for="preset-smartcard-uid-input">Smartcard UID</label>
+          <input class="form-control" type="text" id='preset-smartcard-id-input' value=state.smartcard_uid on-input("valueChanged", "smartcard_uid")/>
+        </div>
+        <div class="form-group">
+          <label class="control-label" for="preset-description-input">Description</label>
+          <input class="form-control" type="text" id='preset-description-input' value=state.description on-input("valueChanged", "description")/>
+        </div>
+        <button class="btn btn-default btn-close" type="button" data-dismiss="modal">Close</button>
+        <button class="btn btn-primary btn-submit" type="submit" on-click("addPreset")>
+          <i class="fas fa-user-plus"/>
+          <span class="ml-10">${heading}</span>
+        </button>
+      </form>
+    </div>
+  </div>
+</div>

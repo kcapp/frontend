@@ -155,9 +155,9 @@ router.delete('/:id/cancel', function (req, res, next) {
 /** Method to change player order */
 router.put('/:id/order', function (req, res, next) {
     axios.put(`${req.app.locals.kcapp.api}/leg/${req.params.id}/order`, req.body)
-        .then(() => {
+        .then(response => {
             this.socketHandler.emitMessage('/active', 'order_changed', { leg_id: req.params.id });
-            res.status(200).end();
+            res.status(200).send(response.data).end();
         }).catch(error => {
             debug('Unable to change order: %s', error);
             next(error);
