@@ -1,8 +1,9 @@
-var moment = require("moment");
+const axios = require("axios");
+const moment = require("moment");
 
 module.exports = {
     onCreate(input) {
-        var match = input.match;
+        const match = input.match;
 
         match.started = moment(match.created_at).format('YYYY-MM-DD HH:mm:ss');
         match.finished = match.end_time === undefined ? '-' : moment(match.end_time).format('YYYY-MM-DD HH:mm:ss');
@@ -26,13 +27,21 @@ module.exports = {
             case '7':
             case '8':
             case '9':
-                var idx = parseInt(e.key) - 1; // Match array index
-                var leg = this.state.match.legs[idx];
+                const idx = parseInt(e.key) - 1; // Match array index
+                const leg = this.state.match.legs[idx];
                 if (leg) {
-                    location.href = '/legs/' + leg.id + '/result';
+                    location.href = `/legs/${leg.id}/result`;
                 }
                 break;
             default: // NOOP
         }
+    },
+    onRematch() {
+        axios.post(`${window.location.origin}/matches/${this.state.match.id}/rematch`, null)
+            .then(response => {
+                location.href = `/legs/${response.data.current_leg_id}`;
+            }).catch(error => {
+                alert(`Unable to rematch, see log for details (${error.statusText})`);
+            });
     }
 }

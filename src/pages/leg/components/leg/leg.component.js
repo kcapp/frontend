@@ -33,8 +33,6 @@ module.exports = {
             isPlayerBoardCam: input.leg_players.some(player => player.player.board_stream_url),
             announcedStart: false
         }
-
-
     },
 
     onMount() {
@@ -65,14 +63,13 @@ module.exports = {
                 }
             });
         });
-
         socket.on('error', this.onError.bind(this));
         this.state.socket = socket;
         this.state.audioAnnouncer = new Audio();
 
         // If this is an official match, which has not had any darts thrown, and was not updated in the last two minutes
         // show the dialog to set player order
-        var lastUpdated = (moment().valueOf() - moment.utc(this.input.leg.updated_at).valueOf()) / (1000 * 60);
+        const lastUpdated = (moment().valueOf() - moment.utc(this.input.leg.updated_at).valueOf()) / (1000 * 60);
         if (this.input.match.tournament_id && this.input.leg.visits.length === 0 && lastUpdated > 2) {
             document.getElementById('change-player-order').click();
         } else {
@@ -86,6 +83,14 @@ module.exports = {
         // Disable gestures on mobile devices
         document.addEventListener('gesturestart', (e) => {
             e.preventDefault();
+        });
+
+        window.addEventListener('pageshow', (event) => {
+            // If navigation happens via 'back; button make sure to reload to get correct state
+            var perfEntries = performance.getEntriesByType("navigation");
+            if (perfEntries[0].type === "back_forward") {
+                location.reload();
+            }
         });
     },
 
@@ -103,10 +108,12 @@ module.exports = {
     },
 
     onPossibleThrowEvent(data) {
+        window.kcapp.lastEvent = new Date();
         io.onPossibleThrow(data, this);
     },
 
     onScoreUpdate(data) {
+        window.kcapp.lastEvent = new Date();
         if (data.match && data.match.is_finished) {
             /// Don't update UI when match is finished
             return;

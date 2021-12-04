@@ -1,20 +1,20 @@
-var debug = require('debug')('kcapp:matches');
+const debug = require('debug')('kcapp:matches');
 
-var express = require('express');
-var router = express.Router();
+const express = require('express');
+const router = express.Router();
 
-var axios = require('axios');
-var _ = require('underscore');
-var skill = require('kcapp-bot/bot-skill');
+const axios = require('axios');
+const _ = require('underscore');
+const skill = require('kcapp-bot/bot-skill');
 
-var bracket = require('./lib/bracket_generator');
+const bracket = require('./lib/bracket_generator');
 
 const template = require('marko');
-var matchesTemplate = template.load(require.resolve('../src/pages/matches/matches-template.marko'));
-var matchResultTemplate = template.load(require.resolve('../src/pages/match-result/match-result-template.marko'));
-var spectateTemplate = template.load(require.resolve('../src/pages/spectate/spectate-template.marko'));
-var previewTemplate = template.load(require.resolve('../src/pages/match-preview/match-preview-template.marko'));
-var obsTemplate = template.load(require.resolve('../src/pages/obs/obs-template.marko'));
+const matchesTemplate = template.load(require.resolve('../src/pages/matches/matches-template.marko'));
+const matchResultTemplate = template.load(require.resolve('../src/pages/match-result/match-result-template.marko'));
+const spectateTemplate = template.load(require.resolve('../src/pages/spectate/spectate-template.marko'));
+const previewTemplate = template.load(require.resolve('../src/pages/match-preview/match-preview-template.marko'));
+const obsTemplate = template.load(require.resolve('../src/pages/obs/obs-template.marko'));
 
 /* Redirect requests to /matches to /matches/page/1 */
 router.get('/', function (req, res) {
@@ -162,38 +162,6 @@ router.get('/:id/spectate', function (req, res, next) {
     });
 });
 
-/* Spectate the given match */
-router.get('/:id/spectate/compact', function (req, res, next) {
-    axios.all([
-        axios.get(`${req.app.locals.kcapp.api}/player`),
-        axios.get(`${req.app.locals.kcapp.api}/match/${req.params.id}`)
-    ]).then(axios.spread((players, response) => {
-        var match = response.data;
-        if (match.is_finished) {
-            res.redirect(`/matches/${req.params.id}/result`);
-        } else {
-            axios.all([
-                axios.get(`${req.app.locals.kcapp.api}/leg/${match.current_leg_id}`),
-                axios.get(`${req.app.locals.kcapp.api}/leg/${match.current_leg_id}/players`)
-            ]).then(axios.spread((leg, legPlayers) => {
-                legPlayers = _.sortBy(legPlayers.data, (player) => player.order)
-                res.render('leg/spectate_compact', {
-                    leg: leg.data,
-                    leg_players: legPlayers,
-                    players: players.data,
-                    match: match
-                });
-            })).catch(error => {
-                debug(`Error when getting data for matches ${error}`);
-                next(error);
-            });
-        }
-    })).catch(error => {
-        debug(`Error when getting data for match ${error}`);
-        next(error);
-    });
-});
-
 /* Render the match obs view */
 router.get('/:id/obs', function (req, res, next) {
     axios.all([
@@ -315,13 +283,13 @@ router.post('/new', function (req, res, next) {
 
             axios.post(`${req.app.locals.kcapp.api}/match`, body)
                 .then(response => {
-                    var match = response.data;
+                    const match = response.data;
                     this.socketHandler.setupLegsNamespace(match.current_leg_id);
 
                     // Forward all spectating clients to next leg
                     if (match.venue) {
                         this.socketHandler.emitMessage(`/venue/${match.venue.id}`, 'venue_new_match', {
-                            match_id: match.id,
+                            match: match,
                             leg_id: match.current_leg_id
                         });
                         this.socketHandler.emitMessage('/active', 'new_match', {
@@ -344,12 +312,12 @@ router.post('/new', function (req, res, next) {
 router.post('/:id/rematch', function (req, res, next) {
     axios.post(`${req.app.locals.kcapp.api}/match/${req.params.id}/rematch`, null)
         .then(response => {
-            var match = response.data;
+            const match = response.data;
             this.socketHandler.setupLegsNamespace(match.current_leg_id);
             // Forward all spectating clients to next leg
             if (match.venue) {
                 this.socketHandler.emitMessage(`/venue/${match.venue.id}`, 'venue_new_match', {
-                    match_id: match.id,
+                    match: match,
                     leg_id: match.current_leg_id
                 });
                 this.socketHandler.emitMessage('/active', 'new_match', {

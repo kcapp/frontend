@@ -45,8 +45,8 @@ $ {
           <matches-table players=input.players matches=input.matches[id] columns=["start_time", "status", "players", "results", "options"]/>
         </div>
         <div role="tabpanel" id=`unplayed-matches-${group[0].tournament_group.id}` class="tab-pane">
-          $ var unplayed = [];
-          $ for (var i = 0; i < input.matches[id].length; i++) {
+          $ const unplayed = [];
+          $ for (let i = 0; i < input.matches[id].length; i++) {
             var match = input.matches[id][i];
             if (match.is_finished) {
               continue;
@@ -141,6 +141,7 @@ $ {
               <tr>
                 <th>Position</th>
                 <th>Player</th>
+                <th>Elo</th>
               </tr>
             </thead>
             <tbody>
@@ -150,6 +151,7 @@ $ {
                   <td>
                     <a href=`/players/${standing.player_id}/statistics`>${standing.player_name}</a>
                   </td>
+                  <td>${standing.elo}</td>
                 </tr>
               </for>
             </tbody>

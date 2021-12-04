@@ -1,6 +1,31 @@
 # Changelog
 
 A preview of major changes can be found in the Wiki ([Latest Changes](https://github.com/kcapp/frontend/wiki/Latest_Changes))
+## [2.2.0] - 2021-12-04
+#### Feature
+- Support for reading player smartcard UIDs and adding player using smartcards
+- New page `/venues/<id>/spectate` to spectate all matches at a given venue
+- New button for `Next Match` on official tournament matches
+- Additional custom voice announcements added
+- New `Rematch`-button on match result page
+
+#### Changed
+- Support for other games types in OBS view
+- Filter out "placeholder"-players on tournament overview page
+- Correctly handle empty string vocal names
+- Don't show `Rematch` button for Tournament matches
+- Sort player by recently played on `index-controller`
+- Reset screensaver timer on throw events on socket.io
+- Correctly forward `index-controller` back to  home page on finished matches
+- Prevent starting of mulitple matches from `index-controller`
+- Player `elo` is shown on tournament standings
+
+#### Fixed
+- Correctly update `Tic-Tac-Toe` board between players
+- Correctly handle `undo` in OBS view
+- Set correct match type on Spectate page
+- Bug displaying results for `X01 Handicap`
+
 ## [2.1.0] - 2021-10-17
 #### Feature
 - Added new game type `JDC Practice Routine`
@@ -89,6 +114,7 @@ A preview of major changes can be found in the Wiki ([Latest Changes](https://gi
 - Multiple score entry methods
     - Including [Unicorn Smartboard](https://github.com/kcapp/smartboard)
 
+[2.2.0]: https://github.com/kcapp/frontend/compare/v2.2.0...v2.2.0
 [2.1.0]: https://github.com/kcapp/frontend/compare/v2.0.0...v2.1.0
 [2.0.0]: https://github.com/kcapp/frontend/compare/v1.2.0...v2.0.0
 [1.2.0]: https://github.com/kcapp/frontend/compare/v1.1.0...v1.2.0

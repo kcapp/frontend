@@ -1,7 +1,7 @@
-$ const types = require('../../../../components/scorecard/components/match_types');
+$ const types = require('../scorecard/components/match_types');
 
 <div class="pt-20"/>
-<spectate-header name=state.matchName round=state.leg.round leg=input.leg match=input.match on-enable-announcement('onEnableAnnouncement')/>
+<spectate-header name=state.matchName round=state.leg.round leg=input.leg match=input.match venue=input.venue on-enable-announcement('onEnableAnnouncement')/>
 <div>
   <table>
     <tbody>

@@ -1,6 +1,8 @@
 const _ = require("underscore");
 const axios = require('axios');
 const localStorage = require("../../../../util/localstorage");
+const io = require("../../../../util/socket.io-helper");
+const alertify = require("../../../../util/alertify");
 const types = require("../../../../components/scorecard/components/match_types.js")
 
 module.exports = {
@@ -34,6 +36,24 @@ module.exports = {
                 this.changeOffice(officeId, this.input.offices[officeId]);
             }
         }
+        const venue = localStorage.get('venue_id');
+        if (venue) {
+            const socket = io.connect(`${window.location.origin}/active`);
+            socket.on('smartcard', (data) => {
+                if (data.venue_id === venue) {
+                    const player = _.find(this.input.players, (player) => {
+                        return player.smartcard_uid === data.uid;
+                    });
+                    if (player) {
+                        this.addPlayer(null, player);
+                        alertify.success(`Added player ${player.name}`);
+                    } else {
+                        alertify.error(`No player with the given smartcard registered ${data.uid}`);
+                    }
+                }
+            });
+        }
+
         document.addEventListener("keydown", this.onKeyDown.bind(this), false);
         document.addEventListener("keypress", this.onKeyPress.bind(this), false);
     },
@@ -186,9 +206,9 @@ module.exports = {
         }
     },
     addPlayer(event, selected) {
-        var player = selected.input.player;
+        const player = selected.input ? selected.input.player : selected;
 
-        this.state.players = _.reject(this.state.players, function (el) { return el.id === player.id; });
+        this.state.players = _.reject(this.state.players, (el) => el.id === player.id );
         this.setStateDirty('players');
 
         this.state.selected.push(player);

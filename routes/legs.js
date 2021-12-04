@@ -15,7 +15,7 @@ const x01InputTemplate = template.load(require.resolve('../src/pages/leg/leg-tem
 const spectateTemplate = template.load(require.resolve('../src/pages/spectate/spectate-template.marko'));
 const legResultTemplate = template.load(require.resolve('../src/pages/leg-result/leg-result-template.marko'));
 
-/* Render the leg view */
+/* Render the leg view with beta features */
 router.get('/:id/beta', function (req, res, next) {
     renderLegView(req, res, next, true, false);
 });
@@ -25,11 +25,10 @@ router.get('/:id', function (req, res, next) {
     renderLegView(req, res, next, false, false);
 });
 
-/* Render the leg view */
+/* Render the leg view for tablet-controllers */
 router.get('/:id/controller', function (req, res, next) {
     renderLegView(req, res, next, false, true);
 });
-
 
 /* Render the leg spectate view */
 router.get('/:id/spectate', function (req, res, next) {
@@ -58,34 +57,6 @@ router.get('/:id/spectate', function (req, res, next) {
             });
     })).catch(error => {
         debug(`Error when getting data for leg spectate ${error}`);
-        next(error);
-    });
-});
-
-/* Render the leg umpire view */
-router.get('/:id/umpire', function (req, res, next) {
-    axios.all([
-        axios.get(`${req.app.locals.kcapp.api}/player`),
-        axios.get(`${req.app.locals.kcapp.api}/leg/${req.params.id}`),
-        axios.get(`${req.app.locals.kcapp.api}/leg/${req.params.id}/players`)
-    ]).then(axios.spread((players, legResponse, legPlayers) => {
-        var leg = legResponse.data;
-        axios.get(`${req.app.locals.kcapp.api}/match/${leg.match_id}`)
-            .then(response => {
-                var match = response.data;
-
-                res.render('leg/umpire', {
-                    leg: leg,
-                    players: players.data,
-                    match: match,
-                    leg_players: legPlayers.data
-                });
-            }).catch(error => {
-                debug(`Error when getting match: ${error}`);
-                next(error);
-            });
-    })).catch(error => {
-        debug(`Error when getting data for umpire ${error}`);
         next(error);
     });
 });
@@ -205,7 +176,6 @@ router.put('/:id/undo', function (req, res, next) {
         });
 });
 
-
 function renderLegView(req, res, next, isExperimental, isController) {
     axios.all([
         axios.get(`${req.app.locals.kcapp.api}/player`),
@@ -217,6 +187,12 @@ function renderLegView(req, res, next, isExperimental, isController) {
         axios.get(`${req.app.locals.kcapp.api}/match/${leg.match_id}`)
             .then(response => {
                 const match = response.data;
+
+                if (isController && match.is_finished) {
+                    res.redirect('/controller');
+                    return;
+                }
+
                 // Sort players based on order
                 legPlayers = _.sortBy(legPlayers.data, (player) => player.order)
                 res.marko(x01InputTemplate, {

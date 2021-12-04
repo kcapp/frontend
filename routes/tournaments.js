@@ -329,6 +329,21 @@ router.get('/:id/player/:player_id', function (req, res, next) {
     });
 });
 
+/* Get tournament with the given ID */
+router.get('/match/:id/next', function (req, res, next) {
+    axios.get(`${req.app.locals.kcapp.api}/tournament/match/${req.params.id}/next`)
+        .then(response => {
+            if (response.status === 204) {
+                res.send(204);
+                return;
+            }
+            res.send(response.data);
+    }).catch(error => {
+        debug(`Error when getting next tournament match ${error}`);
+        next(error);
+    });
+});
+
 function sortTournamentOverview(overview) {
     for (var groupId in overview) {
         var group = overview[groupId];
