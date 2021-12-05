@@ -15,7 +15,6 @@ module.exports = {
         this.state = {
             player: player,
             name: name,
-            isCurrentPlayer: player.is_current_player,
             wins: player.wins ? player.wins : 0,
             cameraEnabled: true
         }

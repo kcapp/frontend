@@ -21,7 +21,8 @@ router.get('/', function (req, res, next) {
         axios.get(`${req.app.locals.kcapp.api}/match/outshot`),
         axios.get(`${req.app.locals.kcapp.api}/venue`),
         axios.get(`${req.app.locals.kcapp.api}/office`),
-    ]).then(axios.spread((players, matchModes, oweTypes, matchTypes, outshots, venues, offices) => {
+        axios.get(`${req.app.locals.kcapp.api}/preset`),
+    ]).then(axios.spread((players, matchModes, oweTypes, matchTypes, outshots, venues, offices, presets) => {
         res.marko(indexTemplate, {
             players: _.sortBy(players.data, (player) => player.name),
             modes: matchModes.data,
@@ -31,7 +32,8 @@ router.get('/', function (req, res, next) {
             lives: [{ id: 1, name: 1 }, { id: 3, name: 3 }, { id: 5, name: 5 }, { id: 7, name: 7 }, { id: 10, name: 10 }],
             venues: venues.data,
             stakes: oweTypes.data,
-            offices: offices.data
+            offices: offices.data,
+            presets: presets.data
         });
     })).catch(error => {
         debug(`Error when getting data for / ${error}`);
@@ -47,8 +49,9 @@ router.get('/controller', function (req, res, next) {
         axios.get(`${req.app.locals.kcapp.api}/match/types`),
         axios.get(`${req.app.locals.kcapp.api}/match/outshot`),
         axios.get(`${req.app.locals.kcapp.api}/venue`),
-        axios.get(`${req.app.locals.kcapp.api}/office`)
-    ]).then(axios.spread((players, matchModes, matchTypes, outshots, venues, offices) => {
+        axios.get(`${req.app.locals.kcapp.api}/office`),
+        axios.get(`${req.app.locals.kcapp.api}/preset`),
+    ]).then(axios.spread((players, matchModes, matchTypes, outshots, venues, offices, presets) => {
         res.marko(indexControllerTemplate, {
             players: players.data,
             modes: matchModes.data,
@@ -58,6 +61,7 @@ router.get('/controller', function (req, res, next) {
             lives: [{ id: 1, name: 1 }, { id: 3, name: 3 }, { id: 5, name: 5 }, { id: 7, name: 7 }, { id: 10, name: 10 }],
             venues: venues.data,
             offices: offices.data,
+            presets: presets.data,
             locals: req.app.locals
         });
     })).catch(error => {

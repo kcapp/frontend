@@ -2,6 +2,12 @@
 
 A preview of major changes can be found in the Wiki ([Latest Changes](https://github.com/kcapp/frontend/wiki/Latest_Changes))
 ## [2.3.0] - TBD
+#### Feature
+- Support for match presets, that can be configured via smartcards
+- Switch player order by pressing `Tab` at the beginning of the match
+
+#### Changed
+- Show the `Change order` modal on the right side
 
 ## [2.2.0] - 2021-12-04
 #### Feature
