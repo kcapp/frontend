@@ -1,0 +1,49 @@
+.modal.modal-left .modal-dialog,
+.modal.modal-right .modal-dialog {
+    position: fixed;
+    margin: auto;
+    width: 700px;
+    height: 80%;
+    padding: 60px 10px;
+    -webkit-transform: translate3d(0%, 0, 0);
+        -ms-transform: translate3d(0%, 0, 0);
+         -o-transform: translate3d(0%, 0, 0);
+            transform: translate3d(0%, 0, 0);
+}
+
+.modal.modal-left .modal-content,
+.modal.modal-right .modal-content {
+    height: 65%;
+    overflow-y: hidden;
+}
+
+.modal.modal-left .modal-body,
+.modal.modal-right .modal-body {
+    padding: 2px 15px 20px 15px;
+}
+
+/* Float Left */
+.modal.modal-left.fade .modal-dialog{
+    left: -650px;
+    -webkit-transition: opacity 0.3s linear, left 0.3s ease-out;
+       -moz-transition: opacity 0.3s linear, left 0.3s ease-out;
+         -o-transition: opacity 0.3s linear, left 0.3s ease-out;
+            transition: opacity 0.3s linear, left 0.3s ease-out;
+}
+
+.modal.modal-left.fade.in .modal-dialog{
+    left: 0;
+}
+
+/* Float Right */
+.modal.modal-right.fade .modal-dialog {
+    right: -650px;
+    -webkit-transition: opacity 0.3s linear, right 0.3s ease-out;
+       -moz-transition: opacity 0.3s linear, right 0.3s ease-out;
+         -o-transition: opacity 0.3s linear, right 0.3s ease-out;
+            transition: opacity 0.3s linear, right 0.3s ease-out;
+}
+
+.modal.modal-right.fade.in .modal-dialog {
+    right: 0;
+}

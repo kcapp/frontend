@@ -10,10 +10,10 @@ $ const types = require('../../../../components/scorecard/components/match_types
   <table>
     <tbody>
       <if(input.leg.players.length % 2 != 0 && state.venueConfig.has_dual_monitor)>
-        <for|player| of=input.leg_players>
+        <for|player| of=state.players>
           <tr>
             <scorecard-header key=`player-${player.player_id}` player=player players=input.players isPlayerBoardCam=state.isPlayerBoardCam on-toggle-camera("onToggleCamera")/>
-            <scorecard key="players[]" uuid=state.uuid leg=state.leg submitting=state.submitting player=player players=input.leg_players type=state.matchType
+            <scorecard key="players[]" uuid=state.uuid leg=state.leg submitting=state.submitting player=player players=state.players type=state.matchType
                 on-possible-throw("onPossibleThrow")
                 on-score-change("onScoreChange")
                 on-player-busted("onPlayerBusted")
@@ -24,13 +24,13 @@ $ const types = require('../../../../components/scorecard/components/match_types
       </if>
       <else>
         <tr>
-          <for|player| of=input.leg_players>
+          <for|player| of=state.players>
             <scorecard-header key=`player-${player.player_id}` player=player players=input.players isPlayerBoardCam=state.isPlayerBoardCam on-toggle-camera("onToggleCamera")/>
           </for>
         </tr>
         <tr>
-          <for|player| of=input.leg_players>
-            <scorecard key="players[]" uuid=state.uuid leg=state.leg submitting=state.submitting player=player players=input.leg_players type=state.matchType
+          <for|player| of=state.players>
+            <scorecard key="players[]" uuid=state.uuid leg=state.leg submitting=state.submitting player=player players=state.players type=state.matchType
                 on-possible-throw("onPossibleThrow")
                 on-score-change("onScoreChange")
                 on-player-busted("onPlayerBusted")
@@ -48,7 +48,7 @@ $ const types = require('../../../../components/scorecard/components/match_types
     </div>
   </if>
 </div>
-<player-order players=input.leg_players match=input.match legId=state.leg.id on-warmup-started("onWarmupStarted") on-smartboard-reconnect('onSmartboardReconnect')/>
+<player-order players=state.players match=input.match legId=state.leg.id on-warmup-started("onWarmupStarted") on-smartboard-reconnect('onSmartboardReconnect')/>
 <qr-code-modal/>
 <confirm-checkout on-confirm-checkout("onConfirmCheckout")/>
 <if(state.enableButtonInput)>

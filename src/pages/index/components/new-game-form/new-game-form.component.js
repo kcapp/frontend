@@ -45,10 +45,34 @@ module.exports = {
                         return player.smartcard_uid === data.uid;
                     });
                     if (player) {
-                        this.addPlayer(null, player);
-                        alertify.success(`Added player ${player.name}`);
+                        if (this.state.selected.indexOf(player) === -1) {
+                            this.addPlayer(null, player);
+                        }
+                        alertify.success(`Added player "${player.name}"`);
                     } else {
-                        alertify.error(`No player with the given smartcard registered ${data.uid}`);
+                        const preset = _.find(this.input.presets, (preset) => {
+                            return preset.smartcard_uid === data.uid;
+                        });
+                        if (preset) {
+                            const typeComponent = this.getComponent('game-type');
+                            typeComponent.state.index = preset.match_type.id;
+                            this.state.options.game_type = typeComponent.state.index;
+
+                            const scoreComponents = this.getComponent('starting-score');
+                            scoreComponents.state.index = preset.starting_score;
+                            this.state.options.starting_score = scoreComponents.state.index;
+
+                            const modeComponent = this.getComponent('game-mode');
+                            modeComponent.state.index = preset.match_mode.id;
+                            this.state.options.game_mode = modeComponent.state.index;
+
+                            alertify.success(`Configured preset "${preset.name}"`);
+                            if (this.state.selected.length > 1) {
+                                this.newGame();
+                            }
+                        } else {
+                            alertify.error(`No player or preset registered to smartcard "${data.uid}"`);
+                        }
                     }
                 }
             });
@@ -69,8 +93,8 @@ module.exports = {
         switch (e.key) {
             // Add players by entering player id and ENTER
             case 'Enter':
-                var playerId = this.state.playerId;
-                if (playerId == '00') {
+                const playerId = this.state.playerId;
+                if (playerId === '00') {
                     if (!this.state.submitting) {
                         this.newGame();
                     }
@@ -78,13 +102,17 @@ module.exports = {
                 }
                 this.state.playerId = '';
 
-                var player = _.find(this.state.players, function (player) { return player.id == playerId; })
+                let player = _.find(this.state.players, function (player) {
+                    return player.id == playerId;
+                });
                 if (player) {
                     // Player is not already added, so add it
                     this.addPlayer(null, { input: { player: player } });
                 } else {
                     // Player is already added, so remove it
-                    player = _.find(this.state.selected, function (player) { return player.id == playerId; })
+                    player = _.find(this.state.selected, function (player) {
+                        return player.id == playerId;
+                    });
                     if (!player) {
                         return;
                     }
@@ -92,33 +120,44 @@ module.exports = {
                 }
                 break;
             case '1':
-                this.state.playerId += '1'; break;
+                this.state.playerId += '1';
+                break;
             case '2':
-                this.state.playerId += '2'; break;
+                this.state.playerId += '2';
+                break;
             case '3':
-                this.state.playerId += '3'; break;
+                this.state.playerId += '3';
+                break;
             case '4':
-                this.state.playerId += '4'; break;
+                this.state.playerId += '4';
+                break;
             case '5':
-                this.state.playerId += '5'; break;
+                this.state.playerId += '5';
+                break;
             case '6':
-                this.state.playerId += '6'; break;
+                this.state.playerId += '6';
+                break;
             case '7':
-                this.state.playerId += '7'; break;
+                this.state.playerId += '7';
+                break;
             case '8':
-                this.state.playerId += '8'; break;
+                this.state.playerId += '8';
+                break;
             case '9':
-                this.state.playerId += '9'; break;
+                this.state.playerId += '9';
+                break;
             case '0':
-                this.state.playerId += '0'; break;
-            case '/':
-                var component = this.getComponent('game-type');
+                this.state.playerId += '0';
+                break;
+            case '/': {
+                const component = this.getComponent('game-type');
                 component.state.index = this.cycleValues(this.state.input.types, this.state.options.game_type);
                 this.state.options.game_type = component.state.index;
                 this.onGameTypeChanged('game_type', component.state.index);
                 break;
-            case '*':
-                var component = this.getComponent('starting-score');
+            }
+            case '*': {
+                const component = this.getComponent('starting-score');
                 if (this.state.options.game_type === types.X01 || this.state.options.game_type === types.X01HANDICAP) {
                     var score = this.cycleValues(this.state.input.scores, this.state.options.starting_score);
                     if (score === 0) {
@@ -133,12 +172,14 @@ module.exports = {
                     this.state.options.starting_score = component.state.index;
                 }
                 break;
-            case '-':
-                var component = this.getComponent('game-mode');
+            }
+            case '-': {
+                const component = this.getComponent('game-mode');
                 component.state.index = this.cycleValues(this.state.input.modes, this.state.options.game_mode);
                 this.state.options.game_mode = component.state.index;
                 break;
-            case '+':
+            }
+            case '+': {
                 var component = this.getComponent('stake');
                 if (component.state.index === this.input.stakes.length) {
                     component.state.index = -1;
@@ -147,6 +188,7 @@ module.exports = {
                 }
                 this.state.options.stake = component.state.index;
                 break;
+            }
             default:
                 break; // NOOP
         }
@@ -226,6 +268,9 @@ module.exports = {
         this.setStateDirty('players');
     },
     newGame(event) {
+        if (this.state.submitting) {
+            return;
+        }
         this.state.submitting = true;
 
         let officeId = this.state.officeId;

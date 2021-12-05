@@ -1,4 +1,5 @@
 const _ = require("underscore");
+const axios = require("axios");
 const moment = require('moment');
 const io = require('../../../../util/socket.io-helper.js');
 const alertify = require('../../../../util/alertify.js');
@@ -332,6 +333,32 @@ module.exports = {
             }
 
             e.preventDefault();
+        } else if (e.key === 'Tab') {
+            if (this.state.leg.visits.length > 0) {
+                // Don't allow switching players when match has started
+                e.preventDefault();
+                return;
+            }
+            if (this.state.players.length > 2) {
+                // If more than two players just show the change-order modal
+                document.getElementById('change-player-order').click();
+                e.preventDefault();
+                return;
+            }
+
+            const order = {};
+            const players = this.state.players.reverse();
+            for (let i = 0; i < players.length; i++) {
+                order[players[i].player_id] = i + 1;
+            }
+            axios.put(`${window.location.origin}/legs/${this.state.leg.id}/order`, order)
+                .then(response => {
+                    this.state.players = response.data;
+                }).catch(error => {
+                    alert('Error changing player order. Please reload');
+                    location.reload();
+                });
+            e.preventDefault();
         }
     },
 
@@ -340,14 +367,14 @@ module.exports = {
             // Don't allow input while score is being submitted
             return;
         }
-        var component = this.findActive(this.getComponents('players'));
+        const component = this.findActive(this.getComponents('players'));
 
-        var text = '';
-        var currentValue = component.getCurrentValue();
-        var currentMultiplier = component.getCurrentMultiplier();
+        let text = '';
+        const currentValue = component.getCurrentValue();
+        let currentMultiplier = component.getCurrentMultiplier();
         switch (e.key) {
             case 'Enter':
-                var dartsThrown = component.getDartsThrown();
+                const dartsThrown = component.getDartsThrown();
                 if (dartsThrown > 3) {
                     this.state.submitting = true;
                     this.state.socket.emit('throw', JSON.stringify(component.getPayload()));
