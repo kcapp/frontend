@@ -1,4 +1,5 @@
 const _ = require('underscore');
+const localStorage = require('../../../../util/localstorage');
 
 module.exports = {
     onCreate(input) {
@@ -7,10 +8,16 @@ module.exports = {
             allButtonsMode: false,
             players: input.players,
             current: this.findCurrent(input.players),
-            currentDart: 0
+            currentDart: 0,
+            buttonLayout: "wide"
         }
     },
-
+    onMount() {
+        const buttonLayout = localStorage.get("button-layout");
+        if (buttonLayout) {
+            this.state.buttonLayout = buttonLayout
+        }
+    },
     findCurrent(players) {
         return _.find(players, (player) => player.is_current_player);
     },

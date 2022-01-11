@@ -1,4 +1,4 @@
-$ var types = require("../../../../components/scorecard/components/match_types");
+$ let types = require("../../../../components/scorecard/components/match_types");
 
 <table id='compact-scores-table' style={ 'margin-top': input.compactMode ? "" : "20px" } class='table'>
   <tbody>
@@ -17,7 +17,12 @@ $ var types = require("../../../../components/scorecard/components/match_types")
 <table id='score-selector-table' class='table'>
   <tbody>
     <if(input.allButtonsMode)>
-      <all-buttons-input on-button-press("onButtonPress")/>
+      <if(state.buttonLayout === "compact")>
+        <all-buttons-input-compact on-button-press("onButtonPress")/>
+      </if>
+      <else>
+        <all-buttons-input on-button-press("onButtonPress")/>
+      </else>
     </if>
     <else-if(input.type === types.AROUND_THE_WORLD || input.type === types.SHANGHAI)>
       $ var target = input.leg.round === 21 ? 25 : input.leg.round;
@@ -284,7 +289,12 @@ $ var types = require("../../../../components/scorecard/components/match_types")
       </else>
     </else-if>
     <else>
-      <all-buttons-input on-button-press("onButtonPress")/>
+      <if(state.buttonLayout === "compact")>
+        <all-buttons-input-compact on-button-press("onButtonPress")/>
+      </if>
+      <else>
+        <all-buttons-input on-button-press("onButtonPress")/>
+      </else>
     </else>
   </tbody>
 </table>

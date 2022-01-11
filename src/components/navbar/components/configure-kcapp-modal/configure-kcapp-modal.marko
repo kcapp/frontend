@@ -1,0 +1,29 @@
+<div id="modal-configure-kcapp" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modal-configure-kcapp-title" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Device Configuration</h4>
+      </div>
+      <div class="modal-body">
+        <div>
+          <div class="block-container-header">
+            <span>Button Input Layout</span>
+          </div>
+          <div class="block-container-with-header">
+            <div class="form-group form-check">
+                <select id="buttonLayout" class="form-select" style="width: 100%" name="button-layout">
+                  <for|layout| of=[ "Wide", "Compact" ]>
+                    <option style="text-transform: capitalize;" value=layout.toLowerCase() selected=(layout.toLowerCase() === state.buttonLayout)>${layout}</option>
+                  </for>
+                </select>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-primary" type="button" on-click("onSave") data-dismiss="modal">Save</button>
+        <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+      </div>
+    </div>
+  </div>
+</div>

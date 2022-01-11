@@ -10,7 +10,7 @@
             <span>Offices</span>
           </div>
           <div class="block-container-with-header">
-            <div class="form-group form-check players-all">
+            <div class="form-group form-check offices-all">
               <for|id| in=input.offices>
                 $ const office = input.offices[id];
                 <selector-button key="offices[]" data=office on-click("officeSelected") selected=state.office/>
@@ -21,7 +21,7 @@
             <span>Venues</span>
           </div>
           <div class="block-container-with-header">
-            <div class="form-group form-check players-all">
+            <div class="form-group form-check venues-all">
               <if(state.office)>
                 <for|venue| of=state.venues>
                   <selector-button key="venues[]" data=venue on-click("venueSelected") selected=state.venue/>

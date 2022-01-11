@@ -1,0 +1,4 @@
+$ let clazz = input.multiplier == 3 ? 'btn-triple' : input.multiplier == 2 ? 'btn-double' : '';
+$ let text =  input.multiplier == 3 ? 'Triple' : input.multiplier == 2 ? 'Double' : '';
+<button type="button" class=`btn btn-score btn-info btn-lg fill-button btn-multiplier ${clazz}` multiplier=input.multiplier
+     on-click("onClick", input.multiplier)>${text}<br/>${".".repeat(input.multiplier)}</button>
