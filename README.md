@@ -1,5 +1,10 @@
 ![kcapp logo](https://raw.githubusercontent.com/kcapp/frontend/master/public/images/logo.png)
 # kcapp-frontend
+![Latest Version](https://img.shields.io/github/package-json/v/kcapp/frontend)
+![Docker Image CI Workflow](https://github.com/kcapp/frontend/actions/workflows/docker.image.yaml/badge.svg)
+[![Join our Slack](https://img.shields.io/badge/Slack-Join%20the%20discussion-limegreen.svg?logo=slack)](https://kcappdarts.slack.com)
+[![Buy me a Coffee](https://img.shields.io/badge/Ko--fi-Buy%20me%20a%20coffee-limegreen.svg?logo=data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAIAAACQKrqGAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAE0SURBVChTlZE/S8NAGIff613+gMXYQgYhqxlCSXdxCvQDuAUyFC0BlUz6QcSPUQcJdCrZXB0zJEPo0M1BBAmSJuTim/QE0SU+y3u5e+7N7+6I53nQj4GoPfiHSm3bxlKWZZ7nuz/gEmOsM6Et6E2n0/l8/kkaqDkwSnYlA6Jp2nK5XK/Xw+EQtTYA53w0HhuGYT6n5ntpRi8nI32k67PZzHGcyWRSVZXoijSEAAe4f4DjI6g+4G1TXd+oqrparSzLStNUkiRxLI77cHh1DuUrHFC4vTtkzPf9IAjCMJRlGZ1vlWNPgMsFXCzg8QmHuJBlmeu6lNLBoNXaANg8SZLtdlsUBTk9azYbChBFURzHeCCC2TrEa9V1jZe1n9qjKApmFR8dIgD+Ba/mJ788RKh96K0CfAEJznGqIDf7PAAAAABJRU5ErkJggg==)](https://ko-fi.com/P5P5BBQQ4)
+
 kcapp (pronounced [keɪk æp](https://en.wikipedia.org/wiki/Help:IPA/English)) is an application used for scoring Darts matches, with multiple input methods, statistics tracking, and more. See [Wiki](https://github.com/kcapp/frontend/wiki) for more information
 
 ## Install
