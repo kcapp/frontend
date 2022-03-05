@@ -1,4 +1,4 @@
-var _ = require("underscore");
+const _ = require("underscore");
 
 module.exports = {
     onCreate(input) {

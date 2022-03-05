@@ -1,13 +1,13 @@
-var debug = require('debug')('kcapp:elo');
+const debug = require('debug')('kcapp:elo');
 
-var express = require('express');
-var router = express.Router();
+const express = require('express');
+const router = express.Router();
 
-var axios = require('axios');
-var _ = require('underscore');
+const axios = require('axios');
+const _ = require('underscore');
 
 const template = require('marko');
-var eloTemplate = template.load(require.resolve('../src/pages/elo/elo-template.marko'));
+const eloTemplate = template.load(require.resolve('../src/pages/elo/elo-template.marko'));
 
 /** Get elo */
 router.get('/', function (req, res, next) {
@@ -16,13 +16,20 @@ router.get('/', function (req, res, next) {
         axios.get(`${req.app.locals.kcapp.api}/tournament/standings`),
         axios.get(`${req.app.locals.kcapp.api}/office`)
     ]).then(axios.spread((players, standings, offices) => {
-        var general = JSON.parse(JSON.stringify(standings.data));
-        general.sort(function (a, b) {
-            return b.current_elo - a.current_elo;
-        });
+        const general = JSON.parse(JSON.stringify(standings.data));
+        general.sort((player1, player2) => player2.current_elo - player1.current_elo );
+
+        const tournamentData = standings.data;
+        const tournament = [];
+        for (let i = 0; i< tournamentData.length; i++) {
+            const standing = tournamentData[i];
+            if (standing.elo_matches >= 5) {
+                tournament.push(standing);
+            }
+        }
         res.marko(eloTemplate, {
             players: players.data,
-            tournament: standings.data,
+            tournament: tournament,
             offices: offices.data,
             general: general,
         });
