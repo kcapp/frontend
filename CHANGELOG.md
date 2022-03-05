@@ -6,12 +6,14 @@ A preview of major changes can be found in the Wiki ([Latest Changes](https://gi
 - Support for match presets, that can be configured via smartcards
 - Switch player order by pressing `Tab` at the beginning of the match
 - New button compact button layout and option to specify default button layout per device
-- Vocal announcements for some scores >180 for JDC
+- Vocal announcements for some scores >180 for JDC Practice
 - Allow closing modals with `Backspace` button for easier navigation on Numpad
+- Show current shirt color in JDC Practice
 
 #### Changed
 - Show the `Change order` modal on the right side
 - Don't prompt to delete visits when nothing is thrown
+- Tooltip for JDC Shirts on leg result page
 
 ## [2.2.0] - 2021-12-04
 #### Feature
