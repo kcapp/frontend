@@ -28,7 +28,6 @@ module.exports = {
             leg: input.leg,
             player: player,
             type: input.type,
-            playerId: player.player_id,
             isCurrentPlayer: player.is_current_player,
             submitClass: null,
             totalScore: 0,
@@ -44,6 +43,9 @@ module.exports = {
         } else {
             this.state.submitClass = null;
         }
+        this.state.isCurrentPlayer = input.player.is_current_player;
+        this.state.player = input.player;
+        this.state.leg = input.leg;
     },
 
     reset() {
@@ -229,7 +231,7 @@ module.exports = {
         const second = this.getComponent(DART_CONTAINER_MAP[2]);
         const third = this.getComponent(DART_CONTAINER_MAP[3]);
         return {
-            player_id: this.state.playerId,
+            player_id: this.state.player.player_id,
             leg_id: this.state.leg.id,
             first_dart: first.toJSON(),
             second_dart: second.toJSON(),

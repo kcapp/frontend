@@ -32,12 +32,12 @@ exports.onScoreUpdate = (data, thiz) => {
     let isLastVisitFishNChips = false;
     let totalFishNChips = 0;
     const globalFish = globalstat ? globalstat.fish_n_chips : 0;
-    const currentPlayerIdx = _.findIndex(scorecardComponents, (component) => component.state.playerId === leg.current_player_id);
+    const currentPlayerIdx = _.findIndex(scorecardComponents, (component) => component.state.player.player_id === leg.current_player_id);
     for (let i = 0; i < scorecardComponents.length; i++) {
         const component = scorecardComponents[i];
-        const player = playersMap[component.state.playerId]
+        const player = playersMap[component.state.player.player_id]
 
-        const isCurrentPlayer = component.state.playerId === leg.current_player_id;
+        const isCurrentPlayer = component.state.player.player_id === leg.current_player_id;
         if (isCurrentPlayer) {
             isLastVisitFishNChips = players[i === 0 ? players.length - 1 : i - 1].modifiers.is_fish_and_chips;
             component.reset();

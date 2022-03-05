@@ -156,8 +156,16 @@ router.delete('/:id/cancel', function (req, res, next) {
 router.put('/:id/order', function (req, res, next) {
     axios.put(`${req.app.locals.kcapp.api}/leg/${req.params.id}/order`, req.body)
         .then(response => {
+            const players = response.data;
             this.socketHandler.emitMessage('/active', 'order_changed', { leg_id: req.params.id });
-            res.status(200).send(response.data).end();
+            axios.get(`${req.app.locals.kcapp.api}/leg/${req.params.id}`)
+                .then(response => {
+                    const leg = response.data;
+                    res.status(200).send({ leg: leg, players: players}).end();
+                }).catch(error => {
+                    debug('Unable to change order: %s', error);
+                    next(error);
+                });
         }).catch(error => {
             debug('Unable to change order: %s', error);
             next(error);

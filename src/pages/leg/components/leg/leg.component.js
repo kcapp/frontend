@@ -125,7 +125,7 @@ module.exports = {
 
     onScoreChange(scored, playerId, component) {
         if (!playerId) {
-            playerId = this.findActive(this.getComponents('players')).state.playerId;
+            playerId = this.findActive(this.getComponents('players')).state.player.player_id;
         }
         this.getComponent(`player-${playerId}`).setScored(scored);
     },
@@ -199,7 +199,7 @@ module.exports = {
 
         this.state.socket.emit('possible_throw', {
             uuid: this.state.uuid,
-            current_player_id: component.state.playerId,
+            current_player_id: component.state.player.player_id,
             score: score,
             multiplier: multiplier,
             is_bust: isBust,
@@ -353,7 +353,10 @@ module.exports = {
             }
             axios.put(`${window.location.origin}/legs/${this.state.leg.id}/order`, order)
                 .then(response => {
-                    this.state.players = response.data;
+                    const leg = response.data.leg;
+                    this.state.leg = leg;
+                    const players = response.data.players;
+                    this.state.players = players;
                 }).catch(error => {
                     alert('Error changing player order. Please reload');
                     location.reload();

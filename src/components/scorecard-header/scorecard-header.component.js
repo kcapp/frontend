@@ -19,6 +19,9 @@ module.exports = {
             cameraEnabled: true
         }
     },
+    onInput(input) {
+        this.state.player = input.player;
+    },
     onMount() {
         if (this.state.player.player.board_stream_url && this.state.player.player.board_stream_css) {
             $("iframe").ready(function() {
