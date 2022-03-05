@@ -10,6 +10,15 @@ function setTheme() {
 function bootstrap() {
     if (!this.alertify) {
         this.alertify = require('alertifyjs');
+        this.alertify.defaults.hooks.postinit = function(instance) {
+            instance.elements.root.onkeydown = function(e) {
+                if (e.key === "Backspace") {
+                    // Close dialog if Backspace is pressed to easier navigate when using Numpad
+                    instance.close();
+                    e.stopPropagation();
+                }
+            }
+        }
         setTheme();
     }
     return this.alertify;
@@ -30,6 +39,7 @@ exports.confirm = (text, okFnc, cancelFnc) => {
             closable: false
         })
         .set({ transition: 'zoom' })
+        .set({ onclose:cancelFnc })
         .show();
 }
 

@@ -161,14 +161,16 @@ module.exports = {
     },
 
     onUndoThrow() {
-        this.state.submitting = true;
-        alertify.confirm('Delete last Visit',
-        () => {
-            this.state.socket.emit('undo_visit', {});
-        },
-        () => {
-            this.state.submitting = false;
-        });
+        if (this.state.leg.visits.length > 0) {
+            this.state.submitting = true;
+            alertify.confirm('Delete last Visit',
+            () => {
+                this.state.socket.emit('undo_visit', {});
+            },
+            () => {
+                this.state.submitting = false;
+            });
+        }
     },
 
     onScoreButtonPressed(score, multiplier, isUndo) {
@@ -334,11 +336,13 @@ module.exports = {
 
             e.preventDefault();
         } else if (e.key === 'Tab') {
-            if (this.state.leg.visits.length > 0) {
+            const component = this.findActive(this.getComponents('players'));
+            if (this.state.leg.visits.length > 0 || component.state.currentDart !== 1) {
                 // Don't allow switching players when match has started
                 e.preventDefault();
                 return;
             }
+
             if (this.state.players.length > 2) {
                 // If more than two players just show the change-order modal
                 document.getElementById('change-player-order').click();
