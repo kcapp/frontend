@@ -14,6 +14,7 @@ A preview of major changes can be found in the Wiki ([Latest Changes](https://gi
 - Show the `Change order` modal on the right side
 - Don't prompt to delete visits when nothing is thrown
 - Tooltip for JDC Shirts on leg result page
+- Made all external resources available locally
 
 ## [2.2.0] - 2021-12-04
 #### Feature
