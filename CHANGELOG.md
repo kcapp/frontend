@@ -6,6 +6,7 @@ A preview of major changes can be found in the Wiki ([Latest Changes](https://gi
 - Support for match presets, that can be configured via smartcards
 - Switch player order by pressing `Tab` at the beginning of the match
 - New button compact button layout and option to specify default button layout per device
+* Vocal announcements for some scores >180 for JDC
 
 #### Changed
 - Show the `Change order` modal on the right side
