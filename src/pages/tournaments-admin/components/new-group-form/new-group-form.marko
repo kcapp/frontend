@@ -1,0 +1,30 @@
+$ var id = input.id || "add-group-modal";
+$ var heading = input.heading || "Add Group";
+<div class="modal fade" id=`${id}` tabindex="-1" role="dialog" aria-labelledby=`${id}-label`>
+  <div class="modal-dialog" role="document">
+    <div class="block-container-header">
+      <i class="fas fa-user-plus"/>
+      <span class="ml-10">${heading}</span>
+      <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="block-container-with-header">
+      <form>
+        <div class="form-group">
+          <label class="control-label">Name</label>
+          <input class="form-control" type="text" value=state.name on-input("nameChange")/>
+        </div>
+        <div class="form-group">
+          <label class="control-label" >Division</label>
+          <input class="form-control" type="number" value=state.division on-input("divisionChange")/>
+        </div>
+        <button class="btn btn-default btn-close" type="button" data-dismiss="modal">Close</button>
+        <button class="btn btn-primary btn-submit" type="submit" on-click("addGroup")>
+          <i class="fas fa-user-plus"/>
+          <span class="ml-10">${heading}</span>
+        </button>
+      </form>
+    </div>
+  </div>
+</div>

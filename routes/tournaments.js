@@ -1,22 +1,22 @@
-var debug = require('debug')('kcapp:tournaments');
+const debug = require('debug')('kcapp:tournaments');
 
-var bottleneck = require("bottleneck/es5");
-var limiter = new bottleneck({ minTime: 51 });
+const bottleneck = require("bottleneck/es5");
+const limiter = new bottleneck({ minTime: 51 });
 
-var express = require('express');
-var router = express.Router();
+const express = require('express');
+const router = express.Router();
 
-var axios = require('axios');
-var _ = require('underscore');
-var bracket = require('./lib/bracket_generator');
+const axios = require('axios');
+const _ = require('underscore');
+const bracket = require('./lib/bracket_generator');
 
 const template = require('marko');
-var tournamentTemplate = template.load(require.resolve('../src/pages/tournament/tournament-template.marko'));
-var tournamentsTemplate = template.load(require.resolve('../src/pages/tournaments/tournaments-template.marko'));
-var tournamentAdminTemplate = template.load(require.resolve('../src/pages/tournament-admin/tournament-admin-template.marko'));
-var tournamentsAdminTemplate = template.load(require.resolve('../src/pages/tournaments-admin/tournaments-admin-template.marko'));
-var tournamentScheduleTemplate = template.load(require.resolve('../src/pages/tournament-schedule/tournament-schedule-template.marko'));
-var tournamentPlayerMatchesTemplate = template.load(require.resolve('../src/pages/tournament-player-matches/tournament-player-matches-template.marko'));
+const tournamentTemplate = template.load(require.resolve('../src/pages/tournament/tournament-template.marko'));
+const tournamentsTemplate = template.load(require.resolve('../src/pages/tournaments/tournaments-template.marko'));
+const tournamentAdminTemplate = template.load(require.resolve('../src/pages/tournament-admin/tournament-admin-template.marko'));
+const tournamentsAdminTemplate = template.load(require.resolve('../src/pages/tournaments-admin/tournaments-admin-template.marko'));
+const tournamentScheduleTemplate = template.load(require.resolve('../src/pages/tournament-schedule/tournament-schedule-template.marko'));
+const tournamentPlayerMatchesTemplate = template.load(require.resolve('../src/pages/tournament-player-matches/tournament-player-matches-template.marko'));
 
 /** Get all tournaments */
 router.get('/', function (req, res, next) {
@@ -186,9 +186,23 @@ router.post('/admin', function (req, res, next) {
             }
             res.end();
         }).catch(error => {
-            debug(`Error when starting new match: ${error}`);
+            debug(`Error when creating new tournament: ${error}`);
+            next(error);
         });
 });
+
+/* Create new tournament group  */
+router.post('/admin/groups', function (req, res, next) {
+    const body = req.body;
+    axios.post(`${req.app.locals.kcapp.api}/tournament/groups`, body)
+        .then(response => {
+            res.redirect('/tournaments/admin');
+        }).catch(error => {
+            debug(`Error when adding tournament group: ${error}`);
+            next(error);
+        });
+});
+
 
 /* Get tournament with the given ID */
 router.get('/:id', function (req, res, next) {

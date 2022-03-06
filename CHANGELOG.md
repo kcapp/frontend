@@ -9,6 +9,7 @@ A preview of major changes can be found in the Wiki ([Latest Changes](https://gi
 - Vocal announcements for some scores >180 for JDC Practice
 - Allow closing modals with `Backspace` button for easier navigation on Numpad
 - Show current shirt color in JDC Practice
+- Ability to add Tournament Groups from Admin page
 
 #### Changed
 - Show the `Change order` modal on the right side
