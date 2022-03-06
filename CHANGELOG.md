@@ -1,6 +1,14 @@
 # Changelog
 
 A preview of major changes can be found in the Wiki ([Latest Changes](https://github.com/kcapp/frontend/wiki/Latest_Changes))
+## [2.4.0] - TBD
+#### Changed
+- Added JDC shirt to spectate page
+
+#### Fixed
+- Fixed broken office selector on players page
+
+
 ## [2.3.0] - 2022-03-06
 #### Feature
 - Support for match presets, that can be configured via smartcards
@@ -134,6 +142,7 @@ A preview of major changes can be found in the Wiki ([Latest Changes](https://gi
 - Multiple score entry methods
     - Including [Unicorn Smartboard](https://github.com/kcapp/smartboard)
 
+[2.4.0]: https://github.com/kcapp/frontend/compare/v2.3.0...develop
 [2.3.0]: https://github.com/kcapp/frontend/compare/v2.2.0...v2.3.0
 [2.2.0]: https://github.com/kcapp/frontend/compare/v2.1.0...v2.2.0
 [2.1.0]: https://github.com/kcapp/frontend/compare/v2.0.0...v2.1.0
