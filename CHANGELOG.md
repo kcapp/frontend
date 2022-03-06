@@ -16,6 +16,10 @@ A preview of major changes can be found in the Wiki ([Latest Changes](https://gi
 - Tooltip for JDC Shirts on leg result page
 - Made all external resources available locally
 
+#### Fixed
+- Don't allow numbers to be stolen in Tic-Tac-Toe
+- Fixed a bug with voice announcements not working on Draw
+
 ## [2.2.0] - 2021-12-04
 #### Feature
 - Support for reading player smartcard UIDs and adding player using smartcards

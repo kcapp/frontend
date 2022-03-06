@@ -379,7 +379,6 @@ module.exports = (io, app) => {
                             const currentLeg = legNum + ["", "st", "nd", "rd", "th"][legNum > 4 ? 4 : legNum];
                             const sentence = [
                                 AUDIO_GAMESHOT.random(currentLeg),
-                                getNameAnnouncement(player.player, "name"),
                                 AUDIO_SENTENCES.random("matchdraw")
                             ];
                             announce(`Game shot, in the ${currentLeg} leg, ${name}. The match a DRAW!!!`, 'game_shot', sentence);
