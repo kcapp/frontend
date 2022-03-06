@@ -1,0 +1,36 @@
+<tr class='row'>
+    <td/>
+    <td colspan=2>
+        <multiplier-button multiplier=2 on-button-press("onMultiplierButtonPress") />
+    </td>
+    <td colspan=2>
+        <multiplier-button multiplier=3 on-button-press("onMultiplierButtonPress") />
+    </td>
+</tr>
+<tr class='row'>
+    <td>
+        <score-button text="Miss" value=0 multiplier=1 on-button-press("onButtonPress")/>
+    </td>
+    <button-row numbers=[ 20, 19, 18, 17 ] multiplier=state.multiplier on-button-press("onButtonPress")/>
+</tr>
+<tr class='row'>
+    <td rowspan='2'>
+        <score-button text="Bull" value=25 multiplier=(state.multiplier === 3 ? 2 : state.multiplier) extra_clazz=`fill-button` on-button-press("onButtonPress")/>
+    </td>
+    <button-row numbers=[ 16, 15, 14, 13 ] multiplier=state.multiplier on-button-press("onButtonPress")/>
+</tr>
+<tr class='row'>
+    <button-row numbers=[ 12, 11, 10, 9 ] multiplier=state.multiplier on-button-press("onButtonPress")/>
+    <td style="border: 0;"/>
+</tr>
+<tr class='row'>
+    <td rowspan='2'>
+        <score-button icon="fas fa-long-arrow-alt-left" clazz='fill-button' isUndo=true on-button-press("onButtonPress")/>
+    </td>
+    <button-row numbers=[ 8, 7, 6, 5 ] multiplier=state.multiplier on-button-press("onButtonPress")/>
+    <td style="border: 0;"/>
+</tr>
+<tr class='row'>
+    <button-row numbers=[ 4, 3, 2, 1 ] multiplier=state.multiplier on-button-press("onButtonPress")/>
+    <td style="border: 0;"/>
+</tr>

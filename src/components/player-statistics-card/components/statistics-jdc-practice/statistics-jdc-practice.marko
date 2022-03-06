@@ -14,7 +14,10 @@ $ const player = input.player;
         <player-profile-picture player=player/>
       </div>
     </div>
-    <jdc-shirts score=statistic.score />
+    <for|score, idx, list| of=[0, 150, 300, 450, 600, 700, 850]>
+      $ const size = statistic.score >= score && (statistic.score < list[idx+1] || idx+1 === list.length) ? "large" : "small";
+      <jdc-shirt score=score size=size />
+    </for>
     <statistics-row heading="Score" value=statistic.score />
     <statistics-row heading="MPR" value=statistic.mpr.toFixed(2) />
     <statistics-row heading="Shanghai Count" value=`${statistic.shanghai_count}`/>

@@ -1,6 +1,26 @@
 # Changelog
 
 A preview of major changes can be found in the Wiki ([Latest Changes](https://github.com/kcapp/frontend/wiki/Latest_Changes))
+## [2.3.0] - 2022-03-06
+#### Feature
+- Support for match presets, that can be configured via smartcards
+- Switch player order by pressing `Tab` at the beginning of the match
+- New button compact button layout and option to specify default button layout per device
+- Vocal announcements for some scores >180 for JDC Practice
+- Allow closing modals with `Backspace` button for easier navigation on Numpad
+- Show current shirt color in JDC Practice
+- Ability to add Tournament Groups from Admin page
+
+#### Changed
+- Show the `Change order` modal on the right side
+- Don't prompt to delete visits when nothing is thrown
+- Tooltip for JDC Shirts on leg result page
+- Made all external resources available locally
+
+#### Fixed
+- Don't allow numbers to be stolen in Tic-Tac-Toe
+- Fixed a bug with voice announcements not working on Draw
+
 ## [2.2.0] - 2021-12-04
 #### Feature
 - Support for reading player smartcard UIDs and adding player using smartcards
@@ -114,7 +134,8 @@ A preview of major changes can be found in the Wiki ([Latest Changes](https://gi
 - Multiple score entry methods
     - Including [Unicorn Smartboard](https://github.com/kcapp/smartboard)
 
-[2.2.0]: https://github.com/kcapp/frontend/compare/v2.2.0...v2.2.0
+[2.3.0]: https://github.com/kcapp/frontend/compare/v2.2.0...v2.3.0
+[2.2.0]: https://github.com/kcapp/frontend/compare/v2.1.0...v2.2.0
 [2.1.0]: https://github.com/kcapp/frontend/compare/v2.0.0...v2.1.0
 [2.0.0]: https://github.com/kcapp/frontend/compare/v1.2.0...v2.0.0
 [1.2.0]: https://github.com/kcapp/frontend/compare/v1.1.0...v1.2.0

@@ -1,4 +1,5 @@
 const _ = require("underscore");
+const axios = require("axios");
 const moment = require('moment');
 const io = require('../../../../util/socket.io-helper.js');
 const alertify = require('../../../../util/alertify.js');
@@ -124,7 +125,7 @@ module.exports = {
 
     onScoreChange(scored, playerId, component) {
         if (!playerId) {
-            playerId = this.findActive(this.getComponents('players')).state.playerId;
+            playerId = this.findActive(this.getComponents('players')).state.player.player_id;
         }
         this.getComponent(`player-${playerId}`).setScored(scored);
     },
@@ -160,14 +161,16 @@ module.exports = {
     },
 
     onUndoThrow() {
-        this.state.submitting = true;
-        alertify.confirm('Delete last Visit',
-        () => {
-            this.state.socket.emit('undo_visit', {});
-        },
-        () => {
-            this.state.submitting = false;
-        });
+        if (this.state.leg.visits.length > 0) {
+            this.state.submitting = true;
+            alertify.confirm('Delete last Visit',
+            () => {
+                this.state.socket.emit('undo_visit', {});
+            },
+            () => {
+                this.state.submitting = false;
+            });
+        }
     },
 
     onScoreButtonPressed(score, multiplier, isUndo) {
@@ -198,7 +201,7 @@ module.exports = {
 
         this.state.socket.emit('possible_throw', {
             uuid: this.state.uuid,
-            current_player_id: component.state.playerId,
+            current_player_id: component.state.player.player_id,
             score: score,
             multiplier: multiplier,
             is_bust: isBust,
@@ -332,6 +335,37 @@ module.exports = {
             }
 
             e.preventDefault();
+        } else if (e.key === 'Tab') {
+            const component = this.findActive(this.getComponents('players'));
+            if (this.state.leg.visits.length > 0 || component.state.currentDart !== 1) {
+                // Don't allow switching players when match has started
+                e.preventDefault();
+                return;
+            }
+
+            if (this.state.players.length > 2) {
+                // If more than two players just show the change-order modal
+                document.getElementById('change-player-order').click();
+                e.preventDefault();
+                return;
+            }
+
+            const order = {};
+            const players = this.state.players.reverse();
+            for (let i = 0; i < players.length; i++) {
+                order[players[i].player_id] = i + 1;
+            }
+            axios.put(`${window.location.origin}/legs/${this.state.leg.id}/order`, order)
+                .then(response => {
+                    const leg = response.data.leg;
+                    this.state.leg = leg;
+                    const players = response.data.players;
+                    this.state.players = players;
+                }).catch(error => {
+                    alert('Error changing player order. Please reload');
+                    location.reload();
+                });
+            e.preventDefault();
         }
     },
 
@@ -340,14 +374,14 @@ module.exports = {
             // Don't allow input while score is being submitted
             return;
         }
-        var component = this.findActive(this.getComponents('players'));
+        const component = this.findActive(this.getComponents('players'));
 
-        var text = '';
-        var currentValue = component.getCurrentValue();
-        var currentMultiplier = component.getCurrentMultiplier();
+        let text = '';
+        const currentValue = component.getCurrentValue();
+        let currentMultiplier = component.getCurrentMultiplier();
         switch (e.key) {
             case 'Enter':
-                var dartsThrown = component.getDartsThrown();
+                const dartsThrown = component.getDartsThrown();
                 if (dartsThrown > 3) {
                     this.state.submitting = true;
                     this.state.socket.emit('throw', JSON.stringify(component.getPayload()));

@@ -1,4 +1,7 @@
 <page-header heading="Tournament" subheading="Administrate tournaments"/>
+<div>
+  <options-panel key="options-panel" groups=input.tournament_group on-add-group("addGroup")/>
+</div>
 <div class="game-options">
   <div class="block-container-header">
     <i class="fas fa-cogs"/>
@@ -104,3 +107,5 @@
 </table>
 <button class="btn btn-primary" type="button" on-click("validate")>Validate</button>
 <button class="btn btn-primary" type="button" on-click("createTournament")>Create</button>
+
+<new-group-form isAdd=true groups=input.groups/>

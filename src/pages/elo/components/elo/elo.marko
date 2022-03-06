@@ -23,10 +23,10 @@
         </thead>
         <tbody>
           $ var redStep = Math.floor(256 / state.tournament.length);
-          <for|standing| of=state.tournament>
+          <for|standing, idx| of=state.tournament>
             $ var redValue = 256 - (standing.rank - 1) * redStep;
             <tr>
-              <td class="pl-10">${standing.rank}</td>
+              <td class="pl-10">${idx + 1}</td>
               <td class="text-left">
                 <a href=`/players/${standing.player_id}/statistics`>${input.players[standing.player_id].name}</a>
               </td>

@@ -1,10 +1,17 @@
+$ const types = require("../scorecard/components/match_types");
+
 <td>
-  <div style=`position: relative; opacity: ${state.player.lives !== null && state.player.lives <= 0 ? "35%" : "100%"};` class=(state.isCurrentPlayer ? "scorecard scorecard-active" : "scorecard scorecard-inactive")>
+  <div style=`position: relative; opacity: ${state.player.lives !== null && state.player.lives <= 0 ? "35%" : "100%"};` class=(input.player.is_current_player ? "scorecard scorecard-active" : "scorecard scorecard-inactive")>
     <if(state.player.player.board_stream_url)>
       <i style="position: absolute; top: 5px; right: 5px; cursor: pointer;" class="fas fa-video fa-2x" title="Toggle Camera" on-click("toggleCamera")></i>
     </if>
     <div class="label-player-name">${state.name}</div>
     <div class="label label-block label-player-score">${state.player.current_score}</div>
+    <if(input.type == types.JDC_PRACTICE)>
+      <div>
+        <jdc-shirt score=state.player.current_score />
+      </div>
+    </if>
     <div class="player-legs">
       <label>${state.wins}</label>
     </div>

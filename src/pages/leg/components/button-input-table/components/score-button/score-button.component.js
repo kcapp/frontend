@@ -1,5 +1,5 @@
 module.exports = {
-    onCreate(input) {
+    onInput(input) {
         let clazz = 'btn-score btn-info btn-lg btn-block';
         if (input.clazz) {
             clazz += ` ${input.clazz}`;
@@ -8,6 +8,10 @@ module.exports = {
         } else if (input.multiplier === 2) {
             clazz += ' btn-double';
         }
+        if (input.extra_clazz) {
+            clazz += ` ${input.extra_clazz}`;
+        }
+
         this.state = {
             isUndo: input.isUndo || false,
             clazz: clazz
@@ -21,7 +25,6 @@ module.exports = {
         } else {
             const score = parseInt(target.getAttribute('data-score'));
             const multiplier = parseInt(target.getAttribute('data-multiplier'));
-
             this.emit('button-press', score, multiplier, false);
         }
         target.blur();

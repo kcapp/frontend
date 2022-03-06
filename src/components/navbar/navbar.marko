@@ -8,7 +8,10 @@
           <span class="icon-bar"/>
           <span class="icon-bar"/>
         </button>
-        <a class="navbar-brand" href=`${state.homePage}`>Darts Scorer</a>
+        <a class="navbar-brand" href=`${state.homePage}`>
+          <img src="/favicon.ico" class="kcapp-logo" alt="kcapp logo"/>
+          kcapp
+        </a>
       </div>
       <div class="navbar-collapse collapse" id="navbar">
         <ul class="nav navbar-nav">
@@ -38,7 +41,15 @@
             </li>
           </ul>
         </if>
+        <ul class="nav navbar-nav" style="float: right;">
+          <li>
+            <a data-toggle="modal" data-target="#modal-configure-kcapp">
+              <i class="fas fa-cogs" data-toggle="tooltip" data-placement="top" title="View"/>
+            </a>
+          </li>
+        </ul>
       </div>
     </div>
   </div>
 </nav>
+<configure-kcapp-modal />

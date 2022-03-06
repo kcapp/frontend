@@ -1,7 +1,8 @@
 $ const width = input.width ? input.width : 98;
 $ const height = input.height ? input.height : 130;
 <if(state.profile_pic_url)>
-  <img class="glyphicon glyphicon-user" height=height width=width src=`${state.profile_pic_url}` data-player=`${state.player_id}`/>
+  <img class="glyphicon glyphicon-user player-pic-center" height=height width=width src=`${state.profile_pic_url}` data-player=`${state.player_id}`
+    onerror="if (this.src != '/images/player_fallback.png') this.src = '/images/player_fallback.png';"/>
 </if>
 <else>
   <span class="fa fa-user-circle" style="font-size: 100px; color: #c5c5c5;"/>

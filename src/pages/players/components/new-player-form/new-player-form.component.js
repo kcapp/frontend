@@ -35,7 +35,7 @@ module.exports = {
         this.state.isAdd = false;
     },
     playVoice() {
-        const vocalName = this.state.vocal_name;
+        const vocalName = this.state.vocal_name || this.state.first_name;
         if (vocalName) {
             if (vocalName.endsWith(".wav")) {
                 const name = this.state.first_name.toLowerCase().replace(" ", "");

@@ -15,10 +15,12 @@ module.exports = {
         this.state = {
             player: player,
             name: name,
-            isCurrentPlayer: player.is_current_player,
             wins: player.wins ? player.wins : 0,
             cameraEnabled: true
         }
+    },
+    onInput(input) {
+        this.state.player = input.player;
     },
     onMount() {
         if (this.state.player.player.board_stream_url && this.state.player.player.board_stream_css) {

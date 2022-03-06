@@ -97,7 +97,7 @@ module.exports = {
 
     onScoreChange(scored, playerId, component) {
         if (!playerId) {
-            playerId = this.findActive(this.getComponents('players')).state.playerId;
+            playerId = this.findActive(this.getComponents('players')).state.player.player_id;
         }
         this.getComponent(`player-${playerId}`).setScored(scored);
     },

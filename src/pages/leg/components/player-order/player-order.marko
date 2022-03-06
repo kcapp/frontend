@@ -1,4 +1,4 @@
-<div id="modal-player-order" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modal-player-selector-title" aria-hidden="true">
+<div id="modal-player-order" class="modal fade modal-right" tabindex="-1" role="dialog" aria-labelledby="modal-player-selector-title" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content">
       <div class="modal-header">
@@ -6,13 +6,13 @@
       </div>
       <div class="modal-body">
         <h5>Players</h5>
-        <div class="table-responsive no-border">
+        <div class="table-responsive no-border" style="min-height: 75px">
           <table class="uv-table-players" id="table-players-select-order" style="table-layout: fixed;">
             <tbody>
               <tr>
                 <for|player| of=state.old>
-                  <td class="block-container-blue" data-player-id=player.player_id on-click("playerSelected")>
-                    <div class="text-center">
+                  <td class="block-container-blue text-center" data-player-id=player.player_id on-click("playerSelected")>
+                    <div>
                       <label class="key-small">${player.order}</label>
                     </div>
                     <label id=`player-name-${player.player_id}` class="label-player-name">${player.player.name}</label>
@@ -23,12 +23,12 @@
           </table>
         </div>
         <h5>Order</h5>
-        <div class="table-responsive no-border">
+        <div class="table-responsive no-border" style="min-height: 75px">
           <table class="uv-table-players" id="table-players-selected-order" style="table-layout: fixed;">
             <tbody>
               <tr>
                 <for|player| of=state.new>
-                  <td class="block-container-blue" data-player-id=player.player_id on-click("playerReset")>
+                  <td class="block-container-blue text-center" data-player-id=player.player_id on-click("playerReset")>
                     <div class="text-center">
                       <label class="key-small">${player.order}</label>
                     </div>
@@ -40,7 +40,7 @@
           </table>
         </div>
       </div>
-      <div class="modal-footer">
+      <div class="modal-footer text-center">
         <if(input.match.venue && input.match.venue.config.has_smartboard)>
           <button key="btn-reconnect-smartboard" class="btn btn-primary" type="button" once-click("reconnectSmartboard")>
             <div class="text-center">

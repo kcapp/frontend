@@ -76,6 +76,21 @@ module.exports = {
                         if (player) {
                             this.addPlayer(null, player);
                         }
+                        else {
+                            const preset = _.find(this.input.presets, (preset) => {
+                                return preset.smartcard_uid === data.uid;
+                            });
+                            if (preset) {
+                                this.gameTypeSelected(null, { input: { data: preset.match_type } });
+                                this.state.startingScore = preset.starting_score;
+                                this.state.gameMode = preset.match_mode.id;
+                                if (this.state.playersSelected.length > 1) {
+                                    this.onStart();
+                                }
+                            } else {
+                                alertify.error(`No player or preset registered to smartcard "${data.uid}"`);
+                            }
+                        }
                     }
                 });
             }
@@ -137,7 +152,9 @@ module.exports = {
                 alert(`Error starting match. ${msg}`);
                 console.log(error);
             });
-        e.preventDefault();
+        if (e) {
+            e.preventDefault();
+        }
     },
     addPlayer(event, selected) {
         const player = selected.input ? selected.input.data : selected;

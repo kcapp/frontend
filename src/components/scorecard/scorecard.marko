@@ -1,7 +1,7 @@
 $ const types = require("./components/match_types");
 $ const cricket = require("./components/cricket");
 
-<td style=`opacity: ${state.player.lives !== null && state.player.lives <= 0 ? "35%" : "100%"};` class=(state.isCurrentPlayer ? "visits-active" : "visits-inactive")>
+<td style=`opacity: ${state.player.lives !== null && state.player.lives <= 0 ? "35%" : "100%"};` class=`${state.isCurrentPlayer ? "visits-active" : "visits-inactive"}`>
   <table>
     <tbody>
       <tr>
@@ -212,7 +212,7 @@ $ const cricket = require("./components/cricket");
               </thead>
               <tbody>
                 <for|player| of=state.players>
-                  <if(player.player_id !== state.playerId)>
+                  <if(player.player_id !== state.player.player_id)>
                     <tr>
                       <td class="text-center target-text-gotcha">${player.player.first_name}</td>
                       <td class="text-center target-text-gotcha">
