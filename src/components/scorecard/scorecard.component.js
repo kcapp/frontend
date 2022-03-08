@@ -33,7 +33,8 @@ module.exports = {
             totalScore: 0,
             currentDart: 1,
             isSubmitted: true,
-            isBusted: false
+            isBusted: false,
+            isSpectate: input.spectate
         }
     },
 
@@ -219,6 +220,10 @@ module.exports = {
         }
         var newValue = parseInt(`${dart.state.value}${value}`);
         if (newValue > 20 && newValue !== 25) {
+            if (this.state.spectate) {
+                // Don't show alerts for spectators
+                return;
+            }
             alertify.alert('Invalid Value', () => { });
             return;
         }

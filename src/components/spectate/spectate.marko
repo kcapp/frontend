@@ -6,13 +6,13 @@ $ const types = require('../scorecard/components/match_types');
   <table>
     <tbody>
       <tr>
-        <for|player| of=input.leg_players>
+        <for|player| of=state.players>
           <scorecard-header key=`player-${player.player_id}` player=player players=input.players type=state.matchType/>
         </for>
       </tr>
       <tr>
-        <for|player| of=input.leg_players>
-          <scorecard key="players[]" leg=state.leg player=player players=input.leg_players type=state.matchType
+        <for|player| of=state.players>
+          <scorecard key="players[]" leg=state.leg player=player players=state.players spectate=true type=state.matchType
               on-score-change("onScoreChange")
               on-player-busted("onPlayerBusted")/>
         </for>

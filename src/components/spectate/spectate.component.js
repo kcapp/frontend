@@ -7,6 +7,7 @@ module.exports = {
         const matchName = input.match.match_mode.short_name;
         this.state = {
             leg: input.leg,
+            players: input.leg_players,
             roundNumber: input.leg.round,
             matchName: matchName,
             matchType: input.leg.leg_type.id || input.match.match_type.id,
