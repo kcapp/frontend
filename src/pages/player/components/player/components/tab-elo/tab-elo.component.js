@@ -11,6 +11,8 @@ module.exports = {
         }
     },
     onMount() {
+        this.updateChangelog(0, this.state.itemsPerPage);
+
         document.write('<script type="text/javascript" src="/javascripts/jquery.twbsPagination-1.4.1.min.js"><\/script>');
 
         $(function () {
@@ -18,11 +20,13 @@ module.exports = {
                 totalPages: this.state.totalPages,
                 visiblePages: 5,
                 initiateStartPageClick: false,
+                hideOnlyOnePage: false,
                 startPage: this.state.currentPage,
                 cssStyle: '',
                 prevText: '<span aria-hidden="true">&laquo;</span>',
                 nextText: '<span aria-hidden="true">&raquo;</span>',
                 onPageClick: function (event, page) {
+                    console.log("OnPageClick")
                     this.updateChangelog(this.state.itemsPerPage * (page - 1), this.state.itemsPerPage);
                 }.bind(this)
             });
@@ -45,7 +49,6 @@ module.exports = {
                 elements: { line: { tension: 0 } }
             }
         });
-        this.updateChangelog(0, this.state.itemsPerPage);
     },
     updateChangelog(start, limit) {
         const base = `${window.location.protocol}//${window.location.hostname}${this.input.locals.kcapp.api_path}`;
@@ -54,7 +57,7 @@ module.exports = {
                 const changes = response.data;
                 this.state.changelog = changes.changelog;
                 this.state.totalPages = changes.total / limit;
-                this.state.totalPages = this.state.totalPages <= 1 ? 1 : this.state.totalPages;
+                this.state.totalPages = parseInt(this.state.totalPages <= 1 ? 1 : this.state.totalPages);
                 this.setStateDirty('changelog');
 
                 const chart = this.state.chart;
