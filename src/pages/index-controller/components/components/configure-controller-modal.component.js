@@ -1,5 +1,5 @@
 const _ = require('underscore');
-const localstorage = require('../../../../util/localstorage.js');
+const localStorage = require('../../../../util/localstorage.js');
 
 module.exports = {
     onCreate(input) {
@@ -24,9 +24,9 @@ module.exports = {
         this.state.venue = selected.input.data.id;
     },
     onSave(event) {
-        localstorage.set('office_id', this.state.office);
-        localstorage.set('venue_id', this.state.venue);
-        localstorage.set('controller', true);
+        localStorage.set('office_id', this.state.office);
+        localStorage.set('venue_id', this.state.venue);
+        localStorage.set('controller', true);
         location.href = location.href.split("?")[0]; // Reload page
     }
 }

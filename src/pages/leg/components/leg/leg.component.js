@@ -444,7 +444,8 @@ module.exports = {
     },
 
     onWarmupStarted() {
-        this.state.socket.emit('warmup_started', { leg: this.input.leg, match: this.input.match });
+        const venue = localStorage.get('venue_id');
+        this.state.socket.emit('warmup_started', { leg: this.input.leg, match: this.input.match, venue: venue ? parseInt(venue) : null });
     },
 
     onSmartboardReconnect() {

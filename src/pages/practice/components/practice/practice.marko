@@ -76,7 +76,7 @@
       <game-option-selector values=[input.types[0]] enabled=false options=state.options key="game-type" label="Match Type" attribute="game_type" defaultValue=state.options.game_type on-value-changed("onGameTypeChanged")/>
       <game-option-selector values=[input.scores[1]] options=state.options key="starting-score" label="Starting Score" attribute="starting_score" defaultValue=state.options.starting_score/>
       <game-option-selector values=[input.modes[0]] options=state.options key="game-mode" label="Match Mode" attribute="game_mode" defaultValue=state.options.game_mode/>
-      <game-option-selector values=state.venues options=state.options key="venue" label="Venue" attribute="venue" addNull=true/>
+      <game-option-selector values=state.venues options=state.options key="venue" label="Venue" attribute="venue_id" addNull=true/>
       <button class="btn btn-primary" type="submit" on-click("newGame")>Start</button>
     </div>
   </div>

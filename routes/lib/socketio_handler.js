@@ -186,11 +186,12 @@ module.exports = (io, app) => {
 
                     client.on('warmup_started', function (data) {
                         log('warmup_started');
-                        axios.put(`${app.locals.kcapp.api}/leg/${data.leg.id}/warmup`)
+                        axios.put(`${app.locals.kcapp.api}/leg/${data.leg.id}/warmup`, { id: data.venue} )
                             .then(() => {
                                 _this.io.of('/active').emit('warmup_started', { leg: data.leg, match: data.match });
-                                if (data.match.venue) {
-                                    _this.io.of(`/venue/${data.match.venue.id}`).emit('warmup_started', { leg: data.leg, match: data.match });
+                                if (data.venue || data.match.venue) {
+                                    const venue = data.venue || data.match.venue.id;
+                                    _this.io.of(`/venue/${venue}`).emit('warmup_started', { leg: data.leg, match: data.match });
                                 }
                             }).catch(error => {
                                 const message = `${error.message}(${error})`;

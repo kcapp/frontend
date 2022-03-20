@@ -19,7 +19,7 @@ module.exports = {
                 game_mode: 1,
                 outshot_type: types.OUTSHOT_DOUBLE,
                 stake: null,
-                venue: null
+                venue_id: null
             },
             playerId: "",
             submitting: false
@@ -31,7 +31,7 @@ module.exports = {
             if (!this.input.offices[officeId]) {
                 // Unset stored value if it points to a non-existing office
                 localStorage.remove("office_id");
-                localStorage.remove("venue");
+                localStorage.remove("venue_id");
             } else {
                 this.changeOffice(officeId, this.input.offices[officeId]);
             }
@@ -275,14 +275,14 @@ module.exports = {
 
         let officeId = this.state.officeId;
         if (officeId <= 0) {
-            if (officeId == 0 && this.state.options.venue && this.state.options.venue !== -1) {
-                officeId = this.input.venues[this.state.options.venue].office_id;
+            if (officeId == 0 && this.state.options.venue_id && this.state.options.venue_id !== -1) {
+                officeId = this.input.venues[this.state.options.venue_id].office_id;
             } else {
                 officeId = null;
             }
         }
 
-        let venueId = this.state.options.venue;
+        let venueId = this.state.options.venue_id;
         if (venueId <= 0) {
             venueId = null;
         }
@@ -312,7 +312,7 @@ module.exports = {
         axios.post(`${window.location.origin}/matches/new`, body)
             .then(response => {
                 // Store venue in localstorage so it doesn't have to be selected each time
-                localStorage.set('venue', this.state.options.venue);
+                localStorage.set('venue_id', this.state.options.venue_id);
                 const isController = localStorage.get("controller");
                 location.href = isController ? `/legs/${response.data.current_leg_id}/controller` : `/legs/${response.data.current_leg_id}`;
             }).catch(error => {

@@ -1,6 +1,6 @@
 var _ = require("underscore");
 var axios = require('axios');
-var localStorageUtil = require("../../../../util/localstorage");
+var localStorage = require("../../../../util/localstorage");
 var skill = require('kcapp-bot/bot-skill');
 
 var NINE_DART_SHOOTOUT = 2;
@@ -22,13 +22,13 @@ module.exports = {
                 game_type: 1,
                 game_mode: 1,
                 stake: null,
-                venue: null
+                venue_id: null
             },
             playerId: ""
         }
     },
     onMount() {
-        var officeId = localStorageUtil.getInt("office_id");
+        var officeId = localStorage.getInt("office_id");
         if (officeId) {
             this.changeOffice(officeId);
         }
@@ -165,8 +165,8 @@ module.exports = {
 
         var officeId = this.state.officeId;
         if (officeId <= 0) {
-            if (officeId == 0 && this.state.options.venue && this.state.options.venue !== -1) {
-                officeId = this.input.venues[this.state.options.venue].office_id;
+            if (officeId == 0 && this.state.options.venue_id && this.state.options.venue_id !== -1) {
+                officeId = this.input.venues[this.state.options.venue_id].office_id;
             } else {
                 officeId = null;
             }
@@ -188,7 +188,7 @@ module.exports = {
             match_type: this.state.options.game_type,
             match_mode: this.state.options.game_mode,
             match_stake: this.state.options.stake,
-            venue: this.state.options.venue,
+            venue: this.state.options.venue_id,
             players: players,
             office_id: officeId,
             bot_player_config: botPlayerConfig,
@@ -198,7 +198,7 @@ module.exports = {
         axios.post(window.location.origin + '/matches/new', body)
             .then(response => {
                 // Store venue in localstorage so it doesn't have to be selected each time
-                localStorageUtil.set('venue', this.state.options.venue);
+                localStorage.set('venue_id', this.state.options.venue_id);
                 location.href = 'legs/' + response.data.current_leg_id
             }).catch(error => {
                 alert("Error starting match. See log for details");
@@ -231,7 +231,7 @@ module.exports = {
 
         this.setStateDirty('players');
         this.setStateDirty('venues');
-        localStorageUtil.set('office_id', this.state.officeId);
+        localStorage.set('office_id', this.state.officeId);
     },
     botTypeChanged(event) {
         this.state.bot.type = parseInt(event.target.value);

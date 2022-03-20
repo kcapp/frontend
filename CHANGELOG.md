@@ -2,6 +2,9 @@
 
 A preview of major changes can be found in the Wiki ([Latest Changes](https://github.com/kcapp/frontend/wiki/Latest_Changes))
 ## [2.4.0] - TBD
+#### Feature
+- Set venue when warmup of a match starts, to make it possible to play matches on a different venue than scheduled
+
 #### Changed
 - Added JDC shirt to spectate page
 
