@@ -7,7 +7,8 @@ module.exports = {
             legId: input.legId,
             warmupStarted: false,
             old: input.players,
-            new: []
+            new: [],
+            submitting: false
         }
     },
 
@@ -18,6 +19,10 @@ module.exports = {
 
     onKeyPress(e) {
         if (e.key === 'Enter') {
+            if (this.state.submitting) {
+                e.preventDefault();
+                return;
+            }
             this.startMatch();
         } else if (e.key == '0') {
             this.startWarmup();
@@ -79,6 +84,7 @@ module.exports = {
     },
 
     startMatch(event) {
+        this.state.submitting = true;
         if (this.state.old.length !== 0) {
             alert("All players must be selected before starting");
             return;
@@ -91,11 +97,13 @@ module.exports = {
         for (let i = 0; i < players.length; i++) {
             order[players[i].player_id] = i + 1;
         }
+        console.log("Changing order");
         axios.put(`${window.location.origin}/legs/${this.state.legId}/order`, order)
             .then(response => {
                 this.emit('warmup-started');
                 location.href = `/legs/${this.state.legId}`;
             }).catch(error => {
+                this.state.submitting = false;
                 alert('Error changing player order. Please reload');
                 console.log(error);
                 location.reload();
