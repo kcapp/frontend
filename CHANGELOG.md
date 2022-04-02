@@ -10,6 +10,7 @@ A preview of major changes can be found in the Wiki ([Latest Changes](https://gi
 
 #### Fixed
 - Fixed broken office selector on players page
+- Bot waiting on initial throw
 
 
 ## [2.3.0] - 2022-03-06

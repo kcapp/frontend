@@ -1,4 +1,6 @@
 $ var types = require('../../../../../../components/scorecard/components/match_types');
+$ var moment = require('moment');
+
 <div class="block-container no-padding no-border">
     <div style="margin-left: 5px">
         <statistics-selector on-type-changed("typeChanged")/>
@@ -254,7 +256,7 @@ $ var types = require('../../../../../../components/scorecard/components/match_t
             <for|history| of=input.history>
                 <tr>
                     <td class="text-left">
-                        <div style={ 'white-space': 'nowrap', 'overflow': 'hidden' }>${history.created_at}</div>
+                        <div style={ 'white-space': 'nowrap', 'overflow': 'hidden' }>${moment(history.created_at).format('YYYY-MM-DD HH:mm')}</div>
                     </td>
                     <td class="text-center">
                         <for|id| of=history.players>

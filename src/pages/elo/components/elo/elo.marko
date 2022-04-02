@@ -59,7 +59,7 @@
             <tr>
               <td class="pl-10">${idx + 1}</td>
               <td class="text-left">
-                <a href=`/players/${standing.player_id}/statistics`>${standing.player_name}</a>
+                <a href=`/players/${standing.player_id}/statistics`>${input.players[standing.player_id].name}</a>
               </td>
               $ var length = Math.ceil(0.2 * standing.current_elo);
               <td class="text-left">
