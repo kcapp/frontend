@@ -97,7 +97,6 @@ module.exports = {
         for (let i = 0; i < players.length; i++) {
             order[players[i].player_id] = i + 1;
         }
-        console.log("Changing order");
         axios.put(`${window.location.origin}/legs/${this.state.legId}/order`, order)
             .then(response => {
                 this.emit('warmup-started');

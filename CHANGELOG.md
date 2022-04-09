@@ -4,6 +4,8 @@ A preview of major changes can be found in the Wiki ([Latest Changes](https://gi
 ## [2.4.0] - TBD
 #### Feature
 - Set venue when warmup of a match starts, to make it possible to play matches on a different venue than scheduled
+- Emit `order_changed` event on leg namespace
+- Display visits in reverse order on spectate page
 
 #### Changed
 - Added JDC shirt to spectate page
@@ -12,6 +14,7 @@ A preview of major changes can be found in the Wiki ([Latest Changes](https://gi
 - Fixed broken office selector on players page
 - Bot waiting on initial throw
 - Prevent spamming of 'order_changes' when changing order
+- Update wins per player on spectate page
 
 
 ## [2.3.0] - 2022-03-06

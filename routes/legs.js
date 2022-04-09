@@ -161,6 +161,7 @@ router.put('/:id/order', function (req, res, next) {
             axios.get(`${req.app.locals.kcapp.api}/leg/${req.params.id}`)
                 .then(response => {
                     const leg = response.data;
+                    this.socketHandler.emitMessage(`/legs/${req.params.id}`, 'order_changed', { leg: leg, players: players} );
                     res.status(200).send({ leg: leg, players: players}).end();
                 }).catch(error => {
                     debug('Unable to change order: %s', error);
