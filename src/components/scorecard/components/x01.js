@@ -1,5 +1,17 @@
 const alertify = require("../../../util/alertify");
 
+exports.removeLast = function(dart, external) {
+    console.log(`x01 removeLast`);
+    let value = dart.getValue();
+    this.state.totalScore -= value;
+    this.state.player.current_score += value;
+
+    this.emit('score-change', -value, this.state.player.player_id);
+    if (!external) {
+        this.emit('possible-throw', false, false, this.state.currentDart, -dart.getScore(), dart.getMultiplier(), true, false);
+    }
+}
+
 exports.isBust = (currentScore, thrown) => {
     if (currentScore - thrown < 2) {
         return true;

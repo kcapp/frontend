@@ -14,6 +14,7 @@ function bootstrap() {
             instance.elements.root.onkeydown = function(e) {
                 if (e.key === "Backspace") {
                     // Close dialog if Backspace is pressed to easier navigate when using Numpad
+                    instance.settings.oncancel()
                     instance.close();
                     e.stopPropagation();
                 }
@@ -39,7 +40,6 @@ exports.confirm = (text, okFnc, cancelFnc) => {
             closable: false
         })
         .set({ transition: 'zoom' })
-        .set({ onclose:cancelFnc })
         .show();
 }
 

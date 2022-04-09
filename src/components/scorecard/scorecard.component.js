@@ -108,11 +108,7 @@ module.exports = {
                     break;
                 case types.X01HANDICAP:
                 case types.X01:
-                    var value = dart.getValue();
-                    this.state.totalScore -= value;
-                    this.state.player.current_score += value;
-                    this.emit('score-change', -value, this.state.player.player_id);
-                    this.emit('possible-throw', false, false, this.state.currentDart, -dart.getScore(), dart.getMultiplier(), true, false);
+                    x01.removeLast.bind(this)(dart, external);
                     break;
                 case types.CRICKET:
                     cricket.removeLast.bind(this)(dart, external);
