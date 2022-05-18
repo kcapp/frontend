@@ -16,8 +16,8 @@ module.exports = {
         this.state = {
             tournamentName: "",
             shortName: "",
-            start: moment().format("YYYY-MM-DDT09:00"),
-            end: "",
+            start: moment().format("YYYY-MM-DDT16:00:00"),
+            end: moment().format("YYYY-MM-DDT21:00:00"),
             office: 1,
             venue: 1,
             groups: [{ id: 1, score: 301, mode: 1, type: 1 }],
@@ -86,30 +86,30 @@ module.exports = {
         this.setStateDirty("groups");
     },
     onPaste(e) {
-        var clipboardData;
+        let clipboardData;
 
         e.stopPropagation();
         e.preventDefault();
 
         clipboardData = e.clipboardData || window.clipboardData;
-        var text = clipboardData.getData('Text');
+        const text = clipboardData.getData('Text');
 
-        var lines = text.split(/\n/);
-        var matches = [];
-        for (var i = 0; i < lines.length; i++) {
-            var match = [];
-            for (var j = 0; j < 5; j++) {
+        const lines = text.split(/\n/);
+        const matches = [];
+        for (let i = 0; i < lines.length; i++) {
+            const match = [];
+            for (let j = 0; j < 5; j++) {
                 match.push({ value: "", valid: false });
             }
             matches.push(match);
         }
         console.log(matches)
-        for (var i = 0; i < lines.length; i++) {
-            var line = lines[i];
+        for (let i = 0; i < lines.length; i++) {
+            const line = lines[i];
 
-            var fields = line.split(/,|\t/);
-            for (var j = 0; j < fields.length; j++) {
-                var field = fields[j];
+            const fields = line.split(/,|\t/);
+            for (let j = 0; j < fields.length; j++) {
+                const field = fields[j];
                 matches[i][j].value = field;
             }
         }
@@ -120,34 +120,34 @@ module.exports = {
     },
     validate() {
         this.state.shortName = this.state.shortName.substring(0, 4);
-        var matches = this.state.matches;
+        const matches = this.state.matches;
 
-        for (var i = 0; i < matches.length; i++) {
-            var match = matches[i];
+        for (let i = 0; i < matches.length; i++) {
+            let match = matches[i];
 
-            var date = moment(match[0].value);
+            const date = moment(match[0].value);
             if (date.isValid()) {
                 match[0].valid = true;
             }
 
-            var time = /[0-9][0-9]:[0-9][0-9]/.test(match[1].value);
+            const time = /[0-9][0-9]:[0-9][0-9]/.test(match[1].value);
             if (time) {
                 match[1].valid = true;
             }
 
-            var group = _.filter(this.input.groups, (group) => { return group.name == match[2].value; });
+            const group = _.filter(this.input.groups, (group) => { return group.name == match[2].value; });
             if (group.length === 1) {
                 match[2].id = group[0].id;
                 match[2].valid = true;
             }
 
-            var home = _.filter(this.state.players, (player) => { return player.name == match[3].value; });
+            const home = _.filter(this.state.players, (player) => { return player.name == match[3].value; });
             if (home.length === 1) {
                 match[3].id = home[0].id;
                 match[3].valid = true;
             }
 
-            var away = _.filter(this.state.players, (player) => { return player.name == match[4].value.trim(); });
+            const away = _.filter(this.state.players, (player) => { return player.name == match[4].value.trim(); });
             if (away.length === 1) {
                 match[4].id = away[0].id;
                 match[4].valid = true;
@@ -156,11 +156,11 @@ module.exports = {
         this.setStateDirty("matches");
     },
     createTournament() {
-        var body = {
+        const body = {
             name: this.state.tournamentName,
             short_name: this.state.shortName,
-            start: this.state.start,
-            end: this.state.end,
+            start: moment(this.state.start).format("yyyy-MM-hhTHH:mm:ssZ"),
+            end: moment(this.state.end).format("yyyy-MM-hhTHH:mm:ssZ"),
             office_id: this.state.office,
             venue_id: this.state.venue,
             groups: this.state.groups,

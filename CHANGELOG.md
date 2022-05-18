@@ -16,6 +16,7 @@ A preview of major changes can be found in the Wiki ([Latest Changes](https://gi
 - Prevent spamming of 'order_changes' when changing order
 - Update wins per player on spectate page
 - Issue where canceling bust dialog would submit two events
+- Bug preventing creation of new tournaments 
 
 
 ## [2.3.0] - 2022-03-06
