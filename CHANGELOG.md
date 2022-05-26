@@ -6,6 +6,7 @@ A preview of major changes can be found in the Wiki ([Latest Changes](https://gi
 - Set venue when warmup of a match starts, to make it possible to play matches on a different venue than scheduled
 - Emit `order_changed` event on leg namespace
 - Display visits in reverse order on spectate page
+- Additional tournament statistics displayed on statistics page
 
 #### Changed
 - Added JDC shirt to spectate page
@@ -16,7 +17,7 @@ A preview of major changes can be found in the Wiki ([Latest Changes](https://gi
 - Prevent spamming of 'order_changes' when changing order
 - Update wins per player on spectate page
 - Issue where canceling bust dialog would submit two events
-- Bug preventing creation of new tournaments 
+- Bug preventing creation of new tournaments
 
 
 ## [2.3.0] - 2022-03-06
