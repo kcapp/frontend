@@ -18,6 +18,7 @@ const tournamentAdminTemplate = template.load(require.resolve('../src/pages/tour
 const tournamentsAdminTemplate = template.load(require.resolve('../src/pages/tournaments-admin/tournaments-admin-template.marko'));
 const tournamentScheduleTemplate = template.load(require.resolve('../src/pages/tournament-schedule/tournament-schedule-template.marko'));
 const tournamentPlayerMatchesTemplate = template.load(require.resolve('../src/pages/tournament-player-matches/tournament-player-matches-template.marko'));
+const tournamentObsOverlayTemplate = template.load(require.resolve('../src/pages/obs-overlay/obs-overlay-template.marko'));
 
 /** Get all tournaments */
 router.get('/', function (req, res, next) {
@@ -355,6 +356,22 @@ router.get('/match/:id/next', function (req, res, next) {
             res.send(response.data);
     }).catch(error => {
         debug(`Error when getting next tournament match ${error}`);
+        next(error);
+    });
+});
+
+/* Get OBS overlay for tournament with the given ID */
+router.get('/:id/obs', function (req, res, next) {
+    axios.get(`${req.app.locals.kcapp.api}/tournament/${req.params.id}/statistics`)
+    .then(response => {
+        const statistics = response.data;
+        res.marko(tournamentObsOverlayTemplate, {
+            tournament_id: req.params.id,
+            statistics: statistics,
+            locals: req.app.locals
+        });
+    }).catch(error => {
+        debug(`Error when getting data for tournament ${error}`);
         next(error);
     });
 });

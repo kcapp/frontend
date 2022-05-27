@@ -7,6 +7,7 @@ A preview of major changes can be found in the Wiki ([Latest Changes](https://gi
 - Emit `order_changed` event on leg namespace
 - Display visits in reverse order on spectate page
 - Additional tournament statistics displayed on statistics page
+- New view for `tournaments/<id>/obs` which shows a counter for certain statistics in a given tournament
 
 #### Changed
 - Added JDC shirt to spectate page

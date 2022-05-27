@@ -1,0 +1,34 @@
+.obs-alert-container {
+    width: 130px;
+    background: white;
+}
+
+.counter {
+    text-align: center;
+    font-size: 4em;
+}
+
+span, h4, h5 {
+    text-align: center;
+}
+
+.score-label {
+  font-size: 2em;
+}
+
+.elementToFadeInAndOut {
+    width:200px;
+    height: 200px;
+    background: white;
+    -webkit-animation: fadeinout 4s linear forwards;
+    animation: fadeinout 4s linear forwards;
+    opacity: 0;
+}
+
+@-webkit-keyframes fadeinout {
+  50% { opacity: 1; }
+}
+
+@keyframes fadeinout {
+  50% { opacity: 1; }
+}
