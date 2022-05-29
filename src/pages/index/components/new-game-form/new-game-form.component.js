@@ -3,6 +3,7 @@ const axios = require('axios');
 const localStorage = require("../../../../util/localstorage");
 const io = require("../../../../util/socket.io-helper");
 const alertify = require("../../../../util/alertify");
+const speaker = require('../../../../util/speaker');
 const types = require("../../../../components/scorecard/components/match_types.js")
 
 module.exports = {
@@ -48,6 +49,21 @@ module.exports = {
                         if (this.state.selected.indexOf(player) === -1) {
                             this.addPlayer(null, player);
                         }
+
+                        const vocalName = player.vocal_name || player.first_name;
+                        const name = player.first_name.toLowerCase().replace(" ", "");
+                        let audioPlayer = new Audio(`/audio/announcer/sentences/welcome_${Math.floor(Math.random() * 3 + 1)}.wav`);
+                        audioPlayer.addEventListener("ended", () => {
+                            if (vocalName.endsWith(".wav")) {
+                                let playPromise = new Audio(`/audio/announcer/names/${name}/name_1.wav`).play();
+                                playPromise.catch((error) => {
+                                    speaker.speak( {text: vocalName } );
+                                });
+                            } else {
+                                speaker.speak( {text: vocalName } );
+                            }
+                        }, false);
+                        audioPlayer.play();
                         alertify.success(`Added player "${player.name}"`);
                     } else {
                         const preset = _.find(this.input.presets, (preset) => {
@@ -71,6 +87,7 @@ module.exports = {
                                 this.newGame();
                             }
                         } else {
+                            new Audio(`/audio/announcer/sentences/unknown_player_${Math.floor(Math.random() * 3) + 1}.wav`).play();
                             alertify.error(`No player or preset registered to smartcard "${data.uid}"`);
                         }
                     }

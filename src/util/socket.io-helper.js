@@ -211,7 +211,7 @@ exports.onAnnounce = function (data) {
 
 function getFishNChipsHTML(countLeg, countGlobal) {
     return `
-        <h4>Fish & Chips Count<h4>
+        <h4>Fish & Chips Count</h4>
         <h5>Leg</h5>
         <h1>${countLeg}</h1>
         <h5>Globally</h5>
