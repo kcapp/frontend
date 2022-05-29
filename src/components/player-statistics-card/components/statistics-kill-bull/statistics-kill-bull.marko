@@ -21,7 +21,14 @@ $ var player = input.player;
 
     <div class="info">
       <div style="text-align: center;">
-        <scores-table statistics=statistic type=types.KILL_BULL/>
+        <table>
+          <tr>
+              <score-pill text="3 Marks" value=statistic.marks_3/>
+              <score-pill text="4 Marks" value=statistic.marks_4/>
+              <score-pill text="5 Marks" value=statistic.marks_5/>
+              <score-pill text="6 Marks" value=statistic.marks_6/>
+          </tr>
+        </table>
       </div>
     </div>
 

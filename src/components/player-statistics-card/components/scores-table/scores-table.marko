@@ -2,39 +2,9 @@ $ var types = require("../../../scorecard/components/match_types");
 $ var statistics = input.statistics;
 <table>
   <tr>
-    <if(input.type == types.CRICKET)>
-      <score-pill text="5 Marks" value=statistics.marks_5/>
-      <score-pill text="6 Marks" value=statistics.marks_6/>
-      <score-pill text="7 Marks" value=statistics.marks_7/>
-      <score-pill text="8 Marks" value=statistics.marks_8/>
-      <score-pill text="9 Marks" value=statistics.marks_9/>
-    </if>
-    <else-if(input.type === types.DARTS_AT_X)>
-      <td/>
-      <score-pill text="Singles" value=statistics.singles/>
-      <score-pill text="Doubles" value=statistics.doubles/>
-      <score-pill text="Triples" value=statistics.triples/>
-    </else-if>
-    <else-if(input.type === types.KILL_BULL)>
-      <score-pill text="3 Marks" value=statistics.marks_3/>
-      <score-pill text="4 Marks" value=statistics.marks_4/>
-      <score-pill text="5 Marks" value=statistics.marks_5/>
-      <score-pill text="6 Marks" value=statistics.marks_6/>
-    </else-if>
-    <else>
-      <score-pill text="60+" value=statistics.scores_60s_plus/>
-      <score-pill text="100+" value=statistics.scores_100s_plus/>
-      <score-pill text="140+" value=statistics.scores_140s_plus/>
-      <score-pill text="180" value=statistics.scores_180s/>
-    </else>
+    <score-pill text="60+" value=statistics.scores_60s_plus/>
+    <score-pill text="100+" value=statistics.scores_100s_plus/>
+    <score-pill text="140+" value=statistics.scores_140s_plus/>
+    <score-pill text="180" value=statistics.scores_180s/>
   </tr>
-  <if(input.type === types.DARTS_AT_X)>
-    <tr>
-        <score-pill text="Hit 5" value=statistics.hits_5/>
-        <score-pill text="Hit 6" value=statistics.hits_6/>
-        <score-pill text="Hit 7" value=statistics.hits_7/>
-        <score-pill text="Hit 8" value=statistics.hits_8/>
-        <score-pill text="Hit 9" value=statistics.hits_9/>
-    </tr>
-  </if>
 </table>
