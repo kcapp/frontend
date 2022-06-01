@@ -27,43 +27,45 @@
             </thead>
             <tbody>
                 <for|player, index| of=state.overview>
-                    <tr class=`tournament-${player.tournament_group.id}-rank-${player.rank}`>
-                        <td class="pl-10">
-                        <div>
-                            <span class="pr-5">${player.manual_order ? player.manual_order : player.rank}</span>
-                            <if(player.is_winner)>
-                                <i class="fas fa-star"/>
+                    <if(!input.players[player.player_id].is_placeholder)>
+                        <tr class=`tournament-${player.tournament_group.id}-rank-${player.rank}`>
+                            <td class="pl-10">
+                            <div>
+                                <span class="pr-5">${player.manual_order ? player.manual_order : player.rank}</span>
+                                <if(player.is_winner)>
+                                    <i class="fas fa-star"/>
+                                </if>
+                                <else-if(player.is_promoted)>
+                                    <i class="fas fa-caret-up"/>
+                                </else-if>
+                                <else-if(player.is_relegated)>
+                                    <i class="fas fa-caret-down"/>
+                                </else-if>
+                            </div>
+                            </td>
+                            <td style='width: 15%;'>
+                                <a style='white-space: nowrap; overflow: hidden; text-overflow: ellipsis;' href=`/tournaments/${input.tournament.id}/player/${player.player_id}`>${input.players[player.player_id].name}</a>
+                            </td>
+                            <td class="text-right">${player.played}</td>
+                            <td class="text-right pl-20">${player.matches_won}</td>
+                            <td class="text-right">${player.matches_draw}</td>
+                            <td class="text-right">${player.matches_lost}</td>
+                            <td class="text-center pl-10">${player.legs_for + " - " + player.legs_against}</td>
+                            <td class="text-right pl-10">${player.legs_difference > 0 ? "+" + player.legs_difference : player.legs_difference}</td>
+                            <td class="text-right">${player.points}</td>
+                            <if(state.hasStatistics)>
+                                <td class="text-center">${player.three_dart_avg === -1 ? "- / -" : player.three_dart_avg.toFixed(2) + " / " + player.first_nine_three_dart_avg.toFixed(2)}</td>
+                                <td class="text-center">${player.checkout_percentage === -1 ? "-" : player.checkout_percentage.toFixed(2) + "%"}</td>
+                                <td class="text-right">${player.scores_60s_plus}</td>
+                                <td class="text-right">${player.scores_100s_plus}</td>
+                                <td class="text-right">${player.scores_140s_plus}</td>
+                                <td class="text-right">${player.scores_180s}</td>
+                                <td class="text-center">${player.accuracy_overall === -1 ? "-" : player.accuracy_overall.toFixed(2)}</td>
+                                <td class="text-center">${player.accuracy_20 === -1 ? "-" : player.accuracy_20.toFixed(2)}</td>
+                                <td class="text-center">${player.accuracy_19 === -1 ? "-" : player.accuracy_19.toFixed(2)}</td>
                             </if>
-                            <else-if(player.is_promoted)>
-                                <i class="fas fa-caret-up"/>
-                            </else-if>
-                            <else-if(player.is_relegated)>
-                                <i class="fas fa-caret-down"/>
-                            </else-if>
-                        </div>
-                        </td>
-                        <td style='width: 15%;'>
-                            <a style='white-space: nowrap; overflow: hidden; text-overflow: ellipsis;' href=`/tournaments/${input.tournament.id}/player/${player.player_id}`>${input.players[player.player_id].name}</a>
-                        </td>
-                        <td class="text-right">${player.played}</td>
-                        <td class="text-right pl-20">${player.matches_won}</td>
-                        <td class="text-right">${player.matches_draw}</td>
-                        <td class="text-right">${player.matches_lost}</td>
-                        <td class="text-center pl-10">${player.legs_for + " - " + player.legs_against}</td>
-                        <td class="text-right pl-10">${player.legs_difference > 0 ? "+" + player.legs_difference : player.legs_difference}</td>
-                        <td class="text-right">${player.points}</td>
-                        <if(state.hasStatistics)>
-                            <td class="text-center">${player.three_dart_avg === -1 ? "- / -" : player.three_dart_avg.toFixed(2) + " / " + player.first_nine_three_dart_avg.toFixed(2)}</td>
-                            <td class="text-center">${player.checkout_percentage === -1 ? "-" : player.checkout_percentage.toFixed(2) + "%"}</td>
-                            <td class="text-right">${player.scores_60s_plus}</td>
-                            <td class="text-right">${player.scores_100s_plus}</td>
-                            <td class="text-right">${player.scores_140s_plus}</td>
-                            <td class="text-right">${player.scores_180s}</td>
-                            <td class="text-center">${player.accuracy_overall === -1 ? "-" : player.accuracy_overall.toFixed(2)}</td>
-                            <td class="text-center">${player.accuracy_20 === -1 ? "-" : player.accuracy_20.toFixed(2)}</td>
-                            <td class="text-center">${player.accuracy_19 === -1 ? "-" : player.accuracy_19.toFixed(2)}</td>
-                        </if>
-                    </tr>
+                        </tr>
+                    </if>
                 </for>
             </tbody>
         </table>

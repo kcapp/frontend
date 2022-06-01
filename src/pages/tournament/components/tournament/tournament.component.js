@@ -3,7 +3,7 @@ const _ = require("underscore");
 module.exports = {
     onCreate(input) {
         this.state = {
-            hasStatistics: !_.isEmpty(input.statistics)
+            hasStatistics: !_.isEmpty(input.statistics.best_three_dart_avg)
         }
     },
 
