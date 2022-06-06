@@ -1,7 +1,6 @@
 const alertify = require("../../../util/alertify");
 
 exports.removeLast = function(dart, external) {
-    console.log(`x01 removeLast`);
     let value = dart.getValue();
     this.state.totalScore -= value;
     this.state.player.current_score += value;
