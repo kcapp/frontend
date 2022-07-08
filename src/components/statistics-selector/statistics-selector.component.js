@@ -20,6 +20,7 @@ module.exports = {
                 { id: types.GOTCHA, name: "Gotcha" },
                 { id: types.JDC_PRACTICE, name: "JDC Practice" },
                 { id: types.KNOCKOUT, name: "Knockout" },
+                { id: types.SCAM, name: "Scam" }
             ]
         }
     },

@@ -1,11 +1,11 @@
 
 exports.removeLast = function(dart, external) {
     const player = this.state.player;
-    if (player.is_stopper) {
-        player.hits[dart.getValue()] = undefined;
+    if (player.is_stopper && dart.getMultiplier() === 1) {
+        player.hits[dart.getScore()] = undefined;
     } else if (player.is_scorer) {
         let stopper = getStopper(this.state.players);
-        if (!stopper.hits[dart.getValue()]) {
+        if (!stopper.hits[dart.getScore()]) {
             let score = dart.getValue();
             player.current_score -= score;
             this.emit('score-change', -score, this.state.player.player_id);
@@ -38,6 +38,8 @@ exports.isCheckout = (currentPlayer, players) => {
 }
 
 exports.confirmThrow = function (external) {
+    let submitting = false;
+
     let dart = this.getCurrentDart();
     if (dart.getValue() === 0) {
         this.setDart(0, 1);
@@ -48,7 +50,9 @@ exports.confirmThrow = function (external) {
     let allClosed = true;
     const player = this.state.player;
     if (player.is_stopper) {
-        player.hits[dart.getValue()] = { "total": 1 };
+        if (dart.getMultiplier() === 1) {
+            player.hits[dart.getScore()] = { "total": 1 };
+        }
 
         for (let i = 1; i <= 20; i++) {
             if (!player.hits[i]) {
@@ -58,18 +62,24 @@ exports.confirmThrow = function (external) {
     } else if (player.is_scorer) {
         let stopper = getStopper(this.state.players);
         // Only allow hits if other player has not stopped the number
-        if (!stopper.hits[dart.getValue()]) {
+        if (!stopper.hits[dart.getScore()]) {
             let score = dart.getValue();
             player.current_score += score;
             this.emit('score-change', score, this.state.player.player_id);
         }
+        allClosed = false;
     }
 
     const isCheckout = module.exports.isCheckout(player, this.state.players);
+    if (isCheckout) {
+        submitting = true;
+    }
+
     // Automatically send darts if we have closed all numbers and it's not a checkout
     let submit = false;
     if (allClosed && !isCheckout) {
         submit = true;
+        submitting = true
     }
     if (!external) {
         // If an external event triggered the update don't emit a throw

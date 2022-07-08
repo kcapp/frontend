@@ -41,6 +41,7 @@ function readFolders(src) {
 
 const AUDIO_NUMBERS = readFiles('public/audio/announcer/numbers');
 const AUDIO_SCORES = readFiles('public/audio/announcer/scores');
+const AUDIO_MARKS = readFiles('public/audio/announcer/marks');
 const AUDIO_NAMES = readFolders('public/audio/announcer/names');
 const AUDIO_SENTENCES = readFiles('public/audio/announcer/sentences');
 const AUDIO_GAMESHOT = readFiles('public/audio/announcer/sentences/gameshot');
@@ -349,10 +350,15 @@ module.exports = (io, app) => {
                 function announceScored(visit, matchType) {
                     const score = visit.score;
                     let text = `${score}`;
+                    let source = AUDIO_SCORES;
                     if (visit.is_bust || (score === 0 && matchType === types.TIC_TAC_TOE)) {
                         text = 'Noscore';
+                    } else if (matchType === types.SCAM && visit.is_stopper) {
+                        source = AUDIO_MARKS;
+                        text = visit.score + 'marks';
                     }
-                    const audios = [ AUDIO_SCORES.random(text) ];
+
+                    const audios = [ source.random(text) ];
                     announce(text, 'score', audios);
                 }
 
