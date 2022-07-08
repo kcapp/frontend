@@ -12,6 +12,9 @@ $ const types = require("../scorecard/components/match_types");
         <jdc-shirt score=state.player.current_score />
       </div>
     </if>
+    <else-if(input.type == types.SCAM)>
+      <div class="label-player-name">${state.player.is_stopper ? "STOPPER" : "SCORER"}</div>
+    </else-if>
     <div class="player-legs">
       <label>${state.wins}</label>
     </div>
