@@ -28,7 +28,7 @@ exports.isCheckout = (currentPlayer, players) => {
         const player = players[i];
 
         for (let i = 1; i <= 20; i++) {
-            if (!player.hits[i]) {
+            if (!player.hits[i] || !player.hits[i]['1']) {
                 finished = false;
                 break;
             }
@@ -55,7 +55,7 @@ exports.confirmThrow = function (external) {
         }
 
         for (let i = 1; i <= 20; i++) {
-            if (!player.hits[i]) {
+            if (!player.hits[i] || !player.hits[i]['1']) {
                 allClosed = false;
             }
         }

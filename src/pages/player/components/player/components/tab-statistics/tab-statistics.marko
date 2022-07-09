@@ -132,6 +132,17 @@ $ var moment = require('moment');
                             <statistics-card label="Avg. Position" value=`${input.statistics.legs_played ? input.statistics.final_position : "-"}` icon="fas fa-trophy"/>
                         </td>
                     </else-if>
+                    <else-if(input.type == types.SCAM)>
+                        <td style="width: 25%;">
+                            <statistics-card label="Avg. Score" value=`${input.statistics.legs_played ? input.statistics.score : "-"}` icon="far fa-star"/>
+                        </td>
+                        <td style="width: 25%;">
+                            <statistics-card label="MPR" value=`${input.statistics.legs_played ? input.statistics.mpr.toFixed(2) : "-"}` icon="fas fa-circle-notch"/>
+                        </td>
+                        <td style="width: 25%;">
+                            <statistics-card label="Three Dart Avg." value=`${input.statistics.three_dart_avg.toFixed(2)}` icon="fas fa-circle-notch"/>
+                        </td>
+                    </else-if>
                     <else>
                         <div>TODO</div>
                     </else>
@@ -249,6 +260,11 @@ $ var moment = require('moment');
                     <th class="text-center">Lives Taken</th>
                     <th class="text-center">Avg. Position</th>
                 </else-if>
+                <else-if(input.type == types.SCAM)>
+                    <th class="text-center">Avg. Score</th>
+                    <th class="text-center">MPR</th>
+                    <th class="text-center">Three Dart Avg.</th>
+                </else-if>
                 <th class="text-center"/>
             </tr>
         </thead>
@@ -361,6 +377,11 @@ $ var moment = require('moment');
                         <td class="text-center">${statistics.lives_lost}</td>
                         <td class="text-center">${statistics.lives_taken}</td>
                         <td class="text-center">${statistics.final_position}</td>
+                    </else-if>
+                    <else-if(input.type == types.SCAM)>
+                        <td class="text-center">${statistics.score}</td>
+                        <td class="text-center">${statistics.mpr.toFixed(2)}</td>
+                        <td class="text-center">${statistics.three_dart_avg.toFixed(2)}</td>
                     </else-if>
                     <td>
                         <a href=`/legs/${history.id}/result`>

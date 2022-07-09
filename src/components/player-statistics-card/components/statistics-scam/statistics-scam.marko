@@ -13,6 +13,7 @@ $ var player = input.player;
       </div>
     </div>
 
+    <statistics-row heading="Score" value=statistic.score/>
     <table>
       <tr>
         <td>
@@ -23,7 +24,7 @@ $ var player = input.player;
         <td>
             <label style="font-size: 1.5em">Scorer</label>
             <statistics-row heading="Darts Thrown" value=statistic.darts_thrown_scorer/>
-            <statistics-row heading="Score" value=statistic.score/>
+            <statistics-row heading="Three Dart Avg." value=statistic.three_dart_avg.toFixed(2)/>
         </td>
       </tr>
     </table>
