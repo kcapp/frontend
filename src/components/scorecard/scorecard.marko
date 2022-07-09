@@ -299,7 +299,7 @@ $ const cricket = require("./components/cricket");
                   <tr style="padding-top: 10px;">
                     <for|num| from=1 to=10>
                       <td class="text-center" style="font-size: 3em;">
-                        <if(state.player.hits[num])>
+                        <if(state.player.hits[num] && state.player.hits[num]['1'])>
                           ${" "}
                         </if>
                         <else>
@@ -311,7 +311,7 @@ $ const cricket = require("./components/cricket");
                   <tr style="padding-top: 10px;">
                     <for|num| from=11 to=20>
                       <td class="text-center" style="font-size: 3em;">
-                        <if(state.player.hits[num])>
+                        <if(state.player.hits[num] && state.player.hits[num]['1'])>
                           ${" "}
                         </if>
                         <else>

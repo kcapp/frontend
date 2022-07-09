@@ -51,7 +51,7 @@ exports.confirmThrow = function (external) {
     const player = this.state.player;
     if (player.is_stopper) {
         if (dart.getMultiplier() === 1) {
-            player.hits[dart.getScore()] = { "total": 1 };
+            player.hits[dart.getScore()] = { '1': 1 };
         }
 
         for (let i = 1; i <= 20; i++) {
@@ -62,7 +62,7 @@ exports.confirmThrow = function (external) {
     } else if (player.is_scorer) {
         let stopper = getStopper(this.state.players);
         // Only allow hits if other player has not stopped the number
-        if (!stopper.hits[dart.getScore()]) {
+        if (!stopper.hits[dart.getScore()] || !stopper.hits[dart.getScore()]['1']) {
             let score = dart.getValue();
             player.current_score += score;
             this.emit('score-change', score, this.state.player.player_id);

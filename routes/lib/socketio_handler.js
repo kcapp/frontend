@@ -355,7 +355,10 @@ module.exports = (io, app) => {
                         text = 'Noscore';
                     } else if (matchType === types.SCAM && visit.is_stopper) {
                         source = AUDIO_MARKS;
-                        text = visit.score + 'marks';
+                        text = visit.marks + 'marks';
+                    } else if (matchType === types.CRICKET) {
+                        source = AUDIO_MARKS;
+                        text = visit.marks + 'marks';
                     }
 
                     const audios = [ source.random(text) ];

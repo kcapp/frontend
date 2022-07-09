@@ -9,7 +9,7 @@ A preview of major changes can be found in the Wiki ([Latest Changes](https://gi
 - Additional tournament statistics displayed on statistics page
 - New view for `tournaments/<id>/obs` which shows a counter for certain statistics in a given tournament
 - New `Scam` match type
-- Voice announcements for `marks` hit
+- Voice announcements for `marks` hit in `Cricket`
 
 #### Changed
 - Added JDC shirt to spectate page
