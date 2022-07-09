@@ -51,6 +51,9 @@ $ const matchType = leg.leg_type.id || match.match_type.id;
 <else-if(matchType == type.KNOCKOUT)>
   <statistics-knockout isWinner=state.isWinner player=input.player statistic=input.statistic isMatchResult=input.isMatchResult />
 </else-if>
+<else-if(matchType == type.SCAM)>
+  <statistics-scam isWinner=state.isWinner player=input.player statistic=input.statistic />
+</else-if>
 <else>
   <div class="block-container-with-header">
     <div class="player-card-match">

@@ -191,7 +191,7 @@ module.exports = {
     },
 
     onPossibleThrow(isCheckout, isBust, dartsThrown, score, multiplier, isUndo, submit) {
-        var component = this.findActive(this.getComponents('players'));
+        let component = this.findActive(this.getComponents('players'));
         if (isCheckout) {
             component.confirmLegFinish();
         }
@@ -251,7 +251,7 @@ module.exports = {
 
     onLegFinished(finished, component) {
         if (finished) {
-            var component = this.findActive(this.getComponents('players'));
+            let component = this.findActive(this.getComponents('players'));
             this.state.socket.emit('throw', JSON.stringify(component.getPayload()));
         } else {
             this.state.submitting = false;

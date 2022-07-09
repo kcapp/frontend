@@ -221,11 +221,11 @@ module.exports = {
     onGameTypeChanged(attribute, value) {
         if (attribute == 'game_type') {
             // If this is 9 Dart Shootout or Cricket, make sure to set score to 0 and disable the selector
-            var scoreComponent = this.getComponent('starting-score');
+            let scoreComponent = this.getComponent('starting-score');
             scoreComponent.updateOptions(this.input.scores);
             if (this.state.options.game_type === types.SHOOTOUT || this.state.options.game_type == types.CRICKET || this.state.options.game_type === types.AROUND_THE_WORLD ||
                 this.state.options.game_type === types.SHANGHAI || this.state.options.game_type === types.AROUND_THE_CLOCK || this.state.options.game_type === types.BERMUDA_TRIANGLE ||
-                this.state.options.game_type === types.JDC_PRACTICE || this.state.options.game_type === types.KNOCKOUT) {
+                this.state.options.game_type === types.JDC_PRACTICE || this.state.options.game_type === types.KNOCKOUT || this.state.options.game_type == types.SCAM) {
                 scoreComponent.state.index = 0;
                 scoreComponent.state.enabled = false;
             } else if (this.state.options.game_type == types.TIC_TAC_TOE) {
@@ -257,7 +257,7 @@ module.exports = {
             }
             this.state.options.starting_score = scoreComponent.state.index
 
-            var selectedPlayers = this.getComponents('players');
+            let selectedPlayers = this.getComponents('players');
             for (var i = 0; i < selectedPlayers.length; i++) {
                 selectedPlayers[i].handleTypeChange(this.state.options.game_type);
             }

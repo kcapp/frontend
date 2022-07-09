@@ -92,6 +92,9 @@ $ var types = require('../../../../components/scorecard/components/match_types')
 <else-if(state.type == types.KNOCKOUT)>
   <statistics-table-knockout statistics=state.statistics players=input.players />
 </else-if>
+<else-if(state.type == types.SCAM)>
+  <statistics-table-scam statistics=state.statistics players=input.players />
+</else-if>
 <else-if(state.type == state.GLOBAL)>
   <statistics-table-global statistics=state.statistics players=input.players/>
 </else-if>
