@@ -49,5 +49,18 @@ module.exports = {
             }).catch(error => {
                 alert(`Unable to rematch, see log for details (${error.statusText})`);
             });
+    },
+    onNextMatch() {
+        axios.get(`${window.location.origin}/tournaments/match/${this.state.match.id}/next`, null)
+            .then(response => {
+                if (response.data === 204) {
+                    location.href = `/tournaments/${this.state.match.tournament_id}`;
+                } else {
+                    const leg = response.data.legs[0];
+                    location.href = leg.is_finished ? `/legs/${leg.id}/result` : `/legs/${leg.id}`;
+                }
+            }).catch(error => {
+                alert(`Unable to get next match, see log for details (${error.statusText})`);
+            });
     }
 }

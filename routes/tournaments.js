@@ -345,7 +345,7 @@ router.get('/:id/player/:player_id', function (req, res, next) {
     });
 });
 
-/* Get tournament with the given ID */
+/* Get next tournament match */
 router.get('/match/:id/next', function (req, res, next) {
     axios.get(`${req.app.locals.kcapp.api}/tournament/match/${req.params.id}/next`)
         .then(response => {

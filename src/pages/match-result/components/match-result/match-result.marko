@@ -1,5 +1,6 @@
-$ var match = state.match;
-<page-header heading=`Match Result (${match.id})` style="block-container" rematch_button=`true` subheadings=[
+$ let match = state.match;
+$ let isOfficial = state.match.tournament_id || false;
+<page-header heading=`Match Result (${match.id})` style="block-container" rematch_button=!isOfficial next_match_button=isOfficial subheadings=[
   [
     {
       heading: `Started   ${match.started}`,
@@ -36,7 +37,7 @@ $ var match = state.match;
       icon: "fa-building"
     }
   ]
-] on-rematch("onRematch")/>
+] on-rematch("onRematch") on-next-match('onNextMatch')/>
 <if(match.tournament_id)>
   <div class="block-container-orange">
     <a style="color: white;" href=`/tournaments/${match.tournament_id}`>${match.tournament.tournament_name} / ${match.tournament.tournament_group_name}</a>
