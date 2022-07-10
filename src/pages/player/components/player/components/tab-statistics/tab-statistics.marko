@@ -28,6 +28,9 @@ $ var moment = require('moment');
                         <td style="width: 25%;">
                             <statistics-card label="180s" value=`${input.statistics.scores_180s}` icon="fas fa-star"/>
                         </td>
+                        <td style="width: 25%;">
+                            <statistics-card label="Highest Score" value=`${input.statistics.highest_score}` icon="far fa-star"/>
+                        </td>
                     </else-if>
                     <else-if(input.type == types.CRICKET)>
                         <td style="width: 25%;">
@@ -112,7 +115,13 @@ $ var moment = require('moment');
                     </else-if>
                     <else-if(input.type == types.JDC_PRACTICE)>
                         <td style="width: 25%;">
-                            <statistics-card label="Avg. Score" value=`${input.statistics.legs_played ? input.statistics.score : "-"}` icon="far fa-star"/>
+                            <div class="statistics-card">
+                                <div style="font-size: 2.6em;">${input.statistics.highest_score} / ${input.statistics.legs_played ? input.statistics.score : "-"}</div>
+                                <div style="display: block; margin: auto;">
+                                    <jdc-shirt score=input.statistics.highest_score size="large"/>
+                                </div>
+                                <div class='hs-label'>Best / Avg Score</div>
+                            </div>
                         </td>
                         <td style="width: 25%;">
                             <statistics-card label="MPR" value=`${input.statistics.legs_played ? input.statistics.mpr.toFixed(2) : "-"}` icon="fas fa-circle-notch"/>

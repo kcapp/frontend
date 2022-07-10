@@ -14,6 +14,9 @@ $ var player = input.player;
         <player-profile-picture player=player/>
       </div>
     </div>
+    <if(player.starting_score)>
+      <statistics-row heading="Starting Score" value=player.starting_score/>
+    </if>
     <statistics-row heading="Darts Thrown" value=statistic.darts_thrown/>
     <statistics-row heading="Longest Streak" value=statistic.longest_streak/>
     <statistics-row heading="Times Busted" value=statistic.times_busted/>
