@@ -2,7 +2,7 @@
 exports.removeLast = function(dart, external) {
     const player = this.state.player;
     if (player.is_stopper && dart.getMultiplier() === 1) {
-        player.hits[dart.getScore()] = undefined;
+        player.hits[dart.getScore()]['1'] -= 1;
     } else if (player.is_scorer) {
         let stopper = getStopper(this.state.players);
         if (!stopper.hits[dart.getScore()]) {
@@ -51,7 +51,9 @@ exports.confirmThrow = function (external) {
     const player = this.state.player;
     if (player.is_stopper) {
         if (dart.getMultiplier() === 1) {
-            player.hits[dart.getScore()] = { '1': 1 };
+            const hits = player.hits[dart.getScore()];
+            const previousHits = hits ? hits['1'] || 0 : 0
+            player.hits[dart.getScore()] = { '1': previousHits + 1 };
         }
 
         for (let i = 1; i <= 20; i++) {

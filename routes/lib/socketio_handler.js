@@ -349,19 +349,20 @@ module.exports = (io, app) => {
 
                 function announceScored(visit, matchType) {
                     const score = visit.score;
+                    const audios = [];
                     let text = `${score}`;
-                    let source = AUDIO_SCORES;
                     if (visit.is_bust || (score === 0 && matchType === types.TIC_TAC_TOE)) {
-                        text = 'Noscore';
+                        audios.push(AUDIO_SCORES.random('Noscore'));
                     } else if (matchType === types.SCAM && visit.is_stopper) {
-                        source = AUDIO_MARKS;
-                        text = visit.marks + 'marks';
+                        audios.push(AUDIO_MARKS.random(`${visit.marks}marks`));
                     } else if (matchType === types.CRICKET) {
-                        source = AUDIO_MARKS;
-                        text = visit.marks + 'marks';
+                        audios.push(AUDIO_MARKS.random(`${visit.marks}marks`));
+                        if (visit.score > 0) {
+                            audios.push(AUDIO_SCORES.random(text));
+                        }
+                    } else {
+                        audios.push(AUDIO_SCORES.random(text));
                     }
-
-                    const audios = [ source.random(text) ];
                     announce(text, 'score', audios);
                 }
 

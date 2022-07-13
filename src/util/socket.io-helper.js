@@ -82,10 +82,6 @@ exports.say = (data, thiz) => {
         // Skip announcement of remaining score for non-x01 game types
         return;
     }
-    if (thiz.state.matchType === types.CRICKET && data.type === 'score' && data.text === "0") {
-        // Skip announcment of 0 in Cricket
-        return;
-    }
 
     const oldPlayer = thiz.state.audioAnnouncer;
     const isAudioAnnouncement = (oldPlayer.duration > 0 && !oldPlayer.paused) || (!isNaN(oldPlayer.duration) && !oldPlayer.ended && oldPlayer.paused);
