@@ -163,7 +163,7 @@ router.post('/admin', function (req, res, next) {
             for (let i = 0; i < matches.length; i++) {
                 const match = matches[i];
 
-                const startDatetime = moment(`${match[0].value} ${match[1].value}`).format('yyyy-MM-hhTHH:mm:ssZ');
+                const startDatetime = moment(`${match[0].value} ${match[1].value}`).format('yyyy-MM-DDTHH:mm:ssZ');
                 const group = groups[match[2].id];
 
                 const matchBody = {
