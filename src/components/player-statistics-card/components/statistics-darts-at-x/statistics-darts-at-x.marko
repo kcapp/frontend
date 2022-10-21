@@ -1,0 +1,54 @@
+$ const statistic = input.statistic;
+$ const player = input.player;
+$ const leg = input.leg;
+<if(input.header)>
+  <div class="block-container-header-center">
+    <a href=`/players/${player.id}/statistics`>${player.name}</a>
+  </div>
+</if>
+<div class="block-container-with-header">
+  <div class="player-card-match">
+    <div style="padding-bottom: 20px;">
+      <div class="player-pic-cutout" style="margin: 0 auto;">
+        <player-profile-picture player=player/>
+      </div>
+    </div>
+
+    <if(leg)>
+        $ const startingScore = leg.starting_score === 25 ? "Bull" : leg.starting_score;
+        <statistics-row heading="Number" value=startingScore/>
+    </if>
+    <statistics-row heading="Hit Rate" value=((statistic.hit_rate * 100).toFixed(2) + "%")/>
+    <if(statistic.score !== null)>
+        <statistics-row heading="Score" value=statistic.score/>
+    </if>
+
+    <div class="info">
+        <div style="text-align: center;">
+            <table>
+            <tr>
+                <td/>
+                <score-pill text="Singles" value=statistic.singles/>
+                <score-pill text="Doubles" value=statistic.doubles/>
+                <score-pill text="Triples" value=statistic.triples/>
+            </tr>
+                <tr>
+                    <score-pill text="Hit 5" value=statistic.hits_5/>
+                    <score-pill text="Hit 6" value=statistic.hits_6/>
+                    <score-pill text="Hit 7" value=statistic.hits_7/>
+                    <score-pill text="Hit 8" value=statistic.hits_8/>
+                    <score-pill text="Hit 9" value=statistic.hits_9/>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <div style="clear: both;"/>
+
+    <if(input.isWinner)>
+        <div class="label-winner">WINNER</div>
+    </if>
+    <else>
+        <div class="label-loser">&nbsp;</div>
+    </else>
+  </div>
+</div>

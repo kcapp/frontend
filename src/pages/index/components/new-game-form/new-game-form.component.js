@@ -3,6 +3,7 @@ const axios = require('axios');
 const localStorage = require("../../../../util/localstorage");
 const io = require("../../../../util/socket.io-helper");
 const alertify = require("../../../../util/alertify");
+const speaker = require('../../../../util/speaker');
 const types = require("../../../../components/scorecard/components/match_types.js")
 
 module.exports = {
@@ -19,7 +20,7 @@ module.exports = {
                 game_mode: 1,
                 outshot_type: types.OUTSHOT_DOUBLE,
                 stake: null,
-                venue: null
+                venue_id: null
             },
             playerId: "",
             submitting: false
@@ -31,7 +32,7 @@ module.exports = {
             if (!this.input.offices[officeId]) {
                 // Unset stored value if it points to a non-existing office
                 localStorage.remove("office_id");
-                localStorage.remove("venue");
+                localStorage.remove("venue_id");
             } else {
                 this.changeOffice(officeId, this.input.offices[officeId]);
             }
@@ -48,6 +49,21 @@ module.exports = {
                         if (this.state.selected.indexOf(player) === -1) {
                             this.addPlayer(null, player);
                         }
+
+                        const vocalName = player.vocal_name || player.first_name;
+                        const name = player.first_name.toLowerCase().replace(" ", "");
+                        let audioPlayer = new Audio(`/audio/announcer/sentences/welcome_${Math.floor(Math.random() * 3 + 1)}.wav`);
+                        audioPlayer.addEventListener("ended", () => {
+                            if (vocalName.endsWith(".wav")) {
+                                let playPromise = new Audio(`/audio/announcer/names/${name}/name_1.wav`).play();
+                                playPromise.catch((error) => {
+                                    speaker.speak( {text: vocalName } );
+                                });
+                            } else {
+                                speaker.speak( {text: vocalName } );
+                            }
+                        }, false);
+                        audioPlayer.play();
                         alertify.success(`Added player "${player.name}"`);
                     } else {
                         const preset = _.find(this.input.presets, (preset) => {
@@ -71,6 +87,7 @@ module.exports = {
                                 this.newGame();
                             }
                         } else {
+                            new Audio(`/audio/announcer/sentences/unknown_player_${Math.floor(Math.random() * 3) + 1}.wav`).play();
                             alertify.error(`No player or preset registered to smartcard "${data.uid}"`);
                         }
                     }
@@ -204,11 +221,11 @@ module.exports = {
     onGameTypeChanged(attribute, value) {
         if (attribute == 'game_type') {
             // If this is 9 Dart Shootout or Cricket, make sure to set score to 0 and disable the selector
-            var scoreComponent = this.getComponent('starting-score');
+            let scoreComponent = this.getComponent('starting-score');
             scoreComponent.updateOptions(this.input.scores);
             if (this.state.options.game_type === types.SHOOTOUT || this.state.options.game_type == types.CRICKET || this.state.options.game_type === types.AROUND_THE_WORLD ||
                 this.state.options.game_type === types.SHANGHAI || this.state.options.game_type === types.AROUND_THE_CLOCK || this.state.options.game_type === types.BERMUDA_TRIANGLE ||
-                this.state.options.game_type === types.JDC_PRACTICE || this.state.options.game_type === types.KNOCKOUT) {
+                this.state.options.game_type === types.JDC_PRACTICE || this.state.options.game_type === types.KNOCKOUT || this.state.options.game_type == types.SCAM) {
                 scoreComponent.state.index = 0;
                 scoreComponent.state.enabled = false;
             } else if (this.state.options.game_type == types.TIC_TAC_TOE) {
@@ -240,7 +257,7 @@ module.exports = {
             }
             this.state.options.starting_score = scoreComponent.state.index
 
-            var selectedPlayers = this.getComponents('players');
+            let selectedPlayers = this.getComponents('players');
             for (var i = 0; i < selectedPlayers.length; i++) {
                 selectedPlayers[i].handleTypeChange(this.state.options.game_type);
             }
@@ -275,14 +292,14 @@ module.exports = {
 
         let officeId = this.state.officeId;
         if (officeId <= 0) {
-            if (officeId == 0 && this.state.options.venue && this.state.options.venue !== -1) {
-                officeId = this.input.venues[this.state.options.venue].office_id;
+            if (officeId == 0 && this.state.options.venue_id && this.state.options.venue_id !== -1) {
+                officeId = this.input.venues[this.state.options.venue_id].office_id;
             } else {
                 officeId = null;
             }
         }
 
-        let venueId = this.state.options.venue;
+        let venueId = this.state.options.venue_id;
         if (venueId <= 0) {
             venueId = null;
         }
@@ -312,7 +329,7 @@ module.exports = {
         axios.post(`${window.location.origin}/matches/new`, body)
             .then(response => {
                 // Store venue in localstorage so it doesn't have to be selected each time
-                localStorage.set('venue', this.state.options.venue);
+                localStorage.set('venue_id', this.state.options.venue_id);
                 const isController = localStorage.get("controller");
                 location.href = isController ? `/legs/${response.data.current_leg_id}/controller` : `/legs/${response.data.current_leg_id}`;
             }).catch(error => {

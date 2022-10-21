@@ -1,0 +1,45 @@
+$ var statistic = input.statistic;
+$ var player = input.player;
+<if(input.header)>
+  <div class="block-container-header-center">
+    <a href=`/players/${player.id}/statistics`>${player.name}</a>
+  </div>
+</if>
+<div class="block-container-with-header">
+  <div class="player-card-match">
+    <div style="padding-bottom: 20px;">
+      <div class="player-pic-cutout" style="margin: 0 auto;">
+        <player-profile-picture player=player/>
+      </div>
+    </div>
+
+    <statistics-row heading="Marks Per Round" value=statistic.mpr.toFixed(2)/>
+    <statistics-row heading="First 9 MPR" value=statistic.first_nine_mpr.toFixed(2)/>
+    <if(statistic.score !== null)>
+        <statistics-row heading="Score" value=statistic.score/>
+    </if>
+
+    <div class="info">
+        <div style="text-align: center;">
+            <table>
+                <tr style="display: flex; flex-wrap: wrap; justify-content: center;">
+                    <score-pill text="5 Marks" value=statistic.marks_5/>
+                    <score-pill text="6 Marks" value=statistic.marks_6/>
+                </tr>
+                <tr style="display: flex; flex-wrap: wrap;">
+                    <score-pill text="7 Marks" value=statistic.marks_7/>
+                    <score-pill text="8 Marks" value=statistic.marks_8/>
+                    <score-pill text="9 Marks" value=statistic.marks_9/>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+    <if(input.isWinner)>
+        <div class="label-winner">WINNER</div>
+    </if>
+    <else>
+        <div class="label-loser">&nbsp;</div>
+    </else>
+  </div>
+</div>

@@ -66,25 +66,25 @@ $ var stats2 = input.stats2;
         $ var p1s60 = stats1.scores_60s_plus == null ? '0' : stats1.scores_60s_plus
         $ var p2s60 = stats2.scores_60s_plus == null ? '0' : stats2.scores_60s_plus
         $ var p1s60pl = stats1.scores_60s_plus == null ? '0' : (stats1.scores_60s_plus / stats1.legs_played).toFixed(2)
-        $ var p2s60pl = stats2.scores_60s_plus == null ? '0' : (stats2.scores_60s_plus / stats1.legs_played).toFixed(2)
+        $ var p2s60pl = stats2.scores_60s_plus == null ? '0' : (stats2.scores_60s_plus / stats2.legs_played).toFixed(2)
         <score-statistic-row label="60+" stat1=p1s60 stat1PerLeg=p1s60pl stat2=p2s60 stat2PerLeg=p2s60pl />
 
         $ var p1s100 = stats1.scores_100s_plus == null ? '0' : stats1.scores_100s_plus
         $ var p2s100 = stats2.scores_100s_plus == null ? '0' : stats2.scores_100s_plus
         $ var p1s100pl = stats1.scores_100s_plus == null ? '0' : (stats1.scores_100s_plus / stats1.legs_played).toFixed(2)
-        $ var p2s100pl = stats2.scores_100s_plus == null ? '0' : (stats2.scores_100s_plus / stats1.legs_played).toFixed(2)
+        $ var p2s100pl = stats2.scores_100s_plus == null ? '0' : (stats2.scores_100s_plus / stats2.legs_played).toFixed(2)
         <score-statistic-row label="100+" stat1=p1s100 stat1PerLeg=p1s100pl stat2=p2s100 stat2PerLeg=p2s100pl />
 
         $ var p1s140 = stats1.scores_140s_plus == null ? '0' : stats1.scores_140s_plus
         $ var p2s140 = stats2.scores_140s_plus == null ? '0' : stats2.scores_140s_plus
         $ var p1s140pl = stats1.scores_140s_plus == null ? '0' : (stats1.scores_140s_plus / stats1.legs_played).toFixed(2)
-        $ var p2s140pl = stats2.scores_140s_plus == null ? '0' : (stats2.scores_140s_plus / stats1.legs_played).toFixed(2)
+        $ var p2s140pl = stats2.scores_140s_plus == null ? '0' : (stats2.scores_140s_plus / stats2.legs_played).toFixed(2)
         <score-statistic-row label="140+" stat1=p1s140 stat1PerLeg=p1s140pl stat2=p2s140 stat2PerLeg=p2s140pl />
 
         $ var p1s180 = stats1.scores_180s == null ? '0' : stats1.scores_180s
         $ var p2s180 = stats2.scores_180s == null ? '0' : stats2.scores_180s
         $ var p1s180pl = stats1.scores_180s == null ? '0' : (stats1.scores_180s / stats1.legs_played).toFixed(2)
-        $ var p2s180pl = stats2.scores_180s == null ? '0' : (stats2.scores_180s / stats1.legs_played).toFixed(2)
+        $ var p2s180pl = stats2.scores_180s == null ? '0' : (stats2.scores_180s / stats2.legs_played).toFixed(2)
         <score-statistic-row label="180" stat1=p1s180 stat1PerLeg=p1s180pl stat2=p2s180 stat2PerLeg=p2s180pl />
     </if>
 </table>

@@ -21,6 +21,7 @@ module.exports = {
     },
     onInput(input) {
         this.state.player = input.player;
+        this.state.wins = this.state.player.wins ? this.state.player.wins : 0;
     },
     onMount() {
         if (this.state.player.player.board_stream_url && this.state.player.player.board_stream_css) {

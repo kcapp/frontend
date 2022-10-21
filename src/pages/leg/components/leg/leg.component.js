@@ -191,7 +191,7 @@ module.exports = {
     },
 
     onPossibleThrow(isCheckout, isBust, dartsThrown, score, multiplier, isUndo, submit) {
-        var component = this.findActive(this.getComponents('players'));
+        let component = this.findActive(this.getComponents('players'));
         if (isCheckout) {
             component.confirmLegFinish();
         }
@@ -251,7 +251,7 @@ module.exports = {
 
     onLegFinished(finished, component) {
         if (finished) {
-            var component = this.findActive(this.getComponents('players'));
+            let component = this.findActive(this.getComponents('players'));
             this.state.socket.emit('throw', JSON.stringify(component.getPayload()));
         } else {
             this.state.submitting = false;
@@ -326,7 +326,7 @@ module.exports = {
                 value = 0;
             }
             component.setDart(value, multiplier);
-            var dartsThrown = component.getDartsThrown();
+            let dartsThrown = component.getDartsThrown();
             if (dartsThrown > 2) {
                 this.state.submitting = true;
                 this.state.socket.emit('throw', JSON.stringify(component.getPayload()));
@@ -366,6 +366,55 @@ module.exports = {
                     location.reload();
                 });
             e.preventDefault();
+        } else if (e.key === 'F3') {
+            e.preventDefault();
+
+            // Throw same dart as last
+            if (component.state.currentDart === 0) {
+                // Cannot redo previous dart when no darts are thrown
+                return;
+            }
+            let dart = component.getDart(component.state.currentDart - 1);
+
+            let value = dart.state.value;
+            let multiplier = dart.state.multiplier;
+            component.setDart(value, multiplier);
+            let dartsThrown = component.getDartsThrown();
+            if (dartsThrown > 2) {
+                this.state.submitting = true;
+                this.state.socket.emit('throw', JSON.stringify(component.getPayload()));
+            } else {
+                this.state.submitting = component.confirmThrow(false);
+            }
+        } else if (e.key === 'F2') {
+            e.preventDefault();
+
+            if (this.state.matchType !== types.X01) {
+                // Only support checkout for X01
+                return;
+            }
+            let currentScore = component.state.player.current_score;
+            if (currentScore > 40 && currentScore !== 50) {
+                // Score is too high
+                return;
+            }
+            let isCheckoutPossible = currentScore % 2 === 0;
+            if (!isCheckoutPossible) {
+                // We don't have a even number, so can't checkout
+                return;
+            }
+
+            let value = currentScore / 2;
+            let multiplier = 2;
+
+            component.setDart(value, multiplier);
+            let dartsThrown = component.getDartsThrown();
+            if (dartsThrown > 2) {
+                this.state.submitting = true;
+                this.state.socket.emit('throw', JSON.stringify(component.getPayload()));
+            } else {
+                this.state.submitting = component.confirmThrow(false);
+            }
         }
     },
 
@@ -444,7 +493,8 @@ module.exports = {
     },
 
     onWarmupStarted() {
-        this.state.socket.emit('warmup_started', { leg: this.input.leg, match: this.input.match });
+        const venue = localStorage.get('venue_id');
+        this.state.socket.emit('warmup_started', { leg: this.input.leg, match: this.input.match, venue: venue ? parseInt(venue) : null });
     },
 
     onSmartboardReconnect() {

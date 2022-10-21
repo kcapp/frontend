@@ -7,5 +7,8 @@ module.exports = {
     },
     onRematch() {
         this.emit("rematch");
+    },
+    onNextMatch() {
+        this.emit("next-match");
     }
 }

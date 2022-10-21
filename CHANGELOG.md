@@ -1,6 +1,31 @@
 # Changelog
 
 A preview of major changes can be found in the Wiki ([Latest Changes](https://github.com/kcapp/frontend/wiki/Latest_Changes))
+## [2.4.0] - 2022-10-21
+#### Feature
+- Set venue when warmup of a match starts, to make it possible to play matches on a different venue than scheduled
+- Emit `order_changed` event on leg namespace
+- Display visits in reverse order on spectate page
+- Additional tournament statistics displayed on statistics page
+- New view for `tournaments/<id>/obs` which shows a counter for certain statistics in a given tournament
+- New `Scam` match type
+- Voice announcements for `marks` hit in `Cricket`
+- Next Match button for Tournament results to easily move to next match
+
+#### Changed
+- Added JDC shirt to spectate page
+- More vocal announcements
+
+#### Fixed
+- Fixed broken office selector on players page
+- Bot waiting on initial throw
+- Prevent spamming of 'order_changes' when changing order
+- Update wins per player on spectate page
+- Issue where canceling bust dialog would submit two events
+- Bug preventing creation of new tournaments
+- Bug showing wrong per leg statistics on Head-to-Head page
+
+
 ## [2.3.0] - 2022-03-06
 #### Feature
 - Support for match presets, that can be configured via smartcards
@@ -134,6 +159,7 @@ A preview of major changes can be found in the Wiki ([Latest Changes](https://gi
 - Multiple score entry methods
     - Including [Unicorn Smartboard](https://github.com/kcapp/smartboard)
 
+[2.4.0]: https://github.com/kcapp/frontend/compare/v2.3.0...v2.4.0
 [2.3.0]: https://github.com/kcapp/frontend/compare/v2.2.0...v2.3.0
 [2.2.0]: https://github.com/kcapp/frontend/compare/v2.1.0...v2.2.0
 [2.1.0]: https://github.com/kcapp/frontend/compare/v2.0.0...v2.1.0

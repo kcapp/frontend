@@ -18,7 +18,8 @@ module.exports = {
             this.state.smartcardReadhFnc = comp.smartcardRead.bind(comp);
         }.bind(this));
     },
-    officeChanged(officeId) {
+    officeChanged(id) {
+        const officeId = parseInt(id);
         if (officeId === 0) {
             this.state.players = this.input.players;
         } else {

@@ -101,6 +101,12 @@ module.exports = {
                         current = current - visit.score;
                     }
                     values[visit.player_id].push(current);
+                } else if (this.state.matchType === types.SCAM) {
+                    current = current + (visit.is_stopper ? 0 : visit.score);
+                    values[visit.player_id].push(current);
+                    if (current > chartMaxValue) {
+                        chartMaxValue = current;
+                    }
                 } else {
                     values[visit.player_id].push(current - visit.score);
                 }

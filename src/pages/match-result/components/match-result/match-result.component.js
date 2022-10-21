@@ -7,7 +7,13 @@ module.exports = {
 
         match.started = moment(match.created_at).format('YYYY-MM-DD HH:mm:ss');
         match.finished = match.end_time === undefined ? '-' : moment(match.end_time).format('YYYY-MM-DD HH:mm:ss');
-        match.duration = moment.duration(moment(match.last_throw_time).diff(match.first_throw_time)).asMinutes().toFixed();
+
+        if (match.first_throw_time !== null) {
+            match.duration = moment.duration(moment(match.last_throw_time).diff(match.first_throw_time)).asMinutes().toFixed();
+        } else {
+            match.duration = moment.duration(moment(match.end_time).diff(match.created_at)).asMinutes().toFixed();
+        }
+
 
         this.state = {
             match: match
@@ -42,6 +48,19 @@ module.exports = {
                 location.href = `/legs/${response.data.current_leg_id}`;
             }).catch(error => {
                 alert(`Unable to rematch, see log for details (${error.statusText})`);
+            });
+    },
+    onNextMatch() {
+        axios.get(`${window.location.origin}/tournaments/match/${this.state.match.id}/next`, null)
+            .then(response => {
+                if (response.data === 204) {
+                    location.href = `/tournaments/${this.state.match.tournament_id}`;
+                } else {
+                    const leg = response.data.legs[0];
+                    location.href = leg.is_finished ? `/legs/${leg.id}/result` : `/legs/${leg.id}`;
+                }
+            }).catch(error => {
+                alert(`Unable to get next match, see log for details (${error.statusText})`);
             });
     }
 }

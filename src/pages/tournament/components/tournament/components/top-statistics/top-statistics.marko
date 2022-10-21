@@ -1,5 +1,5 @@
-$ var idx = input.idx;
-$ var statistics = input.statistics;
+$ let idx = input.idx;
+$ let statistics = input.statistics;
 <if(statistics[idx])>
   <td class="cutout-with-rank">
     <div class="float-left">
@@ -12,7 +12,7 @@ $ var statistics = input.statistics;
   <td class="valign-mid">
     <a href=`/players/${statistics[idx].player_id}/statistics`>${input.players[statistics[idx].player_id].name}</a>
   </td>
-  <best-statistics statistic=statistics[idx] clazz="valign-mid"/>
+  <best-statistics statistic=statistics[idx] clazz="valign-mid" isFloat=input.isFloat/>
 </if>
 <else>
   <td class="cutout-with-rank">

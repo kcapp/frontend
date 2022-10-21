@@ -1,6 +1,6 @@
 {
     "name": "kcapp",
-    "version": "2.3.0",
+    "version": "2.4.0",
     "private": true,
     "scripts": {
         "dev": "browser-refresh ./bin/www",
@@ -22,8 +22,9 @@
         "compression": "^1.7.4",
         "cookie-parser": "^1.4.5",
         "debug": "^4.3.2",
+        "dissolve": "^0.3.3",
         "express": "^5.0.0-alpha.8",
-        "kcapp-bot": "github:kcapp/bot",
+        "kcapp-bot": "github:kcapp/bot#d47d13d9cdbc80a282ed2c0e8072b7b937088239",
         "kcapp-sio-client": "github:kcapp/kcapp-sio-client",
         "lasso": "^3.4.3",
         "lasso-less": "^4.0.1",

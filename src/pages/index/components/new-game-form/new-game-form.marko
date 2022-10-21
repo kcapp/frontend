@@ -71,7 +71,7 @@ $ const types = require('../../../../components/scorecard/components/match_types
           </if>
           <game-option-selector values=input.modes options=state.options key="game-mode" label="Mode" attribute="game_mode" defaultValue=state.options.game_mode/>
           <game-option-selector values=input.stakes options=state.options key="stake" label="Stake" attribute="stake" addNull=true defaultAttrName="item"/>
-          <game-option-selector values=state.venues options=state.options key="venue" label="Venue" attribute="venue" addNull=true defaultValue=state.options.venue/>
+          <game-option-selector values=state.venues options=state.options key="venue" label="Venue" attribute="venue_id" addNull=true defaultValue=state.options.venue_id/>
           <button class="btn btn-primary" disabled=state.submitting type="submit" on-click("newGame")>Start</button>
         </div>
         <div class="block-container-with-header">

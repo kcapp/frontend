@@ -286,6 +286,45 @@ $ const cricket = require("./components/cricket");
           </td>
         </tr>
       </if>
+      <if(state.type === types.SCAM && state.player.is_stopper)>
+        <tr>
+          <td colspan="3">
+            <table id='table-scam' class='table-striped'>
+              <thead>
+                <tr>
+                  <td colspan=10 class="text-center">Numbers</td>
+                </tr>
+              </thead>
+              <tbody>
+                  <tr style="padding-top: 10px;">
+                    <for|num| from=1 to=10>
+                      <td class="text-center" style="font-size: 3em;">
+                        <if(state.player.hits[num] && state.player.hits[num]['1'])>
+                          ${" "}
+                        </if>
+                        <else>
+                            ${num}
+                        </else>
+                      </td>
+                    </for>
+                  </tr>
+                  <tr style="padding-top: 10px;">
+                    <for|num| from=11 to=20>
+                      <td class="text-center" style="font-size: 3em;">
+                        <if(state.player.hits[num] && state.player.hits[num]['1'])>
+                          ${" "}
+                        </if>
+                        <else>
+                            ${num}
+                        </else>
+                      </td>
+                    </for>
+                  </tr>
+              </tbody>
+            </table>
+          </td>
+        </tr>
+      </if>
     </tbody>
   </table>
 </td>

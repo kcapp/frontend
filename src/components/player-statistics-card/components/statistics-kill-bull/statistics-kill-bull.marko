@@ -14,6 +14,9 @@ $ var player = input.player;
         <player-profile-picture player=player/>
       </div>
     </div>
+    <if(player.starting_score)>
+      <statistics-row heading="Starting Score" value=player.starting_score/>
+    </if>
     <statistics-row heading="Darts Thrown" value=statistic.darts_thrown/>
     <statistics-row heading="Longest Streak" value=statistic.longest_streak/>
     <statistics-row heading="Times Busted" value=statistic.times_busted/>
@@ -21,7 +24,14 @@ $ var player = input.player;
 
     <div class="info">
       <div style="text-align: center;">
-        <scores-table statistics=statistic type=types.KILL_BULL/>
+        <table>
+          <tr>
+              <score-pill text="3 Marks" value=statistic.marks_3/>
+              <score-pill text="4 Marks" value=statistic.marks_4/>
+              <score-pill text="5 Marks" value=statistic.marks_5/>
+              <score-pill text="6 Marks" value=statistic.marks_6/>
+          </tr>
+        </table>
       </div>
     </div>
 

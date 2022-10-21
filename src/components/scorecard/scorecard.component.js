@@ -14,6 +14,7 @@ const killBull = require('./components/kill_bull');
 const gotcha = require('./components/gotcha');
 const jdcPractice = require('./components/jdc_practice');
 const knockout = require("./components/knockout");
+const scam = require("./components/scam");
 
 const types = require("./components/match_types");
 
@@ -33,7 +34,8 @@ module.exports = {
             totalScore: 0,
             currentDart: 1,
             isSubmitted: true,
-            isBusted: false
+            isBusted: false,
+            isSpectate: input.spectate
         }
     },
 
@@ -107,11 +109,7 @@ module.exports = {
                     break;
                 case types.X01HANDICAP:
                 case types.X01:
-                    var value = dart.getValue();
-                    this.state.totalScore -= value;
-                    this.state.player.current_score += value;
-                    this.emit('score-change', -value, this.state.player.player_id);
-                    this.emit('possible-throw', false, false, this.state.currentDart, -dart.getScore(), dart.getMultiplier(), true, false);
+                    x01.removeLast.bind(this)(dart, external);
                     break;
                 case types.CRICKET:
                     cricket.removeLast.bind(this)(dart, external);
@@ -148,6 +146,9 @@ module.exports = {
                     break;
                 case types.KNOCKOUT:
                     knockout.removeLast.bind(this)(dart, external);
+                    break;
+                case types.SCAM:
+                    scam.removeLast.bind(this)(dart, external);
                     break;
             }
             dart.reset();
@@ -205,6 +206,9 @@ module.exports = {
                 case types.KNOCKOUT:
                     submitting = knockout.confirmThrow.bind(this)(external);
                     break;
+                case types.SCAM:
+                    submitting = scam.confirmThrow.bind(this)(external);
+                    break;
             }
         }
         return submitting;
@@ -219,6 +223,10 @@ module.exports = {
         }
         var newValue = parseInt(`${dart.state.value}${value}`);
         if (newValue > 20 && newValue !== 25) {
+            if (this.state.spectate) {
+                // Don't show alerts for spectators
+                return;
+            }
             alertify.alert('Invalid Value', () => { });
             return;
         }

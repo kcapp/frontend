@@ -41,6 +41,7 @@ function readFolders(src) {
 
 const AUDIO_NUMBERS = readFiles('public/audio/announcer/numbers');
 const AUDIO_SCORES = readFiles('public/audio/announcer/scores');
+const AUDIO_MARKS = readFiles('public/audio/announcer/marks');
 const AUDIO_NAMES = readFolders('public/audio/announcer/names');
 const AUDIO_SENTENCES = readFiles('public/audio/announcer/sentences');
 const AUDIO_GAMESHOT = readFiles('public/audio/announcer/sentences/gameshot');
@@ -186,11 +187,12 @@ module.exports = (io, app) => {
 
                     client.on('warmup_started', function (data) {
                         log('warmup_started');
-                        axios.put(`${app.locals.kcapp.api}/leg/${data.leg.id}/warmup`)
+                        axios.put(`${app.locals.kcapp.api}/leg/${data.leg.id}/warmup`, { id: data.venue} )
                             .then(() => {
                                 _this.io.of('/active').emit('warmup_started', { leg: data.leg, match: data.match });
-                                if (data.match.venue) {
-                                    _this.io.of(`/venue/${data.match.venue.id}`).emit('warmup_started', { leg: data.leg, match: data.match });
+                                if (data.venue || data.match.venue) {
+                                    const venue = data.venue || data.match.venue.id;
+                                    _this.io.of(`/venue/${venue}`).emit('warmup_started', { leg: data.leg, match: data.match });
                                 }
                             }).catch(error => {
                                 const message = `${error.message}(${error})`;
@@ -347,11 +349,20 @@ module.exports = (io, app) => {
 
                 function announceScored(visit, matchType) {
                     const score = visit.score;
+                    const audios = [];
                     let text = `${score}`;
                     if (visit.is_bust || (score === 0 && matchType === types.TIC_TAC_TOE)) {
-                        text = 'Noscore';
+                        audios.push(AUDIO_SCORES.random('Noscore'));
+                    } else if (matchType === types.SCAM && visit.is_stopper) {
+                        audios.push(AUDIO_MARKS.random(`${visit.marks}marks`));
+                    } else if (matchType === types.CRICKET) {
+                        audios.push(AUDIO_MARKS.random(`${visit.marks}marks`));
+                        if (visit.score > 0) {
+                            audios.push(AUDIO_SCORES.random(text));
+                        }
+                    } else {
+                        audios.push(AUDIO_SCORES.random(text));
                     }
-                    const audios = [ AUDIO_SCORES.random(text) ];
                     announce(text, 'score', audios);
                 }
 

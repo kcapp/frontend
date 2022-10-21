@@ -60,6 +60,38 @@ $ {
   </div>
   <if(state.hasStatistics)>
     <div role="tabpanel" id="statistics" class="tab-pane">
+      <div style='padding-top: 10px;'>
+        <table style="width: 100%;">
+          <tr>
+            <td style="width: 25%;">
+              <statistics-card label="60+" value=input.statistics.general_statistics.scores_60s_plus icon="fas fa-star" color="#e4c500"/>
+            </td>
+            <td style="width: 25%;">
+              <statistics-card label="100+" value=input.statistics.general_statistics.scores_100s_plus icon="fas fa-star" count=2 color="#e4c500"/>
+            </td>
+            <td style="width: 25%;">
+              <statistics-card label="140+" value=input.statistics.general_statistics.scores_140s_plus icon="fas fa-star" count=3 color="#e4c500"/>
+            </td>
+            <td style="width: 25%;">
+              <statistics-card label="180s" value=input.statistics.general_statistics.scores_180s icon="fas fa-star" count=4 color="#e4c500"/>
+            </td>
+          </tr>
+          <tr>
+            <td style="width: 25%;">
+              <statistics-card label="Fish-N-Chips" value=input.statistics.general_statistics.scores_fish_n_chips icon="fas fa-fish" color="#4954b8"/>
+            </td>
+            <td style="width: 25%;">
+              <statistics-card label="Bullseye" value=input.statistics.general_statistics.scores_bullseye icon="fas fa-bullseye" color="red"/>
+            </td>
+            <td style="width: 25%;">
+              <statistics-card label="D-Bullseye" value=input.statistics.general_statistics.scores_double_bullseye icon="fas fa-bullseye" count=2 color="red"/>
+            </td>
+            <td style="width: 25%;">
+              <statistics-card label="D1 Checkout" value=input.statistics.general_statistics.checkout_d1 icon="fas fa-crosshairs" color="#3d7332"/>
+            </td>
+          </tr>
+        </table>
+      </div>
       <div class="table table-responsive">
         <table class="tournament-records">
           <tbody>
@@ -85,7 +117,7 @@ $ {
                     <tbody>
                       <for|i| from=0 to=9>
                         <tr>
-                          <top-statistics players=input.players statistics=input.statistics.best_three_dart_avg idx=i rank=(i + 1)/>
+                          <top-statistics players=input.players statistics=input.statistics.best_three_dart_avg idx=i rank=(i + 1) isFloat=true/>
                         </tr>
                       </for>
                     </tbody>
@@ -99,7 +131,7 @@ $ {
                     <tbody>
                       <for|i| from=0 to=9>
                         <tr>
-                          <top-statistics players=input.players statistics=input.statistics.best_first_nine_avg idx=i rank=(i + 1)/>
+                          <top-statistics players=input.players statistics=input.statistics.best_first_nine_avg idx=i rank=(i + 1) isFloat=true/>
                         </tr>
                       </for>
                     </tbody>
