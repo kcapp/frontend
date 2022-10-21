@@ -23,6 +23,7 @@ A preview of major changes can be found in the Wiki ([Latest Changes](https://gi
 - Update wins per player on spectate page
 - Issue where canceling bust dialog would submit two events
 - Bug preventing creation of new tournaments
+- Bug showing wrong per leg statistics on Head-to-Head page
 
 
 ## [2.3.0] - 2022-03-06
