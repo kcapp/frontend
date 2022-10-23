@@ -1,6 +1,9 @@
 # Changelog
 
 A preview of major changes can be found in the Wiki ([Latest Changes](https://github.com/kcapp/frontend/wiki/Latest_Changes))
+## [2.5.0] - TBD
+
+
 ## [2.4.0] - 2022-10-21
 #### Feature
 - Set venue when warmup of a match starts, to make it possible to play matches on a different venue than scheduled
@@ -159,6 +162,7 @@ A preview of major changes can be found in the Wiki ([Latest Changes](https://gi
 - Multiple score entry methods
     - Including [Unicorn Smartboard](https://github.com/kcapp/smartboard)
 
+[2.5.0]: https://github.com/kcapp/frontend/compare/v2.4.0...develop
 [2.4.0]: https://github.com/kcapp/frontend/compare/v2.3.0...v2.4.0
 [2.3.0]: https://github.com/kcapp/frontend/compare/v2.2.0...v2.3.0
 [2.2.0]: https://github.com/kcapp/frontend/compare/v2.1.0...v2.2.0
