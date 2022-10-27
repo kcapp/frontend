@@ -28,10 +28,11 @@
             <tbody>
                 <for|player, index| of=state.overview>
                     <if(!input.players[player.player_id].is_placeholder)>
-                        <tr class=`tournament-${player.tournament_group.id}-rank-${player.rank}`>
+                        $ let rank = player.manual_order ? player.manual_order : player.rank;
+                        <tr class=`tournament-${player.tournament_group.id}-rank-${rank}`>
                             <td class="pl-10">
                             <div>
-                                <span class="pr-5">${player.manual_order ? player.manual_order : player.rank}</span>
+                                <span class="pr-5">${rank}</span>
                                 <if(player.is_winner)>
                                     <i class="fas fa-star"/>
                                 </if>
