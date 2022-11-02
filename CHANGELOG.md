@@ -3,6 +3,9 @@
 A preview of major changes can be found in the Wiki ([Latest Changes](https://github.com/kcapp/frontend/wiki/Latest_Changes))
 ## [2.5.0] - TBD
 
+#### Changed
+- More vocal announcements
+
 
 ## [2.4.0] - 2022-10-21
 #### Feature
