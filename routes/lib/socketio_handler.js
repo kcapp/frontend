@@ -351,7 +351,7 @@ module.exports = (io, app) => {
                     const score = visit.score;
                     const audios = [];
                     let text = `${score}`;
-                    if (visit.is_bust || (score === 0 && matchType === types.TIC_TAC_TOE)) {
+                    if (visit.is_bust || score === 0) {
                         audios.push(AUDIO_SCORES.random('Noscore'));
                     } else if (matchType === types.SCAM && visit.is_stopper) {
                         audios.push(AUDIO_MARKS.random(`${visit.marks}marks`));
