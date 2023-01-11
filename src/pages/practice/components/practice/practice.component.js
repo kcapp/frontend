@@ -18,7 +18,7 @@ module.exports = {
             officeId: 0,
             venues: input.venues,
             options: {
-                starting_score: 301,
+                starting_score: 501,
                 game_type: 1,
                 game_mode: 1,
                 stake: null,
@@ -176,7 +176,11 @@ module.exports = {
 
         var botPlayerConfig = {};
         if (this.state.bot.type == this.state.skill.TYPE_MOCK) {
-            botPlayerConfig[bot.id] = { player_id: this.state.bot.mock_player_id, skill_level: 0 };
+            botPlayerConfig[bot.id] = {
+                player_id: this.state.bot.mock_player_id,
+                skill_level: 0,
+                starting_score: this.state.options.starting_score
+            }
         } else {
             botPlayerConfig[bot.id] = { player_id: null, skill_level: this.state.bot.skill };
         }
