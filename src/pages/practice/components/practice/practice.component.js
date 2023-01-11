@@ -182,7 +182,11 @@ module.exports = {
                 starting_score: this.state.options.starting_score
             }
         } else {
-            botPlayerConfig[bot.id] = { player_id: null, skill_level: this.state.bot.skill };
+            botPlayerConfig[bot.id] = {
+                player_id: null,
+                skill_level: this.state.bot.skill,
+                starting_score: this.state.options.starting_score
+            }
         }
         var players = this.state.selected.map(player => player.id);
         players.push(bot.id);
