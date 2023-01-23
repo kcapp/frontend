@@ -119,7 +119,7 @@ module.exports = (io, app) => {
                                 if (player.is_bot) {
                                     debug(`[${legId}] Adding bot ${player.id}/${player.name}`);
                                     const config = legPlayers[id].bot_config;
-                                    const bot = require('kcapp-bot/kcapp-bot')(player.id, "localhost", 3000);
+                                    const bot = require('kcapp-bot/kcapp-bot')(player.id, "localhost", 3000, `${app.locals.kcapp.api}`);
                                     if (config && config.skill_level === 0) {
                                         bot.replayLeg(legId, config.player_id, legPlayers[id].starting_score);
                                     } else {
