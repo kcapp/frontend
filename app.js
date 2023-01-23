@@ -112,8 +112,8 @@ app.use(function (req, res, next) {
 
 // Error Handler
 const template = require('marko');
-var notFoundTemplate = template.load(require.resolve('./src/pages/404/404.marko'));
-var errorTemplate = template.load(require.resolve('./src/pages/404/404.marko'));
+const notFoundTemplate = template.load(require.resolve('./src/pages/404/404.marko'));
+const errorTemplate = template.load(require.resolve('./src/pages/404/404.marko'));
 
 app.use(function (err, req, res, next) {
     // set locals, only providing error in development

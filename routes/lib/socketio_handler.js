@@ -117,12 +117,11 @@ module.exports = (io, app) => {
                             for (let id in legPlayers) {
                                 const player = legPlayers[id].player;
                                 if (player.is_bot) {
-                                    // TODO Make sure this works correctly
                                     debug(`[${legId}] Adding bot ${player.id}/${player.name}`);
                                     const config = legPlayers[id].bot_config;
                                     const bot = require('kcapp-bot/kcapp-bot')(player.id, "localhost", 3000);
                                     if (config && config.skill_level === 0) {
-                                        bot.replayLeg(legId, config.player_id, config.starting_score);
+                                        bot.replayLeg(legId, config.player_id, legPlayers[id].starting_score);
                                     } else {
                                         const botSkill = config ? skill.fromInt(config.skill_level) : skill.MEDIUM;
                                         bot.playLeg(legId, botSkill);
