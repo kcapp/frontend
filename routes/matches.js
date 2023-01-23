@@ -242,7 +242,7 @@ router.get('/:id/result', function (req, res, next) {
 
 /* Method for starting a new match */
 router.post('/new', function (req, res, next) {
-    var players = req.body.players;
+    const players = req.body.players;
     if (players === undefined || players.length === 0) {
         debug('No players specified, unable to start leg');
         res.status(400).send("No players specified").end();
@@ -251,18 +251,17 @@ router.post('/new', function (req, res, next) {
 
     axios.get(`${req.app.locals.kcapp.api}/player`)
         .then(response => {
-            var playerMap = response.data;
+            const playerMap = response.data;
 
-            var isPractice = players.length === 1;
-            for (var i = 0; i < players.length; i++) {
+            let isPractice = players.length === 1;
+            for (let i = 0; i < players.length; i++) {
                 if (isPractice) {
                     break;
                 }
-                var player = playerMap[players[i]];
+                const player = playerMap[players[i]];
                 isPractice = player.is_bot;
             }
-
-            var body = {
+            const body = {
                 owe_type_id: req.body.match_stake == -1 ? null : req.body.match_stake,
                 venue_id: req.body.venue === -1 ? null : req.body.venue,
                 match_type: { id: req.body.match_type },
@@ -298,8 +297,12 @@ router.post('/new', function (req, res, next) {
                     }
                     res.status(200).send(match).end();
                 }).catch(error => {
-                    debug(`Error when starting new match: ${error}`);
-                    next(error);
+                    if (error.response.status === 400) {
+                        res.status(400).send({ status: 400, message: error.response.data}).end();
+                    } else {
+                        debug(`Error when starting new match: ${error}`);
+                        next(error);
+                    }
                 });
         }).catch(error => {
             debug(`Error when starting new match: ${error}`);
