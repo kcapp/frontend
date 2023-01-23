@@ -117,12 +117,11 @@ module.exports = (io, app) => {
                             for (let id in legPlayers) {
                                 const player = legPlayers[id].player;
                                 if (player.is_bot) {
-                                    // TODO Make sure this works correctly
                                     debug(`[${legId}] Adding bot ${player.id}/${player.name}`);
                                     const config = legPlayers[id].bot_config;
                                     const bot = require('kcapp-bot/kcapp-bot')(player.id, "localhost", 3000);
                                     if (config && config.skill_level === 0) {
-                                        bot.replayLeg(legId, config.player_id);
+                                        bot.replayLeg(legId, config.player_id, legPlayers[id].starting_score);
                                     } else {
                                         const botSkill = config ? skill.fromInt(config.skill_level) : skill.MEDIUM;
                                         bot.playLeg(legId, botSkill);
@@ -351,7 +350,7 @@ module.exports = (io, app) => {
                     const score = visit.score;
                     const audios = [];
                     let text = `${score}`;
-                    if (visit.is_bust || (score === 0 && matchType === types.TIC_TAC_TOE)) {
+                    if (visit.is_bust || score === 0) {
                         audios.push(AUDIO_SCORES.random('Noscore'));
                     } else if (matchType === types.SCAM && visit.is_stopper) {
                         audios.push(AUDIO_MARKS.random(`${visit.marks}marks`));
