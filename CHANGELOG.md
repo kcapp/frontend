@@ -6,6 +6,9 @@ A preview of major changes can be found in the Wiki ([Latest Changes](https://gi
 #### Changed
 - More vocal announcements
 
+#### Fixed
+- Issue with Mock-Player Bots (Contributed by @lluni)
+
 
 ## [2.4.0] - 2022-10-21
 #### Feature
