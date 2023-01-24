@@ -214,16 +214,29 @@ module.exports = {
             event.preventDefault();
         }
     },
-    changeOffice(officeId) {
+    changeOffice(officeId, office) {
         this.state.officeId = officeId;
 
         if (officeId == 0) {
-            this.state.players = this.input.players;
+            this.state.players =  _.reject(this.input.players, (player) => {
+                return player.is_bot;
+            });
             this.state.venues = this.input.venues;
         } else {
-            this.state.players = _.reject(this.input.players, (player) => { return player.office_id != officeId || player.is_bot;  });
-            this.state.venues = _.reject(this.input.venues, (venue) => { return venue.office_id != officeId; });
+            if (office.is_global) {
+                this.state.players =  _.reject(this.input.players, (player) => {
+                    return player.is_bot;
+                });
+            } else {
+                this.state.players = _.reject(this.input.players, (player) => {
+                    return player.office_id != officeId || player.is_bot;
+                });
+            }
+            this.state.venues = _.reject(this.input.venues, (venue) => {
+                return venue.office_id != officeId;
+            });
         }
+        this.getComponent('venue').updateOptions(this.state.venues);
 
         // Remove any players already selected
         this.state.players = _.reject(this.state.players, (player) => {
