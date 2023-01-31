@@ -223,7 +223,7 @@ module.exports = {
             });
             this.state.venues = this.input.venues;
         } else {
-            if (office.is_global) {
+            if (office && office.is_global) {
                 this.state.players =  _.reject(this.input.players, (player) => {
                     return player.is_bot;
                 });

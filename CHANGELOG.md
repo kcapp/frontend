@@ -3,6 +3,9 @@
 A preview of major changes can be found in the Wiki ([Latest Changes](https://github.com/kcapp/frontend/wiki/Latest_Changes))
 ## [2.5.0] - TBD
 
+#### Feature
+- Support multiple legs for Practice matches
+
 #### Changed
 - More vocal announcements
 
