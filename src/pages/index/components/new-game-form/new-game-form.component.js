@@ -244,12 +244,12 @@ module.exports = {
                 scoreComponent.updateOptions(types.SCORES_KILL_BULL);
                 scoreComponent.state.index = 200;
                 scoreComponent.state.enabled = true;
-            } else if (this.state.options.starting_score === 0) {
-                scoreComponent.state.index = scoreComponent.state.defaultValue;
-                scoreComponent.state.enabled = true;
             } else if (this.state.options.game_type === types.GOTCHA) {
                 scoreComponent.updateOptions(types.SCORES_GOTCHA);
                 scoreComponent.state.index = 200;
+                scoreComponent.state.enabled = true;
+            } else if (this.state.options.starting_score === 0) {
+                scoreComponent.state.index = scoreComponent.state.defaultValue;
                 scoreComponent.state.enabled = true;
             } else {
                 scoreComponent.state.index = scoreComponent.state.defaultValue;

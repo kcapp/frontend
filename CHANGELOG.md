@@ -12,6 +12,7 @@ A preview of major changes can be found in the Wiki ([Latest Changes](https://gi
 #### Fixed
 - Issue with Mock-Player Bots (Contributed by @lluni)
 - Bug where Bot would sometime get stuck in infinite loop on certain scores
+- Bug where starting score for Gotcha would be incorrect
 
 
 ## [2.4.0] - 2022-10-21
