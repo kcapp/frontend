@@ -5,9 +5,11 @@ A preview of major changes can be found in the Wiki ([Latest Changes](https://gi
 
 #### Feature
 - Support multiple legs for Practice matches
+- PLayer options to disable automatic score deduction per dart, and to show/hide checkout guide
 
 #### Changed
 - More vocal announcements
+- Improved Checkout Suggestions for x01
 
 #### Fixed
 - Issue with Mock-Player Bots (Contributed by @lluni)

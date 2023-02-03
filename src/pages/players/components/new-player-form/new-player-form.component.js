@@ -18,6 +18,11 @@ module.exports = {
             profile_pic_url: undefined,
             smartcard_uid: undefined,
             office_id: 1,
+            options: {
+                edited: false,
+                subtract_per_dart: true,
+                show_checkout_guide: true
+            },
             isAdd: true
         }
     },
@@ -32,6 +37,13 @@ module.exports = {
         this.state.profile_pic_url = player.profile_pic_url;
         this.state.smartcard_uid = player.smartcard_uid;
         this.state.office_id = player.office_id;
+        if (player.options) {
+            this.state.options.subtract_per_dart = player.options.subtract_per_dart;
+            this.state.options.show_checkout_guide = player.options.show_checkout_guide;
+        } else {
+            this.state.options.subtract_per_dart = true;
+            this.state.options.show_checkout_guide = true;
+        }
         this.state.isAdd = false;
     },
     playVoice() {
@@ -86,6 +98,14 @@ module.exports = {
     officeChanged(event) {
         this.state.office_id = event.target.value;
     },
+    subtractScoreChange(event) {
+        this.state.options.edited = true;
+        this.state.options.subtract_per_dart = event.target.checked;
+    },
+    showCheckoutGuideChange(event) {
+        this.state.options.edited = true;
+        this.state.options.subtract_per_dart = event.target.checked;
+    },
     addPlayer(event) {
         if (!this.state.first_name) {
             alert("At least first name must be specified");
@@ -103,6 +123,12 @@ module.exports = {
             smartcard_uid: this.state.smartcard_uid,
             office_id: this.state.office_id
         };
+        if (this.state.options.edited) {
+            body.options = {
+                subtract_per_dart: this.state.options.subtract_per_dart,
+                show_checkout_guide: this.state.options.show_checkout_guide
+            }
+        }
         if (this.state.isAdd) {
             axios.post(`${window.location.origin}/players`, body)
                 .then(response => {

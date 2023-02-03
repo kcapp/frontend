@@ -65,7 +65,9 @@ exports.confirmThrow = function (external) {
                 this.emit('player-busted', false);
             });
     }
-    this.state.player.current_score -= scored;
+    if (!this.state.player.player.options || this.state.player.player.options.subtract_per_dart) {
+        this.state.player.current_score -= scored;
+    }
     if (!external) {
         // If an external event triggered the update don't emit a throw
         this.emit('possible-throw', isCheckout, isBust, this.state.currentDart - 1, dart.getScore(), dart.getMultiplier(), false, false);

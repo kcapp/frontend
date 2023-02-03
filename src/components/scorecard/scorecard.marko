@@ -28,7 +28,9 @@ $ const cricket = require("./components/cricket");
       <if(state.type == types.X01 || state.type == types.X01HANDICAP)>
         <tr>
           <td colspan="3" style="height: 44px;">
-            <checkout-suggestion key="suggestion" score=state.player.current_score currentDart=state.currentDart />
+            <if(!state.player.player.options || state.player.player.options.show_checkout_guide)>
+              <checkout-suggestion key="suggestion" score=state.player.current_score currentDart=state.currentDart />
+            </if>
           </td>
         </tr>
       </if>
