@@ -1,12 +1,12 @@
-var axios = require('axios');
-var _ = require('underscore');
+const axios = require('axios');
+const _ = require('underscore');
 
 module.exports = {
     onCreate(input) {
         this.state = {
-            statistics1: input.statistics[0] ? input.statistics[0].x01 : {},
-            statistics2: input.statistics[1] ? input.statistics[1].x01 : {},
-            statistics3: input.statistics[2] ? input.statistics[2].x01 : {}
+            statistics1: input.statistics[0] ? input.statistics[0] : {},
+            statistics2: input.statistics[1] ? input.statistics[1] : {},
+            statistics3: input.statistics[2] ? input.statistics[2] : {}
         }
     },
     handlePlayerChange(statistics, playerId) {
@@ -20,7 +20,7 @@ module.exports = {
         });
     },
     onShareButtonClick(event) {
-        var playerIds = [];
+        const playerIds = [];
         if (this.state.statistics1.player_id) {
             playerIds.push(this.state.statistics1.player_id);
         }
@@ -30,7 +30,7 @@ module.exports = {
         if (this.state.statistics3.player_id) {
             playerIds.push(this.state.statistics3.player_id);
         }
-        var params = playerIds.length === 0 ? "" : "?player_id=";
+        let params = playerIds.length === 0 ? "" : "?player_id=";
         if (playerIds.length === 1) {
             params += playerIds[0];
         } else {
