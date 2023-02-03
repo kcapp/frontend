@@ -3,41 +3,24 @@ import { RouterLink, RouterView } from "vue-router";
 </script>
 
 <template>
-  <div class="wrapper">
+  <div class="content-wrapper">
     <nav>
-      <RouterLink to="/">kcapp</RouterLink>
+      <RouterLink to="/"> kcapp</RouterLink>
       <RouterLink to="/players">players</RouterLink>
-      <RouterLink to="/about">practice</RouterLink>
-      <RouterLink to="/about">statistics</RouterLink>
+      <RouterLink to="/players">matches</RouterLink>
       <RouterLink to="/tournaments">tournaments</RouterLink>
-      <RouterLink to="/about">elo</RouterLink>
-      <RouterLink to="/about">matches</RouterLink>
+      <RouterLink to="/players">statistics</RouterLink>
+      <RouterLink to="/players">elo</RouterLink>
+      <RouterLink to="/players">practice</RouterLink>
     </nav>
   </div>
 
-  <div class="contentWrapper">
+  <div class="content-wrapper">
     <RouterView />
   </div>
 </template>
 
 <style>
 @import "assets/base.css";
-
-.contentWrapper {
-  max-width: 1200px;
-  margin: 20px auto;
-}
-
-nav {
-  padding: 20px 0px;
-  max-width: 1200px;
-  margin: 0 auto;
-  border-bottom: 1px solid #b4b4b4;
-}
-
-nav > a {
-  display: inline-block;
-  margin-right: 10px;
-  font-weight: 600;
-}
+@import "assets/spaces.css";
 </style>

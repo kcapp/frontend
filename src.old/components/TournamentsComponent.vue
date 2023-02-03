@@ -2,11 +2,24 @@
   <RoundContainer>
     <table v-if="this.tournaments.length > 0">
       <tr>
-        <td
-          colspan="10"
-          class="txtr"
-          style="padding-bottom: 20px; border-bottom: 1px solid #b4b8b9"
-        >
+        <td colspan="10" style="font-size: 25px; padding-bottom: 15px">
+          <div>
+            <table>
+              <tr>
+                <td class="txtl font30">
+                  <i
+                    class="fab fa-solid fa-trophy"
+                    style="font-size: 25px; left: 4px"
+                  ></i>
+                  Tournaments
+                </td>
+              </tr>
+            </table>
+          </div>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="10" class="txtr roundHeaderOptions">
           <button class="officeLabel" @click="this.setOffice(0)">All</button>
           <span v-for="(office, index) in this.offices" v-bind:key="index">
             <button class="officeLabel" @click="this.setOffice(office.id)">
@@ -15,7 +28,10 @@
           </span>
         </td>
       </tr>
-      <tr style="font-weight: 900">
+      <tr>
+        <td colspan="6">&nbsp;</td>
+      </tr>
+      <tr style="font-weight: 900; color: #64b1c4">
         <td>name</td>
         <td class="txtl">office</td>
         <td class="txtc">short name</td>
@@ -93,13 +109,5 @@ export default {
 .commonHeader {
   padding-top: 10px;
   border-bottom: 1px solid #dddddd;
-}
-
-.officeLabel {
-  border-radius: 5px;
-  border: 1px solid #dddddd;
-  padding: 5px 10px;
-  margin-left: 10px;
-  background-color: aliceblue;
 }
 </style>

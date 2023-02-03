@@ -1,0 +1,83 @@
+.mar10 {
+    margin: 10px;
+}
+
+.marr10 {
+    margin-right: 10px;
+}
+
+.marl10 {
+    margin-left: 10px;
+}
+
+.mart10 {
+    margin-top: 10px;
+}
+
+.marb10 {
+    margin-bottom: 10px;
+}
+
+.mar20 {
+    margin: 20px;
+}
+
+.marl20 {
+    margin-left: 20px;
+}
+
+.marr20 {
+    margin-right: 20px;
+}
+
+.mart20 {
+    margin-top: 20px;
+}
+
+.marb20 {
+    margin-bottom: 20px;
+}
+
+.pad10 {
+    padding: 10px;
+}
+
+.padl10 {
+    padding-left: 10px;
+}
+
+.padr10 {
+    padding-right: 10px;
+}
+
+.padt10 {
+    padding-top: 10px;
+}
+
+.padb10 {
+    padding-bottom: 10px;
+}
+
+.pad20 {
+    padding: 20px;
+}
+
+.padl20 {
+    padding-left: 20px;
+}
+
+.padr20 {
+    padding-right: 20px;
+}
+
+.padt20 {
+    padding-top: 20px;
+}
+
+.padb20 {
+    padding-bottom: 20px;
+}
+
+.padt15 {
+    padding-top: 15px;
+}

@@ -1,0 +1,122 @@
+/* color palette from <https://github.com/vuejs/theme> */
+:root {
+    --vt-c-bg: #505361;
+    --vt-c-bg-end: #2c2c3a;
+    --vt-c-white: #ffffff;
+    --vt-c-link-blue: #005bff;
+    --vt-c-link-white: #f5f5f5;
+    --vt-c-link-white-hover: #949494;
+    --vt-bg: #1b1f25;
+}
+
+/* semantic color variables for this project */
+:root {
+    --color-background: var(--vt-c-white);
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    color: var(--color-text);
+    background-color: #112333;
+    transition: color 0.5s, background-color 0.5s;
+    line-height: 1.6;
+    font-family: 'Quicksand', sans-serif;
+    font-size: 15px;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+button {
+    font-family: 'Quicksand', sans-serif;
+}
+
+a, a:visited {
+    text-decoration: none;
+    color: var(--vt-c-link-white);
+    font-weight: 600;
+}
+
+a:hover {
+    color: var(--vt-c-link-white-hover);
+}
+
+table {
+    width: 100%;
+}
+
+.roundHeaderOptions {
+    padding: 20px;
+    border: 0px solid #8a8d9b;
+    background-color: #127d99;
+    border-radius: 5px;
+    /*background: linear-gradient(135deg, #414350, #8a8d9b);*/
+}
+
+.txtr {
+    text-align: right;
+}
+
+.txtl {
+    text-align: left;
+}
+
+.txtc {
+    text-align: center;
+}
+
+.pl20 {
+    padding-left: 20px;
+}
+
+.mt20 {
+    margin-top: 20px;
+}
+
+.fat {
+    font-weight: 900;
+}
+
+.font15 {
+    font-size: 15px;
+}
+
+.font25 {
+    font-size: 25px;
+}
+
+.font30 {
+    font-size: 30px;
+    font-weight: 900;
+}
+
+.loader {
+    text-align: center;
+    font-size: 30px;
+    color: #64b1c4;
+}
+
+.officeLabel {
+    border-radius: 5px;
+    border: 1px solid #b6bcbd;
+    padding: 5px 10px;
+    margin-left: 10px;
+    background-color: aliceblue;
+}
+
+.textInput {
+    border: 1px solid rgba(84, 84, 84, 0.65);
+    border-radius: 4px;
+    padding: 5px 8px;
+    background: transparent;
+    color: var(--color-text);
+    font-size: 15px;
+    font-family: 'Quicksand', sans-serif;
+}
+
+.textInput:focus {
+    border: 1px solid rgba(200, 200, 200, 1);
+    outline: rgba(200, 200, 200, 1);
+}

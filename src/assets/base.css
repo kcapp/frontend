@@ -1,22 +1,21 @@
-/* color palette from <https://github.com/vuejs/theme> */
 :root {
-    --vt-c-bg: #eefafc;
-    --vt-c-bg-end: #cdebf6;
-    --vt-c-white: #ffffff;
-    --vt-c-link-blue: #005bff;
-}
-
-/* semantic color variables for this project */
-:root {
-    --color-background: var(--vt-c-white);
+    --color-white: #fff;
+    --color-black: #000;
+    --color-background: #112333;
+    --color-container: #1e1e26;
+    --color-green: #269a78;
+    --pad-5-10: 5px 10px;
+    --col-player-name: #969696;
+    --col-description: #565656;
+    --col-dark: #0f1017;
 }
 
 body {
     margin: 0;
     padding: 0;
     min-height: 100vh;
-    color: var(--color-text);
-    background: linear-gradient(var(--vt-c-bg-end), var(--vt-c-bg));
+    color: var(--color-white);
+    background-color: var(--color-black);
     transition: color 0.5s, background-color 0.5s;
     line-height: 1.6;
     font-family: 'Quicksand', sans-serif;
@@ -26,18 +25,21 @@ body {
     -moz-osx-font-smoothing: grayscale;
 }
 
-button {
-    font-family: 'Quicksand', sans-serif;
-}
-
-a, a:visited {
-    text-decoration: none;
-    color: var(--vt-c-link-blue);
-    font-weight: 600;
-}
-
 table {
     width: 100%;
+    border-collapse: collapse;
+}
+
+.w50pc {
+    width: 50%;
+}
+
+table td {
+    vertical-align: top;
+}
+
+.tbl-fixed {
+    table-layout: fixed;
 }
 
 .txtr {
@@ -52,25 +54,108 @@ table {
     text-align: center;
 }
 
-.pl20 {
-    padding-left: 20px;
+.content-wrapper {
+    max-width: 1200px;
+    margin: 0 auto;
 }
 
-.mt20 {
-    margin-top: 20px;
+.flex {
+    display: flex;
 }
 
-.fat {
-    font-weight: 900;
+nav {
+    padding: 20px 0px;
 }
 
-.font30 {
-    font-size: 30px;
-    font-weight: 900;
+nav > a {
+    display: inline-block;
+    margin-right: 10px;
+    font-weight: 600;
+    color: white;
+    text-decoration: none;
+}
+
+nav > a:hover {
+    color: #808082;
+}
+
+a {
+    text-decoration: none;
+    color: white;
+}
+
+a:hover {
+    color: #808082;
+}
+
+.round-container {
+    background: var(--color-container);
+    border-radius: 20px;
+    padding: 20px;
+}
+
+.round-container-header {
+    font-size: 2em;
+    font-weight: bold;
+}
+
+.round-container-header-cut {
+    font-size: 2em;
+    font-weight: bold;
+}
+
+.round-container-dark {
+    background: #0f1017;
+}
+
+.round-container-dark-small {
+    background: #0f1017;
+    border-radius: 10px;
+    padding: 10px;
 }
 
 .loader {
     text-align: center;
     font-size: 30px;
-    color: #5f5f5f;
+    color: var(--color-green);
+}
+
+.flex-reverse {
+    flex-direction: row-reverse;
+}
+
+.round-container-dgreen {
+    padding: var(--pad-5-10);
+    background: #4e4e4e;
+    border-radius: 5px;
+}
+
+.round-container-dark-empty {
+    padding: var(--pad-5-10);
+}
+
+.cursor-click {
+    cursor: pointer;
+}
+
+.player-pic-cutout {
+    overflow: hidden;
+    border-radius: 100%;
+    width: 98px;
+    height: 98px;
+    border: 2px solid var(--col-player-name);
+}
+
+.player-pic-cutout img {
+    height: 130px;
+    width: 98px;
+    margin-top: -20px;
+}
+
+.txt-bold {
+    font-weight: 900;
+}
+
+.clear {
+    clear: both;
 }
