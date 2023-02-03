@@ -28,15 +28,14 @@ router.get('/page/:page', function (req, res, next) {
 
     axios.all([
         axios.get(`${req.app.locals.kcapp.api}/player`),
-        axios.get(`${req.app.locals.kcapp.api}/match`),
         axios.get(`${req.app.locals.kcapp.api}/office`),
         axios.get(`${req.app.locals.kcapp.api}/match/${start}/${limit}`)
-    ]).then(axios.spread((players, matches, offices, matchPage) => {
+    ]).then(axios.spread((players, offices, matchPage) => {
         res.marko(matchesTemplate, {
             matches: matchPage.data,
             players: players.data,
             offices: offices.data,
-            total_pages: Math.ceil(matches.data.length / limit),
+            total_pages: Math.ceil(matchPage.headers['x-total-count'] / limit),
             page_num: req.params.page
         });
     })).catch(error => {
