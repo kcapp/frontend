@@ -104,7 +104,7 @@ module.exports = {
     },
     showCheckoutGuideChange(event) {
         this.state.options.edited = true;
-        this.state.options.subtract_per_dart = event.target.checked;
+        this.state.options.show_checkout_guide = event.target.checked;
     },
     addPlayer(event) {
         if (!this.state.first_name) {
