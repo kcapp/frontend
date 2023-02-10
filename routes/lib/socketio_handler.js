@@ -294,7 +294,34 @@ module.exports = (io, app) => {
                                     axios.get(`${app.locals.kcapp.api}/statistics/global/fnc`)
                                 ]).then(axios.spread((leg, players, globalstat) => {
                                     nsp.emit('undo_visit', {});
-                                    nsp.emit('score_update', { leg: leg.data, players: players.data, globalstat: globalstat.data[0], is_undo: true });
+
+                                    // checks if the last visit was thrown by a bot
+                                    const was_last_player_bot = _.filter(players.data, (player) => { return player.player_id == leg.data.current_player_id })[0].player.is_bot;
+
+                                    nsp.emit('score_update', { leg: leg.data, players: players.data, globalstat: globalstat.data[0], is_undo: true, skip_bot_rethrow: was_last_player_bot });
+
+                                    // if a bot's last visit was removed, the player's last one also needs to be deleted
+                                    if (was_last_player_bot) {
+                                        axios.delete(`${app.locals.kcapp.api}/visit/${legId}/last`)
+                                            .then(() => {
+                                                axios.all([
+                                                    axios.get(`${app.locals.kcapp.api}/leg/${legId}`),
+                                                    axios.get(`${app.locals.kcapp.api}/leg/${legId}/players`),
+                                                    axios.get(`${app.locals.kcapp.api}/statistics/global/fnc`)
+                                                ]).then(axios.spread((leg, players, globalstat) => {
+                                                    nsp.emit('undo_visit', {});
+                                                    nsp.emit('score_update', { leg: leg.data, players: players.data, globalstat: globalstat.data[0], is_undo: true });
+                                                })).catch(error => {
+                                                    const message = `${error.message}(${error.response.data.trim()})`;
+                                                    debug(`[${legId}] Error when getting leg: ${message}`);
+                                                    nsp.emit('error', { message: error.message, code: error.code });
+                                                });
+                                            }).catch(error => {
+                                                const message = `${error.message}(${error.response.data.trim()})`;
+                                                debug(`[${legId}] Error when undoing visit: ${message}`);
+                                                nsp.emit('error', { message: message, code: error.code });
+                                            });
+                                    }
                                 })).catch(error => {
                                     const message = `${error.message}(${error.response.data.trim()})`;
                                     debug(`[${legId}] Error when getting leg: ${message}`);
