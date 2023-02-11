@@ -35,6 +35,7 @@ module.exports = {
             currentDart: 1,
             isSubmitted: true,
             isBusted: false,
+            isBot: player.player.is_bot,
             isSpectate: input.spectate
         }
     },

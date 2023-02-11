@@ -5,7 +5,8 @@ A preview of major changes can be found in the Wiki ([Latest Changes](https://gi
 
 #### Feature
 - Support multiple legs for Practice matches
-- PLayer options to disable automatic score deduction per dart, and to show/hide checkout guide
+- Player options to disable automatic score deduction per dart, and to show/hide checkout guide
+- Allow undoing of visits when playing against kcapp-bot
 
 #### Changed
 - More vocal announcements

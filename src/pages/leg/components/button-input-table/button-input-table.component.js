@@ -23,6 +23,10 @@ module.exports = {
     },
 
     onButtonPress(score, multiplier, isUndo) {
+        if (this.state.current.player.is_bot) {
+            // Don't allow adding darts for bot
+            return;
+        }
         this.state.currentDart = isUndo ? this.state.currentDart - 1 : this.state.currentDart + 1;
         this.emit('score-button-pressed', score, multiplier, isUndo);
     },
