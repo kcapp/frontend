@@ -39,7 +39,8 @@ exports.onScoreUpdate = (data, thiz) => {
 
         const isCurrentPlayer = component.state.player.player_id === leg.current_player_id;
         if (isCurrentPlayer) {
-            isLastVisitFishNChips = players[i === 0 ? players.length - 1 : i - 1].modifiers.is_fish_and_chips;
+            const previousPlayer = players[i === 0 ? players.length - 1 : i - 1];
+            isLastVisitFishNChips = !previousPlayer.player.is_bot && previousPlayer.modifiers.is_fish_and_chips;
             component.reset();
             component.state.jdcDart = null;
         } else {
@@ -60,7 +61,7 @@ exports.onScoreUpdate = (data, thiz) => {
 
     if (thiz.state.matchType == types.X01) {
         if (isLastVisitFishNChips && !data.is_undo) {
-            var msg = alertify.notify(getFishNChipsHTML(totalFishNChips - 1, globalFish - 1), 'fish-n-chips', 5, () => { });
+            let msg = alertify.notify(getFishNChipsHTML(totalFishNChips - 1, globalFish - 1), 'fish-n-chips', 5, () => { });
             setInterval(() => { msg.setContent(getFishNChipsHTML(totalFishNChips, globalFish)); }, 1000);
         }
     } else if (thiz.state.matchType == types.TIC_TAC_TOE) {
