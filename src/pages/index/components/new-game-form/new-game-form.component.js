@@ -104,6 +104,11 @@ module.exports = {
             var player = this.state.selected[this.state.selected.length - 1];
             this.removePlayer(null, { input: { player: player } });
             e.preventDefault();
+        } else if (e.key === 'PageUp') {
+            // We were in the middle of a match, so take us back
+            if (document.referrer && new RegExp("/legs/[0-9]+").test(document.referrer)) {
+                window.history.go(-1);
+            }
         }
     },
     onKeyPress(e) {
