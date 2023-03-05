@@ -42,18 +42,10 @@ $ {
           <tournament-overview-table tournament=input.tournament players=input.players statistics=input.statistics overview=group/>
         </div>
         <div role="tabpanel" id=`matches-${group[0].tournament_group.id}` class="tab-pane">
-          <matches-table players=input.players matches=input.matches[id] columns=["start_time", "status", "players", "results", "options"]/>
+          <matches-table players=input.players matches=state.matches[id] columns=["start_time", "status", "players", "results", "options"]/>
         </div>
         <div role="tabpanel" id=`unplayed-matches-${group[0].tournament_group.id}` class="tab-pane">
-          $ const unplayed = [];
-          $ for (let i = 0; i < input.matches[id].length; i++) {
-            var match = input.matches[id][i];
-            if (match.is_finished) {
-              continue;
-            }
-            unplayed.push(match);
-          }
-          <matches-table players=input.players matches=unplayed columns=["start_time", "status", "players", "results", "options"]/>
+          <matches-table players=input.players matches=state.unplayed[id] columns=["start_time", "status", "players", "results", "options"]/>
         </div>
       </div>
     </for>

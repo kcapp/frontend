@@ -2,8 +2,18 @@ const _ = require("underscore");
 
 module.exports = {
     onCreate(input) {
+        const matches = {};
+        const unplayed = {};
+
+        for (const key in input.matches) {
+            const m = input.matches[key];
+            matches[key] = m.filter(match => !match.is_bye);
+            unplayed[key] = m.filter(match => !match.is_finished || match.is_bye);
+        }
         this.state = {
-            hasStatistics: !_.isEmpty(input.statistics.best_three_dart_avg)
+            hasStatistics: !_.isEmpty(input.statistics.best_three_dart_avg),
+            matches: matches,
+            unplayed: unplayed
         }
     },
 

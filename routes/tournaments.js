@@ -242,7 +242,7 @@ router.get('/:id', function (req, res, next) {
                 axios.get(`${req.app.locals.kcapp.api}/tournament/${tournament.playoffs_tournament_id}/matches`),
                 axios.get(`${req.app.locals.kcapp.api}/tournament/${tournament.playoffs_tournament_id}/metadata`)
             ]).then(axios.spread((matchesResponse, metadataResponse) => {
-                bracket.generateNew(metadataResponse.data, matchesResponse.data, players, '', (err, brackets) => {
+                bracket.generateLast16(metadataResponse.data, matchesResponse.data, players, '', (err, brackets) => {
                     res.marko(tournamentTemplate, {
                         brackets: brackets,
                         tournament: tournament,
@@ -257,7 +257,7 @@ router.get('/:id', function (req, res, next) {
                 next(error);
             });
         } else {
-            bracket.generateNew(metadata, matches, players, '', (err, brackets) => {
+            bracket.generateLast16(metadata, matches, players, '', (err, brackets) => {
                 res.marko(tournamentTemplate, {
                     brackets: brackets,
                     tournament: tournament,
