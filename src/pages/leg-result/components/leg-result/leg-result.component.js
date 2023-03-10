@@ -44,15 +44,14 @@ module.exports = {
     onMount() {
         document.addEventListener("keydown", this.onKeyDown.bind(this), false);
 
-        var legPlayers = this.state.legPlayers;
-        var players = this.state.players;
-        var leg = this.state.leg;
-        var match = this.input.match;
-        var visits = leg.visits;
+        let legPlayers = this.state.legPlayers;
+        let players = this.state.players;
+        let leg = this.state.leg;
+        let visits = leg.visits;
 
-        var chartMaxValue = this.state.matchType === types.X01 || this.state.matchType === types.X01HANDICAP ? leg.starting_score : 0;
-        var labels = [];
-        var values = { }
+        let chartMaxValue = this.state.matchType === types.X01 || this.state.matchType === types.X01HANDICAP ? leg.starting_score : 0;
+        let labels = [];
+        let values = { }
         for (let i = 0; i < legPlayers.length; i++) {
             const player = legPlayers[i];
 
@@ -81,18 +80,15 @@ module.exports = {
             else {
                 if (this.state.matchType === types.SHOOTOUT || this.state.matchType === types.DARTS_AT_X || this.state.matchType === types.CRICKET ||
                     this.state.matchType === types.AROUND_THE_CLOCK || this.state.matchType === types.AROUND_THE_WORLD || this.state.matchType === types.SHANGHAI ||
-                    this.state.matchType === types.TIC_TAC_TOE || this.state.matchType === types.BERMUDA_TRIANGLE || this.state.matchType === types.JDC_PRACTICE) {
+                    this.state.matchType === types.TIC_TAC_TOE || this.state.matchType === types.BERMUDA_TRIANGLE || this.state.matchType === types.JDC_PRACTICE ||
+                    this.state.matchType === types.KNOCKOUT) {
                     current = current + visit.score;
                     values[visit.player_id].push(current);
                     if (current > chartMaxValue) {
                         chartMaxValue = current;
                     }
                 } else if (this.state.matchType === types.GOTCHA) {
-                    if (visit.score === 0) {
-                        current = 0
-                    } else {
-                        current += visit.score;
-                    }
+                    current = visit.scores[visit.player_id];
                     values[visit.player_id].push(current);
                 } else if (this.state.matchType === types.KILL_BULL) {
                     if (visit.score === 0) {

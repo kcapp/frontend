@@ -51,7 +51,7 @@ $ let isOfficial = state.match.tournament_id || false;
         <for|statistic| of=input.statistics>
           <th>
             <div class="block-container-header">
-              <a href=`/players/${statistic.player_id}/statistics`>${statistic.player_name}</a>
+              <a style='white-space: nowrap' href=`/players/${statistic.player_id}/statistics`>${statistic.player_name}</a>
             </div>
           </th>
         </for>

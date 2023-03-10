@@ -424,6 +424,10 @@ module.exports = {
             return;
         }
         const component = this.findActive(this.getComponents('players'));
+        if (component.state.isBot) {
+            // Don't allow adding darts for bot
+            return;
+        }
 
         let text = '';
         const currentValue = component.getCurrentValue();

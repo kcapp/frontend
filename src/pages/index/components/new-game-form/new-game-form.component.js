@@ -104,6 +104,11 @@ module.exports = {
             var player = this.state.selected[this.state.selected.length - 1];
             this.removePlayer(null, { input: { player: player } });
             e.preventDefault();
+        } else if (e.key === 'PageUp') {
+            // We were in the middle of a match, so take us back
+            if (document.referrer && new RegExp("/legs/[0-9]+").test(document.referrer)) {
+                window.history.go(-1);
+            }
         }
     },
     onKeyPress(e) {
@@ -244,12 +249,12 @@ module.exports = {
                 scoreComponent.updateOptions(types.SCORES_KILL_BULL);
                 scoreComponent.state.index = 200;
                 scoreComponent.state.enabled = true;
-            } else if (this.state.options.starting_score === 0) {
-                scoreComponent.state.index = scoreComponent.state.defaultValue;
-                scoreComponent.state.enabled = true;
             } else if (this.state.options.game_type === types.GOTCHA) {
                 scoreComponent.updateOptions(types.SCORES_GOTCHA);
                 scoreComponent.state.index = 200;
+                scoreComponent.state.enabled = true;
+            } else if (this.state.options.starting_score === 0) {
+                scoreComponent.state.index = scoreComponent.state.defaultValue;
                 scoreComponent.state.enabled = true;
             } else {
                 scoreComponent.state.index = scoreComponent.state.defaultValue;

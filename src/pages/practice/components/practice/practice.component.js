@@ -18,7 +18,7 @@ module.exports = {
             officeId: 0,
             venues: input.venues,
             options: {
-                starting_score: 301,
+                starting_score: 501,
                 game_type: 1,
                 game_mode: 1,
                 stake: null,
@@ -163,7 +163,7 @@ module.exports = {
             return;
         }
 
-        var officeId = this.state.officeId;
+        let officeId = this.state.officeId;
         if (officeId <= 0) {
             if (officeId == 0 && this.state.options.venue_id && this.state.options.venue_id !== -1) {
                 officeId = this.input.venues[this.state.options.venue_id].office_id;
@@ -172,18 +172,24 @@ module.exports = {
             }
         }
 
-        var bot = this.state.bots[0];
+        const bot = this.state.bots[0];
 
-        var botPlayerConfig = {};
+        const botPlayerConfig = {};
         if (this.state.bot.type == this.state.skill.TYPE_MOCK) {
-            botPlayerConfig[bot.id] = { player_id: this.state.bot.mock_player_id, skill_level: 0 };
+            botPlayerConfig[bot.id] = {
+                player_id: this.state.bot.mock_player_id,
+                skill_level: 0
+            }
         } else {
-            botPlayerConfig[bot.id] = { player_id: null, skill_level: this.state.bot.skill };
+            botPlayerConfig[bot.id] = {
+                player_id: null,
+                skill_level: this.state.bot.skill
+            }
         }
-        var players = this.state.selected.map(player => player.id);
+        const players = this.state.selected.map(player => player.id);
         players.push(bot.id);
 
-        var body = {
+        const body = {
             starting_score: this.state.options.starting_score,
             match_type: this.state.options.game_type,
             match_mode: this.state.options.game_mode,
@@ -201,23 +207,36 @@ module.exports = {
                 localStorage.set('venue_id', this.state.options.venue_id);
                 location.href = 'legs/' + response.data.current_leg_id
             }).catch(error => {
-                alert("Error starting match. See log for details");
+                alert(`Error starting pratice match. ${error.response.data.message}\nSee log for details`);
                 console.log(error);
             });
         if (event) {
             event.preventDefault();
         }
     },
-    changeOffice(officeId) {
+    changeOffice(officeId, office) {
         this.state.officeId = officeId;
 
         if (officeId == 0) {
-            this.state.players = this.input.players;
+            this.state.players =  _.reject(this.input.players, (player) => {
+                return player.is_bot;
+            });
             this.state.venues = this.input.venues;
         } else {
-            this.state.players = _.reject(this.input.players, (player) => { return player.office_id != officeId || player.is_bot;  });
-            this.state.venues = _.reject(this.input.venues, (venue) => { return venue.office_id != officeId; });
+            if (office && office.is_global) {
+                this.state.players =  _.reject(this.input.players, (player) => {
+                    return player.is_bot;
+                });
+            } else {
+                this.state.players = _.reject(this.input.players, (player) => {
+                    return player.office_id != officeId || player.is_bot;
+                });
+            }
+            this.state.venues = _.reject(this.input.venues, (venue) => {
+                return venue.office_id != officeId;
+            });
         }
+        this.getComponent('venue').updateOptions(this.state.venues);
 
         // Remove any players already selected
         this.state.players = _.reject(this.state.players, (player) => {
