@@ -1,7 +1,7 @@
 # Changelog
 
 A preview of major changes can be found in the Wiki ([Latest Changes](https://github.com/kcapp/frontend/wiki/Latest_Changes))
-## [2.5.0] - TBD
+## [2.5.0] - 2023-03-10
 
 #### Feature
 - Support multiple legs for Practice matches
@@ -176,7 +176,7 @@ A preview of major changes can be found in the Wiki ([Latest Changes](https://gi
 - Multiple score entry methods
     - Including [Unicorn Smartboard](https://github.com/kcapp/smartboard)
 
-[2.5.0]: https://github.com/kcapp/frontend/compare/v2.4.0...develop
+[2.5.0]: https://github.com/kcapp/frontend/compare/v2.4.0...v2.5.0
 [2.4.0]: https://github.com/kcapp/frontend/compare/v2.3.0...v2.4.0
 [2.3.0]: https://github.com/kcapp/frontend/compare/v2.2.0...v2.3.0
 [2.2.0]: https://github.com/kcapp/frontend/compare/v2.1.0...v2.2.0
