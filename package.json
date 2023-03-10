@@ -26,7 +26,7 @@
         "express": "^5.0.0-alpha.8",
         "kcapp-bot": "github:kcapp/bot#9acc46ba79a00f41f75d06b61336df7e1aa93aed",
         "kcapp-sio-client": "github:kcapp/kcapp-sio-client",
-        "lasso": "^3.4.3",
+        "lasso": "^4.0.2",
         "lasso-less": "^4.0.1",
         "lasso-marko": "^3.1.0",
         "less-middleware": "^3.1.0",
