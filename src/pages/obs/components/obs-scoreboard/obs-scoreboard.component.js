@@ -19,10 +19,20 @@ module.exports = {
     },
 
     onMount() {
+        let params = (new URL(window.location)).searchParams;
+        let officeId = params.get("officeId");
+
         const activeSocket = io.connect(`${window.location.origin}/active`);
         activeSocket.on('warmup_started', (data) => {
             if (data.match.tournament_id !== null) {
-                location.href = `/matches/${data.match.id}/obs`;
+                if (officeId) {
+                    // Check if we are looking only at specific ?officeId=X
+                    if (data.match.office_id && parseInt(officeId) === data.match.office_id) {
+                        location.href = `/matches/${data.match.id}/obs?officeId=${officeId}`;
+                    }
+                } else {
+                    location.href = `/matches/${data.match.id}/obs`;
+                }
             }
         });
 
