@@ -1,6 +1,10 @@
 # Changelog
 
 A preview of major changes can be found in the Wiki ([Latest Changes](https://github.com/kcapp/frontend/wiki/Latest_Changes))
+## [2.6.0] - TBD
+#### Fixed
+- Bug where vocal announcement for Cricket would say "No score" instead of marks
+
 ## [2.5.0] - 2023-03-10
 
 #### Feature
@@ -16,7 +20,6 @@ A preview of major changes can be found in the Wiki ([Latest Changes](https://gi
 - Issue with Mock-Player Bots (Contributed by @lluni)
 - Bug where Bot would sometime get stuck in infinite loop on certain scores
 - Bug where starting score for Gotcha would be incorrect
-- Bug where vocal announcement for Cricket would say "No score" instead of marks
 
 ## [2.4.0] - 2022-10-21
 #### Feature
@@ -176,6 +179,7 @@ A preview of major changes can be found in the Wiki ([Latest Changes](https://gi
 - Multiple score entry methods
     - Including [Unicorn Smartboard](https://github.com/kcapp/smartboard)
 
+[2.6.0]: https://github.com/kcapp/frontend/compare/v2.5.0...develop
 [2.5.0]: https://github.com/kcapp/frontend/compare/v2.4.0...v2.5.0
 [2.4.0]: https://github.com/kcapp/frontend/compare/v2.3.0...v2.4.0
 [2.3.0]: https://github.com/kcapp/frontend/compare/v2.2.0...v2.3.0
