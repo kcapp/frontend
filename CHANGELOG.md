@@ -16,7 +16,7 @@ A preview of major changes can be found in the Wiki ([Latest Changes](https://gi
 - Issue with Mock-Player Bots (Contributed by @lluni)
 - Bug where Bot would sometime get stuck in infinite loop on certain scores
 - Bug where starting score for Gotcha would be incorrect
-
+- Bug where vocal announcement for Cricket would say "No score" instead of marks
 
 ## [2.4.0] - 2022-10-21
 #### Feature
