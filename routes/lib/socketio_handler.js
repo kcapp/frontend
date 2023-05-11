@@ -350,15 +350,15 @@ module.exports = (io, app) => {
                     const score = visit.score;
                     const audios = [];
                     let text = `${score}`;
-                    if (visit.is_bust || score === 0) {
-                        audios.push(AUDIO_SCORES.random('Noscore'));
-                    } else if (matchType === types.SCAM && visit.is_stopper) {
+                    if (matchType === types.SCAM && visit.is_stopper) {
                         audios.push(AUDIO_MARKS.random(`${visit.marks}marks`));
                     } else if (matchType === types.CRICKET) {
                         audios.push(AUDIO_MARKS.random(`${visit.marks}marks`));
                         if (visit.score > 0) {
                             audios.push(AUDIO_SCORES.random(text));
                         }
+                    } else if (visit.is_bust || score === 0) {
+                        audios.push(AUDIO_SCORES.random('Noscore'));
                     } else {
                         audios.push(AUDIO_SCORES.random(text));
                     }
