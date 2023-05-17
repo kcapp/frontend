@@ -5,6 +5,7 @@ A preview of major changes can be found in the Wiki ([Latest Changes](https://gi
 ## [2.6.0] - TBD
 #### Feature
 - New query parameter `officeId=<id>` for `/obs` view, to only forward on matches in a given office
+- Practice against `first time`, `very easy`, `challenging` and `mvg` bots
 
 #### Fixed
 - Bug where vocal announcement for Cricket would say "No score" instead of marks
