@@ -6,6 +6,7 @@ module.exports = {
     },
     onButtonPress(score, multiplier, isUndo) {
         this.emit('button-press', score, multiplier, isUndo);
+        this.state.multiplier = 1;
     },
     onMultiplierButtonPress(multiplier) {
         if (this.state.multiplier === multiplier) {
