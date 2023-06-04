@@ -6,6 +6,7 @@ A preview of major changes can be found in the Wiki ([Latest Changes](https://gi
 #### Feature
 - New query parameter `officeId=<id>` for `/obs` view, to only forward on matches in a given office
 - Practice against `first time`, `very easy`, `challenging` and `mvg` bots
+- New button for swapping order if button input is enabled
 
 #### Changed
 - Always reset multipler to `1` on compact button entry
