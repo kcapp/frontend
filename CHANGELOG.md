@@ -2,6 +2,9 @@
 
 A preview of major changes can be found in the Wiki ([Latest Changes](https://github.com/kcapp/frontend/wiki/Latest_Changes))
 
+## [2.7.0] - TBD
+
+
 ## [2.6.0] - 2023-06-30
 #### Feature
 - New query parameter `officeId=<id>` for `/obs` view, to only forward on matches in a given office
@@ -190,6 +193,7 @@ A preview of major changes can be found in the Wiki ([Latest Changes](https://gi
 - Multiple score entry methods
     - Including [Unicorn Smartboard](https://github.com/kcapp/smartboard)
 
+[2.7.0]: https://github.com/kcapp/frontend/compare/v2.6.0...develop
 [2.6.0]: https://github.com/kcapp/frontend/compare/v2.5.0...v2.6.0
 [2.5.0]: https://github.com/kcapp/frontend/compare/v2.4.0...v2.5.0
 [2.4.0]: https://github.com/kcapp/frontend/compare/v2.3.0...v2.4.0
