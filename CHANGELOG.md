@@ -3,7 +3,9 @@
 A preview of major changes can be found in the Wiki ([Latest Changes](https://github.com/kcapp/frontend/wiki/Latest_Changes))
 
 ## [2.7.0] - TBD
-
+#### Changed
+- Updated to use `Node.js v18`
+- Updated dependencies to newer versions
 
 ## [2.6.0] - 2023-06-30
 #### Feature

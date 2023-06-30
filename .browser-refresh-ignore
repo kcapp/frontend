@@ -8,3 +8,4 @@ log/
 CHANGELOG.md
 README.md
 Dockerfile
+package-lock.json
