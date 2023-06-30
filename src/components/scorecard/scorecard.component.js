@@ -228,7 +228,7 @@ module.exports = {
                 // Don't show alerts for spectators
                 return;
             }
-            alertify.alert('Invalid Value', () => { });
+            alertify.notify(`Invalid Value: ${newValue}`, 'warning');
             return;
         }
         dart.setDart(newValue, multiplier);

@@ -24,7 +24,7 @@
         "debug": "^4.3.2",
         "dissolve": "^0.3.3",
         "express": "^5.0.0-alpha.8",
-        "kcapp-bot": "github:kcapp/bot#9acc46ba79a00f41f75d06b61336df7e1aa93aed",
+        "kcapp-bot": "github:kcapp/bot#f6e02174c98c0e3eb6ae02291d4aea6c0688b46f",
         "kcapp-sio-client": "github:kcapp/kcapp-sio-client",
         "lasso": "^3.4.3",
         "lasso-less": "^4.0.1",

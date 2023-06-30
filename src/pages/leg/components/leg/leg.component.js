@@ -37,8 +37,11 @@ module.exports = {
     },
 
     onMount() {
-        document.addEventListener("keydown", this.onKeyDown.bind(this), false);
-        document.addEventListener("keypress", this.onKeyPress.bind(this), false);
+        document.addEventListener("keydown",  _.debounce(function(e) {
+            // Some Android tablets do a weird thing where they emit mulitple events, so debounce it here,
+            // to ensure we only send a single one
+            this.onKeyDown(e);
+        }.bind(this), 10), false);
 
         // Setup socket endpoints
         const socket = io.connect(`${window.location.origin}/legs/${this.state.leg.id}`);
@@ -174,9 +177,9 @@ module.exports = {
     },
 
     onScoreButtonPressed(score, multiplier, isUndo) {
-        var component = this.findActive(this.getComponents('players'));
+        const component = this.findActive(this.getComponents('players'));
 
-        var dartsThrown = component.getDartsThrown();
+        const dartsThrown = component.getDartsThrown();
         if (isUndo) {
             component.removeLast();
         } else {
@@ -336,36 +339,8 @@ module.exports = {
 
             e.preventDefault();
         } else if (e.key === 'Tab') {
-            const component = this.findActive(this.getComponents('players'));
-            if (this.state.leg.visits.length > 0 || component.state.currentDart !== 1) {
-                // Don't allow switching players when match has started
-                e.preventDefault();
-                return;
-            }
-
-            if (this.state.players.length > 2) {
-                // If more than two players just show the change-order modal
-                document.getElementById('change-player-order').click();
-                e.preventDefault();
-                return;
-            }
-
-            const order = {};
-            const players = this.state.players.reverse();
-            for (let i = 0; i < players.length; i++) {
-                order[players[i].player_id] = i + 1;
-            }
-            axios.put(`${window.location.origin}/legs/${this.state.leg.id}/order`, order)
-                .then(response => {
-                    const leg = response.data.leg;
-                    this.state.leg = leg;
-                    const players = response.data.players;
-                    this.state.players = players;
-                }).catch(error => {
-                    alert('Error changing player order. Please reload');
-                    location.reload();
-                });
             e.preventDefault();
+            this.onSwapPlayers();
         } else if (e.key === 'F3') {
             e.preventDefault();
 
@@ -416,6 +391,8 @@ module.exports = {
                 this.state.submitting = component.confirmThrow(false);
             }
         }
+        // Forward to normal key handler
+        this.onKeyPress(e);
     },
 
     onKeyPress(e) {
@@ -505,7 +482,36 @@ module.exports = {
         this.state.socket.emit('reconnect_smartboard', { leg: this.input.leg, match: this.input.match });
     },
 
+    onSwapPlayers() {
+        const component = this.findActive(this.getComponents('players'));
+        if (this.state.leg.visits.length > 0 || component.state.currentDart !== 1) {
+            // Don't allow switching players when match has started
+            return;
+        }
+
+        if (this.state.players.length > 2) {
+            // If more than two players just show the change-order modal
+            document.getElementById('change-player-order').click();
+            return;
+        }
+        const order = {};
+        const players = this.state.players.reverse();
+        for (let i = 0; i < players.length; i++) {
+            order[players[i].player_id] = i + 1;
+        }
+        axios.put(`${window.location.origin}/legs/${this.state.leg.id}/order`, order)
+            .then(response => {
+                const leg = response.data.leg;
+                this.state.leg = leg;
+                const players = response.data.players;
+                this.state.players = players;
+            }).catch(error => {
+                alert('Error changing player order. Please reload');
+                location.reload();
+            });
+    },
+
     onToggleCamera(enabled) {
         this.state.isPlayerBoardCam = enabled;
-    }
+    },
 };
