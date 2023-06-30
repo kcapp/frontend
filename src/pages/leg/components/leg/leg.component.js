@@ -37,8 +37,11 @@ module.exports = {
     },
 
     onMount() {
-        document.addEventListener("keydown", this.onKeyDown.bind(this), false);
-        document.addEventListener("keypress", this.onKeyPress.bind(this), false);
+        document.addEventListener("keydown",  _.debounce(function(e) {
+            // Some Android tablets do a weird thing where they emit mulitple events, so debounce it here,
+            // to ensure we only send a single one
+            this.onKeyDown(e);
+        }.bind(this), 10), false);
 
         // Setup socket endpoints
         const socket = io.connect(`${window.location.origin}/legs/${this.state.leg.id}`);
@@ -388,6 +391,8 @@ module.exports = {
                 this.state.submitting = component.confirmThrow(false);
             }
         }
+        // Forward to normal key handler
+        this.onKeyPress(e);
     },
 
     onKeyPress(e) {

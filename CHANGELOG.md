@@ -7,9 +7,11 @@ A preview of major changes can be found in the Wiki ([Latest Changes](https://gi
 - New query parameter `officeId=<id>` for `/obs` view, to only forward on matches in a given office
 - Practice against `first time`, `very easy`, `challenging` and `mvg` bots
 - New button for swapping order if button input is enabled
+- Better handling for bluetooth keyboards on Android
 
 #### Changed
 - Always reset multipler to `1` on compact button entry
+- Switched the `Invalid Score` alert to a simple notification
 
 #### Fixed
 - Bug where vocal announcement for Cricket would say "No score" instead of marks
