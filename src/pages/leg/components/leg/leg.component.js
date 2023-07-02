@@ -113,6 +113,10 @@ module.exports = {
                         const scorecards = this.getComponents('players');
                         scorecards.forEach(scorecard => scorecard.reset());
 
+                        if (this.state.matchType == types.TIC_TAC_TOE) {
+                            this.getComponent("tic-tac-toe-board").resetBoard(leg.parameters);
+                        }
+
                         const currentPlayer = this.input.players[leg.current_player_id];
                         this.state.announcedStart = false;
                         this.state.socket.emit('announce', { leg_num: match.current_leg_num, player: currentPlayer, type: 'match_start' });
@@ -120,7 +124,7 @@ module.exports = {
                         // Update the URL of current page, so that if a refresh is triggered we go to the current leg, and not the finished one
                         window.history.pushState(`leg${leg.id}`, "", `/legs/${leg.id}`);
                     })).catch(error => {
-                        alert("error");
+                        alert(`Error when refreshing leg, please reload the page`);
                         console.log(JSON.stringify(error));
                     });
                 }

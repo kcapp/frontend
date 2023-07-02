@@ -4,7 +4,7 @@ exports.removeLast = function(dart, external) {
     if (player.is_stopper && dart.getMultiplier() === 1) {
         player.hits[dart.getScore()]['1'] -= 1;
     } else if (player.is_scorer) {
-        let stopper = getStopper(this.state.players);
+        let stopper = getStopper(this.input.players);
         if (!stopper.hits[dart.getScore()]) {
             let score = dart.getValue();
             player.current_score -= score;
@@ -62,7 +62,7 @@ exports.confirmThrow = function (external) {
             }
         }
     } else if (player.is_scorer) {
-        let stopper = getStopper(this.state.players);
+        let stopper = getStopper(this.input.players);
         // Only allow hits if other player has not stopped the number
         if (!stopper.hits[dart.getScore()] || !stopper.hits[dart.getScore()]['1']) {
             let score = dart.getValue();
@@ -72,7 +72,7 @@ exports.confirmThrow = function (external) {
         allClosed = false;
     }
 
-    const isCheckout = module.exports.isCheckout(player, this.state.players);
+    const isCheckout = module.exports.isCheckout(player, this.input.players);
     if (isCheckout) {
         submitting = true;
     }

@@ -55,7 +55,7 @@ exports.confirmThrow = function (external) {
 
     this.emit('score-change', scored, this.state.player.player_id);
 
-    const isCheckout = module.exports.isCheckout(this.state.players);
+    const isCheckout = module.exports.isCheckout(this.input.players);
     if (isCheckout) {
         submitting = true;
     }

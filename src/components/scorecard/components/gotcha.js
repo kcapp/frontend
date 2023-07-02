@@ -5,7 +5,7 @@ exports.removeLast = function(dart, external) {
     this.emit('score-change', this.state.player.current_score, this.state.player.player_id);
 
     // Reset other players back to their old score
-    const players = this.state.players;
+    const players = this.input.players;
     for (let i = 0; i < players.length; i++) {
         const player = players[i];
         if (player.player_id === this.state.player.player_id) {
@@ -47,7 +47,7 @@ exports.confirmThrow = function (external) {
     this.state.isSubmitted = true;
 
     this.state.player.current_score += dart.getValue();
-    const players = this.state.players;
+    const players = this.input.players;
     for (let i = 0; i < players.length; i++) {
         const player = players[i];
         if (player.player_id === this.state.player.player_id) {

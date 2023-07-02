@@ -25,7 +25,6 @@ module.exports = {
         const player = input.player;
         this.state = {
             uuid: input.uuid,
-            players: input.players,
             leg: input.leg,
             player: player,
             type: input.type,
