@@ -83,7 +83,15 @@ module.exports = {
         socket.on('leg_finished', (data) => {
             let match = data.match;
 
+            // Sometimes the say_finish event isn't sent (Browser isn't play audio, iOS, etc),
+            // which prevents us from moving to the next leg, so create a global timeout here as well
+            const sayWait = setTimeout(nextLeg.bind(this), 6000);
             socket.once('say_finish', () => {
+                clearTimeout(sayWait);
+                nextLeg.bind(this)();
+            });
+
+            function nextLeg() {
                 const isController = localStorage.get('controller');
                 if (match.is_finished) {
                     location.href = isController ? '/controller' : `${window.location.origin}/matches/${match.id}/result`;
@@ -116,7 +124,7 @@ module.exports = {
                         console.log(JSON.stringify(error));
                     });
                 }
-            });
+            }
         });
         socket.on('error', this.onError.bind(this));
         return socket;
