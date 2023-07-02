@@ -211,7 +211,8 @@ function renderLegView(req, res, next, isExperimental, isController) {
                     leg_players: legPlayers,
                     global_statistics: globalStatistics.data,
                     experimental: isExperimental,
-                    controller: isController
+                    controller: isController,
+                    locals: req.app.locals
                 });
             }).catch(error => {
                 debug(`Error when getting match: ${error}`);
