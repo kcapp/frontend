@@ -37,38 +37,14 @@ module.exports = {
     },
 
     onMount() {
+        console.log(this.input.locals);
         document.addEventListener("keydown",  _.debounce(function(e) {
             // Some Android tablets do a weird thing where they emit mulitple events, so debounce it here,
             // to ensure we only send a single one
             this.onKeyDown(e);
         }.bind(this), 10), false);
 
-        // Setup socket endpoints
-        const socket = io.connect(`${window.location.origin}/legs/${this.state.leg.id}`);
-        socket.on('score_update', this.onScoreUpdate.bind(this));
-        socket.on('possible_throw', this.onPossibleThrowEvent.bind(this));
-        socket.on('say', this.onSay.bind(this));
-        socket.on('announce', io.onAnnounce.bind(this));
-        socket.on('leg_finished', (data) => {
-            socket.on('say_finish', () => {
-                // Wait for announcement to finish before moving on
-                const match = data.match;
-                const isController = localStorage.get('controller');
-                if (match.is_finished) {
-                    if (isController) {
-                        // If this is a controller, forward back to start page
-                        location.href = '/controller';
-                    } else {
-                        location.href = `${window.location.origin}/matches/${match.id}/result`;
-                    }
-                } else {
-                    const base = `${window.location.origin}/legs/${match.current_leg_id}`;
-                    location.href = isController ? `${base}/controller` : `${base}`;
-                }
-            });
-        });
-        socket.on('error', this.onError.bind(this));
-        this.state.socket = socket;
+        this.state.socket = this.setupSio(this.state.leg.id);
         this.state.audioAnnouncer = new Audio();
 
         // If this is an official match, which has not had any darts thrown, and was not updated in the last two minutes
@@ -80,7 +56,7 @@ module.exports = {
             if (this.input.leg.visits.length === 0) {
                 const currentPlayer = this.input.players[this.input.leg.current_player_id];
                 setTimeout(() => {
-                    socket.emit('announce', { leg_num: this.input.match.current_leg_num, player: currentPlayer, type: 'match_start' });
+                    this.state.socket.emit('announce', { leg_num: this.input.match.current_leg_num, player: currentPlayer, type: 'match_start' });
                 }, 900);
             }
         }
@@ -96,6 +72,62 @@ module.exports = {
                 location.reload();
             }
         });
+    },
+
+    setupSio(legId) {
+        const socket = io.connect(`${window.location.origin}/legs/${legId}`);
+        socket.on('score_update', this.onScoreUpdate.bind(this));
+        socket.on('possible_throw', this.onPossibleThrowEvent.bind(this));
+        socket.on('say', this.onSay.bind(this));
+        socket.on('announce', io.onAnnounce.bind(this));
+        socket.on('leg_finished', (data) => {
+            let match = data.match;
+
+            // Sometimes the say_finish event isn't sent (Browser isn't play audio, iOS, etc),
+            // which prevents us from moving to the next leg, so create a global timeout here as well
+            const sayWait = setTimeout(nextLeg.bind(this), 6000);
+            socket.once('say_finish', () => {
+                clearTimeout(sayWait);
+                nextLeg.bind(this)();
+            });
+
+            function nextLeg() {
+                const isController = localStorage.get('controller');
+                if (match.is_finished) {
+                    location.href = isController ? '/controller' : `${window.location.origin}/matches/${match.id}/result`;
+                } else {
+                    axios.all([
+                        axios.get(`${window.location.protocol}//${window.location.hostname}${this.input.locals.kcapp.api_path}/leg/${match.current_leg_id}`),
+                        axios.get(`${window.location.protocol}//${window.location.hostname}${this.input.locals.kcapp.api_path}/leg/${match.current_leg_id}/players`)
+                    ]).then(axios.spread((legData, playersData) => {
+                        const leg = legData.data;
+                        const players  = playersData.data;
+
+                        this.state.leg = leg;
+                        this.state.players = players;
+
+                        this.state.socket.disconnect();
+                        this.state.socket = this.setupSio(leg.id);
+
+                        // Reset all player scorecards
+                        const scorecards = this.getComponents('players');
+                        scorecards.forEach(scorecard => scorecard.reset());
+
+                        const currentPlayer = this.input.players[leg.current_player_id];
+                        this.state.announcedStart = false;
+                        this.state.socket.emit('announce', { leg_num: match.current_leg_num, player: currentPlayer, type: 'match_start' });
+
+                        // Update the URL of current page, so that if a refresh is triggered we go to the current leg, and not the finished one
+                        window.history.pushState(`leg${leg.id}`, "", `/legs/${leg.id}`);
+                    })).catch(error => {
+                        alert("error");
+                        console.log(JSON.stringify(error));
+                    });
+                }
+            }
+        });
+        socket.on('error', this.onError.bind(this));
+        return socket;
     },
 
     onAnnounce(data) {

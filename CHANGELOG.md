@@ -3,6 +3,9 @@
 A preview of major changes can be found in the Wiki ([Latest Changes](https://github.com/kcapp/frontend/wiki/Latest_Changes))
 
 ## [2.7.0] - TBD
+#### Feature
+- Automatically start next leg without needing to reload the page to improve load time, and get back to throwing quicker
+
 #### Changed
 - Updated to use `Node.js v18`
 - Updated dependencies to newer versions
