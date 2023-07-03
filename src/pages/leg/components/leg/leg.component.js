@@ -438,7 +438,7 @@ module.exports = {
             return;
         }
         const component = this.findActive(this.getComponents('players'));
-        if (component.state.isBot) {
+        if (component.state.player.player.is_bot) {
             // Don't allow adding darts for bot
             return;
         }
