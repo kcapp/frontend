@@ -116,6 +116,8 @@ module.exports = {
                         if (this.state.matchType == types.TIC_TAC_TOE) {
                             this.getComponent("tic-tac-toe-board").resetBoard(leg.parameters);
                         }
+                        // MatchType might have changed, so make sure we update it
+                        this.state.matchType = leg.leg_type.id || match.match_type.id;
 
                         const currentPlayer = this.input.players[leg.current_player_id];
                         this.state.announcedStart = false;

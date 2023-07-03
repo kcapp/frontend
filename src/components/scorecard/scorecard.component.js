@@ -27,7 +27,7 @@ module.exports = {
             uuid: input.uuid,
             leg: input.leg,
             player: player,
-            type: input.type,
+            type: input.leg.leg_type.id,
             isCurrentPlayer: player.is_current_player,
             submitClass: null,
             totalScore: 0,
@@ -48,6 +48,7 @@ module.exports = {
         this.state.isCurrentPlayer = input.player.is_current_player;
         this.state.player = input.player;
         this.state.leg = input.leg;
+        this.state.type = input.leg.leg_type.id;
     },
 
     reset() {
