@@ -24,7 +24,6 @@ module.exports = {
             roundNumber: input.leg.round,
             venueConfig: venue && venue.config ? venue.config : {},
             submitting: false,
-            globalStatistics: input.global_statistics,
             matchType: input.leg.leg_type.id || input.match.match_type.id,
             socket: {},
             audioAnnouncer: undefined,
