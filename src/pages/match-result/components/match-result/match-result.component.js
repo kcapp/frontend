@@ -21,6 +21,14 @@ module.exports = {
     },
     onMount() {
         document.addEventListener("keydown", this.onKeyDown.bind(this), false);
+
+        const finishedParam = new URLSearchParams(window.location.search).get('finished');
+        if (finishedParam) {
+            // Move back to index page after 2 minutes
+            setTimeout(() => {
+                location.href = '/';
+            }, 120*1000);
+        }
     },
     onKeyDown(e) {
         switch (e.key) {

@@ -5,6 +5,7 @@ A preview of major changes can be found in the Wiki ([Latest Changes](https://gi
 ## [2.7.0] - TBD
 #### Feature
 - Automatically start next leg without needing to reload the page to improve load time, and get back to throwing quicker
+- Forward clients back to main page from match result after 2 minutes
 
 #### Changed
 - Updated to use `Node.js v18`

@@ -93,7 +93,7 @@ module.exports = {
             function nextLeg() {
                 const isController = localStorage.get('controller');
                 if (match.is_finished) {
-                    location.href = isController ? '/controller' : `${window.location.origin}/matches/${match.id}/result`;
+                    location.href = isController ? '/controller' : `${window.location.origin}/matches/${match.id}/result?finished=true`;
                 } else {
                     axios.all([
                         axios.get(`${window.location.protocol}//${window.location.hostname}${this.input.locals.kcapp.api_path}/leg/${match.current_leg_id}`),
