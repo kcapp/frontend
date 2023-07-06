@@ -134,8 +134,8 @@ module.exports = {
                 },
                 hover: { mode: 'nearest', intersect: true },
                 scales: {
-                    xAxes: [{ display: true, scaleLabel: { display: true, labelString: 'Round' } }],
-                    yAxes: [{ display: true, scaleLabel: { display: true, labelString: 'Scores' } }]
+                    x: { display: true, scaleLabel: { display: true, labelString: 'Round' } },
+                    y: { display: true, scaleLabel: { display: true, labelString: 'Scores' } }
                 },
                 elements: { line: { tension: 0 } }
             }
