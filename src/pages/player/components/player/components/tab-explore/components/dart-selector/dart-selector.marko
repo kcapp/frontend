@@ -1,0 +1,7 @@
+
+<select onChange("handleDartChange") class="dart-selector">
+  <option selected value="-1">-</option>
+  <for|value| of=state.darts>
+    <option selected=(input.selected == value) value=`${value}`>${value}</option>
+  </for>
+</select>
