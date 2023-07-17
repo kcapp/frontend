@@ -1,7 +1,8 @@
-var _ = require("underscore");
-var axios = require('axios');
-var localStorage = require("../../../../util/localstorage");
-var skill = require('kcapp-bot/bot-skill');
+const _ = require("underscore");
+const axios = require('axios');
+const localStorage = require("../../../../util/localstorage");
+const skill = require('kcapp-bot/bot-skill');
+const types = require("../../../../components/scorecard/components/match_types.js")
 
 var NINE_DART_SHOOTOUT = 2;
 
@@ -194,6 +195,7 @@ module.exports = {
             match_type: this.state.options.game_type,
             match_mode: this.state.options.game_mode,
             match_stake: this.state.options.stake,
+            outshot_type: types.OUTSHOT_DOUBLE,
             venue: this.state.options.venue_id,
             players: players,
             office_id: officeId,
