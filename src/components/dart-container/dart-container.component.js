@@ -38,7 +38,7 @@ module.exports = {
         this.state = this.initialState();
     },
     setDart(value, multiplier) {
-        var dart = this.state;
+        let dart = this.state;
         if (value !== null) {
             dart.text += value;
             dart.value = value;

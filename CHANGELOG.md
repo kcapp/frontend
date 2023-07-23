@@ -8,6 +8,7 @@ A preview of major changes can be found in the Wiki ([Latest Changes](https://gi
 - Forward clients back to main page from match result after 2 minutes
 - New "Explore" tab on player statistics, to explore darts thrown
 - Support for `ANY` and `MASTER` outs for `x01` legs
+- Simplified input for `x01` legs
 
 #### Changed
 - Updated to use `Node.js v18`

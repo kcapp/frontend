@@ -7,8 +7,13 @@ module.exports = {
             isOfficial: input.match.tournament_id !== null,
             buttonInputEnabled: input.buttonsEnabled,
             compactMode: false,
-            allButtonsMode : false
+            allButtonsMode : false,
+            keyboardMode: input.keyboard.mode
         }
+    },
+
+    onInput(input) {
+        this.state.keyboardMode = input.keyboard.mode;
     },
 
     onMount() {

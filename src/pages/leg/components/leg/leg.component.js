@@ -31,12 +31,16 @@ module.exports = {
             compactMode: compactMode,
             allButtonsMode: false,
             isPlayerBoardCam: input.leg_players.some(player => player.player.board_stream_url),
-            announcedStart: false
+            announcedStart: false,
+            keyboard:  {
+                mode: 'full',
+                timer: undefined,
+                previous: { value: 0, multiplier: 1 }
+            }
         }
     },
 
     onMount() {
-        console.log(this.input.locals);
         document.addEventListener("keydown",  _.debounce(function(e) {
             // Some Android tablets do a weird thing where they emit mulitple events, so debounce it here,
             // to ensure we only send a single one
@@ -314,9 +318,25 @@ module.exports = {
         if (e.key === 'Backspace') {
             component.removeLast();
             e.preventDefault();
-        } else if (types.SUPPORT_SIMPLE_INPUT.includes(this.state.matchType) && simplified.includes(e.keyCode)) {
-            let value = 0;
+        } else if (e.key === '$' || e.key === '=') { 
+            this.state.keyboard.mode = this.state.keyboard.mode === "simple" ? "full" :  "simple";
+            this.setStateDirty('keyboard');
+            this.state.enableButtonInput = false;
+            e.preventDefault();
+        } else if ((types.SUPPORT_SIMPLE_INPUT.includes(this.state.matchType) && simplified.includes(e.keyCode)) || this.state.keyboard.mode === 'simple') {
+            // There are two types of simple input modes:
+            // 1. Devices which support "NumLock" can simply disable numlock and use "END", "ARROW_DOWN", "PG DN" etc for input
+            // 2. Devices which don't support "NumLock" can enable "simple" keyboard mode by pressing "$", and use number like normal
+            const submit = ((component) => {
+                let dartsThrown = component.getDartsThrown();
+                this.state.submitting = component.confirmThrow(false);
+                if (dartsThrown > 2) {
+                    this.state.submitting = true;
+                    this.state.socket.emit('throw', JSON.stringify(component.getPayload()));
+                }
+            }).bind(this);
 
+            let value = 0;
             let multiplier;
             if (this.state.matchType === types.DARTS_AT_X) {
                 value = this.state.leg.starting_score
@@ -351,6 +371,43 @@ module.exports = {
                 } else {
                     value = target.value;
                 }
+            } else if (this.state.matchType === types.X01) {
+                multiplier = 1;
+                switch (e.key) {
+                    case '1': value = 7; break;
+                    case '2': value = 19; break;
+                    case '3': value = 3; break;
+                    case '4': value = 12; break;
+                    case '5': break; // unused
+                    case '6': value = 18; break;
+                    case '7': value = 5; break;
+                    case '8': value = 20; break;
+                    case '9': value = 1; break;
+                    case 'Enter':
+                        clearInterval(this.state.keyboard.timer);
+                        submit(component);
+                        return;
+                    default: return;
+                }
+                clearInterval(this.state.keyboard.timer);
+                if (value === this.state.keyboard.previous.value) {
+                    multiplier = this.state.keyboard.previous.multiplier + 1;
+                    multiplier = multiplier > 3 ? 1 : multiplier;
+                    component.setMultiplier(multiplier);
+                } else {
+                    if (component.getCurrentDart().state.initial) {
+                        component.setDart(value, multiplier);
+                    } else {
+                        submit(component);
+                        component.setDart(value, multiplier);
+                    }
+                }
+                this.state.keyboard.timer = setInterval(() => {
+                    this.state.keyboard.previous = { value: 0, multiplier: 1 };
+                    clearInterval(this.state.keyboard.timer);
+                    submit(component);
+                }, 350);
+                this.state.keyboard.previous = { value: value, multiplier: multiplier};
             }
 
             if (!multiplier) {
@@ -365,20 +422,16 @@ module.exports = {
             if (e.keyCode === KEY_INSERT || e.keyCode === KEY_DELETE) {
                 value = 0;
             }
-            component.setDart(value, multiplier);
-            let dartsThrown = component.getDartsThrown();
-            if (dartsThrown > 2) {
-                this.state.submitting = true;
-                this.state.socket.emit('throw', JSON.stringify(component.getPayload()));
-            } else {
-                this.state.submitting = component.confirmThrow(false);
+            if (!this.state.keyboard.timer) {
+                component.setDart(value, multiplier);
+                submit(component);
             }
-
             e.preventDefault();
+            return;
         } else if (e.key === 'Tab') {
             e.preventDefault();
             this.onSwapPlayers();
-        } else if (e.key === 'F3') {
+        } else if (e.key === 'F3' || e.key === "'") {
             e.preventDefault();
 
             // Throw same dart as last

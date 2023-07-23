@@ -2,7 +2,7 @@ $ const types = require('../../../../components/scorecard/components/match_types
 
 <div class="alert alert-danger" id="cancel-leg-failed-alert" role="alert" hidden="true">Unable to cancel leg</div>
 <div class="pt-20"/>
-<leg-header leg=state.leg match=input.match experimental=input.experimental buttons_only=input.buttons_only
+<leg-header leg=state.leg match=input.match experimental=input.experimental buttons_only=input.buttons_only keyboard=state.keyboard
   on-enable-button-input("onEnableButtonInput")
   on-enable-compact-mode("onEnableCompactMode")
   on-enable-all-buttons-mode("onEnableAllButtonsMode")/>
