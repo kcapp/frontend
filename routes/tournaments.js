@@ -55,15 +55,17 @@ router.get('/current', function (req, res, next) {
 router.get('/admin', function (req, res, next) {
     axios.all([
         axios.get(`${req.app.locals.kcapp.api}/tournament/groups`),
+        axios.get(`${req.app.locals.kcapp.api}/tournament/preset`),
         axios.get(`${req.app.locals.kcapp.api}/player`),
         axios.get(`${req.app.locals.kcapp.api}/office`),
         axios.get(`${req.app.locals.kcapp.api}/venue`),
         axios.get(`${req.app.locals.kcapp.api}/match/modes`),
         axios.get(`${req.app.locals.kcapp.api}/match/types`),
-    ]).then(axios.spread((groups, players, offices, venues, modes, types) => {
+    ]).then(axios.spread((groups, presets, players, offices, venues, modes, types) => {
         res.marko(tournamentsAdminTemplate, {
             groups: groups.data,
-            players: players.data,
+            presets: presets.data,
+            players: _.sortBy(players.data, 'name'),
             offices: offices.data,
             venues: venues.data,
             modes: modes.data,
@@ -189,6 +191,53 @@ router.post('/admin', function (req, res, next) {
             res.end();
         }).catch(error => {
             debug(`Error when creating new tournament: ${error}`);
+            next(error);
+        });
+});
+
+/* Create new tournament  */
+router.post('/admin/generate', function (req, res, next) {
+    const body = req.body;
+
+    axios.get(`${req.app.locals.kcapp.api}/tournament/preset/${body.preset_id}`)
+        .then(response => {
+            const preset = response.data;
+
+            const players = [];
+            for (let i = 0; i < body.group1.length; i++) {
+                const player = body.group1[i];
+                players.push({
+                    player_id: player.id,
+                    tournament_group_id: preset.group1_tournament_group_id.id
+                });
+            }
+            for (let i = 0; i < body.group2.length; i++) {
+                const player = body.group2[i];
+                players.push({
+                    player_id: player.id,
+                    tournament_group_id: preset.group2_tournament_group_id.id
+                });
+            }
+
+            const name = `${preset.name} ${moment().format('Do MMM')}`;
+            const shortName = `${name.substring(0, 1)}${moment().format('DDMM')}`;
+            const tournamentBody = {
+                name: name,
+                short_name: shortName,
+                is_playoffs: false,
+                players: players,
+                preset_id: body.preset_id,
+                office_id: req.body.office_id
+            };
+            axios.post(`${req.app.locals.kcapp.api}/tournament/generate`, tournamentBody)
+                .then(response => {
+                    res.end();
+                }).catch(error => {
+                    debug(`Error when generating new tournament: ${error}`);
+                    next(error);
+                });
+        }).catch(error => {
+            debug(`Error when generating new tournament: ${error}`);
             next(error);
         });
 });
