@@ -59,8 +59,10 @@ router.get('/:id/statistics', function (req, res, next) {
         axios.get(`${req.app.locals.kcapp.api}/player/${playerId}/statistics/previous`),
         axios.get(`${req.app.locals.kcapp.api}/player/${playerId}/progression`),
         axios.get(`${req.app.locals.kcapp.api}/player/${playerId}/checkouts`),
-        axios.get(`${req.app.locals.kcapp.api}/player/${playerId}/tournament`)
-    ]).then(axios.spread((players, player, statistics, previous, progression, checkouts, tournament) => {
+        axios.get(`${req.app.locals.kcapp.api}/player/${playerId}/tournament`),
+        axios.get(`${req.app.locals.kcapp.api}/player/${playerId}/badges`),
+        axios.get(`${req.app.locals.kcapp.api}/badge`)
+    ]).then(axios.spread((players, player, statistics, previous, progression, checkouts, tournament, playerBadges, badges) => {
         res.marko(playerTemplate, {
             players: players.data,
             player: player.data,
@@ -69,6 +71,8 @@ router.get('/:id/statistics', function (req, res, next) {
             progression: progression.data,
             checkouts: checkouts.data,
             tournament_standings: tournament.data,
+            player_badges: playerBadges.data,
+            badges: badges.data,
             locals: req.app.locals
         });
     })).catch(error => {

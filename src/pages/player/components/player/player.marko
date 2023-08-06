@@ -22,6 +22,7 @@
         <div class="player-profile-menu-item"><i class="fas fa-chart-line"></i><span><a href="#progression" data-toggle="tab">Progression</a></span></div>
         <div class="player-profile-menu-item"><i class="fas fa-trophy"></i><span><a href="#tournament" data-toggle="tab">Tournaments</a></span></div>
         <div class="player-profile-menu-item"><i class="fas fa-exchange-alt"></i><span><a href="#elo" data-toggle="tab">Elo</a></span></div>
+        <div class="player-profile-menu-item"><i class="fas fa-id-badge"></i><span><a href="#badges" data-toggle="tab">Badges</a></span></div>
     </div>
     <div class="player-profile-content tab-content" style="width: 100%;">
         <div class="tab-pane active" role="tabpanel" id="overview">
@@ -50,6 +51,9 @@
         </div>
         <div class="tab-pane" role="tabpanel" id="elo">
             <tab-elo player=input.player players=input.players locals=input.locals/>
+        </div>
+        <div class="tab-pane" role="tabpanel" id="badges">
+            <tab-badges badges=input.badges player=input.player player_badges=input.player_badges/>
         </div>
     </div>
     <div style="clear: both;"></div>
