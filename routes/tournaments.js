@@ -89,18 +89,18 @@ router.get('/:id/admin', function (req, res, next) {
         axios.get(`${req.app.locals.kcapp.api}/match/modes`),
         axios.get(`${req.app.locals.kcapp.api}/venue`),
     ]).then(axios.spread((playersResponse, tournamentResponse, matchesData, metadataResponse, groups, modes, venue) => {
-        var matches = matchesData.data;
-        var metadata = _.sortBy(metadataResponse.data, 'order_of_play');
-        var players = playersResponse.data;
-        var tournament = tournamentResponse.data;
+        const matches = matchesData.data;
+        const metadata = _.sortBy(metadataResponse.data, 'order_of_play');
+        const players = playersResponse.data;
+        const tournament = tournamentResponse.data;
 
-        var matchesMap = {};
-        for (var key in matches) {
+        const matchesMap = {};
+        for (let key in matches) {
             _.extend(matchesMap, _.object(_.map(matches[key], function (match) {
                 return [match.id, match]
             })));
         }
-        bracket.generateNew(metadata, matches, players, '', (err, brackets) => {
+        bracket.generate(tournament, metadata, matches, players, '', (err, brackets) => {
             res.marko(tournamentAdminTemplate, {
                 brackets: brackets,
                 tournament: tournament,
@@ -279,7 +279,7 @@ router.get('/:id', function (req, res, next) {
         axios.get(`${req.app.locals.kcapp.api}/tournament/${req.params.id}/statistics`),
         axios.get(`${req.app.locals.kcapp.api}/tournament/${req.params.id}/metadata`)
     ]).then(axios.spread((playersResponse, tournamentResponse, overviewData, matchesData, statisticsResponse, metadataResponse) => {
-        var statistics = statisticsResponse.data;
+        const statistics = statisticsResponse.data;
         if (!_.isEmpty(statistics)) {
             statistics.checkout_highest = _.sortBy(statistics.checkout_highest, (stats) => -stats.value);
             statistics.best_three_dart_avg = _.sortBy(statistics.best_three_dart_avg, (stats) => -stats.value);
@@ -292,12 +292,12 @@ router.get('/:id', function (req, res, next) {
             }
         }
 
-        var matches = matchesData.data;
-        var metadata = _.sortBy(metadataResponse.data, 'order_of_play');
-        var players = playersResponse.data;
-        var tournament = tournamentResponse.data;
+        const matches = matchesData.data;
+        const metadata = _.sortBy(metadataResponse.data, 'order_of_play');
+        const players = playersResponse.data;
+        const tournament = tournamentResponse.data;
 
-        var overview = overviewData.data;
+        const overview = overviewData.data;
         sortTournamentOverview(overview);
 
         if (tournament.playoffs_tournament_id !== null) {
@@ -305,7 +305,7 @@ router.get('/:id', function (req, res, next) {
                 axios.get(`${req.app.locals.kcapp.api}/tournament/${tournament.playoffs_tournament_id}/matches`),
                 axios.get(`${req.app.locals.kcapp.api}/tournament/${tournament.playoffs_tournament_id}/metadata`)
             ]).then(axios.spread((matchesResponse, metadataResponse) => {
-                bracket.generateLast16(metadataResponse.data, matchesResponse.data, players, '', (err, brackets) => {
+                bracket.generate(tournament, metadataResponse.data, matchesResponse.data, players, '', (err, brackets) => {
                     res.marko(tournamentTemplate, {
                         brackets: brackets,
                         tournament: tournament,
@@ -320,7 +320,7 @@ router.get('/:id', function (req, res, next) {
                 next(error);
             });
         } else {
-            bracket.generateLast16(metadata, matches, players, '', (err, brackets) => {
+            bracket.generate(tournament, metadata, matches, players, '', (err, brackets) => {
                 res.marko(tournamentTemplate, {
                     brackets: brackets,
                     tournament: tournament,

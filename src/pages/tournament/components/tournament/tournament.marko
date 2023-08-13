@@ -20,7 +20,7 @@ $ {
 <page-header heading=`${input.tournament.name}` subheading="Tournament" tabs=tabs buttons=buttons/>
 <div class="tab-content">
   <div role="tabpanel" id="season" class="tab-pane active">
-    <if(!input.tournament.is_playoffs)>
+    <if(input.tournament.manual_admin && !input.tournament.is_playoffs)>
       <options-panel tournament=input.tournament/>
     </if>
     <for|id, group| in=input.overview>
