@@ -2,8 +2,8 @@
 
 A preview of major changes can be found in the Wiki ([Latest Changes](https://github.com/kcapp/frontend/wiki/Latest_Changes))
 ## [2.5.0] - TBD
-
 #### Feature
+- Support for Tournament Presets
 - Support multiple legs for Practice matches
 - Player options to disable automatic score deduction per dart, and to show/hide checkout guide
 - Allow undoing of visits when playing against kcapp-bot
