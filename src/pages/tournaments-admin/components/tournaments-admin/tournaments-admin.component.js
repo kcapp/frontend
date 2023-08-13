@@ -215,7 +215,7 @@ module.exports = {
         }
         axios.post(window.location.origin + '/tournaments/admin/generate', body)
             .then(response => {
-                location.href = window.location.origin + '/tournaments';
+                location.href = `/tournaments/${response.data.id}`;
             }).catch(error => {
                 alert("Unable to generate tournament. See log for details");
                 console.log(error);

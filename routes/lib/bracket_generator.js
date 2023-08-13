@@ -116,6 +116,14 @@ exports.generateLast16 = function (metadata, matches, players, current, callback
                     doc.getElementById(`${prefix}_group`).setAttribute('class', "editable");
                 }
             }
+            if (matchMetadatas.length > 7) {
+                // Show the last 16 matches
+                doc.getElementById('last16').setAttribute('style', 'display: block');
+            }
+            if (matchMetadatas.length > 3) {
+                // Show the last 16 matches
+                doc.getElementById('last8').setAttribute('style', 'display: block');
+            }            
             brackets[group] = new XMLSerializer().serializeToString(doc);
         }
         callback(undefined, brackets);

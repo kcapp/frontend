@@ -232,7 +232,8 @@ router.post('/admin/generate', function (req, res, next) {
             };
             axios.post(`${req.app.locals.kcapp.api}/tournament/generate`, tournamentBody)
                 .then(response => {
-                    res.end();
+                    const tournament = response.data;
+                    res.send(tournament);
                 }).catch(error => {
                     debug(`Error when generating new tournament: ${error}`);
                     next(error);

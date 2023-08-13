@@ -17,6 +17,6 @@ module.exports = {
     
     onShowModal(matchId) {
         const match = this.state.matchesMap[matchId];
-        this.getComponent('set-score-modal').setMatch(match);
+        this.getComponent('set-score-modal').setMatch(match, false);
     }
 }

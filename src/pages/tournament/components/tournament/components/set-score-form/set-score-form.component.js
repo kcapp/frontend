@@ -7,7 +7,8 @@ module.exports = {
             homePlayerId: 0,
             homeScore: 0,
             awayPlayerId: 0,
-            awayScore: 0
+            awayScore: 0,
+            isBracket: false
         }
     },
     onMount() {
@@ -15,14 +16,13 @@ module.exports = {
             $("#set-score-modal").on('shown.bs.modal', function(){
                 const matchId = $("#set-score-modal").data('matchId');
                 if (matchId) {
-                    this.setMatch(matchId);
+                    this.setMatch(matchId, true);
                 }
             }.bind(this));
         }.bind(this));
     },
-    setMatch(matchId) {
+    setMatch(matchId, isBracket) {
         const match = this.input.matches[matchId];
-        console.log(match);
         this.state.matchId = match.id;
         this.state.homePlayerId = match.players[0];
         this.state.awayPlayerId = match.players[1];
@@ -33,6 +33,7 @@ module.exports = {
             this.state.homeScore = 0;
             this.state.awayScore = 0;
         }
+        this.state.isBracket = isBracket;
     },
     homeScoreChange(event) {
         this.state.homeScore = parseInt(event.target.value);
@@ -60,6 +61,13 @@ module.exports = {
 
         axios.put(`${window.location.origin}/matches/${this.state.matchId}/finish`, body)
             .then(response => {
+                if (!location.hash) {
+                    location.href = `${location.href}#bracket`;
+                }
+                if (!this.state.isBracket) {
+                    //location.hash =  "";
+                    history.replaceState({}, document.title, `${location.pathname}${location.search}`);
+                }
                 location.reload();
             }).catch(error => {
                 console.log(error);
