@@ -12,80 +12,91 @@
   </div>
   <div class="tab-content" style="width: 100%;">
     <div class="tab-pane active" role="tabpanel" id="generate">
-      <div class="game-options">
-        <div class="block-container-header">
-          <i class="fas fa-cogs"/>
-          <span class="ml-10">Settings</span>
+      <if(input.presets[0])>
+        <div class="game-options">
+          <div class="block-container-header">
+            <i class="fas fa-cogs"/>
+            <span class="ml-10">Settings</span>
+          </div>
+          <div class="block-container-with-header">
+            <p>Office</p>
+            <select on-change("officeChange")>
+              <for|id, office| in=input.offices>
+                <option value=`${id}` selected=(office.id == state.office)>${office.name}</option>
+              </for>
+            </select>        
+            <p>Tournament Preset</p>
+            <select on-change("onPresetChange")>
+              <for|id, preset| in=input.presets>
+                <option value=`${preset.id}` selected=(preset.id == state.tournamentPreset)>${preset.name}</option>
+              </for>
+            </select>
+
+            <div style="display: flex;">
+              <div style="flex: 1;">
+                <h2 style="text-align: center">Group 1</h2>
+                <div class="block-container-header">
+                  <i class="fas fa-users"/>
+                  <span class="ml-10">Players</span>
+                </div>
+                <div class="block-container-with-header">
+                  <div class="form-group form-check players-selected">
+                    <for|player| of=state.selected.group1>
+                      <player-selector key="players[]" player=player on-add-player("removePlayer", "group1") type=1 />
+                    </for>
+                  </div>
+                </div>
+                <div class="block-container-header">
+                  <i class="fas fa-mouse-pointer"/>
+                  <span class="ml-10">Select players</span>
+                </div>
+                <div class="block-container-with-header">
+                  <div class="form-group form-check players-all">
+                    <for|player| of=state.playersAvailable>
+                      <player-selector player=player on-add-player("addPlayer", "group1") type=1 />
+                    </for>
+                  </div>
+                </div>
+              </div>
+              <div style="flex: 1;">
+                <h2 style="text-align: center">Group 2</h2>
+                <div class="block-container-header">
+                  <i class="fas fa-users"/>
+                  <span class="ml-10">Players</span>
+                </div>
+                <div class="block-container-with-header">
+                  <div class="form-group form-check players-selected">
+                    <for|player| of=state.selected.group2>
+                      <player-selector key="players[]" player=player on-add-player("removePlayer", "group2") type=1 />
+                    </for>
+                  </div>
+                </div>
+                <div class="block-container-header">
+                  <i class="fas fa-mouse-pointer"/>
+                  <span class="ml-10">Select players</span>
+                </div>
+                <div class="block-container-with-header">
+                  <div class="form-group form-check players-all">
+                    <for|player| of=state.playersAvailable>
+                      <player-selector player=player on-add-player("addPlayer", "group2") type=1 />
+                    </for>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <button class="btn btn-primary" type="button" on-click("generateTournament")>Generate</button>
+          </div>
+        </div>
+      </if>
+      <else>
+        <div class="block-container-header pt20">
+          <i class="fas fa-building"/>
+          <span class="ml-10">No Presets</span>
         </div>
         <div class="block-container-with-header">
-          <p>Office</p>
-          <select on-change("officeChange")>
-            <for|id, office| in=input.offices>
-              <option value=`${id}` selected=(office.id == state.office)>${office.name}</option>
-            </for>
-          </select>        
-          <p>Tournament Preset</p>
-          <select on-change("onPresetChange")>
-            <for|id, preset| in=input.presets>
-              <option value=`${preset.id}` selected=(preset.id == state.tournamentPreset)>${preset.name}</option>
-            </for>
-          </select>
-
-          <div style="display: flex;">
-            <div style="flex: 1;">
-              <h2 style="text-align: center">Group 1</h2>
-              <div class="block-container-header">
-                <i class="fas fa-users"/>
-                <span class="ml-10">Players</span>
-              </div>
-              <div class="block-container-with-header">
-                <div class="form-group form-check players-selected">
-                  <for|player| of=state.selected.group1>
-                    <player-selector key="players[]" player=player on-add-player("removePlayer", "group1") type=1 />
-                  </for>
-                </div>
-              </div>
-              <div class="block-container-header">
-                <i class="fas fa-mouse-pointer"/>
-                <span class="ml-10">Select players</span>
-              </div>
-              <div class="block-container-with-header">
-                <div class="form-group form-check players-all">
-                  <for|player| of=state.playersAvailable>
-                    <player-selector player=player on-add-player("addPlayer", "group1") type=1 />
-                  </for>
-                </div>
-              </div>
-            </div>
-            <div style="flex: 1;">
-              <h2 style="text-align: center">Group 2</h2>
-              <div class="block-container-header">
-                <i class="fas fa-users"/>
-                <span class="ml-10">Players</span>
-              </div>
-              <div class="block-container-with-header">
-                <div class="form-group form-check players-selected">
-                  <for|player| of=state.selected.group2>
-                    <player-selector key="players[]" player=player on-add-player("removePlayer", "group2") type=1 />
-                  </for>
-                </div>
-              </div>
-              <div class="block-container-header">
-                <i class="fas fa-mouse-pointer"/>
-                <span class="ml-10">Select players</span>
-              </div>
-              <div class="block-container-with-header">
-                <div class="form-group form-check players-all">
-                  <for|player| of=state.playersAvailable>
-                    <player-selector player=player on-add-player("addPlayer", "group2") type=1 />
-                  </for>
-                </div>
-              </div>
-            </div>
-          </div>
-          <button class="btn btn-primary" type="button" on-click("generateTournament")>Generate</button>
+            <div>To generated tournaments, first create a preset</div>
         </div>
-      </div>
+      </else>
     </div>
     <div class="tab-pane" role="tabpanel" id="create">
       <div class="game-options">
