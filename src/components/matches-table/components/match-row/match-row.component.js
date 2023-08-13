@@ -12,5 +12,8 @@ module.exports = {
         this.state = {
             match: match
         }
+    },
+    onShowModal(matchId) {
+        this.emit('show-modal', matchId);
     }
 }

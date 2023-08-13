@@ -88,4 +88,14 @@ $ var columns = input.columns;
       </else>
     </td>
   </if>
+  <if(columns["admin"])>
+    <if(!match.has_scores)>
+      <td class="text-center">
+        <match-button title="View" icon="fa-cog" modal=`set-score-modal` data=match.id on-show-modal("onShowModal")/>
+      </td>  
+    </if>
+    <else>
+      <td/>
+    </else>
+  </if>
 </tr>

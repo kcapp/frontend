@@ -4,7 +4,8 @@ module.exports = {
     onCreate(input) {
         let columns = {
             start_time: true, status: true, venue: true, office: true,
-            type: true, mode: true, players: true, results: true, options: true
+            type: true, mode: true, players: true, results: true, options: true,
+            admin: false
         }
         if (input.columns) {
             columns = {
@@ -16,7 +17,8 @@ module.exports = {
                 mode: _.contains(input.columns, 'mode'),
                 players: _.contains(input.columns, 'players'),
                 results: _.contains(input.columns, 'results'),
-                options: _.contains(input.columns, 'options')
+                options: _.contains(input.columns, 'options'),
+                admin: _.contains(input.columns, 'admin')
             }
         }
         this.state = {
@@ -24,5 +26,8 @@ module.exports = {
             page: input.page,
             columns: columns
         }
+    },
+    onShowModal(matchId) {
+        this.emit('show-modal', matchId);
     }
 }

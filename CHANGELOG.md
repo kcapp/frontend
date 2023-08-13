@@ -1,9 +1,9 @@
 # Changelog
-
 A preview of major changes can be found in the Wiki ([Latest Changes](https://github.com/kcapp/frontend/wiki/Latest_Changes))
 
 ## [2.7.0] - TBD
 #### Feature
+- Support for Tournament Presets
 - Automatically start next leg without needing to reload the page to improve load time, and get back to throwing quicker
 - Forward clients back to main page from match result after 2 minutes
 - New "Explore" tab on player statistics, to explore darts thrown
@@ -30,7 +30,11 @@ A preview of major changes can be found in the Wiki ([Latest Changes](https://gi
 
 ## [2.5.0] - 2023-03-10
 
+=======
+## [2.5.0] - TBD
+>>>>>>> feature/tournament_preset
 #### Feature
+- Support for Tournament Presets
 - Support multiple legs for Practice matches
 - Player options to disable automatic score deduction per dart, and to show/hide checkout guide
 - Allow undoing of visits when playing against kcapp-bot

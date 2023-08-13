@@ -1,40 +1,47 @@
-var debug = require('debug')('kcapp:bracket_generator');
+const debug = require('debug')('kcapp:bracket_generator');
 
-var _ = require('underscore');
-var fs = require('fs');
-var DOMParser = require('xmldom').DOMParser;
-var XMLSerializer = require('xmldom').XMLSerializer;
+const _ = require('underscore');
+const fs = require('fs');
+const DOMParser = require('xmldom').DOMParser;
+const XMLSerializer = require('xmldom').XMLSerializer;
+
+exports.generate = function(tournament, metadata, matches, players, current, callback) {
+    if (tournament.preset_id) {
+        exports.generateLast16(metadata, matches, players, current, callback);
+    } else {
+        exports.generateNew(metadata, matches, players, current, callback);
+    }
+}
 
 exports.generateNew = function (metadata, matches, players, current, callback) {
     try {
-        var bracketConference = fs.readFileSync('public/images/bracket_conference.svg', 'utf-8');
-        var bracket = fs.readFileSync('public/images/bracket.svg', 'utf-8');
+        const bracketConference = fs.readFileSync('public/images/bracket_conference.svg', 'utf-8');
+        const bracket = fs.readFileSync('public/images/bracket.svg', 'utf-8');
 
-        var groupedMetadata = _.groupBy(metadata, (obj) => obj.tournament_group.id);
-        var matchesMap = {};
+        const groupedMetadata = _.groupBy(metadata, (obj) => obj.tournament_group.id);
+        const matchesMap = {};
         for (var key in matches) {
             _.extend(matchesMap, _.object(_.map(matches[key], function (match) { return [match.id, match] })));
         }
 
-        var brackets = {};
-        for (var group in groupedMetadata) {
-            var doc = _.clone(new DOMParser().parseFromString(bracket, 'text/xml'));
+        const brackets = {};
+        for (let group in groupedMetadata) {
+            let doc = _.clone(new DOMParser().parseFromString(bracket, 'text/xml'));
             if (group == 13) {
                 doc = _.clone(new DOMParser().parseFromString(bracketConference, 'text/xml'));
             }
-            var matchMetadatas = groupedMetadata[group];
+            const matchMetadatas = groupedMetadata[group];
+            for (let i = 0; i < matchMetadatas.length; i++) {
+                const matchMetadata = matchMetadatas[i];
+                const match = matchesMap[matchMetadata.match_id];
 
-            for (var i = 0; i < matchMetadatas.length; i++) {
-                var matchMetadata = matchMetadatas[i];
-                var match = matchesMap[matchMetadata.match_id];
-
-                var wins = 0;
+                let wins = 0;
                 if (match.legs_won) {
                     wins = _.countBy(match.legs_won);
                 }
-                var prefix = matchMetadata.match_displayname.toLowerCase().replace(/ /g, "_");
+                let prefix = matchMetadata.match_displayname.toLowerCase().replace(/ /g, "_");
 
-                var preliminaryFinal = doc.getElementById("prelimination_final_show");
+                let preliminaryFinal = doc.getElementById("prelimination_final_show");
                 if (group == 12) {
                     preliminaryFinal.setAttribute("opacity", "1.0");
                 } else {
@@ -43,17 +50,17 @@ exports.generateNew = function (metadata, matches, players, current, callback) {
                     }
                 }
 
-                var home = matchMetadata.player_home;
-                var away = matchMetadata.player_away;
-                var winsHome = wins[home] ? "" + wins[home] : match.is_finished ? "0" : "";
-                var winsAway = wins[away] ? "" + wins[away] : match.is_finished ? "0" : "";
+                const home = matchMetadata.player_home;
+                const away = matchMetadata.player_away;
+                const winsHome = wins[home] ? "" + wins[home] : match.is_finished ? "0" : "";
+                const winsAway = wins[away] ? "" + wins[away] : match.is_finished ? "0" : "";
 
                 doc.getElementById(prefix + "_player_home").childNodes[0].data = players[home].first_name;
                 doc.getElementById(prefix + "_player_away").childNodes[0].data = players[away].first_name;
                 doc.getElementById(prefix + "_player_home_score").childNodes[0].data = winsHome;
                 doc.getElementById(prefix + "_player_away_score").childNodes[0].data = winsAway;
 
-                var currentMatch = doc.getElementById(prefix + "_current_match");
+                let currentMatch = doc.getElementById(prefix + "_current_match");
                 if (current === matchMetadata.match_displayname) {
                     currentMatch.setAttribute("opacity", "1.0");
                 } else {
@@ -68,60 +75,68 @@ exports.generateNew = function (metadata, matches, players, current, callback) {
     }
 }
 
-exports.generate = function (metadata, matches, players, current, callback) {
-    fs.readFile('public/images/bracket.svg', 'utf-8', function (err, data) {
-        if (err) {
-            debug('Error when reading SVG ' + err);
-            return;
-        }
-        var bracketSVG = new DOMParser().parseFromString(data, 'text/xml');
-        var doc = _.clone(bracketSVG);
-        var groupedMetadata = _.groupBy(metadata, (obj) => obj.tournament_group.id);
-
-        var matchesMap = {};
-        for (var key in matches) {
-            _.extend(matchesMap, _.object(_.map(matches[key], function (match) {
-                return [match.id, match]
-            })));
+exports.generateLast16 = function (metadata, matches, players, current, callback) {
+    try {
+        const bracket = fs.readFileSync('public/images/bracket_last16.svg', 'utf-8');
+        const groupedMetadata = _.groupBy(metadata, (obj) => obj.tournament_group.id);
+        const matchesMap = {};
+        for (let key in matches) {
+            _.extend(matchesMap, _.object(_.map(matches[key], (match) => [match.id, match] )));
         }
 
-        var brackets = {};
-        for (var group in groupedMetadata) {
-            var matchMetadatas = groupedMetadata[group];
+        const brackets = {};
+        for (let group in groupedMetadata) {
+            let doc = _.clone(new DOMParser().parseFromString(bracket, 'text/xml'));
 
-            for (var i = 0; i < matchMetadatas.length; i++) {
-                var matchMetadata = matchMetadatas[i];
-                var match = matchesMap[matchMetadata.match_id];
+            const matchMetadatas = groupedMetadata[group];
+            //// Check if two players in this group have the same name, and if so extend their names with last name
+            //const participants = matchMetadatas
+            //    .map(metadata => {
+            //    const home = players[metadata.player_home];
+            //    const away = players[metadata.player_away];
+            //    return [ { id: home.id, name: `${home.first_name} ${home.last_name}`},
+            //             { id: away.id, name: `${away.first_name} ${away.last_name}`} ];
+            //}).flat();
+            //console.log([...new Set(participants)]);
 
-                var wins = 0;
+            for (let i = 0; i < matchMetadatas.length; i++) {
+                const matchMetadata = matchMetadatas[i];
+                const match = matchesMap[matchMetadata.match_id];
+
+                let wins = 0;
                 if (match.legs_won) {
                     wins = _.countBy(match.legs_won);
                 }
-                var prefix = matchMetadata.match_displayname.toLowerCase().replace(" ", "_");
-
-                var preliminaryFinal = doc.getElementById("prelimination_final_show");
-                if (group == 12) {
-                    preliminaryFinal.setAttribute("opacity", "1.0");
-                } else {
-                    preliminaryFinal.setAttribute("opacity", "0.0");
-                }
-                var home = matchMetadata.player_home;
-                var away = matchMetadata.player_away;
-
-                doc.getElementById(prefix + "_player_home").childNodes[0].data = players[home].first_name;
-                doc.getElementById(prefix + "_player_away").childNodes[0].data = players[away].first_name;
-                doc.getElementById(prefix + "_player_home_score").childNodes[0].data = wins[home] ? "" + wins[home] : "";
-                doc.getElementById(prefix + "_player_away_score").childNodes[0].data = wins[away] ? "" + wins[away] : "";
-
-                var currentMatch = doc.getElementById(prefix + "_current_match");
-                if (current === matchMetadata.match_displayname) {
-                    currentMatch.setAttribute("opacity", "1.0");
-                } else {
-                    currentMatch.setAttribute("opacity", "0.0");
+                const prefix = matchMetadata.match_displayname.toLowerCase().replace(/ /g, "_");
+                const home = matchMetadata.player_home;
+                const away = matchMetadata.player_away;
+                const winsHome = wins[home] ? "" + wins[home] : match.is_finished ? "0" : "";
+                const winsAway = wins[away] ? "" + wins[away] : match.is_finished ? "0" : "";
+                const homeName = players[home].is_placeholder ? (match.is_bye ? "bye" : "") : `${players[home].first_name} ${players[home].last_name.substring(0, 1)}`;
+                const awayName = players[away].is_placeholder ? (match.is_bye ? "bye" : "") : `${players[away].first_name} ${players[away].last_name.substring(0, 1)}`;
+                doc.getElementById(`${prefix}_player_home`).childNodes[0].data = homeName;
+                doc.getElementById(`${prefix}_player_away`).childNodes[0].data = awayName;
+                doc.getElementById(`${prefix}_player_home_score`).childNodes[0].data = winsHome;
+                doc.getElementById(`${prefix}_player_away_score`).childNodes[0].data = winsAway;
+                if (!match.is_bye && match.is_players_decided) {
+                    // Only allow editing of matches which are not bye
+                    doc.getElementById(`${prefix}_group`).setAttribute('onclick', `handleClick(${match.id})`);
+                    doc.getElementById(`${prefix}_group`).setAttribute('class', "editable");
                 }
             }
+            if (matchMetadatas.length > 7) {
+                // Show the last 16 matches
+                doc.getElementById('last16').setAttribute('style', 'display: block');
+            }
+            if (matchMetadatas.length > 3) {
+                // Show the last 16 matches
+                doc.getElementById('last8').setAttribute('style', 'display: block');
+            }            
             brackets[group] = new XMLSerializer().serializeToString(doc);
         }
-        callback(brackets);
-    });
+        callback(undefined, brackets);
+    } catch (error) {
+        debug(`Error generating last 16 bracket: ${error}`);
+        callback(error, null);
+    }
 }
