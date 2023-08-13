@@ -1,6 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?>
 <svg font-family="Helvetica Neue,Helvetica,Arial,sans-serif;" font-size="16px" font-weight="200" height="792px" letter-spacing="3px" text-transform="uppercase" version="1.1" viewBox="-0.5 -0.5 980 792" width="980px" xmlns="http://www.w3.org/2000/svg">
-  <g>
+  <g id='match_1_group'>
     <rect fill="#000" height="20" stroke="#000000" width="180" x="4.382" y="4.335"/>
     <g transform="matrix(1, 0, 0, 1, 15.88224, 8.124138)">
       <text fill="#FFFFFF" font-size="11px" style="white-space: pre;" text-anchor="middle" x="55" y="11">Match #1</text>
@@ -22,7 +21,7 @@
       <text fill="#000000" font-weight="bold" id="match_1_player_away_score" style="white-space: pre;" text-anchor="middle" x="5" y="14">0</text>
     </g>
   </g>
-  <g>
+  <g id='match_2_group'>
     <rect fill="#000" height="20" stroke="#000000" width="180" x="4.291" y="103.36"/>
     <g transform="matrix(1, 0, 0, 1, 15.792006, 107.149544)">
       <text fill="#FFFFFF" font-size="11px" style="white-space: pre;" text-anchor="middle" x="55" y="11">Match #2</text>
@@ -44,7 +43,7 @@
       <text fill="#000000" font-weight="bold" id="match_2_player_away_score" style="white-space: pre;" text-anchor="middle" x="5" y="14">0</text>
     </g>
   </g>
-  <g>
+  <g id='match_3_group'>
     <rect fill="#000" height="20" stroke="#000000" width="180" x="4.005" y="201.641"/>
     <g transform="matrix(1, 0, 0, 1, 15.504311, 205.430359)">
       <text fill="#FFFFFF" font-size="11px" style="white-space: pre;" text-anchor="middle" x="55" y="11">Match #3</text>
@@ -66,7 +65,7 @@
       <text fill="#000000" font-weight="bold" id="match_3_player_away_score" style="white-space: pre;" text-anchor="middle" x="5" y="14">0</text>
     </g>
   </g>
-  <g>
+  <g id='match_4_group'>
     <rect fill="#000" height="20" stroke="#000000" width="180" x="3.847" y="300.382"/>
     <g transform="matrix(1, 0, 0, 1, 15.346596, 304.170654)">
       <text fill="#FFFFFF" font-size="11px" style="white-space: pre;" text-anchor="middle" x="55" y="11">Match #4</text>
@@ -88,7 +87,7 @@
       <text fill="#000000" font-weight="bold" id="match_4_player_away_score" style="white-space: pre;" text-anchor="middle" x="5" y="14">0</text>
     </g>
   </g>
-  <g>
+  <g id='match_5_group'>
     <rect fill="#000" height="20" stroke="#000000" width="180" x="3.431" y="398.931"/>
     <g transform="matrix(1, 0, 0, 1, 14.930807, 402.720978)">
       <text fill="#FFFFFF" font-size="11px" style="white-space: pre;" text-anchor="middle" x="55" y="11">Match #5</text>
@@ -110,7 +109,7 @@
       <text fill="#000000" font-weight="bold" id="match_5_player_away_score" style="white-space: pre;" text-anchor="middle" x="5" y="14">0</text>
     </g>
   </g>
-  <g>
+  <g id='match_6_group'>
     <rect fill="#000" height="20" stroke="#000000" width="180" x="3.892" y="500" style=""/>
     <g transform="matrix(1, 0, 0, 1, 15.392336, 503.789398)">
       <text fill="#FFFFFF" font-size="11px" style="white-space: pre;" text-anchor="middle" x="55" y="11">Match #6</text>
@@ -132,7 +131,7 @@
       <text fill="#000000" font-weight="bold" id="match_6_player_away_score" style="white-space: pre;" text-anchor="middle" x="5" y="14">0</text>
     </g>
   </g>
-  <g>
+  <g id='match_7_group'>
     <rect fill="#000" height="20" stroke="#000000" width="180" x="3.892" y="596.858"/>
     <g transform="matrix(1, 0, 0, 1, 15.391305, 600.64801)">
       <text fill="#FFFFFF" font-size="11px" style="white-space: pre;" text-anchor="middle" x="55" y="11">Match #7</text>
@@ -154,7 +153,7 @@
       <text fill="#000000" font-weight="bold" id="match_7_player_away_score" style="white-space: pre;" text-anchor="middle" x="5" y="14">0</text>
     </g>
   </g>
-  <g>
+  <g id='match_8_group'>
     <rect fill="#000" height="20" stroke="#000000" width="180" x="3.941" y="695.901"/>
     <g transform="matrix(1, 0, 0, 1, 15.441457, 699.690247)">
       <text fill="#FFFFFF" font-size="11px" style="white-space: pre;" text-anchor="middle" x="55" y="11">Match #8</text>
@@ -218,7 +217,7 @@
       </g>
     </g>
   </g>
-  <g>
+  <g id='quarter_final_1_group'>
     <rect fill="#000" height="20" stroke="#000000" width="180" x="266.212" y="53.988"/>
     <g transform="matrix(1, 0, 0, 1, 282.712982, 57.776764)">
       <text fill="#FFFFFF" font-size="11px" style="white-space: pre;" text-anchor="middle" x="55" y="11">Quarter Finals #1</text>
@@ -240,7 +239,7 @@
       <text fill="#000000" font-weight="bold" id="quarter_final_1_player_away_score" style="white-space: pre;" text-anchor="middle" x="5" y="14">0</text>
     </g>
   </g>
-  <g>
+  <g id='quarter_final_2_group'>
     <rect fill="#000" height="20" stroke="#000000" width="180" x="266.722" y="251.3"/>
     <g transform="matrix(1, 0, 0, 1, 283.223206, 255.088882)">
       <text fill="#FFFFFF" font-size="11px" style="white-space: pre;" text-anchor="middle" x="55" y="11">Quarter Finals #2</text>
@@ -262,7 +261,7 @@
       <text fill="#000000" font-weight="bold" id="quarter_final_2_player_away_score" style="white-space: pre;" text-anchor="middle" x="5" y="14">0</text>
     </g>
   </g>
-  <g>
+  <g id='quarter_final_3_group'>
     <rect fill="#000" height="20" stroke="#000000" width="180" x="266.212" y="448.505"/>
     <g transform="matrix(1, 0, 0, 1, 282.713196, 452.294159)">
       <text fill="#FFFFFF" font-size="11px" style="white-space: pre;" text-anchor="middle" x="55" y="11">Quarter Finals #3</text>
@@ -284,7 +283,7 @@
       <text fill="#000000" font-weight="bold" id="quarter_final_3_player_away_score" style="white-space: pre;" text-anchor="middle" x="5" y="14">0</text>
     </g>
   </g>
-  <g>
+  <g id='quarter_final_4_group'>
     <rect fill="#000" height="20" stroke="#000000" width="180" x="265.019" y="646.819"/>
     <g transform="matrix(1, 0, 0, 1, 281.519867, 650.607849)">
       <text fill="#FFFFFF" font-size="11px" style="white-space: pre;" text-anchor="middle" x="55" y="11">Quarter Finals #4</text>
@@ -328,7 +327,7 @@
       </g>
     </g>
   </g>
-  <g>
+  <g id='semi_final_1_group'>
     <rect fill="#000" height="20" stroke="#000000" width="180" x="528.31" y="150.797"/>
     <g transform="matrix(1, 0, 0, 1, 539.811096, 154.586761)">
       <text fill="#FFFFFF" font-size="11px" style="white-space: pre;" text-anchor="middle" x="55" y="11">Semi Finals #1</text>
@@ -350,7 +349,7 @@
       <text fill="#000000" font-weight="bold" id="semi_final_1_player_away_score" style="white-space: pre;" text-anchor="middle" x="5" y="14">0</text>
     </g>
   </g>
-  <g>
+  <g id='semi_final_2_group'>
     <rect fill="#000" height="20" stroke="#000000" width="180" x="526.631" y="545.089"/>
     <g transform="matrix(1, 0, 0, 1, 539.131836, 548.878723)">
       <text fill="#FFFFFF" font-size="11px" style="white-space: pre;" text-anchor="middle" x="55" y="11">Semi Finals #2</text>
@@ -382,7 +381,7 @@
       <path d="M 796.268 427.625 L 789.268 431.125 L 791.018 427.625 L 789.268 424.125 L 796.268 427.625 Z" fill="#000000" stroke="#000000" stroke-miterlimit="10"/>
     </g>
   </g>
-  <g>
+  <g id='grand_final_group'>
     <rect fill="#000" height="20" stroke="#000000" width="180" x="795.596" y="354.739"/>
     <g transform="matrix(1, 0, 0, 1, 807.097412, 358.528442)">
       <text fill="#FFFFFF" font-size="11px" style="white-space: pre;" text-anchor="middle" x="55" y="11">Grand Final</text>

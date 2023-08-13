@@ -10,9 +10,14 @@ module.exports = {
             matches[key] = m.filter(match => !match.is_bye);
             unplayed[key] = m.filter(match => !match.is_finished || match.is_bye);
         }
+        const matchesMap = Object.values(input.matches).flat().reduce((acc, match) => {
+            acc[match.id] = match;
+            return acc;
+        }, {});
         this.state = {
             hasStatistics: !_.isEmpty(input.statistics.best_three_dart_avg),
             matches: matches,
+            matchesMap: matchesMap,
             unplayed: unplayed
         }
     },
@@ -20,6 +25,13 @@ module.exports = {
     onMount() {
         // TODO Do this without datatables
         document.write('<script type="text/javascript" src="/javascripts/datatables-1.10.16.min.js"><\/script>');
+        document.write(`<script>
+            // Handle clicks from within the SVG
+            function handleClick(matchId) {
+                $('#set-score-modal').data('matchId', matchId);
+                $('#set-score-modal').modal('toggle');
+            }
+        </script>`)
 
         $(function () {
             $('.table-matches-list').DataTable({
@@ -32,15 +44,18 @@ module.exports = {
                 }
             });
             if (window.location.hash != "") {
-                if (window.location.hash === '#matches') {
+                const tabId = window.location.hash;
+                if (tabId === '#matches') {
                     $('.tournament-group-matches').click();
-                } else if (window.location.hash === '#unplayed') {
+                } else if (tabId === '#unplayed') {
                     $('.tournament-group-unplayed-matches').click();
                 } else {
-                    $('a[href="' + window.location.hash + '"]').click();
+                    $(`a[href="${tabId}"]`).click();
                 }
             }
         });
+    },
+    onShowModal(matchId) {
+        this.getComponent('set-score-modal').setMatch(matchId);
     }
-
 }

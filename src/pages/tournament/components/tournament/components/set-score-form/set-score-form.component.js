@@ -10,12 +10,29 @@ module.exports = {
             awayScore: 0
         }
     },
-    setMatch(match) {
+    onMount() {
+        $(function() {
+            $("#set-score-modal").on('shown.bs.modal', function(){
+                const matchId = $("#set-score-modal").data('matchId');
+                if (matchId) {
+                    this.setMatch(matchId);
+                }
+            }.bind(this));
+        }.bind(this));
+    },
+    setMatch(matchId) {
+        const match = this.input.matches[matchId];
+        console.log(match);
         this.state.matchId = match.id;
         this.state.homePlayerId = match.players[0];
-        this.state.homeScore = 0;
         this.state.awayPlayerId = match.players[1];
-        this.state.awayScore = 0;
+        if (match.legs_won) {
+            this.state.homeScore = match.legs_won.filter(winnerId => winnerId === match.players[0]).length;
+            this.state.awayScore = match.legs_won.filter(winnerId => winnerId === match.players[1]).length;
+        } else {
+            this.state.homeScore = 0;
+            this.state.awayScore = 0;
+        }
     },
     homeScoreChange(event) {
         this.state.homeScore = parseInt(event.target.value);
@@ -24,8 +41,8 @@ module.exports = {
         this.state.awayScore = parseInt(event.target.value);
     },
     saveScore(event) {
-        const winner = {};
-        const looser = {};
+        let winner = {};
+        let looser = {};
         if (this.state.homeScore > this.state.awayScore) {
             winner = { id: this.state.homePlayerId, score: this.state.homeScore };
             looser = { id: this.state.awayPlayerId, score: this.state.awayScore };
@@ -43,8 +60,6 @@ module.exports = {
 
         axios.put(`${window.location.origin}/matches/${this.state.matchId}/finish`, body)
             .then(response => {
-                // TODO just close modal and reload data instead of reloading page
-                //$('#set-score-modal').modal('hide');
                 location.reload();
             }).catch(error => {
                 console.log(error);

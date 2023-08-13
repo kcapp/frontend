@@ -1,16 +1,16 @@
-var axios = require('axios');
-var _ = require('underscore');
+const axios = require('axios');
+const _ = require('underscore');
 
 module.exports = {
     onCreate(input) {
-        var matches = input.matches;
-        var metadata = input.metadata;
-        for (var i = 0; i < metadata.length; i++) {
-            var data = metadata[i];
-            var match = matches[data.match_id];
-            if (match.is_finished) {
-                var homeWins =  match.legs_won.filter(id => id === data.player_home).length;
-                var awayWins =  match.legs_won.filter(id => id === data.player_away).length;
+        const matches = input.matches;
+        const metadata = input.metadata;
+        for (let i = 0; i < metadata.length; i++) {
+            const data = metadata[i];
+            const match = matches[data.match_id];
+            if (match.is_finished && !match.is_bye) {
+                const homeWins =  match.legs_won.filter(id => id === data.player_home).length;
+                const awayWins =  match.legs_won.filter(id => id === data.player_away).length;
                 match.result = homeWins + " - " + awayWins;
             }
         }

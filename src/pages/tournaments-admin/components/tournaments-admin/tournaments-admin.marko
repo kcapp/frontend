@@ -27,7 +27,7 @@
           <p>Tournament Preset</p>
           <select on-change("onPresetChange")>
             <for|id, preset| in=input.presets>
-              <option value=`${id}` selected=(preset.id == state.tournamentPreset)>${preset.name}</option>
+              <option value=`${preset.id}` selected=(preset.id == state.tournamentPreset)>${preset.name}</option>
             </for>
           </select>
 

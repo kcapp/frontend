@@ -61,11 +61,12 @@ router.get('/admin', function (req, res, next) {
         axios.get(`${req.app.locals.kcapp.api}/venue`),
         axios.get(`${req.app.locals.kcapp.api}/match/modes`),
         axios.get(`${req.app.locals.kcapp.api}/match/types`),
-    ]).then(axios.spread((groups, presets, players, offices, venues, modes, types) => {
+    ]).then(axios.spread((groups, presets, playersData, offices, venues, modes, types) => {
+        const players = _.reject(playersData.data, (player) => player.is_placeholder);
         res.marko(tournamentsAdminTemplate, {
             groups: groups.data,
             presets: presets.data,
-            players: _.sortBy(players.data, 'name'),
+            players: _.sortBy(players, 'name'),
             offices: offices.data,
             venues: venues.data,
             modes: modes.data,
@@ -99,7 +100,6 @@ router.get('/:id/admin', function (req, res, next) {
                 return [match.id, match]
             })));
         }
-
         bracket.generateNew(metadata, matches, players, '', (err, brackets) => {
             res.marko(tournamentAdminTemplate, {
                 brackets: brackets,
@@ -195,7 +195,7 @@ router.post('/admin', function (req, res, next) {
         });
 });
 
-/* Create new tournament  */
+/* Generate new tournament  */
 router.post('/admin/generate', function (req, res, next) {
     const body = req.body;
 
@@ -227,6 +227,7 @@ router.post('/admin/generate', function (req, res, next) {
                 is_playoffs: false,
                 players: players,
                 preset_id: body.preset_id,
+                manual_admin: true,
                 office_id: req.body.office_id
             };
             axios.post(`${req.app.locals.kcapp.api}/tournament/generate`, tournamentBody)
@@ -238,6 +239,18 @@ router.post('/admin/generate', function (req, res, next) {
                 });
         }).catch(error => {
             debug(`Error when generating new tournament: ${error}`);
+            next(error);
+        });
+});
+
+/* Generate playoffs tournament  */
+router.post('/admin/generate/playoffs/:id', function (req, res, next) {
+    axios.post(`${req.app.locals.kcapp.api}/tournament/generate/playoffs/${req.params.id}`)
+        .then(response => {
+            const tournament = response.data;
+            res.send(tournament);
+        }).catch(error => {
+            debug(`Error when generating playoffs tournament: ${error}`);
             next(error);
         });
 });

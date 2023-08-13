@@ -24,7 +24,7 @@ module.exports = {
             players: input.players,
             matches: matches,
             venues: input.venues,
-            tournamentPreset: 1,
+            tournamentPreset: input.presets[0].id,
             playersAvailable: input.players,
             selected: {
                 group1: [],

@@ -1,82 +1,93 @@
 <page-header heading=`${input.tournament.name}` subheading="Tournament"/>
 <div class="block-container no-padding">
-  <div class="table table-responsive">
-    <table class="table-matches-admin">
-      <thead>
-        <tr>
-          <th class="text-center">
-            <span>Order</span>
-          </th>
-          <th class="text-center">
-            <span>Players</span>
-          </th>
-          <th class="text-center">
-            <span>Group</span>
-          </th>
-          <th class="text-center">
-            <span>Displayname</span>
-          </th>
-          <th class="text-center">
-            <span>Mode</span>
-          </th>
-          <th class="text-center">
-            <span>Scores</span>
-          </th>
-          <th class="text-center">
-            <span></span>
-          </th>
-        </tr>
-      </thead>
-      <tbody>
-        <for|metadata| of=input.metadata>
-          $ let match = input.matches[metadata.match_id];
-          <tr>
-            <td class="text-center">
-              <select>
-                <for|m| of=input.metadata>
-                  <option selected=(m.id == metadata.id) value=`${m.order_of_player}`>${m.order_of_play}</option>
-                </for>
-              </select>
-            </td>
-            <td class="text-center">
-              <for|id| of=match.players>
-                <div class="float-left">
-                  <span class=`label label-secondary`>${input.players[id].name}</span>
-                </div>
-              </for>
-            </td>
-            <td class="text-center">
-                <div>${metadata.tournament_group.name}</div>
-            </td>
-            <td class="text-center">
-              <input type="text" value=`${metadata.match_displayname}`/>
-            </td>
-            <td class="text-center">
-              <select>
-                <for|mode| of=input.modes>
-                  <option selected=(mode.id == match.match_mode.id) value=`${mode.id}`>${mode.short_name}</option>
-                </for>
-              </select>
-            </td>
-            <td class="text-center">
-              <div style="width: 30%;">
-                <input style="width: 50%;" type="number" value=0/>
-                <input style="width: 50%;" type="number" value=0/>
-              </div>
-            </td>
-            <td class="text-center">
-              <button class="btn btn-primary" type="button" data-toggle="modal" data-target=`#set-score-modal` data-match-id=match.id on-click('onEditScore')>
-                <i class="fas fa-keyboard"/>
-              </button>
-              <button class="btn btn-primary" type="button">
-                <i class="fas fa-save"/>
-              </button>
-            </td>
-          </tr>
-        </for>
-      </tbody>
-    </table>
-  </div>
+	<ul class="nav nav-tabs">
+		<li role="presentation" class="active"><a href="#matches" data-toggle="tab">Matches</a></li>
+    <li role="presentation"><a href="#metadata" data-toggle="tab">Metadata</a></li>
+  </ul>
+	<div class="tab-content" style="width: 100%;">
+		<div class="tab-pane active" role="tabpanel" id="matches">
+			<matches-table players=input.players matches=state.matches columns=["status", "type", "mode", "players", "results", "admin"] on-show-modal("onShowModal") />
+		</div>
+		<div class="tab-pane" role="tabpanel" id="metadata">
+			<div class="table table-responsive">
+				<table class="table-matches-admin">
+					<thead>
+						<tr>
+							<th class="text-center">
+								<span>Order</span>
+							</th>
+							<th class="text-center">
+								<span>Players</span>
+							</th>
+							<th class="text-center">
+								<span>Group</span>
+							</th>
+							<th class="text-center">
+								<span>Displayname</span>
+							</th>
+							<th class="text-center">
+								<span>Mode</span>
+							</th>
+							<th class="text-center">
+								<span>Scores</span>
+							</th>
+							<th class="text-center">
+								<span></span>
+							</th>
+						</tr>
+					</thead>
+					<tbody>
+						<for|metadata| of=input.metadata>
+							$ let match = state.matchesMap[metadata.match_id];
+							<tr>
+								<td class="text-center">
+									<select>
+										<for|m| of=input.metadata>
+											<option selected=(m.id == metadata.id) value=`${m.order_of_player}`>${m.order_of_play}</option>
+										</for>
+									</select>
+								</td>
+								<td class="text-center">
+									<for|id| of=match.players>
+										<div class="float-left">
+											<span class=`label label-secondary`>${input.players[id].name}</span>
+										</div>
+									</for>
+								</td>
+								<td class="text-center">
+										<div>${metadata.tournament_group.name}</div>
+								</td>
+								<td class="text-center">
+									<input type="text" value=`${metadata.match_displayname}`/>
+								</td>
+								<td class="text-center">
+									<select>
+										<for|mode| of=input.modes>
+											<option selected=(mode.id == match.match_mode.id) value=`${mode.id}`>${mode.short_name}</option>
+										</for>
+									</select>
+								</td>
+								<td class="text-center">
+									<div style="width: 30%;">
+										<input style="width: 50%;" type="number" value=0/>
+										<input style="width: 50%;" type="number" value=0/>
+									</div>
+								</td>
+								<td class="text-center">
+									<button class="btn btn-primary" type="button" data-toggle="modal" data-target=`#set-score-modal` data-match-id=match.id on-click('onEditScore')>
+										<i class="fas fa-keyboard"/>
+									</button>
+									<button class="btn btn-primary" type="button">
+										<i class="fas fa-save"/>
+									</button>
+								</td>
+							</tr>
+						</for>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
 </div>
 <for|id, bracket| in=input.brackets>
     <div class="center">

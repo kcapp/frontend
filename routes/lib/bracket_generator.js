@@ -91,7 +91,6 @@ exports.generateLast16 = function (metadata, matches, players, current, callback
             //}).flat();
             //console.log([...new Set(participants)]);
 
-
             for (let i = 0; i < matchMetadatas.length; i++) {
                 const matchMetadata = matchMetadatas[i];
                 const match = matchesMap[matchMetadata.match_id];
@@ -105,17 +104,23 @@ exports.generateLast16 = function (metadata, matches, players, current, callback
                 const away = matchMetadata.player_away;
                 const winsHome = wins[home] ? "" + wins[home] : match.is_finished ? "0" : "";
                 const winsAway = wins[away] ? "" + wins[away] : match.is_finished ? "0" : "";
-                const homeName = players[home].is_placeholder ? (match.is_bye ? "bye" : "") : players[home].name;
-                const awayName = players[away].is_placeholder ? (match.is_bye ? "bye" : "") : players[away].name;
+                const homeName = players[home].is_placeholder ? (match.is_bye ? "bye" : "") : `${players[home].first_name} ${players[home].last_name.substring(0, 1)}`;
+                const awayName = players[away].is_placeholder ? (match.is_bye ? "bye" : "") : `${players[away].first_name} ${players[away].last_name.substring(0, 1)}`;
                 doc.getElementById(`${prefix}_player_home`).childNodes[0].data = homeName;
                 doc.getElementById(`${prefix}_player_away`).childNodes[0].data = awayName;
                 doc.getElementById(`${prefix}_player_home_score`).childNodes[0].data = winsHome;
                 doc.getElementById(`${prefix}_player_away_score`).childNodes[0].data = winsAway;
+                if (!match.is_bye && match.is_players_decided) {
+                    // Only allow editing of matches which are not bye
+                    doc.getElementById(`${prefix}_group`).setAttribute('onclick', `handleClick(${match.id})`);
+                    doc.getElementById(`${prefix}_group`).setAttribute('class', "editable");
+                }
             }
             brackets[group] = new XMLSerializer().serializeToString(doc);
         }
         callback(undefined, brackets);
     } catch (error) {
+        debug(`Error generating last 16 bracket: ${error}`);
         callback(error, null);
     }
 }

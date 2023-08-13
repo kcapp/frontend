@@ -1,3 +1,10 @@
-<a href=`${input.location}`>
-  <i class=`fas ${input.icon} fas-option-button pl-10` data-toggle="tooltip" data-placement="top" title=`${input.title}`/>
-</a>
+<if(input.modal)>
+  <a href=`#` data-toggle="modal" data-target=`#${input.modal}` on-click("onModalPressed")>
+    <i class=`fas ${input.icon} fas-option-button pl-10` data-toggle="tooltip" data-placement="top" title=`${input.title}`/>
+  </a>
+</if>
+<else>
+  <a href=`${input.location}`>
+    <i class=`fas ${input.icon} fas-option-button pl-10` data-toggle="tooltip" data-placement="top" title=`${input.title}`/>
+  </a>
+</else>
