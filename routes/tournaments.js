@@ -208,14 +208,14 @@ router.post('/admin/generate', function (req, res, next) {
                 const player = body.group1[i];
                 players.push({
                     player_id: player.id,
-                    tournament_group_id: preset.group1_tournament_group_id.id
+                    tournament_group_id: preset.group1_tournament_group.id
                 });
             }
             for (let i = 0; i < body.group2.length; i++) {
                 const player = body.group2[i];
                 players.push({
                     player_id: player.id,
-                    tournament_group_id: preset.group2_tournament_group_id.id
+                    tournament_group_id: preset.group2_tournament_group.id
                 });
             }
 

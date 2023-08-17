@@ -112,8 +112,20 @@ exports.generateLast16 = function (metadata, matches, players, current, callback
                 const away = matchMetadata.player_away;
                 const winsHome = wins[home] ? "" + wins[home] : match.is_finished ? "0" : "";
                 const winsAway = wins[away] ? "" + wins[away] : match.is_finished ? "0" : "";
-                const homeName = players[home].is_placeholder ? (match.is_bye ? "bye" : "") : `${players[home].first_name} ${players[home].last_name.substring(0, 1)}`;
-                const awayName = players[away].is_placeholder ? (match.is_bye ? "bye" : "") : `${players[away].first_name} ${players[away].last_name.substring(0, 1)}`;
+
+                const getPlayerName = (player) => {
+                    if (player.is_placeholder) {
+                        if (match.is_bye) {
+                            return "bye"; // Match is a bye
+                        } else {
+                            return ""; // Player not decided yet
+                        }
+                    }
+                    return `${player.first_name} ${player.last_name ? player.last_name.substring(0, 1) : ''}`
+                };
+
+                const homeName = getPlayerName(players[home]);
+                const awayName = getPlayerName(players[away]);
                 doc.getElementById(`${prefix}_player_home`).childNodes[0].data = homeName;
                 doc.getElementById(`${prefix}_player_away`).childNodes[0].data = awayName;
                 doc.getElementById(`${prefix}_player_home_score`).childNodes[0].data = winsHome;

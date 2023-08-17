@@ -1,6 +1,7 @@
 const _ = require("underscore");
 const moment = require('moment');
 const axios = require('axios');
+const alertify = require("../../../../util/alertify");
 
 module.exports = {
     onCreate(input) {
@@ -24,7 +25,7 @@ module.exports = {
             players: input.players,
             matches: matches,
             venues: input.venues,
-            tournamentPreset: input.presets[0] ? input.presets[0].id : -1,
+            tournamentPreset: input.presets[0] ? input.presets[0] : undefined,
             playersAvailable: input.players,
             selected: {
                 group1: [],
@@ -37,6 +38,11 @@ module.exports = {
     },
 
     addPlayer(group, event, selected) {
+        if (this.state.selected[group].length >= 8) {
+            alertify.notify(`Max 8 players per group`, 'warning');
+            return;
+        }
+
         const player = selected.input.player;
 
         this.state.playersAvailable = _.reject(this.state.playersAvailable, (el) => el.id === player.id );
@@ -57,7 +63,7 @@ module.exports = {
         this.setStateDirty('playersAvailable');
     },
     onPresetChange(event) {
-        this.state.tournamentPreset = event.target.value;
+        this.state.tournamentPreset = _.find(this.input.presets, (preset) => preset.id === parseInt(event.target.value));
     },
 
     tournamentNameChange(event) {
@@ -208,7 +214,7 @@ module.exports = {
     },
     generateTournament() {
         const body = {
-            preset_id: this.state.tournamentPreset,
+            preset_id: this.state.tournamentPreset.id,
             office_id: this.state.office,
             group1: this.state.selected.group1,
             group2: this.state.selected.group2

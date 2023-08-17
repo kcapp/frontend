@@ -108,6 +108,7 @@ module.exports = {
 
                         this.state.leg = leg;
                         this.state.players = players;
+                        this.input.match = match;
 
                         this.state.socket.disconnect();
                         this.state.socket = this.setupSio(leg.id);

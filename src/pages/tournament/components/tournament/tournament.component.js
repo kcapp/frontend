@@ -8,7 +8,7 @@ module.exports = {
         for (const key in input.matches) {
             const m = input.matches[key];
             matches[key] = m.filter(match => !match.is_bye);
-            unplayed[key] = m.filter(match => !match.is_finished || match.is_bye);
+            unplayed[key] = m.filter(match => !match.is_finished);
         }
         const matchesMap = Object.values(input.matches).flat().reduce((acc, match) => {
             acc[match.id] = match;

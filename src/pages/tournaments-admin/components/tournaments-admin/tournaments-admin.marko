@@ -28,13 +28,13 @@
             <p>Tournament Preset</p>
             <select on-change("onPresetChange")>
               <for|id, preset| in=input.presets>
-                <option value=`${preset.id}` selected=(preset.id == state.tournamentPreset)>${preset.name}</option>
+                <option value=`${preset.id}` selected=(preset.id == state.tournamentPreset.id)>${preset.name}</option>
               </for>
             </select>
 
             <div style="display: flex;">
               <div style="flex: 1;">
-                <h2 style="text-align: center">Group 1</h2>
+                <h2 style="text-align: center">${input.groups[state.tournamentPreset.group1_tournament_group.id].name}</h2>
                 <div class="block-container-header">
                   <i class="fas fa-users"/>
                   <span class="ml-10">Players</span>
@@ -59,7 +59,7 @@
                 </div>
               </div>
               <div style="flex: 1;">
-                <h2 style="text-align: center">Group 2</h2>
+                <h2 style="text-align: center">${input.groups[state.tournamentPreset.group2_tournament_group.id].name}</h2>
                 <div class="block-container-header">
                   <i class="fas fa-users"/>
                   <span class="ml-10">Players</span>
@@ -94,7 +94,7 @@
           <span class="ml-10">No Presets</span>
         </div>
         <div class="block-container-with-header">
-            <div>To generated tournaments, first create a preset</div>
+            <div>To generate tournaments, first create a preset</div>
         </div>
       </else>
     </div>

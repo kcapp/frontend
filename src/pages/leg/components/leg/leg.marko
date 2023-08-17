@@ -52,7 +52,7 @@ $ const types = require('../../../../components/scorecard/components/match_types
 <qr-code-modal/>
 <confirm-checkout on-confirm-checkout("onConfirmCheckout")/>
 <if(state.enableButtonInput)>
-  <if(state.leg.visits.length < 1)>
+  <if(state.leg.visits.length < 1 && input.match.legs.length === 1)>
     <button type="submit" class="btn btn-primary" on-click('onSwapPlayers')>Swap Order</button>
   </if>
   <button-input-table key="compact-input" type=state.matchType leg=state.leg compactMode=state.compactMode allButtonsMode=state.allButtonsMode players=state.players on-score-button-pressed("onScoreButtonPressed") on-swap-players('onSwapPlayers')/>
