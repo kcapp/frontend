@@ -1,15 +1,15 @@
 $ {
-  var tabs = [{ name: "Season", href: "season" }];
+  let tabs = [{ name: "Season", href: "season" }];
   if (state.hasStatistics) {
     tabs.push({ name: "Statistics", href: "statistics" });
   }
-  tabs.push({ name: "Bracket", href: "playoffs" });
+  tabs.push({ name: "Bracket", href: "bracket" });
   if (input.tournament.standings) {
     tabs.push({ name: "Final Standings", href: "standings" });
   }
 }
 $ {
-  var buttons = [];
+  let buttons = [];
   if (input.tournament.playoffs_tournament_id) {
     buttons.push({ name: "Playoffs", href: `/tournaments/${input.tournament.playoffs_tournament_id}`});
   }
@@ -20,6 +20,9 @@ $ {
 <page-header heading=`${input.tournament.name}` subheading="Tournament" tabs=tabs buttons=buttons/>
 <div class="tab-content">
   <div role="tabpanel" id="season" class="tab-pane active">
+    <if(input.tournament.manual_admin && !input.tournament.is_playoffs)>
+      <options-panel tournament=input.tournament/>
+    </if>
     <for|id, group| in=input.overview>
       <div class="block-container p-10" style='margin-bottom: 0;'>
         <div class="float-left" style="font-size: 30px;">${group[0].tournament_group.name}</div>
@@ -41,19 +44,17 @@ $ {
         <div role="tabpanel" id=`standings-${group[0].tournament_group.id}` class="tab-pane active">
           <tournament-overview-table tournament=input.tournament players=input.players statistics=input.statistics overview=group/>
         </div>
+        $ {
+          let columns = ["start_time", "status", "players", "results", "options"];
+          if (input.tournament.manual_admin) {
+            columns.push("admin");
+          }
+        }
         <div role="tabpanel" id=`matches-${group[0].tournament_group.id}` class="tab-pane">
-          <matches-table players=input.players matches=input.matches[id] columns=["start_time", "status", "players", "results", "options"]/>
+          <matches-table players=input.players matches=state.matches[id] columns=columns on-show-modal("onShowModal")/>
         </div>
         <div role="tabpanel" id=`unplayed-matches-${group[0].tournament_group.id}` class="tab-pane">
-          $ const unplayed = [];
-          $ for (let i = 0; i < input.matches[id].length; i++) {
-            var match = input.matches[id][i];
-            if (match.is_finished) {
-              continue;
-            }
-            unplayed.push(match);
-          }
-          <matches-table players=input.players matches=unplayed columns=["start_time", "status", "players", "results", "options"]/>
+          <matches-table players=input.players matches=state.unplayed[id] columns=columns on-show-modal("onShowModal")/>
         </div>
       </div>
     </for>
@@ -159,7 +160,7 @@ $ {
       </div>
     </div>
   </if>
-  <div role="tabpanel" id="playoffs" class="tab-pane">
+  <div role="tabpanel" id="bracket" class="tab-pane">
     <for|id, bracket| in=input.brackets>
       <object>$!{bracket}</object>
     </for>
@@ -193,3 +194,4 @@ $ {
     </div>
   </if>
 </div>
+<set-score-form players=input.players matches=state.matchesMap key="set-score-modal"/>

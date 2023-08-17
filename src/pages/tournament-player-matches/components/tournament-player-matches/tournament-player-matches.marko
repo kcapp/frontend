@@ -1,9 +1,8 @@
-$ var tournament = input.tournament.name;
-$ var group = input.matches[0].tournament.tournament_group_name;
-
+$ let tournament = input.tournament.name;
+$ let group = input.matches[0].tournament.tournament_group_name;
 
 $ {
-  var buttons = [ { name: "Matches", href: ``},
+  let buttons = [ { name: "Matches", href: ``},
     { name: "Player", href: `/players/${input.player.id}/statistics`},
     { name: "Tournament", href: `/tournaments/${input.tournament.id}`} ];
 }

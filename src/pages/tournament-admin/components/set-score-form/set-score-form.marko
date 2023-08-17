@@ -1,0 +1,46 @@
+<div class="modal fade set-score-modal" id=`set-score-modal` tabindex="-1" role="dialog" aria-labelledby=`set-score-modal-label`>
+  <div class="modal-dialog" role="document">
+    <div class="block-container-header">
+      <i class="fas fa-user-plus"/>
+      <span class="ml-10">Set Match Score</span>
+      <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="block-container-with-header">
+      <form>
+        <div class="form-group">
+          <div style="width: 50%; float: left;">
+            <label class="control-label">Home</label>
+            <input class="form-control" type="number" min=0 value=state.homeScore on-input("homeScoreChange")/>
+          </div>
+          <div style="width: 50%; float: right;">
+            <label class="control-label">Away</label>
+            <input class="form-control" type="number" min=0 value=state.awayScore on-input("awayScoreChange")/>
+          </div>
+        </div>
+        <div class="form-group">
+          <div style="width: 50%; float: left;">
+            <div>
+              <label class=`player-name-label form-check-label label label-${state.homeScore > state.awayScore ? 'success' : 'default'}`>
+                ${input.players[state.homePlayerId] ? input.players[state.homePlayerId].name : ""}
+              </label>
+            </div>
+          </div>
+          <div style="width: 50%; float: right;">
+            <div>
+              <label class=`player-name-label form-check-label label label-${state.awayScore > state.homeScore ? 'success' : 'default'}`>
+                ${input.players[state.awayPlayerId] ? input.players[state.awayPlayerId].name : ""}
+              </label>
+            </div>
+          </div>
+        </div>
+        <button style="float: none" class="btn btn-default btn-close mt-10" type="button" data-dismiss="modal">Close</button>
+        <button class="btn btn-primary btn-submit mt-10" type="submit" on-click("saveScore")>
+          <i class="fas fa-user-plus"/>
+          <span class="ml-10">Save</span>
+        </button>
+      </form>
+    </div>
+  </div>
+</div>

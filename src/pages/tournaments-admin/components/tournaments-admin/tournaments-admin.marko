@@ -2,110 +2,210 @@
 <div>
   <options-panel key="options-panel" groups=input.tournament_group on-add-group("addGroup")/>
 </div>
-<div class="game-options">
-  <div class="block-container-header">
-    <i class="fas fa-cogs"/>
-    <span class="ml-10">Settings</span>
+
+<div>
+  <div class="block-container">
+    <ul class="nav nav-tabs">
+      <li role="presentation" class="active"><a href="#generate" data-toggle="tab">Generate</a></li>
+      <li role="presentation"><a href="#create" data-toggle="tab">Create</a></li>
+    </ul>
   </div>
-  <div class="block-container-with-header">
-    <p>Name</p>
-    <input type="text" placeholder="Name" on-input("tournamentNameChange") value=`${state.tournamentName}`/>
-    <p>Short Name</p>
-    <input type="text" placeholder="Short Name" on-input("shortNameChange") value=`${state.shortName}`/>
-    <p>Start</p>
-    <input type="datetime-local" placeholder="Start" on-input("startDateChange") value=`${state.start}`/>
-    <p>End</p>
-    <input type="datetime-local" placeholder="End" on-input("endDateChange") value=`${state.end}`/>
-    <p>Office</p>
-    <select on-change("officeChange")>
-      <for|id, office| in=input.offices>
-        <option value=`${id}` selected=(office.id == state.office)>${office.name}</option>
-      </for>
-    </select>
-    <p>Venue</p>
-    <select on-change("venueChange")>
-      <for|id, venue| in=state.venues>
-        <option value=`${venue.id}` selected=(venue.id == state.venue)>${venue.name}</option>
-      </for>
-    </select>
+  <div class="tab-content" style="width: 100%;">
+    <div class="tab-pane active" role="tabpanel" id="generate">
+      <if(input.presets[0])>
+        <div class="game-options">
+          <div class="block-container-header">
+            <i class="fas fa-cogs"/>
+            <span class="ml-10">Settings</span>
+          </div>
+          <div class="block-container-with-header">
+            <p>Office</p>
+            <select on-change("officeChange")>
+              <for|id, office| in=input.offices>
+                <option value=`${id}` selected=(office.id == state.office)>${office.name}</option>
+              </for>
+            </select>        
+            <p>Tournament Preset</p>
+            <select on-change("onPresetChange")>
+              <for|id, preset| in=input.presets>
+                <option value=`${preset.id}` selected=(preset.id == state.tournamentPreset.id)>${preset.name}</option>
+              </for>
+            </select>
+
+            <div style="display: flex;">
+              <div style="flex: 1;">
+                <h2 style="text-align: center">${input.groups[state.tournamentPreset.group1_tournament_group.id].name}</h2>
+                <div class="block-container-header">
+                  <i class="fas fa-users"/>
+                  <span class="ml-10">Players</span>
+                </div>
+                <div class="block-container-with-header">
+                  <div class="form-group form-check players-selected">
+                    <for|player| of=state.selected.group1>
+                      <player-selector key="players[]" player=player on-add-player("removePlayer", "group1") type=1 />
+                    </for>
+                  </div>
+                </div>
+                <div class="block-container-header">
+                  <i class="fas fa-mouse-pointer"/>
+                  <span class="ml-10">Select players</span>
+                </div>
+                <div class="block-container-with-header">
+                  <div class="form-group form-check players-all">
+                    <for|player| of=state.playersAvailable>
+                      <player-selector player=player on-add-player("addPlayer", "group1") type=1 />
+                    </for>
+                  </div>
+                </div>
+              </div>
+              <div style="flex: 1;">
+                <h2 style="text-align: center">${input.groups[state.tournamentPreset.group2_tournament_group.id].name}</h2>
+                <div class="block-container-header">
+                  <i class="fas fa-users"/>
+                  <span class="ml-10">Players</span>
+                </div>
+                <div class="block-container-with-header">
+                  <div class="form-group form-check players-selected">
+                    <for|player| of=state.selected.group2>
+                      <player-selector key="players[]" player=player on-add-player("removePlayer", "group2") type=1 />
+                    </for>
+                  </div>
+                </div>
+                <div class="block-container-header">
+                  <i class="fas fa-mouse-pointer"/>
+                  <span class="ml-10">Select players</span>
+                </div>
+                <div class="block-container-with-header">
+                  <div class="form-group form-check players-all">
+                    <for|player| of=state.playersAvailable>
+                      <player-selector player=player on-add-player("addPlayer", "group2") type=1 />
+                    </for>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <button class="btn btn-primary" type="button" on-click("generateTournament")>Generate</button>
+          </div>
+        </div>
+      </if>
+      <else>
+        <div class="block-container-header pt20">
+          <i class="fas fa-building"/>
+          <span class="ml-10">No Presets</span>
+        </div>
+        <div class="block-container-with-header">
+            <div>To generate tournaments, first create a preset</div>
+        </div>
+      </else>
+    </div>
+    <div class="tab-pane" role="tabpanel" id="create">
+      <div class="game-options">
+        <div class="block-container-header">
+          <i class="fas fa-cogs"/>
+          <span class="ml-10">Settings</span>
+        </div>
+        <div class="block-container-with-header">
+          <p>Name</p>
+          <input type="text" placeholder="Name" on-input("tournamentNameChange") value=`${state.tournamentName}`/>
+          <p>Short Name</p>
+          <input type="text" placeholder="Short Name" on-input("shortNameChange") value=`${state.shortName}`/>
+          <p>Start</p>
+          <input type="datetime-local" placeholder="Start" on-input("startDateChange") value=`${state.start}`/>
+          <p>End</p>
+          <input type="datetime-local" placeholder="End" on-input("endDateChange") value=`${state.end}`/>
+          <p>Office</p>
+          <select on-change("officeChange")>
+            <for|id, office| in=input.offices>
+              <option value=`${id}` selected=(office.id == state.office)>${office.name}</option>
+            </for>
+          </select>
+          <p>Venue</p>
+          <select on-change("venueChange")>
+            <for|id, venue| in=state.venues>
+              <option value=`${venue.id}` selected=(venue.id == state.venue)>${venue.name}</option>
+            </for>
+          </select>
+        </div>
+      </div>
+      <h3>Groups</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Starting Score</th>
+            <th>Type</th>
+            <th>Mode</th>
+          </tr>
+        </thead>
+        <tbody>
+          <for|group, idx| of=state.groups>
+            <tr>
+              <td>
+                <select idx=idx on-change("groupChange")>
+                  <for|id, inputGroup| in=input.groups>
+                    <option value=`${id}` selected=(inputGroup.id == group.id)>${inputGroup.name}</option>
+                  </for>
+                </select>
+              </td>
+              <td>
+                <input type="number" idx=idx placeholder="301" on-input("scoreChange") value=`${group.score}`/>
+              </td>
+              <td>
+                <select idx=idx on-change("typeChange")>
+                  <for|type| of=input.types>
+                    <option value=`${type.id}` selected=(type.id == group.type)>${type.name}</option>
+                  </for>
+                </select>
+              </td>
+              <select idx=idx on-change("modeChange")>
+                <for|mode| of=input.modes>
+                  <option value=`${mode.id}` selected=(mode.id == group.mode)>${mode.name}</option>
+                </for>
+              </select>
+              <td/>
+            </tr>
+          </for>
+        </tbody>
+      </table>
+      <button class="btn btn-primary" type="button" on-click("addGroup")>Add</button>
+      <button class="btn btn-primary" type="button" on-click("removeGroup")>Remove</button>
+      <h3>Matches</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Time</th>
+            <th>Group</th>
+            <th>Home Player</th>
+            <th>Away Player</th>
+          </tr>
+        </thead>
+        <tbody>
+          <for|match| of=state.matches>
+            <tr>
+              <td>
+                <input on-paste("onPaste") class=`${match[0].valid ? "" : "invalid"}` type="text" placeholder="yyyy-mm-dd" value=`${match[0].value}`/>
+              </td>
+              <td>
+                <input type="text" class=`${match[1].valid ? "" : "invalid"}` placeholder="HH:MM" value=`${match[1].value}`/>
+              </td>
+              <td>
+                <input type="text" class=`${match[2].valid ? "" : "invalid"}` value=`${match[2].value}` disabled/>
+              </td>
+              <td>
+                <input type="text" class=`${match[3].valid ? "" : "invalid"}` placeholder="Home Player" value=`${match[3].value}`/>
+              </td>
+              <td>
+                <input type="text" class=`${match[4].valid ? "" : "invalid"}` placeholder="Away Player" value=`${match[4].value}`/>
+              </td>
+            </tr>
+          </for>
+        </tbody>
+      </table>
+      <button class="btn btn-primary" type="button" on-click("validate")>Validate</button>
+      <button class="btn btn-primary" type="button" on-click("createTournament")>Create</button>
+    </div>
   </div>
 </div>
-<h3>Groups</h3>
-<table>
-  <thead>
-    <tr>
-      <th>Name</th>
-      <th>Starting Score</th>
-      <th>Type</th>
-      <th>Mode</th>
-    </tr>
-  </thead>
-  <tbody>
-    <for|group, idx| of=state.groups>
-      <tr>
-        <td>
-          <select idx=idx on-change("groupChange")>
-            <for|id, inputGroup| in=input.groups>
-              <option value=`${id}` selected=(inputGroup.id == group.id)>${inputGroup.name}</option>
-            </for>
-          </select>
-        </td>
-        <td>
-          <input type="number" idx=idx placeholder="301" on-input("scoreChange") value=`${group.score}`/>
-        </td>
-        <td>
-          <select idx=idx on-change("typeChange")>
-            <for|type| of=input.types>
-              <option value=`${type.id}` selected=(type.id == group.type)>${type.name}</option>
-            </for>
-          </select>
-        </td>
-        <select idx=idx on-change("modeChange")>
-          <for|mode| of=input.modes>
-            <option value=`${mode.id}` selected=(mode.id == group.mode)>${mode.name}</option>
-          </for>
-        </select>
-        <td/>
-      </tr>
-    </for>
-  </tbody>
-</table>
-<button class="btn btn-primary" type="button" on-click("addGroup")>Add</button>
-<button class="btn btn-primary" type="button" on-click("removeGroup")>Remove</button>
-<h3>Matches</h3>
-<table>
-  <thead>
-    <tr>
-      <th>Date</th>
-      <th>Time</th>
-      <th>Group</th>
-      <th>Home Player</th>
-      <th>Away Player</th>
-    </tr>
-  </thead>
-  <tbody>
-    <for|match| of=state.matches>
-      <tr>
-        <td>
-          <input on-paste("onPaste") class=`${match[0].valid ? "" : "invalid"}` type="text" placeholder="yyyy-mm-dd" value=`${match[0].value}`/>
-        </td>
-        <td>
-          <input type="text" class=`${match[1].valid ? "" : "invalid"}` placeholder="HH:MM" value=`${match[1].value}`/>
-        </td>
-        <td>
-          <input type="text" class=`${match[2].valid ? "" : "invalid"}` value=`${match[2].value}` disabled/>
-        </td>
-        <td>
-          <input type="text" class=`${match[3].valid ? "" : "invalid"}` placeholder="Home Player" value=`${match[3].value}`/>
-        </td>
-        <td>
-          <input type="text" class=`${match[4].valid ? "" : "invalid"}` placeholder="Away Player" value=`${match[4].value}`/>
-        </td>
-      </tr>
-    </for>
-  </tbody>
-</table>
-<button class="btn btn-primary" type="button" on-click("validate")>Validate</button>
-<button class="btn btn-primary" type="button" on-click("createTournament")>Create</button>
 
 <new-group-form isAdd=true groups=input.groups/>

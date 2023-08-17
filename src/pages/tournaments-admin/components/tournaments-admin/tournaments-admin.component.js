@@ -1,6 +1,7 @@
-var _ = require("underscore");
-var moment = require('moment');
-var axios = require('axios');
+const _ = require("underscore");
+const moment = require('moment');
+const axios = require('axios');
+const alertify = require("../../../../util/alertify");
 
 module.exports = {
     onCreate(input) {
@@ -23,11 +24,46 @@ module.exports = {
             groups: [{ id: 1, score: 301, mode: 1, type: 1 }],
             players: input.players,
             matches: matches,
-            venues: input.venues
+            venues: input.venues,
+            tournamentPreset: input.presets[0] ? input.presets[0] : undefined,
+            playersAvailable: input.players,
+            selected: {
+                group1: [],
+                group2: []
+            }
         }
     },
     onMount() {
         this.officeChange({ target: { value: this.state.office } });
+    },
+
+    addPlayer(group, event, selected) {
+        if (this.state.selected[group].length >= 8) {
+            alertify.notify(`Max 8 players per group`, 'warning');
+            return;
+        }
+
+        const player = selected.input.player;
+
+        this.state.playersAvailable = _.reject(this.state.playersAvailable, (el) => el.id === player.id );
+        this.setStateDirty('playersAvailable');
+
+        this.state.selected[group].push(player);
+        this.setStateDirty(`selected[${group}]`);
+    },
+
+    removePlayer(group, event, selected) {
+        const player = selected.input.player;
+
+        this.state.selected[group] = _.reject(this.state.selected[group], (el) => el.id === player.id );
+        this.setStateDirty(`selected[${group}]`);
+
+        this.state.playersAvailable.push(player);
+        this.state.playersAvailable = _.sortBy(this.state.playersAvailable, "name");
+        this.setStateDirty('playersAvailable');
+    },
+    onPresetChange(event) {
+        this.state.tournamentPreset = _.find(this.input.presets, (preset) => preset.id === parseInt(event.target.value));
     },
 
     tournamentNameChange(event) {
@@ -53,6 +89,8 @@ module.exports = {
         } else {
             this.venueChange({ target: { value: -1 } });
         }
+        this.state.playersAvailable = _.reject(this.input.players, (player) => player.office_id !== this.state.office );
+        this.setStateDirty('playersAvailable');
     },
     venueChange(event) {
         this.state.venue = parseInt(event.target.value);
@@ -171,6 +209,21 @@ module.exports = {
                 location.href = window.location.origin + '/tournaments';
             }).catch(error => {
                 alert("Unable to create tournament. See log for details");
+                console.log(error);
+            });
+    },
+    generateTournament() {
+        const body = {
+            preset_id: this.state.tournamentPreset.id,
+            office_id: this.state.office,
+            group1: this.state.selected.group1,
+            group2: this.state.selected.group2
+        }
+        axios.post(window.location.origin + '/tournaments/admin/generate', body)
+            .then(response => {
+                location.href = `/tournaments/${response.data.id}`;
+            }).catch(error => {
+                alert("Unable to generate tournament. See log for details");
                 console.log(error);
             });
     }
