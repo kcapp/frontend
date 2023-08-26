@@ -1,8 +1,9 @@
 $ let aquired = input.aquired;
-<div class='highscore-card'>
-    <embed id=state.id class=`badge-img ${aquired ? '' : 'not-aquired'}` src=input.image type="image/svg+xml" height="200" width="200" title="343"/>
-    <div class="badge-name">${input.name}</div>
-    <div class="badge-description">
+<div class='highscore-card' style="min-height: 230px; padding: 0 0 0.5em 0;">
+    $ let clazz = aquired ? '' : 'not-aquired';
+    <embed id=state.id class=`badge-img ${clazz}` src=input.image type="image/svg+xml" height="200" width="200" title="343"/>
+    <div class=`badge-name ${clazz}`>${input.name}</div>
+    <div class=`badge-description ${clazz}`>
         <p>${input.description}</p>
     </div>
 </div>
