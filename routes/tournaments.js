@@ -11,6 +11,7 @@ const _ = require('underscore');
 const bracket = require('./lib/bracket_generator');
 const moment = require('moment');
 
+const types = require('../src/components/scorecard/components/match_types');
 const template = require('marko');
 const tournamentTemplate = template.load(require.resolve('../src/pages/tournament/tournament-template.marko'));
 const tournamentsTemplate = template.load(require.resolve('../src/pages/tournaments/tournaments-template.marko'));
@@ -178,7 +179,8 @@ router.post('/admin', function (req, res, next) {
                     },
                     players: [match[3].id, match[4].id],
                     legs: [{
-                        starting_score: group.score
+                        starting_score: group.score,
+                        parameters: { outshot_type: { id: types.OUTSHOT_DOUBLE } }
                     }],
                     tournament_id: tournament.id,
                     office_id: req.body.office_id
@@ -264,6 +266,21 @@ router.post('/admin/groups', function (req, res, next) {
             res.redirect('/tournaments/admin');
         }).catch(error => {
             debug(`Error when adding tournament group: ${error}`);
+            next(error);
+        });
+});
+
+/* Add a player to tournament  */
+router.post('/:id/player', function (req, res, next) {
+    axios.post(`${req.app.locals.kcapp.api}/tournament/${req.params.id}/player`, req.body)
+        .then(response => {
+            const matches = response.data;
+            for (const match of matches) {
+                this.socketHandler.setupLegsNamespace(match.current_leg_id);
+            }
+            res.end();
+        }).catch(error => {
+            debug(`Error when adding player to tournament: ${error}`);
             next(error);
         });
 });

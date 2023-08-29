@@ -10,6 +10,11 @@ module.exports = {
             matches[key] = m.filter(match => !match.is_bye);
             unplayed[key] = m.filter(match => !match.is_finished);
         }
+        const groups = new Set();
+        for (const key in input.overview) {
+            const g = input.overview[key];
+            groups.add(g[0].tournament_group);
+        }
         const matchesMap = Object.values(input.matches).flat().reduce((acc, match) => {
             acc[match.id] = match;
             return acc;
@@ -18,7 +23,8 @@ module.exports = {
             hasStatistics: !_.isEmpty(input.statistics.best_three_dart_avg),
             matches: matches,
             matchesMap: matchesMap,
-            unplayed: unplayed
+            unplayed: unplayed,
+            groups: Array.from(groups)
         }
     },
 
