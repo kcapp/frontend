@@ -235,7 +235,17 @@ router.post('/admin/generate', function (req, res, next) {
             axios.post(`${req.app.locals.kcapp.api}/tournament/generate`, tournamentBody)
                 .then(response => {
                     const tournament = response.data;
-                    res.send(tournament);
+                    axios.get(`${req.app.locals.kcapp.api}/tournament/${tournament.id}/matches`)
+                        .then(response => {
+                            const matches = Object.values(response.data).flat();
+                            for (const match of matches) {
+                                this.socketHandler.setupLegsNamespace(match.current_leg_id);
+                            }
+                            res.send(tournament);
+                        }).catch(error => {
+                            debug(`Error when generating new tournament: ${error}`);
+                            next(error);
+                        });
                 }).catch(error => {
                     debug(`Error when generating new tournament: ${error}`);
                     next(error);
@@ -251,7 +261,19 @@ router.post('/admin/generate/playoffs/:id', function (req, res, next) {
     axios.post(`${req.app.locals.kcapp.api}/tournament/generate/playoffs/${req.params.id}`)
         .then(response => {
             const tournament = response.data;
-            res.send(tournament);
+            axios.get(`${req.app.locals.kcapp.api}/tournament/${tournament.id}/matches`)
+            .then(response => {
+                const matches = Object.values(response.data).flat();
+                for (const match of matches) {
+                    if (!match.is_finished) {
+                        this.socketHandler.setupLegsNamespace(match.current_leg_id);
+                    }
+                }
+                res.send(tournament);
+            }).catch(error => {
+                debug(`Error when generating playoffs tournament: ${error}`);
+                next(error);
+            });
         }).catch(error => {
             debug(`Error when generating playoffs tournament: ${error}`);
             next(error);
