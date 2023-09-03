@@ -285,7 +285,6 @@ router.post('/:id/player', function (req, res, next) {
         });
 });
 
-
 /* Get tournament with the given ID */
 router.get('/:id', function (req, res, next) {
     axios.all([
@@ -322,13 +321,15 @@ router.get('/:id', function (req, res, next) {
                 axios.get(`${req.app.locals.kcapp.api}/tournament/${tournament.playoffs_tournament_id}/matches`),
                 axios.get(`${req.app.locals.kcapp.api}/tournament/${tournament.playoffs_tournament_id}/metadata`)
             ]).then(axios.spread((matchesResponse, metadataResponse) => {
-                bracket.generate(tournament, metadataResponse.data, matchesResponse.data, players, '', (err, brackets) => {
+                const playoffsMatches = matchesResponse.data;
+                bracket.generate(tournament, metadataResponse.data, playoffsMatches, players, '', (err, brackets) => {
                     res.marko(tournamentTemplate, {
                         brackets: brackets,
                         tournament: tournament,
                         overview: overview,
                         players: players,
                         matches: matches,
+                        playoffs_matches: playoffsMatches,
                         statistics: statistics
                     });
                 });

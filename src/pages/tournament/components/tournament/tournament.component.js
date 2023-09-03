@@ -19,6 +19,13 @@ module.exports = {
             acc[match.id] = match;
             return acc;
         }, {});
+        // Add all playoffs matches
+        if (input.playoffsMatches) {
+            Object.assign(matchesMap, Object.values(input.playoffsMatches).flat().reduce((acc, match) => {
+                acc[match.id] = match;
+                return acc;
+            }, {}));
+        }
         this.state = {
             hasStatistics: !_.isEmpty(input.statistics.best_three_dart_avg),
             matches: matches,
