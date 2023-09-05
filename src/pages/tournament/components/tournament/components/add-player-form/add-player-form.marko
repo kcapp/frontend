@@ -1,0 +1,38 @@
+<div class="modal fade add-player-modal" id=`add-player-modal` data-matchId="-1" tabindex="-1" role="dialog" aria-labelledby=`add-player-modal-label`>
+  <div class="modal-dialog" role="document">
+    <div class="block-container-header">
+      <i class="fas fa-user-plus"/>
+      <span class="ml-10">Add Player</span>
+      <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="block-container-with-header">
+      <form>
+        <div class="form-group">
+          <div>
+            <label>Player</label>
+            <select class="form-control" onChange("onPlayerChange")>
+              <for|idx, player| in=state.players>
+                <option value=player.id selected=player.id===state.playerID>${player.name}</option>
+              </for>
+            </select>            
+          </div>
+          <div>
+            <label>Group</label>
+            <select class="form-control" onChange("onGroupChange")>
+              <for|group| of=input.groups>
+                <option value=group.id selected=group.id===state.groupID>${group.name}</option>
+              </for>
+            </select>            
+          </div>          
+        </div>
+        <button style="float: none" class="btn btn-default btn-close mt-10" type="button" data-dismiss="modal">Close</button>
+        <button class="btn btn-primary btn-submit mt-10" type="submit" on-click("addPlayer")>
+          <i class="fas fa-user-plus"/>
+          <span class="ml-10">Add</span>
+        </button>
+      </form>
+    </div>
+  </div>
+</div>

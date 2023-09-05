@@ -11,6 +11,7 @@ const _ = require('underscore');
 const bracket = require('./lib/bracket_generator');
 const moment = require('moment');
 
+const types = require('../src/components/scorecard/components/match_types');
 const template = require('marko');
 const tournamentTemplate = template.load(require.resolve('../src/pages/tournament/tournament-template.marko'));
 const tournamentsTemplate = template.load(require.resolve('../src/pages/tournaments/tournaments-template.marko'));
@@ -178,7 +179,8 @@ router.post('/admin', function (req, res, next) {
                     },
                     players: [match[3].id, match[4].id],
                     legs: [{
-                        starting_score: group.score
+                        starting_score: group.score,
+                        parameters: { outshot_type: { id: types.OUTSHOT_DOUBLE } }
                     }],
                     tournament_id: tournament.id,
                     office_id: req.body.office_id
@@ -233,7 +235,17 @@ router.post('/admin/generate', function (req, res, next) {
             axios.post(`${req.app.locals.kcapp.api}/tournament/generate`, tournamentBody)
                 .then(response => {
                     const tournament = response.data;
-                    res.send(tournament);
+                    axios.get(`${req.app.locals.kcapp.api}/tournament/${tournament.id}/matches`)
+                        .then(response => {
+                            const matches = Object.values(response.data).flat();
+                            for (const match of matches) {
+                                this.socketHandler.setupLegsNamespace(match.current_leg_id);
+                            }
+                            res.send(tournament);
+                        }).catch(error => {
+                            debug(`Error when generating new tournament: ${error}`);
+                            next(error);
+                        });
                 }).catch(error => {
                     debug(`Error when generating new tournament: ${error}`);
                     next(error);
@@ -249,7 +261,19 @@ router.post('/admin/generate/playoffs/:id', function (req, res, next) {
     axios.post(`${req.app.locals.kcapp.api}/tournament/generate/playoffs/${req.params.id}`)
         .then(response => {
             const tournament = response.data;
-            res.send(tournament);
+            axios.get(`${req.app.locals.kcapp.api}/tournament/${tournament.id}/matches`)
+            .then(response => {
+                const matches = Object.values(response.data).flat();
+                for (const match of matches) {
+                    if (!match.is_finished) {
+                        this.socketHandler.setupLegsNamespace(match.current_leg_id);
+                    }
+                }
+                res.send(tournament);
+            }).catch(error => {
+                debug(`Error when generating playoffs tournament: ${error}`);
+                next(error);
+            });
         }).catch(error => {
             debug(`Error when generating playoffs tournament: ${error}`);
             next(error);
@@ -268,6 +292,20 @@ router.post('/admin/groups', function (req, res, next) {
         });
 });
 
+/* Add a player to tournament  */
+router.post('/:id/player', function (req, res, next) {
+    axios.post(`${req.app.locals.kcapp.api}/tournament/${req.params.id}/player`, req.body)
+        .then(response => {
+            const matches = response.data;
+            for (const match of matches) {
+                this.socketHandler.setupLegsNamespace(match.current_leg_id);
+            }
+            res.end();
+        }).catch(error => {
+            debug(`Error when adding player to tournament: ${error}`);
+            next(error);
+        });
+});
 
 /* Get tournament with the given ID */
 router.get('/:id', function (req, res, next) {
@@ -305,13 +343,15 @@ router.get('/:id', function (req, res, next) {
                 axios.get(`${req.app.locals.kcapp.api}/tournament/${tournament.playoffs_tournament_id}/matches`),
                 axios.get(`${req.app.locals.kcapp.api}/tournament/${tournament.playoffs_tournament_id}/metadata`)
             ]).then(axios.spread((matchesResponse, metadataResponse) => {
-                bracket.generate(tournament, metadataResponse.data, matchesResponse.data, players, '', (err, brackets) => {
+                const playoffsMatches = matchesResponse.data;
+                bracket.generate(tournament, metadataResponse.data, playoffsMatches, players, '', (err, brackets) => {
                     res.marko(tournamentTemplate, {
                         brackets: brackets,
                         tournament: tournament,
                         overview: overview,
                         players: players,
                         matches: matches,
+                        playoffs_matches: playoffsMatches,
                         statistics: statistics
                     });
                 });

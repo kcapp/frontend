@@ -3,7 +3,9 @@ $ {
   if (state.hasStatistics) {
     tabs.push({ name: "Statistics", href: "statistics" });
   }
-  tabs.push({ name: "Bracket", href: "bracket" });
+  if(Object.keys(input.brackets).length !== 0) {
+    tabs.push({ name: "Bracket", href: "bracket" });
+  }
   if (input.tournament.standings) {
     tabs.push({ name: "Final Standings", href: "standings" });
   }
@@ -160,11 +162,13 @@ $ {
       </div>
     </div>
   </if>
-  <div role="tabpanel" id="bracket" class="tab-pane">
-    <for|id, bracket| in=input.brackets>
-      <object>$!{bracket}</object>
-    </for>
-  </div>
+  <if(Object.keys(input.brackets).length !== 0)>
+    <div role="tabpanel" id="bracket" class="tab-pane">
+      <for|id, bracket| in=input.brackets>
+        <object>$!{bracket}</object>
+      </for>
+    </div>
+  </if>
   <if(input.tournament.standings)>
     <div role="tabpanel" id="standings" class="tab-pane">
       <div class="block-container no-padding">
@@ -195,3 +199,4 @@ $ {
   </if>
 </div>
 <set-score-form players=input.players matches=state.matchesMap key="set-score-modal"/>
+<add-player-form players=input.players overview=input.overview tournamentId=input.tournament.id officeId=input.tournament.office_id groups=state.groups/>
