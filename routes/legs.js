@@ -189,9 +189,8 @@ function renderLegView(req, res, next, isExperimental, isController) {
     axios.all([
         axios.get(`${req.app.locals.kcapp.api}/player`),
         axios.get(`${req.app.locals.kcapp.api}/leg/${req.params.id}`),
-        axios.get(`${req.app.locals.kcapp.api}/leg/${req.params.id}/players`),
-        axios.get(`${req.app.locals.kcapp.api}/statistics/global`)
-    ]).then(axios.spread((players, legResponse, legPlayers, globalStatistics) => {
+        axios.get(`${req.app.locals.kcapp.api}/leg/${req.params.id}/players`)
+    ]).then(axios.spread((players, legResponse, legPlayers) => {
         const leg = legResponse.data;
         axios.get(`${req.app.locals.kcapp.api}/match/${leg.match_id}`)
             .then(response => {
@@ -209,9 +208,9 @@ function renderLegView(req, res, next, isExperimental, isController) {
                     players: players.data,
                     match: match,
                     leg_players: legPlayers,
-                    global_statistics: globalStatistics.data,
                     experimental: isExperimental,
-                    controller: isController
+                    controller: isController,
+                    locals: req.app.locals
                 });
             }).catch(error => {
                 debug(`Error when getting match: ${error}`);

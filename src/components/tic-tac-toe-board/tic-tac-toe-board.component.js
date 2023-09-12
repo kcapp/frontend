@@ -1,4 +1,4 @@
-var _ = require("underscore");
+const _ = require("underscore");
 
 module.exports = {
     onCreate(input) {
@@ -8,9 +8,9 @@ module.exports = {
         this.updateBoard();
     },
     updateState(params) {
-        var closed = [];
-        for (var i = 0; i < params.numbers.length; i++) {
-            var num = params.numbers[i];
+        const closed = [];
+        for (let i = 0; i < params.numbers.length; i++) {
+            const num = params.numbers[i];
             if (params.hits[num]) {
                 closed.push(i);
             }
@@ -26,13 +26,13 @@ module.exports = {
         this.updateBoard();
     },
     updateBoard(score = 0, multiplier = 1, isUndo = false) {
-        var cells = this.getComponents("tic-tac-toe-cell");
-        for (var i = 0; i < cells.length; i++) {
-            var cell = cells[i];
-            var num = this.state.parameters.numbers[i];
+        const cells = this.getComponents("tic-tac-toe-cell");
+        for (let i = 0; i < cells.length; i++) {
+            const cell = cells[i];
+            let num = this.state.parameters.numbers[i];
 
             if (!this.state.closed.includes(i)) {
-                var scored = score * multiplier;
+                const scored = score * multiplier;
                 num = isUndo ? num + scored : num - scored;
                 cell.updateValue(num, multiplier);
             }

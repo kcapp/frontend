@@ -109,9 +109,9 @@ module.exports = {
             }
         }
 
-        var datasets = []
-        for (var i = 0; i < legPlayers.length; i++) {
-            var player = players[legPlayers[i].player_id];
+        const datasets = []
+        for (let i = 0; i < legPlayers.length; i++) {
+            const player = players[legPlayers[i].player_id];
             datasets.push({
                 label: player.name,
                 backgroundColor: player.color,
@@ -120,7 +120,7 @@ module.exports = {
                 fill: false
             });
         }
-        var config = {
+        new Chart("canvas-scores", {
             type: 'line',
             data: {
                 labels: labels,
@@ -134,14 +134,13 @@ module.exports = {
                 },
                 hover: { mode: 'nearest', intersect: true },
                 scales: {
-                    xAxes: [{ display: true, scaleLabel: { display: true, labelString: 'Round' } }],
-                    yAxes: [{ display: true, scaleLabel: { display: true, labelString: 'Scores' } }]
+                    x: { display: true, scaleLabel: { display: true, labelString: 'Round' } },
+                    y: { display: true, scaleLabel: { display: true, labelString: 'Scores' }, min: 0, 
+                        max: chartMaxValue, beginAtZero: true }
                 },
                 elements: { line: { tension: 0 } }
             }
-        }
-        config.options.scales.yAxes[0].ticks = { max: chartMaxValue, stepSize: 20, beginAtZero: true };
-        new Chart("canvas-scores", config);
+        });
     },
     onKeyDown(e) {
         switch (e.key) {

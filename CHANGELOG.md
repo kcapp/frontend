@@ -1,9 +1,21 @@
 # Changelog
-
 A preview of major changes can be found in the Wiki ([Latest Changes](https://github.com/kcapp/frontend/wiki/Latest_Changes))
+
+## [2.7.0] - 2023-09-12
+#### Feature
+- Automatically start next leg without needing to reload the page to improve load time, and get back to throwing quicker
+- Forward clients back to main page from match result after 2 minutes
+- New "Explore" tab on player statistics, to explore darts thrown
+- Support for `ANY` and `MASTER` outs for `x01` legs
+- Simplified input for `x01` legs
+
+#### Changed
+- Updated to use `Node.js v18`
+- Updated dependencies to newer versions
 
 ## [2.6.0] - 2023-06-30
 #### Feature
+- Support for Tournament Presets
 - New query parameter `officeId=<id>` for `/obs` view, to only forward on matches in a given office
 - Practice against `first time`, `very easy`, `challenging` and `mvg` bots
 - New button for swapping order if button input is enabled
@@ -17,7 +29,6 @@ A preview of major changes can be found in the Wiki ([Latest Changes](https://gi
 - Bug where vocal announcement for Cricket would say "No score" instead of marks
 
 ## [2.5.0] - 2023-03-10
-
 #### Feature
 - Support multiple legs for Practice matches
 - Player options to disable automatic score deduction per dart, and to show/hide checkout guide
@@ -190,6 +201,7 @@ A preview of major changes can be found in the Wiki ([Latest Changes](https://gi
 - Multiple score entry methods
     - Including [Unicorn Smartboard](https://github.com/kcapp/smartboard)
 
+[2.7.0]: https://github.com/kcapp/frontend/compare/v2.6.0...v2.7.0
 [2.6.0]: https://github.com/kcapp/frontend/compare/v2.5.0...v2.6.0
 [2.5.0]: https://github.com/kcapp/frontend/compare/v2.4.0...v2.5.0
 [2.4.0]: https://github.com/kcapp/frontend/compare/v2.3.0...v2.4.0

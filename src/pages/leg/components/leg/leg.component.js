@@ -24,7 +24,6 @@ module.exports = {
             roundNumber: input.leg.round,
             venueConfig: venue && venue.config ? venue.config : {},
             submitting: false,
-            globalStatistics: input.global_statistics,
             matchType: input.leg.leg_type.id || input.match.match_type.id,
             socket: {},
             audioAnnouncer: undefined,
@@ -32,7 +31,12 @@ module.exports = {
             compactMode: compactMode,
             allButtonsMode: false,
             isPlayerBoardCam: input.leg_players.some(player => player.player.board_stream_url),
-            announcedStart: false
+            announcedStart: false,
+            keyboard:  {
+                mode: 'full',
+                timer: undefined,
+                previous: { value: 0, multiplier: 1 }
+            }
         }
     },
 
@@ -43,32 +47,7 @@ module.exports = {
             this.onKeyDown(e);
         }.bind(this), 10), false);
 
-        // Setup socket endpoints
-        const socket = io.connect(`${window.location.origin}/legs/${this.state.leg.id}`);
-        socket.on('score_update', this.onScoreUpdate.bind(this));
-        socket.on('possible_throw', this.onPossibleThrowEvent.bind(this));
-        socket.on('say', this.onSay.bind(this));
-        socket.on('announce', io.onAnnounce.bind(this));
-        socket.on('leg_finished', (data) => {
-            socket.on('say_finish', () => {
-                // Wait for announcement to finish before moving on
-                const match = data.match;
-                const isController = localStorage.get('controller');
-                if (match.is_finished) {
-                    if (isController) {
-                        // If this is a controller, forward back to start page
-                        location.href = '/controller';
-                    } else {
-                        location.href = `${window.location.origin}/matches/${match.id}/result`;
-                    }
-                } else {
-                    const base = `${window.location.origin}/legs/${match.current_leg_id}`;
-                    location.href = isController ? `${base}/controller` : `${base}`;
-                }
-            });
-        });
-        socket.on('error', this.onError.bind(this));
-        this.state.socket = socket;
+        this.state.socket = this.setupSio(this.state.leg.id);
         this.state.audioAnnouncer = new Audio();
 
         // If this is an official match, which has not had any darts thrown, and was not updated in the last two minutes
@@ -80,7 +59,7 @@ module.exports = {
             if (this.input.leg.visits.length === 0) {
                 const currentPlayer = this.input.players[this.input.leg.current_player_id];
                 setTimeout(() => {
-                    socket.emit('announce', { leg_num: this.input.match.current_leg_num, player: currentPlayer, type: 'match_start' });
+                    this.state.socket.emit('announce', { leg_num: this.input.match.current_leg_num, player: currentPlayer, type: 'match_start' });
                 }, 900);
             }
         }
@@ -96,6 +75,69 @@ module.exports = {
                 location.reload();
             }
         });
+    },
+
+    setupSio(legId) {
+        const socket = io.connect(`${window.location.origin}/legs/${legId}`);
+        socket.on('score_update', this.onScoreUpdate.bind(this));
+        socket.on('possible_throw', this.onPossibleThrowEvent.bind(this));
+        socket.on('say', this.onSay.bind(this));
+        socket.on('announce', io.onAnnounce.bind(this));
+        socket.on('leg_finished', (data) => {
+            let match = data.match;
+
+            // Sometimes the say_finish event isn't sent (Browser isn't play audio, iOS, etc),
+            // which prevents us from moving to the next leg, so create a global timeout here as well
+            const sayWait = setTimeout(nextLeg.bind(this), 6000);
+            socket.once('say_finish', () => {
+                clearTimeout(sayWait);
+                nextLeg.bind(this)();
+            });
+
+            function nextLeg() {
+                const isController = localStorage.get('controller');
+                if (match.is_finished) {
+                    location.href = isController ? '/controller' : `${window.location.origin}/matches/${match.id}/result?finished=true`;
+                } else {
+                    axios.all([
+                        axios.get(`${window.location.protocol}//${window.location.hostname}${this.input.locals.kcapp.api_path}/leg/${match.current_leg_id}`),
+                        axios.get(`${window.location.protocol}//${window.location.hostname}${this.input.locals.kcapp.api_path}/leg/${match.current_leg_id}/players`)
+                    ]).then(axios.spread((legData, playersData) => {
+                        const leg = legData.data;
+                        const players  = playersData.data;
+
+                        this.state.leg = leg;
+                        this.state.players = players;
+                        this.input.match = match;
+
+                        this.state.socket.disconnect();
+                        this.state.socket = this.setupSio(leg.id);
+
+                        // Reset all player scorecards
+                        const scorecards = this.getComponents('players');
+                        scorecards.forEach(scorecard => scorecard.reset());
+
+                        if (this.state.matchType == types.TIC_TAC_TOE) {
+                            this.getComponent("tic-tac-toe-board").resetBoard(leg.parameters);
+                        }
+                        // MatchType might have changed, so make sure we update it
+                        this.state.matchType = leg.leg_type.id || match.match_type.id;
+
+                        const currentPlayer = this.input.players[leg.current_player_id];
+                        this.state.announcedStart = false;
+                        this.state.socket.emit('announce', { leg_num: match.current_leg_num, player: currentPlayer, type: 'match_start' });
+
+                        // Update the URL of current page, so that if a refresh is triggered we go to the current leg, and not the finished one
+                        window.history.pushState(`leg${leg.id}`, "", `/legs/${leg.id}`);
+                    })).catch(error => {
+                        alert(`Error when refreshing leg, please reload the page`);
+                        console.log(JSON.stringify(error));
+                    });
+                }
+            }
+        });
+        socket.on('error', this.onError.bind(this));
+        return socket;
     },
 
     onAnnounce(data) {
@@ -277,9 +319,25 @@ module.exports = {
         if (e.key === 'Backspace') {
             component.removeLast();
             e.preventDefault();
-        } else if (types.SUPPORT_SIMPLE_INPUT.includes(this.state.matchType) && simplified.includes(e.keyCode)) {
-            let value = 0;
+        } else if (e.key === '$' || e.key === '=') { 
+            this.state.keyboard.mode = this.state.keyboard.mode === "simple" ? "full" :  "simple";
+            this.setStateDirty('keyboard');
+            this.state.enableButtonInput = false;
+            e.preventDefault();
+        } else if ((types.SUPPORT_SIMPLE_INPUT.includes(this.state.matchType) && simplified.includes(e.keyCode)) || this.state.keyboard.mode === 'simple') {
+            // There are two types of simple input modes:
+            // 1. Devices which support "NumLock" can simply disable numlock and use "END", "ARROW_DOWN", "PG DN" etc for input
+            // 2. Devices which don't support "NumLock" can enable "simple" keyboard mode by pressing "$", and use number like normal
+            const submit = ((component) => {
+                let dartsThrown = component.getDartsThrown();
+                this.state.submitting = component.confirmThrow(false);
+                if (dartsThrown > 2) {
+                    this.state.submitting = true;
+                    this.state.socket.emit('throw', JSON.stringify(component.getPayload()));
+                }
+            }).bind(this);
 
+            let value = 0;
             let multiplier;
             if (this.state.matchType === types.DARTS_AT_X) {
                 value = this.state.leg.starting_score
@@ -314,6 +372,43 @@ module.exports = {
                 } else {
                     value = target.value;
                 }
+            } else if (this.state.matchType === types.X01) {
+                multiplier = 1;
+                switch (e.key) {
+                    case '1': value = 7; break;
+                    case '2': value = 19; break;
+                    case '3': value = 3; break;
+                    case '4': value = 12; break;
+                    case '5': break; // unused
+                    case '6': value = 18; break;
+                    case '7': value = 5; break;
+                    case '8': value = 20; break;
+                    case '9': value = 1; break;
+                    case 'Enter':
+                        clearInterval(this.state.keyboard.timer);
+                        submit(component);
+                        return;
+                    default: return;
+                }
+                clearInterval(this.state.keyboard.timer);
+                if (value === this.state.keyboard.previous.value) {
+                    multiplier = this.state.keyboard.previous.multiplier + 1;
+                    multiplier = multiplier > 3 ? 1 : multiplier;
+                    component.setMultiplier(multiplier);
+                } else {
+                    if (component.getCurrentDart().state.initial) {
+                        component.setDart(value, multiplier);
+                    } else {
+                        submit(component);
+                        component.setDart(value, multiplier);
+                    }
+                }
+                this.state.keyboard.timer = setInterval(() => {
+                    this.state.keyboard.previous = { value: 0, multiplier: 1 };
+                    clearInterval(this.state.keyboard.timer);
+                    submit(component);
+                }, 350);
+                this.state.keyboard.previous = { value: value, multiplier: multiplier};
             }
 
             if (!multiplier) {
@@ -328,20 +423,16 @@ module.exports = {
             if (e.keyCode === KEY_INSERT || e.keyCode === KEY_DELETE) {
                 value = 0;
             }
-            component.setDart(value, multiplier);
-            let dartsThrown = component.getDartsThrown();
-            if (dartsThrown > 2) {
-                this.state.submitting = true;
-                this.state.socket.emit('throw', JSON.stringify(component.getPayload()));
-            } else {
-                this.state.submitting = component.confirmThrow(false);
+            if (!this.state.keyboard.timer) {
+                component.setDart(value, multiplier);
+                submit(component);
             }
-
             e.preventDefault();
+            return;
         } else if (e.key === 'Tab') {
             e.preventDefault();
             this.onSwapPlayers();
-        } else if (e.key === 'F3') {
+        } else if (e.key === 'F3' || e.key === "'") {
             e.preventDefault();
 
             // Throw same dart as last
@@ -401,7 +492,7 @@ module.exports = {
             return;
         }
         const component = this.findActive(this.getComponents('players'));
-        if (component.state.isBot) {
+        if (component.state.player.player.is_bot) {
             // Don't allow adding darts for bot
             return;
         }

@@ -1,4 +1,5 @@
 const alertify = require("../../../util/alertify");
+const types = require("./match_types");
 
 exports.removeLast = function(dart, external) {
     let value = dart.getValue();
@@ -12,37 +13,45 @@ exports.removeLast = function(dart, external) {
     }
 }
 
-exports.isBust = (currentScore, dart, totalScore, player) => {
+exports.isBust = (player, dart, totalScore, leg) => {
+    let currentScore = player.current_score - dart.getValue();
     if (player.player.options && !player.player.options.subtract_per_dart) {
-        if (currentScore - totalScore < 2) {
-            return true;
-        }
-    } else {
-        if (currentScore - dart.getValue() < 2) {
-            return true;
-        }
+        // Figure out actual current score if we don't subract score per dart
+        currentScore = currentScore - totalScore + dart.getValue();
     }
-    return false;
+
+    const outshotTypeId = leg.parameters.outshot_type.id;
+    if (outshotTypeId == types.OUTSHOT_ANY) {
+        if (currentScore < 1) {
+            // We don't bust on 1 with single out
+            return true;
+        }
+        return false;
+    }
+    return currentScore < 2;
 }
 
-exports.isCheckout = (currentScore, dart, totalScore, player) => {
+exports.isCheckout = (player, dart, totalScore, leg) => {
+    let currentScore = player.current_score - dart.getValue();
     if (player.player.options && !player.player.options.subtract_per_dart) {
-        if (currentScore - totalScore === 0 && dart.getMultiplier() === 2) {
-            return true;
-        }
-    } else {
-        if (currentScore - dart.getValue() === 0 && dart.getMultiplier() === 2) {
-            return true;
-        }
+        // Figure out actual current score if we don't subract score per dart
+        currentScore = currentScore - totalScore + dart.getValue();
+    }
+    const outshotTypeId = leg.parameters.outshot_type.id;
+    if (currentScore === 0 && (
+        (outshotTypeId == types.OUTSHOT_ANY) ||
+        (outshotTypeId == types.OUTSHOT_DOUBLE && dart.getMultiplier() === 2) ||
+        (outshotTypeId == types.OUTSHOT_MASTER && (dart.getMultiplier() == 2 || dart.getMultiplier() == 3)))) {
+        return true;
     }
     return false;
 }
 
 exports.confirmThrow = function (external) {
-    var submitting = false;
+    let submitting = false;
 
-    var dart = this.getCurrentDart();
-    var scored = dart.getValue();
+    const dart = this.getCurrentDart();
+    const scored = dart.getValue();
     if (scored === 0) {
         this.setDart(0, 1);
     }
@@ -53,8 +62,8 @@ exports.confirmThrow = function (external) {
 
     this.emit('score-change', scored, this.state.player.player_id);
 
-    var isCheckout = module.exports.isCheckout(this.state.player.current_score, dart, this.state.totalScore, this.state.player);
-    var isBust = module.exports.isBust(this.state.player.current_score, dart, this.state.totalScore, this.state.player);
+    const isCheckout = module.exports.isCheckout(this.state.player, dart, this.state.totalScore, this.state.leg);
+    const isBust = module.exports.isBust(this.state.player, dart, this.state.totalScore, this.state.leg);
     if (isCheckout) {
         submitting = true;
         alertify.confirm('Leg will be finished.',

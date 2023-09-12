@@ -11,6 +11,7 @@ const _ = require('underscore');
 const bracket = require('./lib/bracket_generator');
 const moment = require('moment');
 
+const types = require('../src/components/scorecard/components/match_types');
 const template = require('marko');
 const tournamentTemplate = template.load(require.resolve('../src/pages/tournament/tournament-template.marko'));
 const tournamentsTemplate = template.load(require.resolve('../src/pages/tournaments/tournaments-template.marko'));
@@ -28,7 +29,8 @@ router.get('/', function (req, res, next) {
     ]).then(axios.spread((tournaments, offices) => {
         res.marko(tournamentsTemplate, {
             tournaments: tournaments.data,
-            offices: offices.data
+            offices: offices.data,
+            locals: req.app.locals
         });
     })).catch(error => {
         debug(`Error when getting data for tournament ${error}`);
@@ -55,15 +57,18 @@ router.get('/current', function (req, res, next) {
 router.get('/admin', function (req, res, next) {
     axios.all([
         axios.get(`${req.app.locals.kcapp.api}/tournament/groups`),
+        axios.get(`${req.app.locals.kcapp.api}/tournament/preset`),
         axios.get(`${req.app.locals.kcapp.api}/player`),
         axios.get(`${req.app.locals.kcapp.api}/office`),
         axios.get(`${req.app.locals.kcapp.api}/venue`),
         axios.get(`${req.app.locals.kcapp.api}/match/modes`),
         axios.get(`${req.app.locals.kcapp.api}/match/types`),
-    ]).then(axios.spread((groups, players, offices, venues, modes, types) => {
+    ]).then(axios.spread((groups, presets, playersData, offices, venues, modes, types) => {
+        const players = _.reject(playersData.data, (player) => player.is_placeholder);
         res.marko(tournamentsAdminTemplate, {
             groups: groups.data,
-            players: players.data,
+            presets: presets.data,
+            players: _.sortBy(players, 'name'),
             offices: offices.data,
             venues: venues.data,
             modes: modes.data,
@@ -86,19 +91,18 @@ router.get('/:id/admin', function (req, res, next) {
         axios.get(`${req.app.locals.kcapp.api}/match/modes`),
         axios.get(`${req.app.locals.kcapp.api}/venue`),
     ]).then(axios.spread((playersResponse, tournamentResponse, matchesData, metadataResponse, groups, modes, venue) => {
-        var matches = matchesData.data;
-        var metadata = _.sortBy(metadataResponse.data, 'order_of_play');
-        var players = playersResponse.data;
-        var tournament = tournamentResponse.data;
+        const matches = matchesData.data;
+        const metadata = _.sortBy(metadataResponse.data, 'order_of_play');
+        const players = playersResponse.data;
+        const tournament = tournamentResponse.data;
 
-        var matchesMap = {};
-        for (var key in matches) {
+        const matchesMap = {};
+        for (let key in matches) {
             _.extend(matchesMap, _.object(_.map(matches[key], function (match) {
                 return [match.id, match]
             })));
         }
-
-        bracket.generateNew(metadata, matches, players, '', (err, brackets) => {
+        bracket.generate(tournament, metadata, matches, players, '', (err, brackets) => {
             res.marko(tournamentAdminTemplate, {
                 brackets: brackets,
                 tournament: tournament,
@@ -176,7 +180,8 @@ router.post('/admin', function (req, res, next) {
                     },
                     players: [match[3].id, match[4].id],
                     legs: [{
-                        starting_score: group.score
+                        starting_score: group.score,
+                        parameters: { outshot_type: { id: types.OUTSHOT_DOUBLE } }
                     }],
                     tournament_id: tournament.id,
                     office_id: req.body.office_id
@@ -193,6 +198,89 @@ router.post('/admin', function (req, res, next) {
         });
 });
 
+/* Generate new tournament  */
+router.post('/admin/generate', function (req, res, next) {
+    const body = req.body;
+
+    axios.get(`${req.app.locals.kcapp.api}/tournament/preset/${body.preset_id}`)
+        .then(response => {
+            const preset = response.data;
+
+            const players = [];
+            for (let i = 0; i < body.group1.length; i++) {
+                const player = body.group1[i];
+                players.push({
+                    player_id: player.id,
+                    tournament_group_id: preset.group1_tournament_group.id
+                });
+            }
+            for (let i = 0; i < body.group2.length; i++) {
+                const player = body.group2[i];
+                players.push({
+                    player_id: player.id,
+                    tournament_group_id: preset.group2_tournament_group.id
+                });
+            }
+
+            const name = `${preset.name} ${moment().format('Do MMM')}`;
+            const shortName = `${name.substring(0, 1)}${moment().format('DDMM')}`;
+            const tournamentBody = {
+                name: name,
+                short_name: shortName,
+                is_playoffs: false,
+                players: players,
+                preset_id: body.preset_id,
+                manual_admin: true,
+                office_id: req.body.office_id
+            };
+            axios.post(`${req.app.locals.kcapp.api}/tournament/generate`, tournamentBody)
+                .then(response => {
+                    const tournament = response.data;
+                    axios.get(`${req.app.locals.kcapp.api}/tournament/${tournament.id}/matches`)
+                        .then(response => {
+                            const matches = Object.values(response.data).flat();
+                            for (const match of matches) {
+                                this.socketHandler.setupLegsNamespace(match.current_leg_id);
+                            }
+                            res.send(tournament);
+                        }).catch(error => {
+                            debug(`Error when generating new tournament: ${error}`);
+                            next(error);
+                        });
+                }).catch(error => {
+                    debug(`Error when generating new tournament: ${error}`);
+                    next(error);
+                });
+        }).catch(error => {
+            debug(`Error when generating new tournament: ${error}`);
+            next(error);
+        });
+});
+
+/* Generate playoffs tournament  */
+router.post('/admin/generate/playoffs/:id', function (req, res, next) {
+    axios.post(`${req.app.locals.kcapp.api}/tournament/generate/playoffs/${req.params.id}`)
+        .then(response => {
+            const tournament = response.data;
+            axios.get(`${req.app.locals.kcapp.api}/tournament/${tournament.id}/matches`)
+            .then(response => {
+                const matches = Object.values(response.data).flat();
+                for (const match of matches) {
+                    if (!match.is_finished) {
+                        this.socketHandler.setupLegsNamespace(match.current_leg_id);
+                    }
+                }
+                res.send(tournament);
+            }).catch(error => {
+                debug(`Error when generating playoffs tournament: ${error}`);
+                next(error);
+            });
+        }).catch(error => {
+            debug(`Error when generating playoffs tournament: ${error}`);
+            next(error);
+        });
+});
+
 /* Create new tournament group  */
 router.post('/admin/groups', function (req, res, next) {
     const body = req.body;
@@ -205,6 +293,20 @@ router.post('/admin/groups', function (req, res, next) {
         });
 });
 
+/* Add a player to tournament  */
+router.post('/:id/player', function (req, res, next) {
+    axios.post(`${req.app.locals.kcapp.api}/tournament/${req.params.id}/player`, req.body)
+        .then(response => {
+            const matches = response.data;
+            for (const match of matches) {
+                this.socketHandler.setupLegsNamespace(match.current_leg_id);
+            }
+            res.end();
+        }).catch(error => {
+            debug(`Error when adding player to tournament: ${error}`);
+            next(error);
+        });
+});
 
 /* Get tournament with the given ID */
 router.get('/:id', function (req, res, next) {
@@ -216,7 +318,7 @@ router.get('/:id', function (req, res, next) {
         axios.get(`${req.app.locals.kcapp.api}/tournament/${req.params.id}/statistics`),
         axios.get(`${req.app.locals.kcapp.api}/tournament/${req.params.id}/metadata`)
     ]).then(axios.spread((playersResponse, tournamentResponse, overviewData, matchesData, statisticsResponse, metadataResponse) => {
-        var statistics = statisticsResponse.data;
+        const statistics = statisticsResponse.data;
         if (!_.isEmpty(statistics)) {
             statistics.checkout_highest = _.sortBy(statistics.checkout_highest, (stats) => -stats.value);
             statistics.best_three_dart_avg = _.sortBy(statistics.best_three_dart_avg, (stats) => -stats.value);
@@ -229,12 +331,12 @@ router.get('/:id', function (req, res, next) {
             }
         }
 
-        var matches = matchesData.data;
-        var metadata = _.sortBy(metadataResponse.data, 'order_of_play');
-        var players = playersResponse.data;
-        var tournament = tournamentResponse.data;
+        const matches = matchesData.data;
+        const metadata = _.sortBy(metadataResponse.data, 'order_of_play');
+        const players = playersResponse.data;
+        const tournament = tournamentResponse.data;
 
-        var overview = overviewData.data;
+        const overview = overviewData.data;
         sortTournamentOverview(overview);
 
         if (tournament.playoffs_tournament_id !== null) {
@@ -242,13 +344,15 @@ router.get('/:id', function (req, res, next) {
                 axios.get(`${req.app.locals.kcapp.api}/tournament/${tournament.playoffs_tournament_id}/matches`),
                 axios.get(`${req.app.locals.kcapp.api}/tournament/${tournament.playoffs_tournament_id}/metadata`)
             ]).then(axios.spread((matchesResponse, metadataResponse) => {
-                bracket.generateNew(metadataResponse.data, matchesResponse.data, players, '', (err, brackets) => {
+                const playoffsMatches = matchesResponse.data;
+                bracket.generate(tournament, metadataResponse.data, playoffsMatches, players, '', (err, brackets) => {
                     res.marko(tournamentTemplate, {
                         brackets: brackets,
                         tournament: tournament,
                         overview: overview,
                         players: players,
                         matches: matches,
+                        playoffs_matches: playoffsMatches,
                         statistics: statistics
                     });
                 });
@@ -257,7 +361,7 @@ router.get('/:id', function (req, res, next) {
                 next(error);
             });
         } else {
-            bracket.generateNew(metadata, matches, players, '', (err, brackets) => {
+            bracket.generate(tournament, metadata, matches, players, '', (err, brackets) => {
                 res.marko(tournamentTemplate, {
                     brackets: brackets,
                     tournament: tournament,

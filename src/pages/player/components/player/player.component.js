@@ -218,8 +218,8 @@ module.exports = {
                 },
                 hover: { mode: 'nearest', intersect: true },
                 scales: {
-                    xAxes: [{ display: true, scaleLabel: { display: true, labelString: xAxisLabel } }],
-                    yAxes: [{ display: true, scaleLabel: { display: true, labelString: yAxisLabel } }]
+                    x: { display: true, scaleLabel: { display: true, labelString: xAxisLabel } },
+                    y: { display: true, scaleLabel: { display: true, labelString: yAxisLabel } }
                 },
                 elements: { line: { tension: 0 } }
             }

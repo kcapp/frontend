@@ -1,21 +1,21 @@
-var DARTS = [ 20, 19, 18, 17, 16, 15, 25 ];
+const DARTS = [ 20, 19, 18, 17, 16, 15, 25 ];
 exports.DARTS = DARTS;
 
 exports.removeLast = function(dart, external) {
-    var score = dart.getScore();
-    var hits = this.state.player.hits[score] ? this.state.player.hits[score].total : 0;
+    let score = dart.getScore();
+    let hits = this.state.player.hits[score] ? this.state.player.hits[score].total : 0;
 
     if (DARTS.includes(score)) {
         if (this.state.player.hits[score].total) {
             this.state.player.hits[score].total -= dart.getMultiplier();
         }
-        var multiplier = this.state.player.hits[score].total < 3 ? hits - dart.getMultiplier() : hits - this.state.player.hits[score].total;
-        var points = score * multiplier;
+        let multiplier = this.state.player.hits[score].total < 3 ? hits - dart.getMultiplier() : hits - this.state.player.hits[score].total;
+        let points = score * multiplier;
 
         if (hits > 3) {
-            var players = this.state.players;
-            for (var i = 0; i < players.length; i++) {
-                var player = players[i];
+            const players = this.input.players;
+            for (let i = 0; i < players.length; i++) {
+                let player = players[i];
                 if (player.player_id == this.state.player.player_id) {
                     continue;
                 }
@@ -34,18 +34,18 @@ exports.removeLast = function(dart, external) {
 
 exports.isCheckout = (current, players) => {
     // Check if current player has closed all numbers
-    var closed = true;
-    var currentPlayer = {};
-    for (var i = 0; i < players.length; i++) {
-        var player = players[i];
+    let closed = true;
+    let currentPlayer = {};
+    for (let i = 0; i < players.length; i++) {
+        let player = players[i];
         if (player.player_id == current.player_id) {
             currentPlayer = player;
             break;
         }
     }
 
-    for (var i = 0; i < DARTS.length; i++) {
-        var score = DARTS[i];
+    for (let i = 0; i < DARTS.length; i++) {
+        let score = DARTS[i];
 
         if (!currentPlayer.hits[score] || currentPlayer.hits[score].total < 3) {
             closed = false;
@@ -56,9 +56,9 @@ exports.isCheckout = (current, players) => {
 
     if (closed) {
         // What is the lowest score?
-        var lowest = Number.MAX_VALUE;
-        for (var i = 0; i < players.length; i++) {
-            var player = players[i];
+        let lowest = Number.MAX_VALUE;
+        for (let i = 0; i < players.length; i++) {
+            let player = players[i];
 
             if (player.current_score < lowest) {
                 lowest = player.current_score;
@@ -73,19 +73,19 @@ exports.isCheckout = (current, players) => {
 }
 
 exports.confirmThrow = function (external) {
-    var submitting = false;
+    let submitting = false;
 
-    var dart = this.getCurrentDart();
+    let dart = this.getCurrentDart();
     if (dart.getValue() === 0) {
         this.setDart(0, 1);
     }
     this.state.currentDart++;
     this.state.isSubmitted = true;
 
-    var score = dart.getScore();
-    var isCheckout = false;
+    let score = dart.getScore();
+    let isCheckout = false;
     if (DARTS.includes(score)) {
-        var hits = this.state.player.hits[score];
+        let hits = this.state.player.hits[score];
         if (hits) {
             hits = hits.total;
             this.state.player.hits[score].total += dart.getMultiplier();
@@ -93,13 +93,13 @@ exports.confirmThrow = function (external) {
             this.state.player.hits[score] = { total: dart.getMultiplier() } ;
             hits = 0;
         }
-        var multiplier = hits < 3 ? this.state.player.hits[score].total - 3 : this.state.player.hits[score].total - hits;
-        var points = score * multiplier;
+        let multiplier = hits < 3 ? this.state.player.hits[score].total - 3 : this.state.player.hits[score].total - hits;
+        let points = score * multiplier;
 
         if (this.state.player.hits[score].total > 3) {
-            var players = this.state.players;
-            for (var i = 0; i < players.length; i++) {
-                var player = players[i];
+            const players = this.input.players;
+            for (let i = 0; i < players.length; i++) {
+                let player = players[i];
                 if (player.player_id == this.state.player.player_id) {
                     continue;
                 }
@@ -110,7 +110,7 @@ exports.confirmThrow = function (external) {
                 }
             }
         }
-        isCheckout = module.exports.isCheckout(this.state.player, this.state.players);
+        isCheckout = module.exports.isCheckout(this.state.player, this.input.players);
         if (isCheckout) {
             submitting = true;
         }

@@ -4,12 +4,16 @@ const alertify = require("../../../../util/alertify");
 module.exports = {
     onCreate(input) {
         this.state = {
-            leg: input.leg,
             isOfficial: input.match.tournament_id !== null,
             buttonInputEnabled: input.buttonsEnabled,
             compactMode: false,
-            allButtonsMode : false
+            allButtonsMode : false,
+            keyboardMode: input.keyboard.mode
         }
+    },
+
+    onInput(input) {
+        this.state.keyboardMode = input.keyboard.mode;
     },
 
     onMount() {
@@ -60,7 +64,7 @@ module.exports = {
 
     cancelLeg(event) {
         alertify.confirm('Leg will be cancelled.', () => {
-            axios.delete(`${window.location.origin}/legs/${this.state.leg.id}/cancel`)
+            axios.delete(`${window.location.origin}/legs/${this.input.leg.id}/cancel`)
                 .then(response => {
                     location.href = '/matches';
                 }).catch(error => {

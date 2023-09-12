@@ -333,6 +333,18 @@ router.post('/:id/rematch', function (req, res, next) {
         });
 });
 
+/* Method for finishing a match */
+router.put('/:id/finish', function (req, res, next) {
+    axios.put(`${req.app.locals.kcapp.api}/match/${req.params.id}`, req.body)
+        .then(response => {
+            res.end();
+        }).catch(error => {
+            debug(`Error when finishing match: ${error}`);
+            next(error);
+        });
+
+});
+
 module.exports = function (socketHandler) {
     this.socketHandler = socketHandler;
     return router;

@@ -21,7 +21,7 @@ exports.OUTSHOT_MASTER = 2;
 exports.OUTSHOT_ANY = 3;
 
 // Define types which support a simple input mode
-exports.SUPPORT_SIMPLE_INPUT = [ 5, 6, 7, 8, 10, 11, 12, 14 ];
+exports.SUPPORT_SIMPLE_INPUT = [ 1, 5, 6, 7, 8, 10, 11, 12, 14 ];
 
 exports.TARGET_BERMUDA_TRIANGLE = [
     { label: "Not Used"}, // Placeholder as round starts on 1

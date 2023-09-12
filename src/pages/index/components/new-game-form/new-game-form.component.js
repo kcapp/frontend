@@ -101,7 +101,7 @@ module.exports = {
     onKeyDown(e) {
         if (e.key === 'Backspace' || e.key === ',') {
             // Remove last player if Backspace or DEL is pressed
-            var player = this.state.selected[this.state.selected.length - 1];
+            let player = this.state.selected[this.state.selected.length - 1];
             this.removePlayer(null, { input: { player: player } });
             e.preventDefault();
         } else if (e.key === 'PageUp') {
@@ -181,7 +181,7 @@ module.exports = {
             case '*': {
                 const component = this.getComponent('starting-score');
                 if (this.state.options.game_type === types.X01 || this.state.options.game_type === types.X01HANDICAP) {
-                    var score = this.cycleValues(this.state.input.scores, this.state.options.starting_score);
+                    let score = this.cycleValues(this.state.input.scores, this.state.options.starting_score);
                     if (score === 0) {
                         // Don't allow cycling to 0 as starting score
                         score = this.cycleValues(this.state.input.scores, score);
@@ -189,7 +189,7 @@ module.exports = {
                     component.state.index = score
                     this.state.options.starting_score = component.state.index;
                 } else if (this.state.options.game_type === types.DARTS_AT_X || this.state.options.game_type === types.TIC_TAC_TOE) {
-                    var score = this.cycleValues(component.state.values, component.state.index);
+                    let score = this.cycleValues(component.state.values, component.state.index);
                     component.state.index = score
                     this.state.options.starting_score = component.state.index;
                 }
@@ -202,7 +202,7 @@ module.exports = {
                 break;
             }
             case '+': {
-                var component = this.getComponent('stake');
+                let component = this.getComponent('stake');
                 if (component.state.index === this.input.stakes.length) {
                     component.state.index = -1;
                 } else {
@@ -263,7 +263,7 @@ module.exports = {
             this.state.options.starting_score = scoreComponent.state.index
 
             let selectedPlayers = this.getComponents('players');
-            for (var i = 0; i < selectedPlayers.length; i++) {
+            for (let i = 0; i < selectedPlayers.length; i++) {
                 selectedPlayers[i].handleTypeChange(this.state.options.game_type);
             }
             this.setStateDirty("options");
@@ -279,12 +279,12 @@ module.exports = {
         this.setStateDirty('selected');
     },
     removePlayer(event, selected) {
-        var player = selected.input.player;
+        let player = selected.input.player;
 
         this.state.selected = _.reject(this.state.selected, function (el) { return el.id === player.id; });
         this.setStateDirty('selected');
 
-        var players = this.state.players;
+        let players = this.state.players;
         players.push(player);
         this.state.players = _.sortBy(players, 'name');
         this.setStateDirty('players');
@@ -378,7 +378,7 @@ module.exports = {
 
         // Remove any players already selected
         this.state.players = _.reject(this.state.players, (player) => {
-            for (var i = 0; i < this.state.selected.length; i++) {
+            for (let i = 0; i < this.state.selected.length; i++) {
                 if (player.id === this.state.selected[i].id) {
                     return true;
                 }

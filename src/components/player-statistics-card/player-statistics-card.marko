@@ -69,6 +69,14 @@ $ const matchType = leg.leg_type.id || match.match_type.id;
         <statistics-row heading="Accuracy Overall / 20 / 19" value=`${statistic.accuracy_overall.toFixed(2)} / ${accuracy_20} / ${accuracy_19}`/>
         $ var checkout = (statistic.checkout_percentage === null || statistic.checkout_percentage == 0 ? "-" : statistic.checkout_percentage.toFixed(2) + "%") + " / " + (statistic.checkout_attempts ? statistic.checkout_attempts : 0);
         <statistics-row heading="Checkout % / Attempts" value=checkout/>
+        <if(statistic.checkout)>
+          $ let outshotTypeId = leg.parameters.outshot_type ? leg.parameters.outshot_type.id : type.OUTSHOT_DOUBLE;
+          $ let checkoutHeading = `Checkout ${outshotTypeId !== type.OUTSHOT_DOUBLE ? "("+leg.parameters.outshot_type.name+")" : ""}`;
+          <statistics-row heading=checkoutHeading value=statistic.checkout === null ? "-" : statistic.checkout />
+        </if>
+        <else>
+          <div class="info" style="height: 40px"/>
+        </else>
         <if(match.elo_change && input.elo)>
           $ var elo = match.elo_change[player.id];
           <if(match.tournament)>

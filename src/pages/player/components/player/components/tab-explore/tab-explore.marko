@@ -1,0 +1,50 @@
+<table style="width: 100%;">
+    <tr>
+        <td style="width: 25%;">
+            <div class="highscore-card">
+                <div class="label-fat-18-grey">First Dart</div>
+                <dart-selector on-dart-change("onDartChange", "firstDart") />
+            </div>
+        </td>
+        <td style="width: 25%;">
+            <div class="highscore-card">
+                <div class="label-fat-18-grey">Second Dart</div>
+                <dart-selector on-dart-change("onDartChange", "secondDart") />
+            </div>
+        </td>
+    </tr>
+</table>
+<div class="block-container no-padding no-border">
+    <div id="heatmap" style="position: relative; width: 500px; height: 500px;" no-update></div>
+    <if(state.hits)>
+        <table id="table-player-profile-hits" style="margin: 0px; padding-top: 0px;">
+            <thead>
+                <tr>
+                    <th class="text-center">First</th>
+                    <th class="text-center">Second</th>
+                    <th class="text-center">Third</th>
+                    <th class="text-center">Count</th>
+                </tr>
+            </thead>
+            <tbody>
+                <for|visit| of=state.hits>
+                    <tr>
+                        <td class="dart-score-container no-border">
+                            <dart-container dart=visit.first_dart/>
+                        </td>
+                        <td class="dart-score-container no-border">
+                            <dart-container dart=visit.second_dart/>
+                        </td>
+                        <td class="dart-score-container no-border">
+                            <dart-container dart=visit.third_dart/>
+                        </td>
+                        <td class="text-center">${visit.count}</td>
+                    </tr>
+                </for>
+            </tbody>
+        </table>
+    </if>
+    <else>
+        <div class="block-container">No data available</div>
+    </else>
+</div>

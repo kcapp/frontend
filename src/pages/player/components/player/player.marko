@@ -17,10 +17,12 @@
         <div class="player-profile-menu-item"><i class="fas fa-star"></i><span><a href="#highscores" data-toggle="tab">High scores</a></span></div>
         <div class="player-profile-menu-item"><i class="fas fa-chart-bar"></i><span><a href="#statistics" data-toggle="tab">Statistics</a></span></div>
         <div class="player-profile-menu-item"><i class="fas fa-crosshairs"></i><span><a href="#hits" data-toggle="tab">Hits</a></span></div>
+        <div class="player-profile-menu-item"><i class="fas fa-search"></i><span><a href="#explore" data-toggle="tab">Explore</a></span></div>
         <div class="player-profile-menu-item"><i class="fas fa-check-double"></i><span><a href="#checkouts" data-toggle="tab">Checkouts</a></span></div>
         <div class="player-profile-menu-item"><i class="fas fa-chart-line"></i><span><a href="#progression" data-toggle="tab">Progression</a></span></div>
         <div class="player-profile-menu-item"><i class="fas fa-trophy"></i><span><a href="#tournament" data-toggle="tab">Tournaments</a></span></div>
         <div class="player-profile-menu-item"><i class="fas fa-exchange-alt"></i><span><a href="#elo" data-toggle="tab">Elo</a></span></div>
+        <div class="player-profile-menu-item"><i class="fas fa-id-badge"></i><span><a href="#badges" data-toggle="tab">Badges</a></span></div>
     </div>
     <div class="player-profile-content tab-content" style="width: 100%;">
         <div class="tab-pane active" role="tabpanel" id="overview">
@@ -35,6 +37,9 @@
         <div class="tab-pane" role="tabpanel" id="hits">
             <tab-hits player=input.player statistics=state.x01 />
         </div>
+        <div class="tab-pane" role="tabpanel" id="explore">
+            <tab-explore player=input.player locals=input.locals/>
+        </div>        
         <div class="tab-pane" role="tabpanel" id="checkouts">
             <tab-checkouts checkouts=input.checkouts />
         </div>
@@ -46,6 +51,9 @@
         </div>
         <div class="tab-pane" role="tabpanel" id="elo">
             <tab-elo player=input.player players=input.players locals=input.locals/>
+        </div>
+        <div class="tab-pane" role="tabpanel" id="badges">
+            <tab-badges badges=input.badges player=input.player player_badges=input.player_badges tournaments=input.tournaments/>
         </div>
     </div>
     <div style="clear: both;"></div>

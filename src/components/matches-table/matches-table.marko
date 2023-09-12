@@ -45,12 +45,17 @@ $ var columns = state.columns;
         <if(columns["options"])>
           <th class="text-center"/>
         </if>
+        <if(columns["admin"])>
+          <th class="text-center"/>
+        </if>        
       </tr>
     </thead>
     <tbody>
-      <for|match| of=input.matches>
-        <match-row players=input.players match=match columns=state.columns offices=input.offices/>
-      </for>
+      <if(input.matches)>
+        <for|match| of=input.matches>
+          <match-row players=input.players match=match columns=state.columns offices=input.offices on-show-modal("onShowModal") />
+        </for>
+      </if>
     </tbody>
   </table>
   </div>

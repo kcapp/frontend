@@ -11,7 +11,7 @@ exports.removeLast = function(dart, external) {
     }
 }
 
-exports.isCheckout = function(leg, currentDart, players, player) {
+exports.isCheckout = function(leg, currentDart, players) {
     let visits = leg.visits.length;
     if (currentDart > 3) {
         visits++;
@@ -49,7 +49,7 @@ exports.confirmThrow = function (external) {
     this.state.player.current_score += scored;
     this.state.player.darts_thrown++;
     this.emit('score-change', -scored, this.state.player.player_id);
-    const isCheckout = module.exports.isCheckout(this.state.leg, this.state.currentDart, this.state.players, this.state.player);
+    const isCheckout = module.exports.isCheckout(this.state.leg, this.state.currentDart, this.input.players);
     if (isCheckout) {
         submitting = true;
         alertify.confirm('Leg will be finished.',

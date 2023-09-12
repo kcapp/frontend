@@ -25,17 +25,15 @@ module.exports = {
         const player = input.player;
         this.state = {
             uuid: input.uuid,
-            players: input.players,
             leg: input.leg,
             player: player,
-            type: input.type,
+            type: input.leg.leg_type.id,
             isCurrentPlayer: player.is_current_player,
             submitClass: null,
             totalScore: 0,
             currentDart: 1,
             isSubmitted: true,
             isBusted: false,
-            isBot: player.player.is_bot,
             isSpectate: input.spectate
         }
     },
@@ -49,6 +47,7 @@ module.exports = {
         this.state.isCurrentPlayer = input.player.is_current_player;
         this.state.player = input.player;
         this.state.leg = input.leg;
+        this.state.type = input.leg.leg_type.id;
     },
 
     reset() {
@@ -82,12 +81,12 @@ module.exports = {
     },
 
     getCurrentValue() {
-        var dart = this.getCurrentDart();
+        const dart = this.getCurrentDart();
         return dart ? dart.state.value : 0;
     },
 
     getCurrentMultiplier() {
-        var dart = this.getCurrentDart()
+        const dart = this.getCurrentDart()
         return dart ? dart.state.multiplier : 1;
     },
 
@@ -161,7 +160,7 @@ module.exports = {
     },
 
     confirmThrow(external) {
-        var submitting = false;
+        let submitting = false;
         if (this.state.currentDart <= 3 && !this.state.isBusted) {
             switch (this.state.type) {
                 case types.SHOOTOUT:
@@ -216,13 +215,13 @@ module.exports = {
     },
 
     setDart(value, multiplier, idx) {
-        var dart;
+        let dart;
         if (idx) {
             dart = this.getDart(idx);
         } else {
             dart = this.getCurrentDart();
         }
-        var newValue = parseInt(`${dart.state.value}${value}`);
+        const newValue = parseInt(`${dart.state.value}${value}`);
         if (newValue > 20 && newValue !== 25) {
             if (this.state.spectate) {
                 // Don't show alerts for spectators
@@ -233,6 +232,11 @@ module.exports = {
         }
         dart.setDart(newValue, multiplier);
         this.state.isSubmitted = false;
+    },
+
+    setMultiplier(multiplier) {
+        const dart = this.getCurrentDart();
+        dart.setDart(dart.state.value, multiplier);
     },
 
     getPayload() {
