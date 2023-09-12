@@ -44,6 +44,7 @@ app.io = io;
 app.locals.kcapp = {};
 app.locals.kcapp.api = process.env.KCAPP_API || 'http://localhost:8001';
 app.locals.kcapp.api_path = process.env.KCAPP_API_PATH || ':8001';
+app.locals.kcapp.local_admin = process.env.KCAPP_LOCAL_ADMIN ? process.env.KCAPP_LOCAL_ADMIN === "true" : true;
 
 // Create all routes
 const socketHandler = require('./routes/lib/socketio_handler')(io, app);
