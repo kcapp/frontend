@@ -29,7 +29,8 @@ router.get('/', function (req, res, next) {
     ]).then(axios.spread((tournaments, offices) => {
         res.marko(tournamentsTemplate, {
             tournaments: tournaments.data,
-            offices: offices.data
+            offices: offices.data,
+            locals: req.app.locals
         });
     })).catch(error => {
         debug(`Error when getting data for tournament ${error}`);

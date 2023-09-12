@@ -3,7 +3,7 @@ $ {
   if (state.hasStatistics) {
     tabs.push({ name: "Statistics", href: "statistics" });
   }
-  if(Object.keys(input.brackets).length !== 0) {
+  if(input.brackets && Object.keys(input.brackets).length !== 0) {
     tabs.push({ name: "Bracket", href: "bracket" });
   }
   if (input.tournament.standings) {
@@ -162,7 +162,7 @@ $ {
       </div>
     </div>
   </if>
-  <if(Object.keys(input.brackets).length !== 0)>
+  <if(input.brackets && Object.keys(input.brackets).length !== 0)>
     <div role="tabpanel" id="bracket" class="tab-pane">
       <for|id, bracket| in=input.brackets>
         <object>$!{bracket}</object>

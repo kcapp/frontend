@@ -1,7 +1,7 @@
 module.exports = {
     onCreate(input) {
         this.state = { 
-            id: input.image.substring(input.image.lastIndexOf('/') + 1, input.image.lastIndexOf('.'))
+            id: input.badge.filename.substring(0, input.badge.filename.lastIndexOf('.'))
         }
     }
 }

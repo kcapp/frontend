@@ -14,7 +14,7 @@ module.exports = {
             matches.push(match);
         }
         const preset = input.presets[0];
-        const groupsAvailable = Object.values(input.groups).filter(group => group.id !== preset.group1_tournament_group.id && group.id !== preset.group2_tournament_group.id);
+        const groupsAvailable = preset ? Object.values(input.groups).filter(group => group.id !== preset.group1_tournament_group.id && group.id !== preset.group2_tournament_group.id) : [];
         this.state = {
             office: Object.values(input.offices)[0].id,
             players: input.players,

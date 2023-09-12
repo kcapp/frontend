@@ -1,9 +1,28 @@
-$ let aquired = input.aquired;
-<div class='highscore-card' style="min-height: 230px; padding: 0 0 0.5em 0;">
-    $ let clazz = aquired ? '' : 'not-aquired';
-    <embed id=state.id class=`badge-img ${clazz}` src=input.image type="image/svg+xml" height="200" width="200" title="343"/>
-    <div class=`badge-name ${clazz}`>${input.name}</div>
-    <div class=`badge-description ${clazz}`>
-        <p>${input.description}</p>
+$ let badge = input.badge;
+$ let acquired = badge.acquired;
+<div class='highscore-card' style="min-height: 290px; padding: 0 0 0.5em 0;">
+    $ let clazz = acquired ? '' : 'not-acquired';
+    $ let src = badge.level ? `${badge.filename.substring(0, badge.filename.indexOf('-'))}-${badge.level}.svg` : badge.filename;
+    <embed id=state.id class=`badge-img ${clazz}` src=`/images/badges/${src}` type="image/svg+xml" height="200" width="200" />
+    <div class=`badge-name ${clazz}`>${badge.name} ${badge.level ? `(Level ${badge.level})` : ''}</div>
+    <div class=`badge-description ${clazz}` style='font-weight: 400'>
+        <p>${badge.description}</p>
+    </div>
+    <div style='font-size: 1em;'>
+        <if(badge.acquired)>
+            Acquired: 
+            <if(badge.leg_id)>
+                <a class='acquired-link' href=`/legs/${badge.leg_id}/result` title=badge.created_at>Leg ${badge.leg_id}</a>
+            </if>
+            <else-if(badge.match_id)>
+                <a class='acquired-link' href=`/matches/${badge.match_id}/result` title=badge.created_at>Match ${badge.match_id}</a>
+            </else-if>
+            <else-if(badge.tournament_id)>
+                <a class='acquired-link' href=`/tournaments/${badge.tournament_id}` title=badge.created_at>${badge.tournament.name}</a>
+            </else-if>
+            <else>
+                <p class='acquired-link'>${badge.created_at}</p>
+            </else>
+        </if>
     </div>
 </div>

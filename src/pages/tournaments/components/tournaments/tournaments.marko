@@ -1,5 +1,7 @@
 <page-header heading="Tournaments" subheading="List of tournaments"/>
-<options-panel />
+<if(input.locals.kcapp.local_admin)>
+  <options-panel />
+</if>
 <div class="block-container no-padding">
   <office-selector offices=input.offices clazz="float-right" on-office-changed("officeChanged")/>
   <div class="table table-responsive">

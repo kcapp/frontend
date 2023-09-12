@@ -3,7 +3,6 @@ A preview of major changes can be found in the Wiki ([Latest Changes](https://gi
 
 ## [2.7.0] - TBD
 #### Feature
-- Support for Tournament Presets
 - Automatically start next leg without needing to reload the page to improve load time, and get back to throwing quicker
 - Forward clients back to main page from match result after 2 minutes
 - New "Explore" tab on player statistics, to explore darts thrown
@@ -16,6 +15,7 @@ A preview of major changes can be found in the Wiki ([Latest Changes](https://gi
 
 ## [2.6.0] - 2023-06-30
 #### Feature
+- Support for Tournament Presets
 - New query parameter `officeId=<id>` for `/obs` view, to only forward on matches in a given office
 - Practice against `first time`, `very easy`, `challenging` and `mvg` bots
 - New button for swapping order if button input is enabled
@@ -29,12 +29,7 @@ A preview of major changes can be found in the Wiki ([Latest Changes](https://gi
 - Bug where vocal announcement for Cricket would say "No score" instead of marks
 
 ## [2.5.0] - 2023-03-10
-
-=======
-## [2.5.0] - TBD
->>>>>>> feature/tournament_preset
 #### Feature
-- Support for Tournament Presets
 - Support multiple legs for Practice matches
 - Player options to disable automatic score deduction per dart, and to show/hide checkout guide
 - Allow undoing of visits when playing against kcapp-bot
