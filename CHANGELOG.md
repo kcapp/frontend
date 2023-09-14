@@ -1,6 +1,9 @@
 # Changelog
 A preview of major changes can be found in the Wiki ([Latest Changes](https://github.com/kcapp/frontend/wiki/Latest_Changes))
 
+## [2.8.0] - TBD
+
+
 ## [2.7.0] - 2023-09-12
 #### Feature
 - Automatically start next leg without needing to reload the page to improve load time, and get back to throwing quicker
@@ -201,6 +204,7 @@ A preview of major changes can be found in the Wiki ([Latest Changes](https://gi
 - Multiple score entry methods
     - Including [Unicorn Smartboard](https://github.com/kcapp/smartboard)
 
+[2.8.0]: https://github.com/kcapp/frontend/compare/v2.7.0...develop
 [2.7.0]: https://github.com/kcapp/frontend/compare/v2.6.0...v2.7.0
 [2.6.0]: https://github.com/kcapp/frontend/compare/v2.5.0...v2.6.0
 [2.5.0]: https://github.com/kcapp/frontend/compare/v2.4.0...v2.5.0
