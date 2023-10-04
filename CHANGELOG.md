@@ -2,7 +2,13 @@
 A preview of major changes can be found in the Wiki ([Latest Changes](https://github.com/kcapp/frontend/wiki/Latest_Changes))
 
 ## [2.8.0] - TBD
+#### Feature
+- "Badges" page showing overview of all badges and how many players have unlocked them
 
+#### Changed
+- Don't show `Rematch` and `Undo Leg Finish` on old legs
+- Display darts throw for certain badges
+- Don't show change order modal if button input is enabled
 
 ## [2.7.0] - 2023-09-12
 #### Feature

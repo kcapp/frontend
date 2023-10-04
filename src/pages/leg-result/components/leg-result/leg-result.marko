@@ -39,13 +39,17 @@ $ if (leg.parameters && leg.parameters.outshot_type) subheadings[1].push({ headi
         </li>
       </if>
       <else>
-        <li role="presentation">
-          <a on-click("rematch")>Rematch</a>
-        </li>
+        <if(leg.minutes_since_end <= 30)>
+          <li role="presentation">
+            <a on-click("rematch")>Rematch</a>
+          </li>
+        </if>
       </else>
-      <li role="presentation">
-        <a on-click("undoLegFinish")>Undo leg finish</a>
-      </li>
+      <if(leg.minutes_since_end <= 3)>
+        <li role="presentation">
+          <a on-click("undoLegFinish")>Undo leg finish</a>
+        </li>
+      </if>
       <li role="presentation">
         <a on-click("viewMatchResult")>Match results</a>
       </li>

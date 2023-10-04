@@ -60,6 +60,7 @@ const statistics = require('./routes/statistics');
 const tournaments = require('./routes/tournaments');
 const elo = require('./routes/elo');
 const venues = require('./routes/venues')(app, socketHandler);
+const badges = require('./routes/badges');
 socketHandler.setupActiveNamespace();
 
 app.locals.moment = require('moment');
@@ -103,6 +104,7 @@ app.use('/statistics', statistics);
 app.use('/tournaments', tournaments);
 app.use('/elo', elo);
 app.use('/venues', venues);
+app.use('/badges', badges);
 
 // Not Found (404) Handler
 app.use(function (req, res, next) {

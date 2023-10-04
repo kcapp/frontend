@@ -277,8 +277,12 @@ module.exports = (io, app) => {
                                     nsp.emit('error', { message: error.message, code: error.code });
                                 });
                             }).catch(error => {
-                                const message = error.response.data.trim();
-                                const status = error.response.status;
+                                let message = "Unable to add visit";
+                                let status = -1;
+                                if (error.response) {
+                                    message = error.response.data.trim();
+                                    status = error.response.status;
+                                }
                                 debug(`[${legId}] Error when adding visit: (${status}) ${message}`);
                                 nsp.emit('error', { message: message, code: status });
                             });

@@ -1,0 +1,50 @@
+$ const moment = require('moment');
+<div class="block-container no-padding">
+   <if(input.statistics.length === 0)>
+        <p>No one has unlocked this badge yet ...</p>
+    </if>
+    <else>
+        $ let badge = input.statistics[0];
+        <div style="text-align: center;">
+            <badge badge=badge.badge />
+        </div>
+        <table class="table table-kcapp table-responsive">
+            <thead>
+                <th>Player</th>
+                <if(badge.leg_id)>
+                    <th>Leg</th>
+                </if>
+                <if(badge.match_id)>
+                    <th>Match</th>
+                </if>
+                <if(badge.tournament_id)>
+                    <th>Tournament</th>
+                </if>
+                <if(badge.darts)>
+                    <th>Darts</th>
+                </if>
+                <th>When</th>
+            </thead>
+            <tbody>
+                <for|statistic| of=input.statistics>
+                    <tr>
+                        <td><player-link player=input.players[statistic.player_id]/></td>
+                        <if(statistic.leg_id)>
+                            <td><a href=`/legs/${statistic.leg_id}/result` title=statistic.created_at>${statistic.leg_id}</a></td>
+                        </if>
+                        <if(statistic.match_id)>
+                            <td><a href=`/matches/${statistic.match_id}/result` title=statistic.created_at>${statistic.match_id}</a></td>
+                        </if>
+                        <if(statistic.tournament_id)>
+                            <td><a href=`/tournaments/${statistic.tournament_id}` title=statistic.created_at>${input.tournaments.find(tournament => tournament.id === statistic.tournament_id).name}</a></td>
+                        </if>
+                        <if(statistic.darts)>
+                            <td><a href=`/legs/${statistic.leg_id}/result` title=statistic.created_at>${statistic.darts_string}</a></td>
+                        </if>
+                        <td>${moment(statistic.created_at).format("YYYY-MM-DD")}</td>
+                    </tr>
+                </for>
+            </tbody>
+        </table>
+    </else>
+</div>

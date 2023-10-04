@@ -1,19 +1,27 @@
 $ let badge = input.badge;
 $ let acquired = badge.acquired;
-<div class='highscore-card' style="min-height: 290px; padding: 0 0 0.5em 0;">
+<div class='badge-card' style="min-height: 290px; padding: 0 0 0.5em 0;">
     $ let clazz = acquired ? '' : 'not-acquired';
     $ let src = badge.level ? `${badge.filename.substring(0, badge.filename.indexOf('-'))}-${badge.level}.svg` : badge.filename;
     <embed id=state.id class=`badge-img ${clazz}` src=`/images/badges/${src}` type="image/svg+xml" height="200" width="200" />
     <div class=`badge-name ${clazz}`>${badge.name} ${badge.level ? `(Level ${badge.level})` : ''}</div>
     <div class=`badge-description ${clazz}` style='font-weight: 400'>
-        <p>${badge.description}</p>
+        <if(input.statistics)>
+            <p>${badge.description} ${input.statistics.value ? `(x${input.statistics.value})` : ""}</p>
+        </if>
+        <else>
+            <p>${badge.description}</p>
+        </else>
     </div>
     <div style='font-size: 1em;'>
         <if(badge.acquired)>
             Acquired: 
-            <if(badge.leg_id)>
-                <a class='acquired-link' href=`/legs/${badge.leg_id}/result` title=badge.created_at>Leg ${badge.leg_id}</a>
+            <if(badge.darts)>
+                <a class='acquired-link' href=`/legs/${badge.leg_id}/result` title=badge.created_at>${badge.darts_str}</a>
             </if>
+            <else-if(badge.leg_id)>
+                <a class='acquired-link' href=`/legs/${badge.leg_id}/result` title=badge.created_at>Leg ${badge.leg_id}</a>
+            </else-if>
             <else-if(badge.match_id)>
                 <a class='acquired-link' href=`/matches/${badge.match_id}/result` title=badge.created_at>Match ${badge.match_id}</a>
             </else-if>
@@ -25,4 +33,10 @@ $ let acquired = badge.acquired;
             </else>
         </if>
     </div>
+    <if(input.statistics)>
+        <div style="font-weight: 400;">
+            <b>Achieved By:</b> ${input.statistics.unlocked_players} (${(input.statistics.unlocked_percent * 100).toFixed(2)}%)
+            <a href=`/badges/${badge.id}`>View</a>
+        </div>
+    </if>
 </div>

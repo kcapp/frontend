@@ -1,0 +1,7 @@
+$ let player = input.player;
+$ let displayName = input.full ? player.display_name : player.name;
+$ let showBadge = input.show_badge || false;
+<a href=`/players/${player.id}/statistics` title=displayName>${displayName}</a>
+<if(showBadge)>
+    <img class='badge-thumbnail' src="/images/badges/kcapp_supporter.svg" height="30" width="30"/>
+</if>
