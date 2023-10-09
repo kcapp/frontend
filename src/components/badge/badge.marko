@@ -17,7 +17,7 @@ $ let acquired = badge.acquired;
         <if(badge.acquired)>
             Acquired: 
             <if(badge.darts)>
-                <a class='acquired-link' href=`/legs/${badge.leg_id}/result` title=badge.created_at>${badge.darts_str}</a>
+                <a class='acquired-link' href=`/legs/${badge.leg_id}/result` title=badge.created_at>${badge.darts_string}</a>
             </if>
             <else-if(badge.leg_id)>
                 <a class='acquired-link' href=`/legs/${badge.leg_id}/result` title=badge.created_at>Leg ${badge.leg_id}</a>
