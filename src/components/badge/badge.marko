@@ -1,10 +1,17 @@
 $ let badge = input.badge;
 $ let acquired = badge.acquired;
-<div class='badge-card' style="min-height: 290px; padding: 0 0 0.5em 0;">
+<div class='badge-card' style="min-height: 23em; padding: 0 0 0.5em 0;">
     $ let clazz = acquired ? '' : 'not-acquired';
     $ let src = badge.level ? `${badge.filename.substring(0, badge.filename.indexOf('-'))}-${badge.level}.svg` : badge.filename;
     <embed id=state.id class=`badge-img ${clazz}` src=`/images/badges/${src}` type="image/svg+xml" height="200" width="200" />
-    <div class=`badge-name ${clazz}`>${badge.name} ${badge.level ? `(Level ${badge.level})` : ''}</div>
+    <div class=`badge-name ${clazz}`>
+        ${badge.name}
+    </div>
+    <if(badge.level)>
+        <div class=`badge-level`>
+            (Level ${badge.level})
+        </div>
+    </if>
     <div class=`badge-description ${clazz}` style='font-weight: 400'>
         <if(input.statistics)>
             <p>${badge.description} ${input.statistics.value ? `(x${input.statistics.value})` : ""}</p>
@@ -35,7 +42,7 @@ $ let acquired = badge.acquired;
     </div>
     <if(input.statistics)>
         <div style="font-weight: 400;">
-            <b>Achieved By:</b> ${input.statistics.unlocked_players} (${(input.statistics.unlocked_percent * 100).toFixed(2)}%)
+            <b>Achieved By:</b> ${input.statistics.unlocked_players === 0} (${(input.statistics.unlocked_percent * 100).toFixed(2)}%)
             <a href=`/badges/${badge.id}`>View</a>
         </div>
     </if>

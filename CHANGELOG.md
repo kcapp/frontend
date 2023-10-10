@@ -4,6 +4,7 @@ A preview of major changes can be found in the Wiki ([Latest Changes](https://gi
 ## [2.8.0] - TBD
 #### Feature
 - "Badges" page showing overview of all badges and how many players have unlocked them
+- New Darts Per Leg `DPL` metric added to tournament overview
 - Lots of new Badges
 
 #### Changed

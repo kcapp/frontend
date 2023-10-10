@@ -148,7 +148,7 @@ $ {
                     <tbody>
                       <for|i| from=0 to=9>
                         <tr>
-                          $ var dartsThrown = input.statistics.best_501_darts_thrown ? input.statistics.best_501_darts_thrown : input.statistics.best_301_darts_thrown ? input.statistics.best_301_darts_thrown : null;
+                          $ let dartsThrown = input.statistics.best_501_darts_thrown ? input.statistics.best_501_darts_thrown : input.statistics.best_301_darts_thrown ? input.statistics.best_301_darts_thrown : null;
                           <top-statistics players=input.players statistics=dartsThrown idx=i rank=(i + 1)/>
                         </tr>
                       </for>
