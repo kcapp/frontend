@@ -42,7 +42,7 @@ $ let acquired = badge.acquired;
     </div>
     <if(input.statistics)>
         <div style="font-weight: 400;">
-            <b>Achieved By:</b> ${input.statistics.unlocked_players === 0} (${(input.statistics.unlocked_percent * 100).toFixed(2)}%)
+            <b>Achieved By:</b> ${input.statistics.unlocked_players} (${(input.statistics.unlocked_percent * 100).toFixed(2)}%)
             <a href=`/badges/${badge.id}`>View</a>
         </div>
     </if>
