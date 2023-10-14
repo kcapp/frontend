@@ -3,8 +3,7 @@ const _ = require("underscore");
 module.exports = {
     onCreate(input) {
         this.state = {
-            // Filter out "placeholder"-players without any name
-            overview: _.filter(input.overview, player => input.players[player.player_id].name !== ""),
+            overview: input.overview,
             hasStatistics: !_.isEmpty(input.statistics)
         }
     },
@@ -12,5 +11,14 @@ module.exports = {
         $(function() {
             $('[data-toggle="tooltip"]').tooltip();
           });
+    },
+    updateStandings(overview) {
+        this.state.overview = _.sortBy(_.sortBy(overview, (standing) => standing.legs_difference), 'points').reverse();
+        this.state.overview = this.state.overview.map((standing, idx) => {
+            // Recalculate ranks
+            standing.rank = idx+1;
+            return standing;
+        });
+        this.setStateDirty("overview");
     }
 }

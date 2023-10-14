@@ -1,0 +1,51 @@
+<div class="block-container no-padding">
+  <div class="table table-responsive">
+    <button class="btn btn-primary reset-button" on-click("onReset")>
+      <i class="fas fa-sync"></i>
+    </button>    
+    <table class="table-matches-predictions">
+      <thead>
+        <tr>
+          <th class="text-center">Players</th>
+          <th class="text-center">Scores</th>
+          <th/>
+        </tr>
+      </thead>
+      <tbody>
+        <for|match| of=state.matches>
+          <tr>
+            <td class="text-center">
+              <for|id, idx| of=match.players>
+                $ let isWinner = id == match.winner_id;
+                <div class="float-left" style=`${match.disabled ? "" : "cursor: pointer;"}` on-click("onPlayerClicked", match.id, idx)>
+                  <span class=`label ${isWinner ? "label-success" : "label-secondary"}`>${input.players[id].name}</span>
+                </div>
+              </for>
+            </td>
+            <td class="text-center">
+              $ let numLegs = match.match_mode.wins_required;
+              $ let scoreHome = match.score ? match.score[0] : 0;
+              $ let scoreAway = match.score ? match.score[1] : 0;
+              <div class="btn-group" role="group">
+                <for|i| from=numLegs to=0 step=-1>
+                  $ let disabled = match.disabled || (i == numLegs && scoreAway == numLegs);
+                  <button type="button" class=`btn ${scoreHome === i ? 'btn-primary' : 'btn-secondary'}` disabled=disabled on-click("onSetScore", 0, i, match.id)>${i}</button>
+                </for>
+              </div>
+              : 
+              <for|i| from=0 to=numLegs>
+                  $ let disabled = match.disabled || (i == numLegs && scoreHome == numLegs);
+                <button type="button" class=`btn ${scoreAway === i ? 'btn-primary' : 'btn-secondary'}` disabled=disabled on-click("onSetScore", 1, i, match.id)>${i}</button>
+              </for>                      
+            </td>
+            <td>
+              <button class="btn btn-primary" disabled=match.disabled on-click("onLock", match.id)>
+                <i class="fas fa-lock"/>
+              </button>
+            </td>
+          </tr>
+        </for>
+      </tbody>
+    </table>
+  </div>
+</div>

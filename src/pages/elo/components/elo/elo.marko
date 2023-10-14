@@ -22,21 +22,10 @@
           </tr>
         </thead>
         <tbody>
-          $ var redStep = Math.floor(256 / state.tournament.length);
+          $ let redStep = Math.floor(256 / state.tournament.length);
           <for|standing, idx| of=state.tournament>
-            $ var redValue = 256 - (standing.rank - 1) * redStep;
-            <tr>
-              <td class="pl-10">${idx + 1}</td>
-              <td class="text-left">
-                <a href=`/players/${standing.player_id}/statistics`>${input.players[standing.player_id].name}</a>
-              </td>
-              $ var length = Math.ceil(0.2 * standing.elo);
-              <td class="text-left">
-                <div class="elo-bar" style=`width: ${length}px; background-color: rgb(${redValue}, 0, 0)`>${standing.elo}</div>
-              </td>
-              <td class="text-right">${standing.elo_matches}</td>
-            </tr>
-          </for>
+            <player-elo idx=idx elo=standing.elo matches=standing.elo_matches player=input.players[standing.player_id] redValue=(256 - (standing.rank - 1) * redStep) />
+          </for>          
         </tbody>
       </table>
     </div>
@@ -53,20 +42,11 @@
           </tr>
         </thead>
         <tbody>
-          $ var redStep = Math.floor(256 / state.general.length);
+          $ let redStep = Math.floor(256 / state.general.length);
           <for|standing, idx| of=state.general>
-            $ var redValue = 256 - (standing.rank - 1) * redStep;
-            <tr>
-              <td class="pl-10">${idx + 1}</td>
-              <td class="text-left">
-                <a href=`/players/${standing.player_id}/statistics`>${input.players[standing.player_id].name}</a>
-              </td>
-              $ var length = Math.ceil(0.2 * standing.current_elo);
-              <td class="text-left">
-                <div class="elo-bar" style=`width: ${length}px; background-color: rgb(${redValue}, 0, 0)`>${standing.current_elo}</div>
-              </td>
-              <td class="text-right">${standing.current_elo_matches}</td>
-            </tr>
+            $ let redValue = (256 - (standing.rank - 1) * redStep)
+            $ console.log(`${input.players[standing.player_id].name} = ${standing.rank} ${redValue}`);
+            <player-elo idx=idx elo=standing.current_elo matches=standing.current_elo_matches player=input.players[standing.player_id] redValue=redValue />
           </for>
         </tbody>
       </table>

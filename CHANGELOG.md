@@ -5,12 +5,17 @@ A preview of major changes can be found in the Wiki ([Latest Changes](https://gi
 #### Feature
 - "Badges" page showing overview of all badges and how many players have unlocked them
 - New Darts Per Leg `DPL` metric added to tournament overview
+- Tournament Predictor
 - Lots of new Badges
 
 #### Changed
 - Don't show `Rematch` and `Undo Leg Finish` on old legs
 - Display darts throw for certain badges
 - Don't show change order modal if button input is enabled
+- Hide Elo for players with Elo <1000
+
+#### Fixed
+- Fixed player Elo Changelog
 
 ## [2.7.0] - 2023-09-12
 #### Feature

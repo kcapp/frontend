@@ -16,16 +16,19 @@ router.get('/', function (req, res, next) {
         axios.get(`${req.app.locals.kcapp.api}/tournament/standings`),
         axios.get(`${req.app.locals.kcapp.api}/office`)
     ]).then(axios.spread((players, standings, offices) => {
-        const general = JSON.parse(JSON.stringify(standings.data));
+        let general = JSON.parse(JSON.stringify(standings.data));
         general.sort((player1, player2) => player2.current_elo - player1.current_elo );
+        general = general.map((standing, idx) => {
+            // Recalculate ranks
+            standing.rank = idx+1;
+            return standing;
+          });
 
         const tournamentData = standings.data;
         const tournament = [];
         for (let i = 0; i< tournamentData.length; i++) {
             const standing = tournamentData[i];
-            if (standing.elo_matches >= 5) {
-                tournament.push(standing);
-            }
+            tournament.push(standing);
         }
         res.marko(eloTemplate, {
             players: players.data,

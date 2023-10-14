@@ -46,12 +46,19 @@ router.get('/', function (req, res, next) {
 
 router.get('/:id', function (req, res, next) {
     axios.all([
+        axios.get(`${req.app.locals.kcapp.api}/badge/${req.params.id}`),
         axios.get(`${req.app.locals.kcapp.api}/badge/${req.params.id}/statistics`),
         axios.get(`${req.app.locals.kcapp.api}/tournament`),
         axios.get(`${req.app.locals.kcapp.api}/player`)
-    ]).then(axios.spread((statistics, tournaments, players) => {
+    ]).then(axios.spread((badge, statisticsData, tournaments, players) => {
+        const level = req.query.level;
+        let statistics = statisticsData.data;
+        if (level) {
+            statistics = statistics.filter((statistic) => statistic.level == level);
+        }
         res.marko(badgeTemplate, {
-            statistics: statistics.data,
+            badge: badge.data,
+            statistics: statistics,
             tournaments: tournaments.data,
             players: players.data,
         });

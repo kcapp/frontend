@@ -1,16 +1,22 @@
 $ const moment = require('moment');
 <div class="block-container no-padding">
-   <if(input.statistics.length === 0)>
-        <p>No one has unlocked this badge yet ...</p>
+    <div style="text-align: center;">
+        <badge badge=input.badge />
+    </div>
+    <if(input.statistics.length === 0)>
+        <div class="text-center">No one has unlocked this badge yet...</div>
     </if>
     <else>
         $ let badge = input.statistics[0];
-        <div style="text-align: center;">
-            <badge badge=badge.badge />
-        </div>
         <table class="table table-kcapp table-responsive">
             <thead>
                 <th>Player</th>
+                <if(badge.level)>
+                    <th>Level</th>
+                </if>
+                <if(badge.value)>
+                    <th>Value</th>
+                </if>                
                 <if(badge.leg_id)>
                     <th>Leg</th>
                 </if>
@@ -29,6 +35,12 @@ $ const moment = require('moment');
                 <for|statistic| of=input.statistics>
                     <tr>
                         <td><player-link player=input.players[statistic.player_id]/></td>
+                        <if(statistic.level)>
+                            <td>${statistic.level}</td>
+                        </if>
+                        <if(statistic.value)>
+                            <td>${statistic.value}</td>
+                        </if>
                         <if(statistic.leg_id)>
                             <td><a href=`/legs/${statistic.leg_id}/result` title=statistic.created_at>${statistic.leg_id}</a></td>
                         </if>

@@ -1,0 +1,12 @@
+<tr>
+    <td class="pl-10">${input.idx + 1}</td>
+    <td class="text-left">
+    <a href=`/players/${input.player.id}/statistics`>${input.player.name} ${input.matches < 10 ? "*" : ""}</a>
+    </td>
+    $ let currentElo = input.elo <= 1000 ? 1000 : input.elo; // Don't show Elo less than 1000
+    $ let length = Math.ceil(0.2 * currentElo);
+    <td class="text-left">
+        <div class="elo-bar" style=`width: ${length}px; background-color: rgb(${input.redValue}, 0, 0)`>${currentElo == 1000 ? "<1000" : currentElo}</div>
+    </td>
+    <td class="text-right">${input.matches}</td>
+</tr>
