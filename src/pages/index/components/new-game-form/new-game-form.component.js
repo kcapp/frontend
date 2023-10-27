@@ -253,6 +253,10 @@ module.exports = {
                 scoreComponent.updateOptions(types.SCORES_GOTCHA);
                 scoreComponent.state.index = 200;
                 scoreComponent.state.enabled = true;
+            } else if (this.state.options.game_type === types.ONESEVENTY) {
+                scoreComponent.updateOptions(types.SCORES_170);
+                scoreComponent.state.index = 170;
+                scoreComponent.state.enabled = false;
             } else if (this.state.options.starting_score === 0) {
                 scoreComponent.state.index = scoreComponent.state.defaultValue;
                 scoreComponent.state.enabled = true;
@@ -326,6 +330,8 @@ module.exports = {
             match_stake: this.state.options.stake,
             outshot_type: this.state.options.outshot_type,
             starting_lives: this.state.options.starting_lives,
+            points_to_win: this.state.options.points_to_win,
+            max_rounds: this.state.options.max_rounds,
             venue: venueId,
             players: this.state.selected.map(player => player.id),
             office_id: officeId,
