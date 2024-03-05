@@ -1,7 +1,7 @@
 $ const moment = require('moment');
 <div class="block-container no-padding">
     <div style="text-align: center;">
-        <badge badge=input.badge />
+        <badge badge=input.badge statistics=input.statistics[0] />
     </div>
     <if(input.statistics.length === 0)>
         <div class="text-center">No one has unlocked this badge yet...</div>
@@ -16,7 +16,10 @@ $ const moment = require('moment');
                 </if>
                 <if(badge.value)>
                     <th>Value</th>
-                </if>                
+                </if>
+                <if(badge.statistics && badge.statistics.values[badge.badge.id])>
+                    <th>Completed</th>
+                </if>
                 <if(badge.leg_id)>
                     <th>Leg</th>
                 </if>
@@ -40,6 +43,15 @@ $ const moment = require('moment');
                         </if>
                         <if(statistic.value)>
                             <td>${statistic.value}</td>
+                        </if>
+                        <if(statistic.statistics && statistic.statistics.values[statistic.badge.id])>
+                            $ let current = statistic.statistics.values[statistic.badge.id];
+                            <if(current.constructor === Array)>
+                                <td>${current.length} (${current})</td>
+                            </if>
+                            <else>
+                                <td>${current}</td>
+                            </else>
                         </if>
                         <if(statistic.leg_id)>
                             <td><a href=`/legs/${statistic.leg_id}/result` title=statistic.created_at>${statistic.leg_id}</a></td>
