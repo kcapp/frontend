@@ -20,6 +20,10 @@ exports.removeLast = function(dart, external) {
 
 exports.isBust = (dart, player) => {
     const currentScore = player.current_score;
+    if (currentScore <= 0) {
+        return true;
+    }
+    
     if (dart.getMultiplier() == 2 && currentScore === 0) {
         // We checked out, so not a bust
         return false;
@@ -75,9 +79,6 @@ exports.confirmThrow = function (external) {
     const isCheckout = module.exports.isCheckout(dart, this.state.player, this.state.leg);
     if (isCheckout) {
         submitting = true;
-    }
-    if (isCheckout) {
-        submitting = true;
         alertify.confirm('Leg will be finished.',
             () => {
                 this.emit('leg-finished', true);
@@ -98,11 +99,13 @@ exports.confirmThrow = function (external) {
                 this.state.isBusted = false;
                 this.emit('player-busted', false);
             });
-    }    
-
+    }
     if (!external) {
+        // Check if we have checked out without winning, and submit to move to next player if we did
+        let submit = !isCheckout && dart.getMultiplier() == 2 && this.state.player.current_score === 0;
+
         // If an external event triggered the update don't emit a throw
-        this.emit('possible-throw', isCheckout, false, this.state.currentDart - 1, dart.getScore(), dart.getMultiplier(), false, false);
+        this.emit('possible-throw', isCheckout, false, this.state.currentDart - 1, dart.getScore(), dart.getMultiplier(), false, submit);
     }
     return submitting;
 }

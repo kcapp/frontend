@@ -31,7 +31,7 @@ router.get('/', function (req, res, next) {
             outshots: outshots.data,
             lives: [{ id: 1, name: 1 }, { id: 3, name: 3 }, { id: 5, name: 5 }, { id: 7, name: 7 }, { id: 10, name: 10 }],
             points_to_win: [{ id: 1, name: 1 }, { id: 2, name: 2 }, { id: 3, name: 3 }, { id: 4, name: 4 }, { id: 5, name: 5 }],
-            max_rounds: [{ id: -1, name: 'Unlimited' }, { id: 5, name: 5 }, { id: 10, name: 10 }, { id: 15, name: 15 }, { id: 20, name: 20 }, { id: 30, name: 30 }],
+            max_rounds: [{ id: -1, name: 'Unlimited' }, { id: 3, name: 3 }, { id: 5, name: 5 }, { id: 7, name: 7 }, { id: 10, name: 10 }, { id: 15, name: 15 }],
             venues: venues.data,
             stakes: oweTypes.data,
             offices: offices.data,
