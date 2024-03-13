@@ -185,7 +185,7 @@ module.exports = {
             this.state.scores = null;
         } else if (type === types.TIC_TAC_TOE) {
             this.state.scores = types.SCORES_TIC_TAC_TOE;
-            this.state.outshotType = this.input.outshots[2].id;
+            this.state.outshotType = this.input.outshots[0].id;
         } else if (type === types.DARTS_AT_X) {
             this.state.scores = types.SCORES_DARTS_AT_X;
         } else if (type === types.FOUR_TWENTY) {
@@ -196,6 +196,7 @@ module.exports = {
             this.state.scores = types.SCORES_GOTCHA;
         } else if (type === types.X01) {
             this.state.scores = types.SCORES_x01;
+            this.state.outshotType = this.input.outshots[1].id;
         } else if (type === types.X01HANDICAP) {
             this.state.scores = types.SCORES_x01;
             _.forEach(this.state.playersSelected, (player) => {

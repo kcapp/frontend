@@ -4,9 +4,6 @@ const alertify = require(`../../../../util/alertify`);
 
 module.exports = {
     onCreate(input) {
-        this.reset();
-    },
-    reset() {
         this.state = {
             id: undefined,
             first_name: undefined,
@@ -17,7 +14,7 @@ module.exports = {
             color: '#dfdfdf',
             profile_pic_url: undefined,
             smartcard_uid: undefined,
-            office_id: 1,
+            office_id: Object.keys(input.offices)[0],
             options: {
                 edited: false,
                 subtract_per_dart: true,
