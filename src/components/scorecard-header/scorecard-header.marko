@@ -15,8 +15,31 @@ $ const types = require("../scorecard/components/match_types");
     <else-if(input.type == types.SCAM)>
       <div class="label-player-name">${state.player.is_stopper ? "STOPPER" : "SCORER"}</div>
     </else-if>
+    <else-if(input.type == types.ONESEVENTY)>
+      <div class="label-player-name">
+        $ let dartsRemaining = 9 - state.player.darts_thrown; 
+        <if(dartsRemaining === 0)>
+          &nbsp;
+        </if>
+        <else>
+          ${"|".repeat(dartsRemaining)}
+        </else>
+      </div>
+    </else-if>
     <div class="player-legs">
-      <label>${state.wins}</label>
+      <if(input.type == types.ONESEVENTY)>
+        <label>
+          ${state.wins}
+          <br/>
+          ${state.player.current_points}
+          <if(input.leg.parameters && input.leg.parameters.points_to_win)>
+            ${` / ${input.leg.parameters.points_to_win}`}
+          </if>
+        </label>
+      </if>
+      <else>
+        <label>${state.wins}</label>
+      </else>
     </div>
   </div>
   <if(input.isPlayerBoardCam && state.cameraEnabled)>

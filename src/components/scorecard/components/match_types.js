@@ -14,6 +14,7 @@ exports.GOTCHA = 13;
 exports.JDC_PRACTICE = 14;
 exports.KNOCKOUT = 15;
 exports.SCAM = 16;
+exports.ONESEVENTY = 17;
 
 // Outshots
 exports.OUTSHOT_DOUBLE = 1;
@@ -101,3 +102,4 @@ exports.SCORES_KILL_BULL = [
     { id: 150, name: '150' }, { id: 200, name: '200' },
     { id: 250, name: '250' }, { id: 300, name: '300' }, { id: 500, name: '500' } ];
 exports.SCORES_FOUR_TWENTY = [ { id: 420, name: 420 } ];
+exports.SCORES_170 = [ { id: 170, name: 170 } ];

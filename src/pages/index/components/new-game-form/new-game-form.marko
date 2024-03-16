@@ -69,6 +69,10 @@ $ const types = require('../../../../components/scorecard/components/match_types
           <if(state.options.game_type == types.KNOCKOUT)>
             <game-option-selector values=input.lives options=state.options key="starting-lives" label="Starting Lives" attribute="starting_lives" defaultValue=5/>
           </if>
+          <if(state.options.game_type == types.ONESEVENTY)>
+            <game-option-selector values=input.points_to_win options=state.options key="points-to-win" label="Points To Win" attribute="points_to_win" defaultValue=1/>
+            <game-option-selector values=input.max_rounds options=state.options key="max-rounds" label="Max Rounds" attribute="max_rounds" defaultValue=-1/>
+          </if>          
           <game-option-selector values=input.modes options=state.options key="game-mode" label="Mode" attribute="game_mode" defaultValue=state.options.game_mode/>
           <game-option-selector values=input.stakes options=state.options key="stake" label="Stake" attribute="stake" addNull=true defaultAttrName="item"/>
           <game-option-selector values=state.venues options=state.options key="venue" label="Venue" attribute="venue_id" addNull=true defaultValue=state.options.venue_id/>

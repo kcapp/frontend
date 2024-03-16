@@ -15,6 +15,7 @@ const gotcha = require('./components/gotcha');
 const jdcPractice = require('./components/jdc_practice');
 const knockout = require("./components/knockout");
 const scam = require("./components/scam");
+const oneseventy = require("./components/170");
 
 const types = require("./components/match_types");
 
@@ -150,6 +151,9 @@ module.exports = {
                 case types.SCAM:
                     scam.removeLast.bind(this)(dart, external);
                     break;
+                case types.ONESEVENTY:
+                    oneseventy.removeLast.bind(this)(dart, external);
+                    break;
             }
             dart.reset();
         } else {
@@ -208,6 +212,9 @@ module.exports = {
                     break;
                 case types.SCAM:
                     submitting = scam.confirmThrow.bind(this)(external);
+                    break;
+                case types.ONESEVENTY:
+                    submitting = oneseventy.confirmThrow.bind(this)(external);
                     break;
             }
         }

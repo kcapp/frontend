@@ -24,8 +24,9 @@ style {
     }
 }
 $ const data = input.data;
+$ const idAttr = input.idAttr || "id";
 <div>
-  <input class="form-check-input" type="checkbox" value=data.id/>
-  <label class=`name-label form-check-label btn ${input.selected === data.id ? 'btn-warning' : 'btn-primary'}` on-click('handleClick')>${data.name}</label>
+  <input class="form-check-input" type="checkbox" value=data[idAttr]/>
+  <label class=`name-label form-check-label btn ${input.selected === data[idAttr] ? 'btn-warning' : 'btn-primary'}` on-click('handleClick')>${data.name}</label>
   <div class="clearfix"/>
 </div>

@@ -260,6 +260,7 @@ router.post('/new', function (req, res, next) {
                 const player = playerMap[players[i]];
                 isPractice = player.is_bot;
             }
+            console.log(req.body.bot_player_config);
             const body = {
                 owe_type_id: req.body.match_stake == -1 ? null : req.body.match_stake,
                 venue_id: req.body.venue === -1 ? null : req.body.venue,
@@ -272,7 +273,9 @@ router.post('/new', function (req, res, next) {
                     starting_score: req.body.starting_score,
                     parameters: {
                         outshot_type: { id: req.body.outshot_type },
-                        starting_lives: req.body.starting_lives
+                        starting_lives: req.body.starting_lives,
+                        points_to_win: req.body.points_to_win,
+                        max_rounds: req.body.max_rounds === -1 ? null : req.body.max_rounds
                     }
                 } ],
                 office_id: req.body.office_id,

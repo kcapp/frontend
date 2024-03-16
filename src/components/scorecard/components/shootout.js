@@ -4,6 +4,7 @@ exports.removeLast = function(dart, external) {
     const value = dart.getValue();
     this.state.player.current_score -= value;
     this.state.player.darts_thrown--;
+    this.state.totalScore -= scored;
 
     this.emit('score-change', value, this.state.player.player_id);
     if (!external) {
