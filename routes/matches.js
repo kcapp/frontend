@@ -260,6 +260,7 @@ router.post('/new', function (req, res, next) {
                 const player = playerMap[players[i]];
                 isPractice = player.is_bot;
             }
+            console.log(req.body.bot_player_config);
             const body = {
                 owe_type_id: req.body.match_stake == -1 ? null : req.body.match_stake,
                 venue_id: req.body.venue === -1 ? null : req.body.venue,

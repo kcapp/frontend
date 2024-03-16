@@ -28,7 +28,14 @@ $ const types = require("../scorecard/components/match_types");
     </else-if>
     <div class="player-legs">
       <if(input.type == types.ONESEVENTY)>
-        <label>${state.player.current_points}</label>
+        <label>
+          ${state.wins}
+          <br/>
+          ${state.player.current_points}
+          <if(input.leg.parameters && input.leg.parameters.points_to_win)>
+            ${` / ${input.leg.parameters.points_to_win}`}
+          </if>
+        </label>
       </if>
       <else>
         <label>${state.wins}</label>

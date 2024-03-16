@@ -103,6 +103,9 @@ module.exports = {
                     if (current > chartMaxValue) {
                         chartMaxValue = current;
                     }
+                } else if (this.state.matchType === types.ONESEVENTY) {
+                    current = visit.scores[visit.player_id] - visit.score;
+                    values[visit.player_id].push(current);
                 } else {
                     values[visit.player_id].push(current - visit.score);
                 }

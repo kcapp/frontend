@@ -20,7 +20,7 @@ exports.removeLast = function(dart, external) {
 
 exports.isBust = (dart, player) => {
     const currentScore = player.current_score;
-    if (currentScore <= 0) {
+    if (currentScore < 0) {
         return true;
     }
     

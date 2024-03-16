@@ -405,11 +405,13 @@ module.exports = (io, app) => {
                         }
                     } else {
                         const currentLeg = legNum - 1 + ["", "st", "nd", "rd", "th"][legNum > 4 ? 4 : legNum - 1];
-                        const sentence = [
-                            AUDIO_GAMESHOT.random(currentLeg),
-                            getNameAnnouncement(player.player, "name")
-                        ];
-                        announce(`Game shot in the ${currentLeg} leg!, ${name}!`, 'game_shot', sentence);
+                        if (player) {
+                            const sentence = [
+                                AUDIO_GAMESHOT.random(currentLeg),
+                                getNameAnnouncement(player.player, "name")
+                            ];
+                            announce(`Game shot in the ${currentLeg} leg!, ${name}!`, 'game_shot', sentence);
+                        }
                     }
                 }
 
