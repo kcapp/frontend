@@ -66,10 +66,18 @@ module.exports = {
         this.state.last_name = event.target.value;
     },
     nicknameChange(event) {
-        this.state.nickname = event.target.value;
+        let value = event.target.value
+        if (value === "") {
+            value = undefined;
+        }
+        this.state.nickname = value;
     },
     vocalNameChange(event) {
-        this.state.vocal_name = event.target.value;
+        let value = event.target.value
+        if (value === "") {
+            value = undefined;
+        }
+        this.state.vocal_name = value;
     },
     colorChange(event) {
         this.state.color = event.target.value;
@@ -90,7 +98,11 @@ module.exports = {
         alertify.notify(`Smartcard Scanned ${data.uid}`, 'success', 5);
     },
     slackHandleChange(event) {
-        this.state.slack_handle = event.target.value;
+        let value = event.target.value
+        if (value === "") {
+            value = undefined;
+        }
+        this.state.slack_handle = value;
     },
     officeChanged(event) {
         this.state.office_id = event.target.value;

@@ -65,9 +65,13 @@ module.exports = {
                 axios.get(`${window.location.protocol}//${window.location.hostname}${this.input.locals.kcapp.api_path}/venue/${this.state.venueId}/players`)
                     .then((ids) => {
                         const playerIds = ids.data;
-                        this.state.players = _.reject(this.input.players, (player) => {
-                            return !playerIds.includes(player.id);
-                        });
+                        if (playerIds.length === 0) {
+                            this.filterPlayers("All", undefined);
+                        } else {
+                            this.state.players = _.reject(this.input.players, (player) => {
+                                return !playerIds.includes(player.id);
+                            });
+                        }
                         this.setStateDirty('players');
                     }).catch(error => {
                         console.log(`Error when getting recent players ${error}`);
@@ -128,6 +132,9 @@ module.exports = {
     },
     onNext(e) {
         this.state.step++;
+        if (this.state.step === this.state.steps.CONFIGURE_BOT && !this.state.bot) {
+            this.state.step++;
+        }
         e.preventDefault();
     },
     onStart(e) {
@@ -282,7 +289,9 @@ module.exports = {
         });
         this.state.players = _.sortBy(players, (player) => player.name);
         this.setStateDirty('players');
-        event.preventDefault();
+        if (event) {
+            event.preventDefault();
+        }
     },
     botSkillSelected(event, selected) {
         this.state.bot_skill = selected.input.data.skill;
