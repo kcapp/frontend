@@ -56,7 +56,7 @@ module.exports = {
                     return player.office_id !== this.state.officeId;
                 });
                 const venue = localStorage.get('venue_id');
-                if (venue) {
+                if (venue && venue !== "null") {
                     this.state.venueId = parseInt(venue);
                 }
                 this.setStateDirty('players');
@@ -109,7 +109,11 @@ module.exports = {
         this.state.step = this.state.steps.SELECT_PLAYERS;
     },
     onContinueMatch(e) {
-        axios.get(`${window.location.protocol}//${window.location.hostname}${this.input.locals.kcapp.api_path}/venue/${this.state.venueId}/matches`)
+        let req = axios.get(`${window.location.protocol}//${window.location.hostname}${this.input.locals.kcapp.api_path}/match/active?since=200000000`);
+        if (this.state.venueId) {
+            req = axios.get(`${window.location.protocol}//${window.location.hostname}${this.input.locals.kcapp.api_path}/venue/${this.state.venueId}/matches`);
+        }
+        req
             .then((matchesData) => {
                 this.state.matches = matchesData.data;
                 this.setStateDirty('matches');

@@ -8,15 +8,18 @@ A preview of major changes can be found in the Wiki ([Latest Changes](https://gi
 - New Darts Per Leg `DPL` metric added to tournament overview
 - Tournament Predictor
 - Lots of new Badges
+- Ability to configure bots from Tablet Controller
 
 #### Changed
 - Don't show `Rematch` and `Undo Leg Finish` on old legs
 - Display darts throw for certain badges
 - Don't show change order modal if button input is enabled
 - Hide Elo for players with Elo <1000
+- Use multipler as points in `Around the World` and `Shanghai` instead of value
 
 #### Fixed
 - Fixed player Elo Changelog
+- Minor fixes to Tablet controller
 
 ## [2.7.0] - 2023-09-12
 #### Feature
