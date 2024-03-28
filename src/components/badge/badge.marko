@@ -43,7 +43,9 @@ $ let acquired = badge.acquired;
     <if(input.show_achieved && input.statistics)>
         <div style="font-weight: 400;">
             <b>Achieved By:</b> ${input.statistics.unlocked_players} (${(input.statistics.unlocked_percent * 100).toFixed(2)}%)
-            <a href=`/badges/${badge.id}${badge.level ? "?level="+badge.level : ""}`>View</a>
+            <if(badge.unlocked)>
+                <a href=`/badges/${badge.id}${badge.level ? "?level="+badge.level : ""}`>View</a>
+            </if>
         </div>
     </if>
 </div>

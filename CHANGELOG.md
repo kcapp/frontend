@@ -7,8 +7,9 @@ A preview of major changes can be found in the Wiki ([Latest Changes](https://gi
 - "Badges" page showing overview of all badges and how many players have unlocked them
 - New Darts Per Leg `DPL` metric added to tournament overview
 - Tournament Predictor
-- Lots of new Badges
 - Ability to configure bots from Tablet Controller
+- New set of larger Compact buttons
+- Lots of new Badges
 
 #### Changed
 - Don't show `Rematch` and `Undo Leg Finish` on old legs

@@ -1,6 +1,6 @@
 module.exports = {
     onInput(input) {
-        let clazz = 'btn-score btn-info btn-lg btn-block';
+        let clazz = 'btn-score btn-info btn-lg btn-block btn-score';
         if (input.clazz) {
             clazz += ` ${input.clazz}`;
         } else if (input.multiplier === 3) {

@@ -115,7 +115,6 @@ $ const cricket = require("./components/cricket");
       <if(state.type === types.AROUND_THE_WORLD || state.type === types.SHANGHAI || state.type === types.AROUND_THE_CLOCK)>
         <tr>
           <td colspan="3">
-            $ var number = state.leg.starting_score;
             <table id='table-aroundthe-scores' class='table-striped'>
               <thead>
                 <tr>
@@ -124,7 +123,7 @@ $ const cricket = require("./components/cricket");
               </thead>
               <tbody>
                   <tr>
-                    $ var value = state.type === types.AROUND_THE_CLOCK ? state.player.current_score + 1 : input.leg.round;
+                    $ let value = state.type === types.AROUND_THE_CLOCK ? state.player.current_score + 1 : input.leg.round;
                     <td class="text-center target-text">${value === 21 ? "Bull" : value}</td>
                   </tr>
               </tbody>

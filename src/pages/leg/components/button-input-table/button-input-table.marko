@@ -292,6 +292,9 @@ $ let types = require("../../../../components/scorecard/components/match_types")
       <if(state.buttonLayout === "compact")>
         <all-buttons-input-compact on-button-press("onButtonPress")/>
       </if>
+      <else-if(state.buttonLayout === "compact-large")>
+        <all-buttons-input-compact on-button-press("onButtonPress") size="large"/>
+      </else-if>
       <else>
         <all-buttons-input on-button-press("onButtonPress")/>
       </else>

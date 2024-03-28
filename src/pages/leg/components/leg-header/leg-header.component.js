@@ -27,6 +27,9 @@ module.exports = {
         const isMobile = md.mobile();
         const isTablet = md.tablet();
 
+        //const userAgent = navigator.userAgent.toLowerCase();
+        //const isTablet = /(ipad|tablet|(android(?!.*mobile))|(windows(?!.*phone)(.*touch))|kindle|playbook|silk|(puffin(?!.*(IP|AP|WP))))/.test(userAgent);
+
         this.state.buttonInputEnabled = isMobile;
         this.emit('enable-button-input', this.state.buttonInputEnabled);
 

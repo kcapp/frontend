@@ -12,8 +12,8 @@
           <div class="block-container-with-header">
             <div class="form-group form-check">
                 <select id="buttonLayout" class="form-select" style="width: 100%" name="button-layout">
-                  <for|layout| of=[ "Wide", "Compact" ]>
-                    <option style="text-transform: capitalize;" value=layout.toLowerCase() selected=(layout.toLowerCase() === state.buttonLayout)>${layout}</option>
+                  <for|layout| of=state.layouts>
+                    <option style="text-transform: capitalize;" value=layout.id selected=(layout.id === state.buttonLayout)>${layout.name}</option>
                   </for>
                 </select>
             </div>
