@@ -17,10 +17,6 @@ module.exports = {
     },
 
     onMount() {
-        if (this.input.buttons_only) {
-            // We only want to show buttons, so no need to try to determine otherwise
-            return;
-        }
         const MobileDetect = require('mobile-detect'),
             md = new MobileDetect(window.navigator.userAgent);
 
