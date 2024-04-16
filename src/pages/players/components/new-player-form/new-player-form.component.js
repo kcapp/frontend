@@ -132,14 +132,14 @@ module.exports = {
         if (this.state.isAdd) {
             axios.post(`${window.location.origin}/players`, body)
                 .then(response => {
-                    location.href = 'players';
+                    location.href = '/players';
                 }).catch(error => {
                     console.log(error);
                 });
         } else {
             axios.put(`${window.location.origin}/players/${this.state.id}`, body)
                 .then(response => {
-                    location.href = 'players';
+                    location.href = '/players';
                 }).catch(error => {
                     console.log(error);
                 });
