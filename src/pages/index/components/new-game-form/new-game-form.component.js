@@ -302,7 +302,8 @@ module.exports = {
         let officeId = this.state.officeId;
         if (officeId <= 0) {
             if (officeId == 0 && this.state.options.venue_id && this.state.options.venue_id !== -1) {
-                officeId = this.input.venues[this.state.options.venue_id].office_id;
+                let venue = _.findWhere(this.input.venues, (venue) => venue.id == this.state.options.venue_id);
+                officeId = venue.office_id;
             } else {
                 officeId = null;
             }

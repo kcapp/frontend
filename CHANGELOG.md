@@ -17,10 +17,12 @@ A preview of major changes can be found in the Wiki ([Latest Changes](https://gi
 - Don't show change order modal if button input is enabled
 - Hide Elo for players with Elo <1000
 - Use multipler as points in `Around the World` and `Shanghai` instead of value
+- Updated to use `Node.js v20`
 
 #### Fixed
 - Fixed player Elo Changelog
 - Minor fixes to Tablet controller
+- Issue where match wouldn't start if venue was selected on office all
 
 ## [2.7.0] - 2023-09-12
 #### Feature
