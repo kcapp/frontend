@@ -26,3 +26,25 @@
 .ajs-success {
     font-weight: 800;
 }
+
+#kcapp-logo {
+    text-decoration: none;
+    padding-right: 20px;
+    left: 30%;
+    position: absolute;
+    z-index: 1;
+    transition: visibility 0s, opacity 3.0s linear;
+}
+
+#kcapp-logo img {
+    -webkit-animation: bounce 0.25s infinite alternate;
+    animation: bounce 0.25s infinite alternate;
+}
+@-webkit-keyframes bounce {
+    0% { transform: translateY(0); }
+    100% { transform: translateY(-20px); }
+}
+@keyframes bounce {
+    0% { transform: translateY(0); }
+    100% { transform: translateY(-20px); }
+}

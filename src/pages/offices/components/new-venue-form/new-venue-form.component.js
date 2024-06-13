@@ -8,6 +8,7 @@ module.exports = {
             description: undefined,
             has_dual_monitor: false,
             has_led_lights: false,
+            has_wled_lights: false,
             has_smartboard: false,
             smartboard_uuid: undefined,
             smartboard_button_number: undefined,
@@ -22,6 +23,7 @@ module.exports = {
                 description: input.venue.description,
                 has_dual_monitor: input.venue.config.has_dual_monitor,
                 has_led_lights: input.venue.config.has_led_lights,
+                has_wled_lights: input.venue.config.has_wled_lights,
                 has_smartboard: input.venue.config.has_smartboard,
                 smartboard_uuid: input.venue.config.smartboard_uuid,
                 smartboard_button_number: input.venue.config.smartboard_button_number,
@@ -43,6 +45,9 @@ module.exports = {
     },
     ledLightsChange(event) {
         this.state.has_led_lights = event.target.checked;
+    },
+    wledLightsChange(event) {
+        this.state.has_wled_lights = event.target.checked;
     },
     smartboardChange(event) {
         this.state.has_smartboard = event.target.checked;
@@ -69,6 +74,7 @@ module.exports = {
             config: {
                 has_dual_monitor: this.state.has_dual_monitor,
                 has_led_lights: this.state.has_led_lights,
+                has_wled_lights: this.state.has_wled_lights,
                 has_smartboard: this.state.has_smartboard,
                 smartboard_uuid: this.state.smartboard_uuid,
                 smartboard_button_number: this.state.smartboard_button_number

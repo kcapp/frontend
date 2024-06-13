@@ -44,6 +44,7 @@
                                     <th>Description</th>
                                     <th>Dual Monitor</th>
                                     <th>LED Lights</th>
+                                    <th>WLED Lights</th>
                                     <th>Smartboard</th>
                                     <th>Options</th>
                                 </tr>
@@ -56,6 +57,7 @@
                                             <td>${venue.description}</td>
                                             <td><input type="checkbox" name="Dual Monitor" checked=venue.config.has_dual_monitor disabled></td>
                                             <td><input type="checkbox" name="LED Lights" checked=venue.config.has_led_lights disabled></td>
+                                            <td><input type="checkbox" name="LED Lights" checked=venue.config.has_wled_lights disabled></td>
                                             <td><input type="checkbox" name="Smartboard" checked=venue.config.has_smartboard disabled></td>
                                             <td>
                                                 $ var modalId = `edit-venue-${venue.id}-modal`;

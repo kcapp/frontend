@@ -10,12 +10,14 @@ const types = require('../../src/components/scorecard/components/match_types');
 
 const _this = this;
 
+const getRandom = (arr) => arr[Math.floor(Math.random() * arr.length)];
+
 function readFiles(src) {
     const map = {};
     map.random = (text) => {
         const key = text.toString().toLowerCase();
         if (map[key]) {
-            return { file: map[key][Math.floor(Math.random() * map[key].length)] };
+            return { file: getRandom(map[key]) };
         }
         return { text: `${key}` };
     }
@@ -45,6 +47,12 @@ const AUDIO_MARKS = readFiles('public/audio/announcer/marks');
 const AUDIO_NAMES = readFolders('public/audio/announcer/names');
 const AUDIO_SENTENCES = readFiles('public/audio/announcer/sentences');
 const AUDIO_GAMESHOT = readFiles('public/audio/announcer/sentences/gameshot');
+const AUDIO_DEMOS = readFiles(`public/audio/demo/songs`);
+const DEMO = [
+    { file: 'audio/demo/songs/demo_0.wav', length: 20, bpm: 132, messages: [ { text: "Dun dun dun dun dun dun dun dun dun dun dun dun dun dun dun", delay: 2 }, { text: "hey! hey! hey!", delay: 5 }, { text: "Dun dun dun dun dun dun dun dun dun dun dun dun dun dun dun", delay: 3 }, { text: "hey! hey! hey!", delay: 5 }, { text: "Dun dun dun dun dun dun dun dun dun dun dun dun dun dun dun", delay: 3 }, ] },
+    { file: 'audio/demo/songs/demo_1.wav', length: 15, bpm: 140, messages: [ { text: "Stand up, if you love the darts!", delay: 3 }, { text: "Stand up, if you love the darts!", delay: 3 }, { text: "Stand up, if you love the darts!", delay: 3 }, { text: "Stand up, if you love the darts!", delay: 5 } ] },
+    { file: 'audio/demo/songs/demo_2.wav', length: 20, bpm: 145, messages: [ { text: "Do-do-do, do-do-do, do-do-do-do-do-do-do", delay: 5 }, { text: "Do-do-do, do-do-do, do-do-do-do-do", delay: 3 }, { text: "Do-do-do, do-do-do, do-do-do-do-do-do-do", delay: 3 }, { text: "Do-do-do, do-do-do, do-do-do-do-do-do-do", delay: 5 } ] }
+];
 
 function getClientIP(client) {
     const realIP = client.handshake.headers["x-real-ip"]
@@ -86,6 +94,18 @@ module.exports = (io, app) => {
                         // TODO Emit on venue namespace?
                         nsp.emit('smartcard', data);
                     })
+                    client.on('demo', (data) => {
+                        debug(`[${namespace}] demo ${JSON.stringify(data)} from ${ip}`);
+                        const demo = getRandom(DEMO);
+                        const audios = [ { file: 'audio/demo/welcome_to_kcapp.wav' }, { file: demo.file, length: demo.length }];
+                        data.audios = audios;
+                        data.messages = demo.messages;
+
+                        nsp.emit('demo', data);
+                        nsp.emit('say', { audios: audios });
+                        nsp.emit('alert', { alerts: demo.messages });
+                        
+                    });
                 });
                 debug(`[${namespace}] created`);
             }

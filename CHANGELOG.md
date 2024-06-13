@@ -6,6 +6,7 @@ A preview of major changes can be found in the Wiki ([Latest Changes](https://gi
 - New game type `170`
 - "Badges" page showing overview of all badges and how many players have unlocked them
 - New Darts Per Leg `DPL` metric added to tournament overview
+- Convenience method for scoring a user checkout by pressing `55` on numpad
 - Tournament Predictor
 - Ability to configure bots from Tablet Controller
 - New set of larger Compact buttons
@@ -17,7 +18,6 @@ A preview of major changes can be found in the Wiki ([Latest Changes](https://gi
 - Don't show change order modal if button input is enabled
 - Hide Elo for players with Elo <1000
 - Use multipler as points in `Around the World` and `Shanghai` instead of value
-- Updated to use `Node.js v20`
 
 #### Fixed
 - Fixed player Elo Changelog

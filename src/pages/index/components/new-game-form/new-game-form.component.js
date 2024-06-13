@@ -23,6 +23,8 @@ module.exports = {
                 venue_id: null
             },
             playerId: "",
+            socket: {},
+            demo_mode: false,
             submitting: false
         }
     },
@@ -93,6 +95,36 @@ module.exports = {
                     }
                 }
             });
+            socket.on('say', (data) => {
+                const audioPlayers = [ ];
+                for (const file of data.audios) {
+                    audioPlayers.push(new Audio(file.file));
+                }
+        
+                for (let i = 0; i < audioPlayers.length; i++) {
+                    const current = audioPlayers[i];
+                    const next = audioPlayers[i + 1];
+                    if (next) {
+                        current.addEventListener("ended", () => {
+                            next.play();
+                        }, false);
+                    } else {
+                        current.addEventListener("ended", () => {
+                            this.state.demo_mode = false;
+                        }, false);
+                    }
+                }
+                audioPlayers[0].play();
+            });
+            socket.on('alert', (data) => {
+                const messages = data.alerts;
+                let delay = 0;
+                messages.forEach((message) => {
+                    delay += (message.delay ? message.delay : 0) * 1000;
+                    setTimeout(() => alertify.success(message.text), delay);
+                });
+            });
+            this.state.socket = socket;
         }
 
         document.addEventListener("keydown", this.onKeyDown.bind(this), false);
@@ -119,6 +151,19 @@ module.exports = {
                 if (playerId === '00') {
                     if (!this.state.submitting) {
                         this.newGame();
+                    }
+                    return;
+                } else if (playerId == '180180') {
+                    if (this.state.socket) {
+                        const venueId = localStorage.get('venue_id');
+                        const venue = _.find(this.state.venues, (venue) => venue.id == venueId);
+                        this.state.socket.emit('demo', { venue: venue, type: "demo" });
+
+                        const image = document.getElementById("kcapp-logo").children[0];
+                        image.style.animation = "none";
+                        setTimeout(() => image.style.animation = "", 2000);
+
+                        this.state.demo_mode = true;
                     }
                     return;
                 }

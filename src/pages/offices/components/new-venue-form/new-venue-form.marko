@@ -36,6 +36,10 @@ $ var heading = input.heading || "Add Venue";
             <label class="control-label">LED Lights</label>
             <input class="form-control small-checkbox" type="checkbox" checked=state.has_led_lights on-input("ledLightsChange")/>
           </div>
+          <div style="width: 50%;">
+            <label class="control-label">WLED Lights</label>
+            <input class="form-control small-checkbox" type="checkbox" checked=state.has_wled_lights on-input("wledLightsChange")/>
+          </div>          
         </div>
         <div class="form-group">
           <div style="width: 10%; float: left;">
