@@ -102,8 +102,6 @@ module.exports = (io, app) => {
                         data.messages = demo.messages;
 
                         nsp.emit('demo', data);
-                        nsp.emit('say', { audios: audios });
-                        nsp.emit('alert', { alerts: demo.messages });
                         
                     });
                 });

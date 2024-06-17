@@ -95,7 +95,11 @@ module.exports = {
                     }
                 }
             });
-            socket.on('say', (data) => {
+            socket.on('demo', (data) => {
+                if (this.state.options.venue_id !== data.venue.id) {
+                    return;
+                }
+
                 const audioPlayers = [ ];
                 for (const file of data.audios) {
                     audioPlayers.push(new Audio(file.file));
@@ -115,9 +119,8 @@ module.exports = {
                     }
                 }
                 audioPlayers[0].play();
-            });
-            socket.on('alert', (data) => {
-                const messages = data.alerts;
+
+                const messages = data.messages;
                 let delay = 0;
                 messages.forEach((message) => {
                     delay += (message.delay ? message.delay : 0) * 1000;
