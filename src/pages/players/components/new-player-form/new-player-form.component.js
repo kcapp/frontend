@@ -55,7 +55,7 @@ module.exports = {
                         speaker.speak( {text: vocalName } );
                     });
             } else {
-                speaker.speak( {text: vocalName } );
+                speaker.speakWithVoice( {text: vocalName }, this.input.ttsVoice );
             }
         }
     },

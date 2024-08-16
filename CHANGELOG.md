@@ -7,6 +7,7 @@ A preview of major changes can be found in the Wiki ([Latest Changes](https://gi
 - "Badges" page showing overview of all badges and how many players have unlocked them
 - New Darts Per Leg `DPL` metric added to tournament overview
 - Convenience method for scoring a user checkout by pressing `55` on numpad
+- Option to select which TTS voice to use per venue
 - Tournament Predictor
 - Ability to configure bots from Tablet Controller
 - New set of larger Compact buttons

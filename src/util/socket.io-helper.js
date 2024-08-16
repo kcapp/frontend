@@ -85,12 +85,17 @@ exports.say = (data, thiz) => {
         return;
     }
 
+    let voice = undefined;
+    if (thiz.state.venueConfig) {
+        voice = thiz.state.venueConfig.tts_voice;
+    }
+
     const oldPlayer = thiz.state.audioAnnouncer;
     const isAudioAnnouncement = (oldPlayer.duration > 0 && !oldPlayer.paused) || (!isNaN(oldPlayer.duration) && !oldPlayer.ended && oldPlayer.paused);
     if (data.audios) {
         const audioPlayers = [ ];
         for (const file of data.audios) {
-            audioPlayers.push(file.file ? new Audio(file.file) : speaker.getUtterance(file));
+            audioPlayers.push(file.file ? new Audio(file.file) : speaker.getUtteranceWithVoice(file, voice));
         }
 
         for (let i = 0; i < audioPlayers.length; i++) {
@@ -124,13 +129,13 @@ exports.say = (data, thiz) => {
     } else {
         if (isAudioAnnouncement) {
             oldPlayer.addEventListener("ended", () => {
-                speaker.speak(data, () => {
+                speaker.speakWithVoice(data, voice, () => {
                     thiz.state.socket.emit("speak_finish");
                 });
             }, false);
         }
         else {
-            speaker.speak(data, () => {
+            speaker.speakWithVoice(data, voice, () => {
                 thiz.state.socket.emit("speak_finish");
             });
         }

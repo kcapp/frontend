@@ -28,6 +28,22 @@ $ var heading = input.heading || "Add Venue";
           <input class="form-control" type="text" value=state.description on-input("descriptionChange")/>
         </div>
         <div class="form-group">
+          <label class="control-label">TTS Voice</label>
+          <div style="width: 95%; float: left;">
+            <select class="form-control" on-change("ttsChange")>
+              <option value=null>${"<Use Browser Default>"}</option>
+              <for|idx, voice| in=state.voices>
+                <option value=voice.name selected=(state.ttsVoice == voice.name)>${voice.name} (${voice.lang})</option>
+              </for>
+            </select>
+          </div>
+          <div style="width: 5%; float: right;">
+            <span class="play-button" on-click("playVoice")>
+              <i class="fas fa-play"/>
+            </span>
+          </div>
+        </div>
+        <div class="form-group">
           <div style="width: 50%; float: left;">
             <label class="control-label">Dual Monitor</label>
             <input class="form-control small-checkbox" type="checkbox" checked=state.has_dual_monitor on-input("dualMonitorChange")/>
@@ -39,7 +55,7 @@ $ var heading = input.heading || "Add Venue";
           <div style="width: 50%;">
             <label class="control-label">WLED Lights</label>
             <input class="form-control small-checkbox" type="checkbox" checked=state.has_wled_lights on-input("wledLightsChange")/>
-          </div>          
+          </div>
         </div>
         <div class="form-group">
           <div style="width: 10%; float: left;">
