@@ -3,6 +3,7 @@ const io = require('socket.io-client');
 const alertify = require('./alertify');
 const speaker = require('./speaker');
 const types = require('../components/scorecard/components/match_types');
+const localStorage = require('./localstorage');
 
 exports.connect = (url) => {
     const socket = io(url);
@@ -84,12 +85,17 @@ exports.say = (data, thiz) => {
         return;
     }
 
+    let volume = localStorage.get("volume");
+    volume = volume ? Math.min(Math.max(parseFloat(volume), 0.0), 1.0) : 1.0;
+
     const oldPlayer = thiz.state.audioAnnouncer;
     const isAudioAnnouncement = (oldPlayer.duration > 0 && !oldPlayer.paused) || (!isNaN(oldPlayer.duration) && !oldPlayer.ended && oldPlayer.paused);
     if (data.audios) {
         const audioPlayers = [ ];
         for (const file of data.audios) {
-            audioPlayers.push(file.file ? new Audio(file.file) : speaker.getUtterance(file));
+            const audioPlayer = file.file ? new Audio(file.file) : speaker.getUtterance(file);
+            audioPlayer.volume = volume;
+            audioPlayers.push(audioPlayer);
         }
 
         for (let i = 0; i < audioPlayers.length; i++) {

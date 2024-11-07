@@ -19,6 +19,17 @@
             </div>
           </div>
         </div>
+        <div>
+          <div class="block-container-header">
+            <span>Announcer Volume</span>
+          </div>
+          <div class="block-container-with-header">
+            <div class="form-group">
+              <label for="volumeSlider">Set Volume: <span id="volumeValue">${state.volume}</span>%</label>
+              <input type="range" id="volumeSlider" class="form-range" min="0" max="100" value=`${state.volume}` on-input("updateVolume")>
+            </div>
+          </div>
+        </div>
       </div>
       <div class="modal-footer">
         <button class="btn btn-primary" type="button" on-click("onSave") data-dismiss="modal">Save</button>
