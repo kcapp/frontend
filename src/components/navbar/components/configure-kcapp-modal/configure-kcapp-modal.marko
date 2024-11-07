@@ -11,11 +11,11 @@
           </div>
           <div class="block-container-with-header">
             <div class="form-group form-check">
-                <select id="buttonLayout" class="form-select" style="width: 100%" name="button-layout">
-                  <for|layout| of=[ "Wide", "Compact" ]>
-                    <option style="text-transform: capitalize;" value=layout.toLowerCase() selected=(layout.toLowerCase() === state.buttonLayout)>${layout}</option>
-                  </for>
-                </select>
+              <select id="buttonLayout" class="form-select" style="width: 100%" name="button-layout">
+                <for|layout| of=[ "Wide", "Compact" ]>
+                  <option style="text-transform: capitalize;" value=layout.toLowerCase() selected=(layout.toLowerCase() === state.buttonLayout)>${layout}</option>
+                </for>
+              </select>
             </div>
           </div>
         </div>
@@ -27,6 +27,35 @@
             <div class="form-group">
               <label for="volumeSlider">Set Volume: <span id="volumeValue">${state.volume}</span>%</label>
               <input type="range" id="volumeSlider" class="form-range" min="0" max="100" value=`${state.volume}` on-input("updateVolume")>
+            </div>
+          </div>
+        </div>
+        <div>
+          <div class="block-container-header">
+            <span>Leg Options</span>
+          </div>
+          <div class="block-container-with-header" style="display: flex; align-items: center; min-height: 81px;">
+            <div class="form-group form-check mr-2">
+              <input type="checkbox" id="autoFinishLegs" class="form-check-input" checked=state.autoFinishLegs on-change("toggleAutoFinishLegs")>
+              <label class="toggle-button" for="autoFinishLegs">
+                <span class="toggle-slider"></span>
+              </label>
+              <span style="margin-left: 8px;">Auto Finish Legs</span>
+            </div>
+            <if(state.autoFinishLegs)>
+              <div class="form-group" style="margin-left: 10px; margin-top: 5px; display: flex; align-items: center;">
+                <input type="number" id="autoFinishTime" class="form-control" min="0" value=state.autoFinishTime on-input("updateAutoFinishTime") style="width: 70px; margin-right: 5px;">
+                <span>seconds</span>
+              </div>
+            </if>
+          </div>
+          <div class="block-container-with-header" style="margin-top: -30px;">
+            <div class="form-group form-check">
+              <input type="checkbox" id="confirmBusts" class="form-check-input" checked=state.confirmBusts on-change("toggleConfirmBusts")>
+              <label class="toggle-button" for="confirmBusts">
+                <span class="toggle-slider"></span>
+              </label>
+              <span style="margin-left: 8px;">Confirm Busts?</span>
             </div>
           </div>
         </div>

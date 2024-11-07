@@ -32,7 +32,7 @@ exports.alert = (text, okFnc) => {
         .show();
 }
 exports.confirm = (text, okFnc, cancelFnc) => {
-    bootstrap().confirm(text, okFnc, cancelFnc)
+    return bootstrap().confirm(text, okFnc, cancelFnc)
         .setting({
             title: TITLE,
             defaultFocus: 'ok',

@@ -1,4 +1,5 @@
 const alertify = require("../../../util/alertify");
+const localStorage = require("../../../util/localstorage");
 const types = require("./match_types");
 
 exports.removeLast = function(dart, external) {
@@ -66,26 +67,27 @@ exports.confirmThrow = function (external) {
     const isBust = module.exports.isBust(this.state.player, dart, this.state.totalScore, this.state.leg);
     if (isCheckout) {
         submitting = true;
-        alertify.confirm('Leg will be finished.',
-            () => {
-                this.emit('leg-finished', true);
-            }, () => {
-                this.removeLast();
-                this.emit('leg-finished', false);
-            });
-    } else if (isBust) {
+    }
+    else if (isBust) {
         submitting = true;
         this.state.isBusted = true;
-        alertify.confirm('Player busted',
-            () => {
-                alertify.success('Player busted');
-                this.emit('player-busted', true);
-            },
-            () => {
-                this.removeLast();
-                this.state.isBusted = false;
-                this.emit('player-busted', false);
-            });
+        const isConfirmBust = localStorage.getBool('confirm-busts');
+
+        if (isConfirmBust) {
+            alertify.confirm('Player busted',
+                () => {
+                    alertify.success('Player busted');
+                    this.emit('player-busted', true);
+                },
+                () => {
+                    this.removeLast();
+                    this.state.isBusted = false;
+                    this.emit('player-busted', false);
+                });
+        } else {
+            alertify.success('Player busted');
+            this.emit('player-busted', true);
+        }
     }
     if (!this.state.player.player.options || this.state.player.player.options.subtract_per_dart) {
         this.state.player.current_score -= scored;
@@ -96,3 +98,4 @@ exports.confirmThrow = function (external) {
     }
     return submitting;
 }
+

@@ -1,4 +1,5 @@
 const alertify = require("../../util/alertify");
+const localStorage = require("../../util/localstorage");
 
 const x01 = require("./components/x01");
 const shootout = require("./components/shootout");
@@ -253,12 +254,39 @@ module.exports = {
     },
 
     confirmLegFinish() {
-        alertify.confirm('Leg will be finished.',
+        let countdown = localStorage.get('auto-finish-time') || 10;
+        let confirmed = false;
+
+        const okFunction = () => {
+            confirmed = true;
+            this.emit('leg-finished', true);
+        };
+
+        const confirmDialog = alertify.confirm(`Leg will be finished`,
+            okFunction,
             () => {
-                this.emit('leg-finished', true);
-            }, () => {
                 this.removeLast();
                 this.emit('leg-finished', false);
+            }
+        );
+
+        const isAutoFinish = localStorage.getBool('auto-finish-legs');
+        if (isAutoFinish) {
+            confirmDialog.setContent(`Leg will be finished (<strong>${countdown}s</strong>)`);
+            const countdownInterval = setInterval(() => {
+                countdown--;
+                confirmDialog.setContent(`Leg will be finished (<strong>${countdown}s</strong>)`);
+
+                if (countdown <= 0) {
+                    clearInterval(countdownInterval);
+                    if (!confirmed) {
+                        okFunction();
+                    }
+                }
+            }, 1000);
+            confirmDialog.set('onclose', function() {
+                clearInterval(countdownInterval);
             });
+        }
     }
 };
