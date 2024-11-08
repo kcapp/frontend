@@ -1,0 +1,52 @@
+.block-container-header > span {
+    font-weight: 700;
+}
+
+.form-check-input {
+    display: none;
+}
+
+.toggle-button {
+    width: 50px;
+    height: 24px;
+    background-color: #ccc;
+    border-radius: 12px;
+    position: relative;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    margin-bottom: -5px;
+}
+
+.toggle-button .toggle-slider {
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 20px;
+    height: 20px;
+    background-color: white;
+    border-radius: 50%;
+    transition: transform 0.3s;
+}
+
+.form-check-input:checked + .toggle-button {
+    background-color: #4caf50;
+}
+
+.form-check-input:checked + .toggle-button .toggle-slider {
+    transform: translateX(26px);
+}
+
+.block-container-with-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 0px;
+    margin-top: 0px;
+}
+
+.form-group {
+    margin-bottom: 0;
+}
+
+.toggle-button {
+    display: inline-block;
+}
