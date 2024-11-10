@@ -21,19 +21,20 @@ $ const cricket = require("./components/cricket");
       <if(state.type == types.X01 || state.type == types.X01HANDICAP || state.type == types.SHOOTOUT || state.type == types.ONESEVENTY)>
         <tr>
           <td colspan="3">
-            <div class=["total-score", state.submitClass]>${state.totalScore}</div>
+            <div class="total-score-container">
+              <div class="total-score">
+                ${state.totalScore}
+              </div>
+              <if(state.type == types.X01 || state.type == types.X01HANDICAP || state.type == types.ONESEVENTY)>
+                <if(!state.player.player.options || state.player.player.options.show_checkout_guide)>
+                  <checkout-suggestion key="suggestion" score=state.player.current_score currentDart=state.currentDart />
+                </if>
+              </if>
+            </div>
           </td>
         </tr>
       </if>
-      <if(state.type == types.X01 || state.type == types.X01HANDICAP || state.type == types.ONESEVENTY)>
-        <tr>
-          <td colspan="3" style="height: 44px;">
-            <if(!state.player.player.options || state.player.player.options.show_checkout_guide)>
-              <checkout-suggestion key="suggestion" score=state.player.current_score currentDart=state.currentDart />
-            </if>
-          </td>
-        </tr>
-      </if>
+
       <if(state.type == types.CRICKET)>
         <tr>
           <td colspan="3">
