@@ -289,6 +289,7 @@ module.exports = {
                     if (!confirmed) {
                         okFunction();
                     }
+                    confirmDialog.close();
                 }
             }, 1000);
             confirmDialog.set('onclose', function() {
