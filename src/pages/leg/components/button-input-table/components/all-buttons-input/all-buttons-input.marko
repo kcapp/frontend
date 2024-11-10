@@ -3,8 +3,8 @@
         <score-button text="Miss" clazz="btn-score" value=0 multiplier=1 on-button-press("onButtonPress")/>
     </td>
     <button-row numbers=[ 20, 19, 18, 17 ] on-button-press("onButtonPress")/>
-    <td rowspan='2' style="width: 5%;">
-        <score-button icon="fas fa-long-arrow-alt-left" clazz='btn-score-tall' isUndo=true on-button-press("onButtonPress")/>
+    <td rowspan='2' style="width: 5%;" class="btn-cell" on-click("onButtonPress", null, null, true)>
+        <score-button icon="fas fa-long-arrow-alt-left" clazz='btn-single btn-score-tall' isUndo=true/>
     </td>
 </tr>
 <tr class='row btn-score-small'>
