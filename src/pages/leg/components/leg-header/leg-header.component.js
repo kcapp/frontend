@@ -61,6 +61,10 @@ module.exports = {
         this.emit('enable-all-buttons-mode', this.state.allButtonsMode)
     },
 
+    swapPlayers() {
+        this.emit('swap-players');
+    },
+
     cancelLeg(event) {
         alertify.confirm('Leg will be cancelled.', () => {
             axios.delete(`${window.location.origin}/legs/${this.input.leg.id}/cancel`)

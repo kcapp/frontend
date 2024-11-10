@@ -45,6 +45,13 @@
         </if>
       </ul>
     </div>
+    <if(input.leg.visits.length < 1 && input.match.legs.length === 1)>
+      <div class="float-left">
+        <button class="btn btn-primary" style='margin-right: 4px;' type="button" on-click('swapPlayers')>
+          <i class="fas fa-exchange-alt"></i>
+        </button>
+      </div>
+    </if>
     <div class="btn-group">
       <ul class="dropdown-menu"/>
     </div>
