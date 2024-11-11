@@ -1,7 +1,7 @@
 <if(input.multiplier)>
     <for|value| of=input.numbers>
         <td>
-            <score-button value=value multiplier=input.multiplier on-button-press("onButtonPressed")/>
+            <score-button value=value multiplier=input.multiplier />
         </td>
     </for>
 </if>
@@ -9,7 +9,7 @@
     <for|multiplier| from=1 to=3>
         <for|value| of=input.numbers>
             <td>
-                <score-button value=value multiplier=multiplier on-button-press("onButtonPressed")/>
+                <score-button value=value multiplier=multiplier />
             </td>
         </for>
     </for>
