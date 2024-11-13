@@ -28,8 +28,8 @@
         "kcapp-sio-client": "github:kcapp/kcapp-sio-client",
         "lasso": "^4.0.4",
         "lasso-less": "^4.0.2",
-        "lasso-marko": "^3.2.1",
-        "less-middleware": "^2.2.1",
+        "lasso-marko": "^5.0.1",
+        "less-middleware": "^3.1.0",
         "marko": "^5.35.33",
         "mobile-detect": "^1.4.5",
         "moment": "^2.30.1",
@@ -39,7 +39,7 @@
         "socket.io": "^4.2.0",
         "socket.io-client": "^4.2.0",
         "underscore": "^1.13.7",
-        "uuid": "^9.0.0",
+        "uuid": "^11.0.3",
         "xmldom": "^0.6.0"
     },
     "devDependencies": {
