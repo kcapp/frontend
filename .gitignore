@@ -78,3 +78,4 @@ public/images/players
 *.marko.js
 
 .DS_Store
+.aider*
