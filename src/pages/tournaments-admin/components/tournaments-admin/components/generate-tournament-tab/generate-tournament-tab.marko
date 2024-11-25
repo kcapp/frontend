@@ -1,63 +1,67 @@
 <div class="tab-pane active" role="tabpanel" id="generate">
-        <if(input.presets[0])>
-            <div class="game-options">
-                <div class="block-container-header">
-                    <i class="fas fa-cogs"/>
-                    <span class="ml-10">Settings</span>
-                </div>
-                <div class="block-container-with-header">
-                    <p>Office</p>
-                    <select on-change("onOfficeChange")>
-                        <for|id, office| in=input.offices>
-                            <option value=`${id}` selected=(office.id == state.office)>${office.name}</option>
-                        </for>
-                    </select>
-                    <p>Tournament Preset</p>
-                    <select on-change("onPresetChange")>
-                        <for|id, preset| in=input.presets>
-                            <option value=`${preset.id}` selected=(preset.id == state.tournamentPreset.id)>${preset.name}</option>
-                        </for>
-                    </select>
+    <div class="game-options">
+        <div class="block-container-header">
+            <i class="fas fa-cogs"/>
+            <span class="ml-10">Settings</span>
+        </div>
+        <div class="block-container-with-header">
+            <p>Office</p>
+            <select on-change("onOfficeChange")>
+                <for|id, office| in=input.offices>
+                    <option value=`${id}` selected=(office.id == state.office)>${office.name}</option>
+                </for>
+            </select>
+            
+            <p>Name</p>
+            <input type="text" value=state.name on-input("onNameInput") placeholder="Enter name"/>
 
-                    <div style="display: flex;">
-                        <add-player name=input.groups[state.tournamentPreset.group1_tournament_group.id].name
-                            selected=state.selected.group1 available=state.playersAvailable
-                            on-add-player("onAddPlayer", "group1")
-                            on-remove-player("onRemovePlayer", "group1") />
+            <p>Match Type</p>
+            <select on-change("onMatchTypeChange")>
+                <for|type| of=input.types>
+                    <option value=`${type.id}` selected=(type.id == state.matchType)>${type.name}</option>
+                </for>
+            </select>
+            
+            <p>Match Mode</p>
+            <select on-change("onMatchModeChange")>
+                <for|mode| of=state.modes>
+                    <option value=`${mode.id}` selected=(mode.id == state.matchMode)>${mode.name}</option>
+                </for>
+            </select>
 
-                        <add-player name=input.groups[state.tournamentPreset.group2_tournament_group.id].name
-                            selected=state.selected.group2 available=state.playersAvailable
-                            on-add-player("onAddPlayer", "group2")
-                            on-remove-player("onRemovePlayer", "group2") />
-                    </div>
-                    <div style="display: flex;">
-                        <if(Object.keys(state.selected).length > 2)>
-                            <add-player groups=state.groupsAvailable
-                                selected=state.selected.group3 available=state.playersAvailable
-                                on-add-player("onAddPlayer", "group3")
-                                on-remove-player("onRemovePlayer", "group3")
-                                on-remove-group("onRemoveGroup", "group3") />
-                        </if>
-                        <if(Object.keys(state.selected).length > 3)>
-                            <add-player groups=state.groupsAvailable
-                                selected=state.selected.group4 available=state.playersAvailable
-                                on-add-player("onAddPlayer", "group4")
-                                on-remove-player("onRemovePlayer", "group4")
-                                on-remove-group("onRemoveGroup", "group4") />
-                        </if>                        
-                    </div>
-                    <button class="btn btn-primary" type="button" style='display: none;' on-click("onAddGroup")>Add Group</button>
-                    <button class="btn btn-primary ml-10" type="button" on-click("generateTournament")>Generate</button>
-                </div>
+            <p>Starting Score</p>
+            <select on-change("onStartingScoreChange")>
+                <option value="301" selected=(state.startingScore == 301)>301</option>
+                <option value="501" selected=(state.startingScore == 501)>501</option>
+            </select>
+            
+            <div style="display: flex;">
+                <add-player group=state.selected.group1.group selected=state.selected.group1.players available=state.playersAvailable
+                    on-add-player("onAddPlayer", "group1")
+                    on-remove-player("onRemovePlayer", "group1")/>
+
+                <add-player group=state.selected.group2.group selected=state.selected.group2.players available=state.playersAvailable
+                    on-add-player("onAddPlayer", "group2")
+                    on-remove-player("onRemovePlayer", "group2")/>
             </div>
-        </if>
-        <else>
-            <div class="block-container-header pt20">
-                <i class="fas fa-building"/>
-                <span class="ml-10">No Presets</span>
+            <div style="display: flex;">
+                <if(Object.keys(state.selected).length > 2)>
+                    <add-player group=state.selected.group3.group selected=state.selected.group3.players available=state.playersAvailable
+                        remove=true
+                        on-add-player("onAddPlayer", "group3")
+                        on-remove-player("onRemovePlayer", "group3")
+                        on-remove-group("onRemoveGroup", "group3") />
+                </if>
+                <if(Object.keys(state.selected).length > 3)>
+                    <add-player group=state.selected.group4.group selected=state.selected.group4.players available=state.playersAvailable
+                        remove=true
+                        on-add-player("onAddPlayer", "group4")
+                        on-remove-player("onRemovePlayer", "group4")
+                        on-remove-group("onRemoveGroup", "group4")/>
+                </if>                        
             </div>
-            <div class="block-container-with-header">
-                <div>To generate tournaments, first create a preset</div>
-            </div>
-    </else>
+            <button class="btn btn-primary" type="button" on-click("onAddGroup")>Add Group</button>
+            <button class="btn btn-primary ml-10" type="button" on-click("generateTournament")>Generate</button>
+        </div>
+    </div>
 </div>

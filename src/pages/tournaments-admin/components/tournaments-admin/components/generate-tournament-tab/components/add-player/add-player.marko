@@ -1,18 +1,11 @@
 $ const types = require('../../../../../../../../components/scorecard/components/match_types')
 <div style="flex: 1;">
-    <if(input.name)>
-        <h2 style="text-align: center">${input.name}</h2>
-    </if>
-    <else>
-        <div style="display: flex;">
-            <select on-change("onGroupChange") style="font-size: 30px; text-align: center; display: inline-block">
-                <for|id, group| in=input.groups>
-                    <option value=`${group.id}` selected=(group.id == id)>${group.name}</option>
-                </for>
-            </select>
+    <div style="display: flex;">
+        <h2 style="text-align: center">${input.group.name}</h2>
+        <if(input.remove)>
             <button class="btn btn-primary" type="button" style="display: inline-block;" on-click("removeGroup")>Remove</button>
-        </div>
-    </else>
+        </if>
+    </div>
     <div class="block-container-header">
         <i class="fas fa-users"/>
         <span class="ml-10">Players</span>

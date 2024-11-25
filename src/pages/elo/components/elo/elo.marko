@@ -45,7 +45,6 @@
           $ let redStep = Math.floor(256 / state.general.length);
           <for|standing, idx| of=state.general>
             $ let redValue = (256 - (standing.rank - 1) * redStep)
-            $ console.log(`${input.players[standing.player_id].name} = ${standing.rank} ${redValue}`);
             <player-elo idx=idx elo=standing.current_elo matches=standing.current_elo_matches player=input.players[standing.player_id] redValue=redValue />
           </for>
         </tbody>

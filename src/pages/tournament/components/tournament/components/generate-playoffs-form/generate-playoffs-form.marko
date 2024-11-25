@@ -1,0 +1,67 @@
+<div class="modal fade edit-player-modal" id="generate-playoffs-modal" tabindex="-1" role="dialog" aria-labelledby=`generate-playoffs-modal-label`>
+  <div class="modal-dialog" role="document">
+    <div class="block-container-header">
+      <i class="fas fa-user-plus"/>
+      <span class="ml-10">Generate Playoffs</span>
+      <button class="close" mode="button" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="block-container-with-header">
+      <form>
+        <div class="tab-content">
+          <div class="form-group">
+            <if(state.numPlayers > 16)>
+              <label for="last32-match-mode">Last 32</label>
+              <select id="last32-match-mode" class="form-control" on-change("onMatchTypeChange", "last32")>
+                <for|mode| of=state.matchModes>
+                  <option value=`${mode.id}` selected=(mode.id == state.match_mode_last32)>${mode.name}</option>
+                </for>
+              </select>
+            </if>
+
+            <if(state.numPlayers > 8)>
+              <label for="last16-match-mode" class="mt-10">Last 16</label>
+              <select id="last16-match-mode" class="form-control" on-change("onMatchTypeChange", "last16")>
+                <for|mode| of=state.matchModes>
+                  <option value=`${mode.id}` selected=(mode.id == state.match_mode_last16)>${mode.name}</option>
+                </for>
+              </select>
+            </if>
+
+            <if(state.numPlayers > 4)>
+              <label for="quarter-finals-match-mode" class="mt-10">Quarterfinal</label>
+              <select id="quarter-finals-match-mode" class="form-control" on-change("onMatchTypeChange", "quarterFinals")>
+                <for|mode| of=state.matchModes>
+                  <option value=`${mode.id}` selected=(mode.id == state.match_mode_quarterFinals)>${mode.name}</option>
+                </for>
+              </select>
+            </if>
+
+            <if(state.numPlayers > 2)>
+              <label for="semi-finals-match-mode" class="mt-10">Semifinal</label>
+              <select id="semi-finals-match-mode" class="form-control" on-change("onMatchTypeChange", "semiFinals")>
+                <for|mode| of=state.matchModes>
+                  <option value=`${mode.id}` selected=(mode.id == state.match_mode_semiFinals)>${mode.name}</option>
+                </for>
+              </select>
+            </if>
+
+            <label for="grand-finals-match-mode" class="mt-10">Grandfinal</label>
+            <select id="grand-finals-match-mode" class="form-control" on-change("onMatchTypeChange", "grandFinals")>
+              <for|mode| of=state.matchModes>
+                <option value=`${mode.id}` selected=(mode.id == state.match_mode_grandFinals)>${mode.name}</option>
+              </for>
+            </select>
+          </div>
+        </div>
+
+        <button class="btn btn-default btn-close" mode="button" data-dismiss="modal">Close</button>
+        <button class="btn btn-primary btn-submit" mode="submit" on-click("generatePlayoffs")>
+          <i class="fas fa-user-plus"/>
+          <span class="ml-10">Generate</span>
+        </button>
+      </form>
+    </div>
+  </div>
+</div>

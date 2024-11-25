@@ -4,11 +4,9 @@ module.exports = {
     onCreate(input) {
         this.state = {
             matchId: 0,
-            homePlayerId: 0,
-            homeScore: 0,
-            awayPlayerId: 0,
-            awayScore: 0,
-            isBracket: false
+            isBracket: false,
+            numLegs: 1,
+            match: undefined
         }
     },
     onMount() {
@@ -23,33 +21,48 @@ module.exports = {
     },
     setMatch(matchId, isBracket) {
         const match = this.input.matches[matchId];
+        this.state.match = match;
         this.state.matchId = match.id;
-        this.state.homePlayerId = match.players[0];
-        this.state.awayPlayerId = match.players[1];
-        if (match.legs_won) {
-            this.state.homeScore = match.legs_won.filter(winnerId => winnerId === match.players[0]).length;
-            this.state.awayScore = match.legs_won.filter(winnerId => winnerId === match.players[1]).length;
-        } else {
-            this.state.homeScore = 0;
-            this.state.awayScore = 0;
-        }
+        this.state.numLegs = match.match_mode.wins_required;
         this.state.isBracket = isBracket;
     },
-    homeScoreChange(event) {
-        this.state.homeScore = parseInt(event.target.value);
-    },
-    awayScoreChange(event) {
-        this.state.awayScore = parseInt(event.target.value);
+    onSetScore(player, points, event) {
+        const match = this.state.match;
+        if (!match.score) {
+            match.score = [];
+        }
+        match.score[player] = parseInt(points);
+        const opponent = player === 0 ? 1 : 0;
+        match.score[opponent] = match.score[opponent] ? match.score[opponent] : 0;
+        match.total_score = match.score.reduce((acc, val) => acc + val, 0);
+
+        const winsRequired = match.match_mode.wins_required;
+        const legsRequired = match.match_mode.legs_required;
+        if (legsRequired) {
+            if ((match.score[0] === winsRequired || match.score[1] === winsRequired) && match.total_score <= legsRequired) {
+                match.is_correct_score = true;
+            } else if (match.total_score === legsRequired) {
+                match.is_correct_score = true;
+            } else {
+                match.is_correct_score = false;
+            }
+        } else if (match.score[0] === winsRequired || match.score[1] === winsRequired) {
+            match.is_correct_score = true;
+        } else {
+            match.is_correct_score = false;
+        }
+        this.setStateDirty("match");
+        event.preventDefault();
     },
     saveScore(event) {
-        let winner = {};
-        let looser = {};
-        if (this.state.homeScore > this.state.awayScore) {
-            winner = { id: this.state.homePlayerId, score: this.state.homeScore };
-            looser = { id: this.state.awayPlayerId, score: this.state.awayScore };
+        const homeScore = this.state.match.score[0];
+        const awayScore = this.state.match.score[1];
+        if (homeScore > awayScore) {
+            winner = { id: this.state.match.players[0], score: homeScore };
+            looser = { id: this.state.match.players[1], score: awayScore };
         } else {
-            winner = { id: this.state.awayPlayerId, score: this.state.awayScore};
-            looser = { id: this.state.homePlayerId, score: this.state.homeScore };
+            winner = { id: this.state.match.players[1], score: awayScore };
+            looser = { id: this.state.match.players[0], score: homeScore };
         }
 
         const body = {
@@ -65,7 +78,6 @@ module.exports = {
                     location.href = `${location.href}#bracket`;
                 }
                 if (!this.state.isBracket) {
-                    //location.hash =  "";
                     history.replaceState({}, document.title, `${location.pathname}${location.search}`);
                 }
                 location.reload();

@@ -9,10 +9,12 @@ A preview of major changes can be found in the Wiki ([Latest Changes](https://gi
 - Convenience method for scoring a user checkout by pressing `55` on numpad
 - Option to select which TTS voice to use per venue
 - Tournament Predictor
+- Tournament generation from frontend
 - Ability to configure bots from Tablet Controller
 - New set of larger Compact buttons
-- Lots of new Badges
 - Ability to configure: "Announcement Volume", "Auto Busting" and "Auto Leg Finish" from frontend
+- Holding score buttons to score same dart three times
+- Lots of new Badges
 
 #### Changed
 - Don't show `Rematch` and `Undo Leg Finish` on old legs

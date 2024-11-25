@@ -32,7 +32,7 @@
                 <for|player, index| of=state.overview>
                     <if(!input.players[player.player_id].is_placeholder)>
                         $ let rank = player.manual_order ? player.manual_order : player.rank;
-                        <tr class=`${input.tournament.is_playoffs ? "tournament-playoffs": ""} tournament-${player.tournament_group.id}-rank-${rank}`>
+                        <tr class=`${input.tournament.is_playoffs || input.tournament.manual_admin ? "tournament-playoffs": ""} tournament-${player.tournament_group.id}-rank-${rank}`>
                             <td class="pl-10">
                             <div>
                                 <span class="pr-5">${rank}</span>
