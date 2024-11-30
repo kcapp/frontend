@@ -32,6 +32,15 @@ exports.isBust = (player, dart, totalScore, leg) => {
     return currentScore < 2;
 }
 
+exports.isMaxRound = (player, dartsThrown, leg, players) => {
+    if (player.player_id === players[players.length - 1].player_id &&
+        dartsThrown > 3 &&
+        leg.parameters.max_rounds && leg.parameters.max_rounds === leg.round) {
+        return true;
+    }
+    return false;
+}
+
 exports.isCheckout = (player, dart, totalScore, leg) => {
     let currentScore = player.current_score - dart.getValue();
     if (player.player.options && !player.player.options.subtract_per_dart) {
@@ -65,6 +74,7 @@ exports.confirmThrow = function (external) {
 
     const isCheckout = module.exports.isCheckout(this.state.player, dart, this.state.totalScore, this.state.leg);
     const isBust = module.exports.isBust(this.state.player, dart, this.state.totalScore, this.state.leg);
+    const isMaxRound = module.exports.isMaxRound(this.state.player, this.state.currentDart, this.state.leg, this.input.players);
     if (isCheckout) {
         submitting = true;
     }
@@ -89,6 +99,11 @@ exports.confirmThrow = function (external) {
             this.emit('player-busted', true);
         }
     }
+    else if (isMaxRound) {
+        alertify.notify(`Maximum numbers of rounds reached.`, 'warning');
+        this.emit('max-rounds-reached', true);
+    }
+
     if (!this.state.player.player.options || this.state.player.player.options.subtract_per_dart) {
         this.state.player.current_score -= scored;
     }
@@ -98,4 +113,3 @@ exports.confirmThrow = function (external) {
     }
     return submitting;
 }
-

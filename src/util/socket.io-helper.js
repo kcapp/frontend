@@ -31,6 +31,7 @@ exports.onScoreUpdate = (data, thiz) => {
     const scorecardComponents = thiz.getComponents('players');
 
     let isLastVisitFishNChips = false;
+    let isSecondLastRound = false;
     let totalFishNChips = 0;
     const globalFish = globalstat ? globalstat.fish_n_chips : 0;
     const currentPlayerIdx = _.findIndex(scorecardComponents, (component) => component.state.player.player_id === leg.current_player_id);
@@ -44,6 +45,8 @@ exports.onScoreUpdate = (data, thiz) => {
             isLastVisitFishNChips = !previousPlayer.player.is_bot && previousPlayer.modifiers.is_fish_and_chips;
             component.reset();
             component.state.jdcDart = null;
+
+            isSecondLastRound =  player.player_id === players[0].player_id && leg.parameters.max_rounds && leg.parameters.max_rounds === leg.round;
         } else {
             if (currentPlayerIdx <= i) {
                 component.state.jdcDart = null;
@@ -64,6 +67,9 @@ exports.onScoreUpdate = (data, thiz) => {
         if (isLastVisitFishNChips && !data.is_undo) {
             let msg = alertify.notify(getFishNChipsHTML(totalFishNChips - 1, globalFish - 1), 'fish-n-chips', 5, () => { });
             setInterval(() => { msg.setContent(getFishNChipsHTML(totalFishNChips, globalFish)); }, 1000);
+        }
+        if (isSecondLastRound) {
+            alertify.notify('Final 3 Darts per player!', 'warning');
         }
     } else if (thiz.state.matchType == types.TIC_TAC_TOE) {
         thiz.getComponent("tic-tac-toe-board").resetBoard(leg.parameters);

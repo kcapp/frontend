@@ -1,0 +1,53 @@
+<div id="pick-winner-modal" class="modal fade modal-right" tabindex="-1" role="dialog" aria-labelledby="pick-winner-modal-label" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+  <div class="modal-dialog modal-dialog-centered" role="document" style="height:100%;">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Select Winner</h4>
+      </div>
+      <div class="modal-body">
+        <h5>Players</h5>
+        <div class="table-responsive no-border" style="min-height: 75px;">
+          <table class="uv-table-players" id="table-players-select-order" style="table-layout: fixed;">
+            <tbody>
+              <tr>
+                <for|player| of=state.players>
+                  <td class="block-container-blue text-center" data-player-id=player.player_id on-click("playerSelected", player.player_id)>
+                    <div>
+                      <label class="key-small">${player.order}</label>
+                    </div>
+                    <label id=`player-name-${player.player_id}` class="label-player-name">${player.player.name}</label>
+                  </td>
+                </for>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <h5>Winner</h5>
+        <div class="table-responsive no-border" style="min-height: 75px;">
+          <table class="uv-table-players" id="table-players-selected-order" style="table-layout: fixed;">
+            <tbody>
+              <tr>
+                <if(state.winner)>
+                  <td class="block-container-blue text-center" data-player-id=state.winner.player_id on-click("removePlayer", state.winner)>
+                    <div class="text-center">
+                      <label class="key-small">${state.winner.order}</label>
+                    </div>
+                    <label id=`player-name-${state.winner.player_id}` class="label-player-name">${state.winner.player.name}</label>
+                  </td>
+                </if>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="modal-footer text-center">
+        <button class="btn btn-primary" type="button" on-click("confirmWinner")>
+          <div class="text-center">
+            <label class="key-small">ENTER</label>
+            <label class="pl-10">Finish Match</label>
+          </div>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

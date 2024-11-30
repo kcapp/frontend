@@ -205,6 +205,10 @@ module.exports = {
         }
     },
 
+    onMaxRoundsReached(component) {
+        $("#pick-winner-modal").modal("show");
+    },
+
     onUndoThrow() {
         if (this.state.leg.visits.length > 0) {
             this.state.submitting = true;

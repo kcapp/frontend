@@ -14,6 +14,7 @@ A preview of major changes can be found in the Wiki ([Latest Changes](https://gi
 - New set of larger Compact buttons
 - Ability to configure: "Announcement Volume", "Auto Busting" and "Auto Leg Finish" from frontend
 - Holding score buttons to score same dart three times
+- Support `Max Rounds` to play for `x01`
 - Lots of new Badges
 
 #### Changed

@@ -18,6 +18,7 @@ $ const types = require('../../../../components/scorecard/components/match_types
                 on-possible-throw("onPossibleThrow")
                 on-score-change("onScoreChange")
                 on-player-busted("onPlayerBusted")
+                on-max-rounds-reached("onMaxRoundsReached")
                 on-leg-finished("onLegFinished")
                 on-undo-throw("onUndoThrow")/>
             </tr>
@@ -35,6 +36,7 @@ $ const types = require('../../../../components/scorecard/components/match_types
                 on-possible-throw("onPossibleThrow")
                 on-score-change("onScoreChange")
                 on-player-busted("onPlayerBusted")
+                on-max-rounds-reached("onMaxRoundsReached")
                 on-leg-finished("onLegFinished")
                 on-undo-throw("onUndoThrow")/>
           </for>
@@ -50,6 +52,7 @@ $ const types = require('../../../../components/scorecard/components/match_types
   </if>
 </div>
 <player-order players=state.players match=input.match legId=state.leg.id on-warmup-started("onWarmupStarted") on-smartboard-reconnect('onSmartboardReconnect')/>
+<pick-winner-modal players=state.players match=input.match legId=state.leg.id/>
 <qr-code-modal/>
 <confirm-checkout on-confirm-checkout("onConfirmCheckout")/>
 <if(state.enableButtonInput)>

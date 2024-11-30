@@ -22,6 +22,7 @@ module.exports = {
                 stake: null,
                 venue_id: null
             },
+            maxRounds: input.max_rounds_x01,
             playerId: "",
             socket: {},
             demo_mode: false,
@@ -104,7 +105,7 @@ module.exports = {
                 for (const file of data.audios) {
                     audioPlayers.push(new Audio(file.file));
                 }
-        
+
                 for (let i = 0; i < audioPlayers.length; i++) {
                     const current = audioPlayers[i];
                     const next = audioPlayers[i + 1];
@@ -313,6 +314,13 @@ module.exports = {
                 scoreComponent.state.enabled = true;
             }
             this.state.options.starting_score = scoreComponent.state.index
+
+
+            if (this.state.options.game_type === types.X01) {
+                this.state.maxRounds = this.input.max_rounds_x01;
+            } else if (this.state.options.game_type === types.ONESEVENTY) {
+                this.state.maxRounds = this.input.max_rounds_170;
+            }
 
             let selectedPlayers = this.getComponents('players');
             for (let i = 0; i < selectedPlayers.length; i++) {
