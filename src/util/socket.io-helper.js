@@ -46,7 +46,7 @@ exports.onScoreUpdate = (data, thiz) => {
             component.reset();
             component.state.jdcDart = null;
 
-            isSecondLastRound =  player.player_id === players[0].player_id && leg.parameters.max_rounds && leg.parameters.max_rounds === leg.round;
+            isSecondLastRound = leg.parameters && player.player_id === players[0].player_id && leg.parameters.max_rounds && leg.parameters.max_rounds === leg.round;
         } else {
             if (currentPlayerIdx <= i) {
                 component.state.jdcDart = null;

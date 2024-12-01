@@ -85,6 +85,18 @@ module.exports = {
                             modeComponent.state.index = preset.match_mode.id;
                             this.state.options.game_mode = modeComponent.state.index;
 
+                            if (preset.players) {
+                                // loop through and add each player
+                                preset.players.forEach((playerId) => {
+                                    const player = _.find(this.input.players, (p) => {
+                                        return p.id === playerId;
+                                    });
+                                    if (player) {
+                                        this.addPlayer(null, player);
+                                    }
+                                });
+                            }
+
                             alertify.success(`Configured preset "${preset.name}"`);
                             if (this.state.selected.length > 1) {
                                 this.newGame();
