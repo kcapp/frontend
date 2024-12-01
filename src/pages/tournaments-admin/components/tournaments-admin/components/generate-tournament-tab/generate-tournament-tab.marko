@@ -11,7 +11,7 @@
                     <option value=`${id}` selected=(office.id == state.office)>${office.name}</option>
                 </for>
             </select>
-            
+
             <p>Name</p>
             <input type="text" value=state.name on-input("onNameInput") placeholder="Enter name"/>
 
@@ -21,7 +21,7 @@
                     <option value=`${type.id}` selected=(type.id == state.matchType)>${type.name}</option>
                 </for>
             </select>
-            
+
             <p>Match Mode</p>
             <select on-change("onMatchModeChange")>
                 <for|mode| of=state.modes>
@@ -34,7 +34,14 @@
                 <option value="301" selected=(state.startingScore == 301)>301</option>
                 <option value="501" selected=(state.startingScore == 501)>501</option>
             </select>
-            
+
+            <p>Max Rounds</p>
+            <select on-change("onMaxRoundsChange")>
+                <for|idx, round| in=input.maxRounds>
+                    <option value=`${round.id}` selected=(state.maxRounds === round.id)>${round.name}</option>
+                </for>
+            </select>
+
             <div style="display: flex;">
                 <add-player group=state.selected.group1.group selected=state.selected.group1.players available=state.playersAvailable
                     on-add-player("onAddPlayer", "group1")
@@ -58,7 +65,7 @@
                         on-add-player("onAddPlayer", "group4")
                         on-remove-player("onRemovePlayer", "group4")
                         on-remove-group("onRemoveGroup", "group4")/>
-                </if>                        
+                </if>
             </div>
             <button class="btn btn-primary" type="button" on-click("onAddGroup")>Add Group</button>
             <button class="btn btn-primary ml-10" type="button" on-click("generateTournament")>Generate</button>

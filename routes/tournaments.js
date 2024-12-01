@@ -72,7 +72,8 @@ router.get('/admin', function (req, res, next) {
             offices: offices.data,
             venues: venues.data,
             modes: modes.data,
-            types: types.data
+            types: types.data,
+            max_rounds: [{ id: -1, name: '-' }, { id: 10, name: 10 }, { id: 12, name: 12 }, { id: 16, name: 16 }, { id: 20, name: 20 }, { id: 30, name: 30 }],
         });
     })).catch(error => {
         debug(`Error when getting data for tournament ${error}`);
@@ -223,6 +224,7 @@ router.post('/admin/generate', function (req, res, next) {
         match_mode_id: body.match_mode_id,
         match_type_id: body.match_type_id,
         starting_score: body.starting_score,
+        max_rounds: body.max_rounds,
         is_playoffs: false,
         players: players,
         manual_admin: true,

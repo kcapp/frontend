@@ -4,7 +4,7 @@ const axios = require('axios');
 const alertify = require("../../../../../../util/alertify");
 
 module.exports = {
-    onCreate(input) {      
+    onCreate(input) {
         const generatedGroups = Object.values(input.groups).filter(group => group.is_generated);
 
         this.state = {
@@ -21,7 +21,8 @@ module.exports = {
             name: `Club Evening ${moment().format("Do MMM")}`,
             matchType: input.types[0].id,
             matchMode: input.modes[0].id,
-            startingScore: 501
+            startingScore: 501,
+            maxRounds: -1
         }
     },
     onMount() {
@@ -39,6 +40,9 @@ module.exports = {
     },
     onStartingScoreChange(event) {
         this.state.startingScore = parseInt(event.target.value);
+    },
+    onMaxRoundsChange(event) {
+        this.state.maxRounds = parseInt(event.target.value);
     },
 
     onAddPlayer(group, player) {
@@ -82,16 +86,26 @@ module.exports = {
         delete this.state.selected[group];
         this.setStateDirty('selected');
     },
- 
+
     onOfficeChange(event) {
         this.state.office = parseInt(event.target.value);
         this.state.playersAvailable = _.reject(this.input.players, (player) => player.office_id !== this.state.office );
         this.setStateDirty('playersAvailable');
     },
     generateTournament() {
+        // Validate that each group contains either no players, or at least 2 players
+        for (let group in this.state.selected) {
+            let players = this.state.selected[group].players;
+            if (players.length !== 0 && players.length < 2) {
+                alert("Groups must contain at least 2 players");
+                return;
+            }
+        }
+
         const body = {
             name: this.state.name,
             starting_score: this.state.startingScore,
+            max_rounds: this.state.maxRounds,
             match_type_id: this.state.matchType,
             match_mode_id: this.state.matchMode,
             office_id: this.state.office,
