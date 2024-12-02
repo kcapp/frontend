@@ -53,7 +53,7 @@ router.get('/current', function (req, res, next) {
         });
 });
 
-/* Get current active tournament */
+/* Get tournament admin */
 router.get('/admin', function (req, res, next) {
     axios.all([
         axios.get(`${req.app.locals.kcapp.api}/tournament/groups`),
@@ -214,6 +214,12 @@ router.post('/admin/generate', function (req, res, next) {
             });
         }
     });
+    const venues = {};
+    ["group1", "group2", "group3", "group4"].forEach(key => {
+        if (body[key]) {
+            venues[body[key].group.id] = body[key].venueId;
+        }
+    });
 
     const name = body.name;
     const shortName = `${name.substring(0, 1)}${moment().format('DDMM')}`;
@@ -225,6 +231,7 @@ router.post('/admin/generate', function (req, res, next) {
         match_type_id: body.match_type_id,
         starting_score: body.starting_score,
         max_rounds: body.max_rounds,
+        venues: venues,
         is_playoffs: false,
         players: players,
         manual_admin: true,

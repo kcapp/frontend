@@ -1,0 +1,14 @@
+<div style="width: 50%;">
+    <h2 style="text-align: center">${input.group.name}</h2>
+    <p>Venue</p>
+    <select on-change("onVenueChange")>
+        <option value=undefined selected=!input.venue>-</option>
+        <for|venue| of=input.venues>
+            <option value=`${venue.id}` selected=(venue.id == input.venue)>${venue.name}</option>
+        </for>
+    </select>
+
+    <add-player selected=input.selected available=input.playersAvailable
+        on-add-player("onAddPlayer")
+        on-remove-player("onRemovePlayer")/>
+</div>

@@ -65,6 +65,9 @@ module.exports = {
         this.state.playersAvailable = _.sortBy(this.state.playersAvailable, "name");
         this.setStateDirty('playersAvailable');
     },
+    onVenueChange(group, venue) {
+        this.state.selected[group].venueId = venue;
+    },
     onAddGroup() {
         const numGroups = Object.keys(this.state.selected).length;
         if (numGroups >= 4) {
@@ -91,8 +94,16 @@ module.exports = {
         this.state.office = parseInt(event.target.value);
         this.state.playersAvailable = _.reject(this.input.players, (player) => player.office_id !== this.state.office );
         this.setStateDirty('playersAvailable');
+
+        this.state.venues = _.reject(this.input.venues, (venue) => venue.office_id != this.state.office );
+        this.setStateDirty("venues");
     },
     generateTournament() {
+        // Validate that group1 contains at least 2 players
+        if (this.state.selected.group1.players.length < 2) {
+            alert("Group 1 must contain at least 2 players");
+            return;
+        }
         // Validate that each group contains either no players, or at least 2 players
         for (let group in this.state.selected) {
             let players = this.state.selected[group].players;
