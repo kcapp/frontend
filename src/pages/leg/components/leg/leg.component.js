@@ -205,7 +205,15 @@ module.exports = {
         }
     },
 
-    onMaxRoundsReached(component) {
+    onMaxRoundsReached() {
+        setTimeout(() => {
+            // We might need to submit the throw here, if it's not done already
+            const component = this.findActive(this.getComponents('players'));
+            if (component.getDartsThrown() > 1) {
+                this.state.submitting = true;
+                this.state.socket.emit('throw', JSON.stringify(component.getPayload()));
+            }
+        }, 500);
         $("#pick-winner-modal").modal("show");
     },
 

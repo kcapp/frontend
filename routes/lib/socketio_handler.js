@@ -102,7 +102,7 @@ module.exports = (io, app) => {
                         data.messages = demo.messages;
 
                         nsp.emit('demo', data);
-                        
+
                     });
                 });
                 debug(`[${namespace}] created`);
@@ -280,7 +280,7 @@ module.exports = (io, app) => {
                                                 announceScored(leg.visits[leg.visits.length - 1], leg.leg_type.id);
                                                 setTimeout(() => {
                                                     // There is a race between these two announcements, so delay the one slightly
-                                                    announceScoreRemaining(currentPlayer);
+                                                    announceScoreRemaining(leg, currentPlayer);
                                                 }, 300);
                                                 nsp.emit('score_update', { leg: leg, players: players, globalstat: globalstat });
                                             }
@@ -387,7 +387,14 @@ module.exports = (io, app) => {
                     announce(text, 'score', audios);
                 }
 
-                function announceScoreRemaining(player) {
+                function announceScoreRemaining(leg, player) {
+                    if ((leg.leg_type.id === types.X01 || leg.leg_type.id === types.X01HANDICAP) &&
+                        leg.parameters && leg.parameters.max_rounds &&
+                        leg.round > leg.parameters.max_rounds) {
+                        // Don't announce score remaining since we hit max rounds
+                        return;
+                    }
+
                     const score = player.current_score;
                     if (score < 171 && ![169, 168, 166, 165, 163, 162, 159].includes(score)) {
                         const name = player.player.vocal_name === null ? player.player.first_name : player.player.vocal_name;

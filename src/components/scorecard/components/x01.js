@@ -32,9 +32,9 @@ exports.isBust = (player, dart, totalScore, leg) => {
     return currentScore < 2;
 }
 
-exports.isMaxRound = (player, dartsThrown, leg, players) => {
+exports.isMaxRound = (player, dartsThrown, leg, players, isBust) => {
     if (player.player_id === players[players.length - 1].player_id &&
-        dartsThrown > 3 &&
+        (dartsThrown > 3 || isBust) &&
         leg.parameters.max_rounds && leg.parameters.max_rounds === leg.round) {
         return true;
     }
@@ -74,20 +74,27 @@ exports.confirmThrow = function (external) {
 
     const isCheckout = module.exports.isCheckout(this.state.player, dart, this.state.totalScore, this.state.leg);
     const isBust = module.exports.isBust(this.state.player, dart, this.state.totalScore, this.state.leg);
-    const isMaxRound = module.exports.isMaxRound(this.state.player, this.state.currentDart, this.state.leg, this.input.players);
+    let isMaxRound = module.exports.isMaxRound(this.state.player, this.state.currentDart, this.state.leg, this.input.players, isBust);
     if (isCheckout) {
         submitting = true;
     }
     else if (isBust) {
         submitting = true;
         this.state.isBusted = true;
-        const isConfirmBust = localStorage.getBool('confirm-busts');
+        const isConfirmBust = localStorage.getBool('confirm-busts', true);
 
         if (isConfirmBust) {
             alertify.confirm('Player busted',
                 () => {
                     alertify.success('Player busted');
                     this.emit('player-busted', true);
+
+                    // Need to check for max round again here, since busting might have made us reach it
+                    isMaxRound = module.exports.isMaxRound(this.state.player, this.state.currentDart, this.state.leg, this.input.players, true);
+                    if (isMaxRound) {
+                        alertify.notify(`Maximum numbers of rounds reached.`, 'warning');
+                        this.emit('max-rounds-reached', true);
+                    }
                 },
                 () => {
                     this.removeLast();
@@ -98,8 +105,7 @@ exports.confirmThrow = function (external) {
             alertify.success('Player busted');
             this.emit('player-busted', true);
         }
-    }
-    else if (isMaxRound) {
+    } else if (isMaxRound) {
         alertify.notify(`Maximum numbers of rounds reached.`, 'warning');
         this.emit('max-rounds-reached', true);
     }
