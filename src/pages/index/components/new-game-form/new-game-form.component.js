@@ -15,10 +15,11 @@ module.exports = {
             officeId: 0,
             venues: input.venues,
             options: {
-                starting_score: 501,
-                game_type: types.X01,
-                game_mode: 1,
-                outshot_type: types.OUTSHOT_DOUBLE,
+                starting_score: input.defaults.starting_score || 501,
+                game_type: input.defaults.match_type.id,
+                game_mode: input.defaults.match_mode.id,
+                outshot_type: input.defaults.outshot_type.id,
+                max_rounds: input.defaults.max_rounds,
                 stake: null,
                 venue_id: null
             },

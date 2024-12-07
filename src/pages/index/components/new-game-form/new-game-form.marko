@@ -65,11 +65,11 @@ $ const types = require('../../../../components/scorecard/components/match_types
           <game-option-selector values=input.types options=state.options key="game-type" label="Type" attribute="game_type" defaultValue=state.options.game_type on-value-changed('onGameTypeChanged')/>
           <game-option-selector values=input.scores options=state.options key="starting-score" label="Starting Score" attribute="starting_score" defaultValue=state.options.starting_score/>
           <if(state.options.game_type == types.X01 || state.options.game_type == types.X01HANDICAP)>
-            <game-option-selector values=input.outshots options=state.options key="outshot-type" label="Outshot Type" attribute="outshot_type" defaultValue=types.OUTSHOT_DOUBLE/>
-            <game-option-selector values=state.maxRounds options=state.options key="max-rounds-x01" label="Max Rounds" attribute="max_rounds" defaultValue=-1/>
+            <game-option-selector values=input.outshots options=state.options key="outshot-type" label="Outshot Type" attribute="outshot_type" defaultValue=state.options.outshot_type/>
+            <game-option-selector values=state.maxRounds options=state.options key="max-rounds-x01" label="Max Rounds" attribute="max_rounds" defaultValue=state.options.max_rounds/>
           </if>
           <if(state.options.game_type == types.TIC_TAC_TOE)>
-            <game-option-selector values=input.outshots options=state.options key="outshot-type" label="Outshot Type" attribute="outshot_type" defaultValue=types.OUTSHOT_DOUBLE/>
+            <game-option-selector values=input.outshots options=state.options key="outshot-type" label="Outshot Type" attribute="outshot_type" defaultValue=state.options.outshot_type/>
           </if>
           <if(state.options.game_type == types.KNOCKOUT)>
             <game-option-selector values=input.lives options=state.options key="starting-lives" label="Starting Lives" attribute="starting_lives" defaultValue=5/>

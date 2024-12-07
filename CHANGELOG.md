@@ -16,6 +16,7 @@ A preview of major changes can be found in the Wiki ([Latest Changes](https://gi
 - Holding score buttons to score same dart three times
 - Support `Max Rounds` to play for `x01`
 - Added option to configure `players` on match presets
+- Configurable default options for starting matches
 - Lots of new Badges
 
 #### Changed

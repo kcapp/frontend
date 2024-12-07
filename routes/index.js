@@ -22,7 +22,8 @@ router.get('/', function (req, res, next) {
         axios.get(`${req.app.locals.kcapp.api}/venue`),
         axios.get(`${req.app.locals.kcapp.api}/office`),
         axios.get(`${req.app.locals.kcapp.api}/preset`),
-    ]).then(axios.spread((players, matchModes, oweTypes, matchTypes, outshots, venues, offices, presets) => {
+        axios.get(`${req.app.locals.kcapp.api}/option/default`),
+    ]).then(axios.spread((players, matchModes, oweTypes, matchTypes, outshots, venues, offices, presets, defaults) => {
         res.marko(indexTemplate, {
             players: _.sortBy(players.data, (player) => player.name),
             modes: matchModes.data,
@@ -36,7 +37,8 @@ router.get('/', function (req, res, next) {
             venues: venues.data,
             stakes: oweTypes.data,
             offices: offices.data,
-            presets: presets.data
+            presets: presets.data,
+            defaults: defaults.data,
         });
     })).catch(error => {
         debug(`Error when getting data for / ${error}`);
