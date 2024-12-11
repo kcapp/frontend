@@ -50,6 +50,16 @@
               <i class="fas fa-cogs" data-toggle="tooltip" data-placement="top" title="View"/>
             </a>
           </li>
+          <li>
+            <div>
+              <input type="checkbox" id="mememode" name="mememode" checked=state.mememode
+                  on-change(event => {
+                      console.info(`Checked? ${event.target.checked}`);
+                      localStorage.setItem('mememode', event.target.checked);
+                  })/>
+              <label for="mememode">Meme Mode</label>
+            </div>
+          </li>
         </ul>
       </div>
     </div>

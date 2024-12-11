@@ -4,8 +4,8 @@ module.exports = {
     onCreate(input) {
         this.state = {
             homePage: "/",
-            isController: false
-
+            isController: false,
+            isMememode: false
         }
     },
     onMount() {
