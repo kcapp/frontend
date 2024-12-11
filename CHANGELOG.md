@@ -1,7 +1,7 @@
 # Changelog
 A preview of major changes can be found in the Wiki ([Latest Changes](https://github.com/kcapp/frontend/wiki/Latest_Changes))
 
-## [2.8.0] - TBD
+## [2.8.0] - 2024-12-11
 #### Feature
 - New game type `170`
 - "Badges" page showing overview of all badges and how many players have unlocked them
@@ -231,7 +231,7 @@ A preview of major changes can be found in the Wiki ([Latest Changes](https://gi
 - Multiple score entry methods
     - Including [Unicorn Smartboard](https://github.com/kcapp/smartboard)
 
-[2.8.0]: https://github.com/kcapp/frontend/compare/v2.7.0...develop
+[2.8.0]: https://github.com/kcapp/frontend/compare/v2.7.0...v2.8.0
 [2.7.0]: https://github.com/kcapp/frontend/compare/v2.6.0...v2.7.0
 [2.6.0]: https://github.com/kcapp/frontend/compare/v2.5.0...v2.6.0
 [2.5.0]: https://github.com/kcapp/frontend/compare/v2.4.0...v2.5.0
