@@ -92,7 +92,7 @@ module.exports = {
                                     const player = _.find(this.input.players, (p) => {
                                         return p.id === playerId;
                                     });
-                                    if (player) {
+                                    if (player && this.state.selected.indexOf(player) === -1) {
                                         this.addPlayer(null, player);
                                     }
                                 });

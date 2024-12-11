@@ -241,7 +241,7 @@ router.get('/:id/result', function (req, res, next) {
 
 /* Method for starting a new match */
 router.post('/new', function (req, res, next) {
-    const players = req.body.players;
+    const players = [...new Set(req.body.players)];
     if (players === undefined || players.length === 0) {
         debug('No players specified, unable to start leg');
         res.status(400).send("No players specified").end();
