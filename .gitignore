@@ -79,3 +79,6 @@ public/images/players
 
 .DS_Store
 .aider*
+
+# Ignore SQL files
+*.sql
