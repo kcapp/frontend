@@ -17,15 +17,14 @@ module.exports = {
     },
 
     onMount() {
-        if (this.input.buttons_only) {
-            // We only want to show buttons, so no need to try to determine otherwise
-            return;
-        }
         const MobileDetect = require('mobile-detect'),
             md = new MobileDetect(window.navigator.userAgent);
 
         const isMobile = md.mobile();
         const isTablet = md.tablet();
+
+        //const userAgent = navigator.userAgent.toLowerCase();
+        //const isTablet = /(ipad|tablet|(android(?!.*mobile))|(windows(?!.*phone)(.*touch))|kindle|playbook|silk|(puffin(?!.*(IP|AP|WP))))/.test(userAgent);
 
         this.state.buttonInputEnabled = isMobile;
         this.emit('enable-button-input', this.state.buttonInputEnabled);
@@ -60,6 +59,10 @@ module.exports = {
     enableAllButtonsMode() {
         this.state.allButtonsMode = !this.state.allButtonsMode;
         this.emit('enable-all-buttons-mode', this.state.allButtonsMode)
+    },
+
+    swapPlayers() {
+        this.emit('swap-players');
     },
 
     cancelLeg(event) {

@@ -5,23 +5,26 @@
                 <tr>
                 <th class="pl-10">Pos</th>
                 <th>Player</th>
-                <th class="text-right">P</th>
-                <th class="text-right pl-20">W</th>
-                <th class="text-right">D</th>
-                <th class="text-right">L</th>
-                <th class="text-center pl-10">F - A</th>
-                <th class="text-right pl-10">+/-</th>
-                <th class="text-right">PTS</th>
+                <th class="text-right" title="Played">P</th>
+                <th class="text-right pl-20" title="Won">W</th>
+                <th class="text-right" title="Draw">D</th>
+                <th class="text-right" title="Lost">L</th>
+                <th class="text-center pl-10" title="For - Against">F - A</th>
+                <th class="text-right pl-10" title="Difference">+/-</th>
+                <th class="text-right" title="Points">PTS</th>
                 <if(state.hasStatistics)>
-                    <th class="text-center">3 Dart Avg.</th>
-                    <th class="text-center">Checkout %</th>
-                    <th class="text-right">60s+</th>
-                    <th class="text-right">100s+</th>
-                    <th class="text-right">140s+</th>
-                    <th class="text-right">180</th>
-                    <th class="text-center">Overall</th>
-                    <th class="text-center">20s</th>
-                    <th class="text-center">19s</th>
+                    <th class="text-center" title="3 Dart Avg. / First 9 Three Dart Avg.">3 Dart Avg.</th>
+                    <th class="text-center" title="Checkout Percentage">Checkout %</th>
+                    <th class="text-right" title="60+ scores">60s+</th>
+                    <th class="text-right" title="100+ scores">100s+</th>
+                    <th class="text-right" title="140+ scores">140s+</th>
+                    <th class="text-right" title="180s">180</th>
+                    <th class="text-center">
+                        DPL<i class="fas fa-info-circle" style="padding-left: 0.3em;" data-toggle="tooltip" data-placement="bottom" title="Avg. Darts Per Leg (DPL) required to Win"></i>
+                    </th>
+                    <th class="text-center" title="Accuracy Overall">Overall</th>
+                    <th class="text-center" title="Accuracy 20s">20s</th>
+                    <th class="text-center" title="Accuracy 19s">19s</th>
                 </if>
                 </tr>
             </thead>
@@ -29,7 +32,7 @@
                 <for|player, index| of=state.overview>
                     <if(!input.players[player.player_id].is_placeholder)>
                         $ let rank = player.manual_order ? player.manual_order : player.rank;
-                        <tr class=`tournament-${player.tournament_group.id}-rank-${rank}`>
+                        <tr class=`${input.tournament.is_playoffs || input.tournament.manual_admin ? "tournament-playoffs": ""} tournament-${player.tournament_group.id}-rank-${rank}`>
                             <td class="pl-10">
                             <div>
                                 <span class="pr-5">${rank}</span>
@@ -61,6 +64,7 @@
                                 <td class="text-right">${player.scores_100s_plus}</td>
                                 <td class="text-right">${player.scores_140s_plus}</td>
                                 <td class="text-right">${player.scores_180s}</td>
+                                <td class="text-center">${player.darts_per_leg === -1 ? "-" : player.darts_per_leg.toFixed(2)}</td>
                                 <td class="text-center">${player.accuracy_overall === -1 ? "-" : player.accuracy_overall.toFixed(2)}</td>
                                 <td class="text-center">${player.accuracy_20 === -1 ? "-" : player.accuracy_20.toFixed(2)}</td>
                                 <td class="text-center">${player.accuracy_19 === -1 ? "-" : player.accuracy_19.toFixed(2)}</td>

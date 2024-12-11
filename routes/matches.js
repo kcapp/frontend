@@ -241,7 +241,7 @@ router.get('/:id/result', function (req, res, next) {
 
 /* Method for starting a new match */
 router.post('/new', function (req, res, next) {
-    const players = req.body.players;
+    const players = [...new Set(req.body.players)];
     if (players === undefined || players.length === 0) {
         debug('No players specified, unable to start leg');
         res.status(400).send("No players specified").end();
@@ -272,7 +272,9 @@ router.post('/new', function (req, res, next) {
                     starting_score: req.body.starting_score,
                     parameters: {
                         outshot_type: { id: req.body.outshot_type },
-                        starting_lives: req.body.starting_lives
+                        starting_lives: req.body.starting_lives,
+                        points_to_win: req.body.points_to_win,
+                        max_rounds: req.body.max_rounds === -1 ? null : req.body.max_rounds
                     }
                 } ],
                 office_id: req.body.office_id,

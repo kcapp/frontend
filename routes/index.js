@@ -22,7 +22,8 @@ router.get('/', function (req, res, next) {
         axios.get(`${req.app.locals.kcapp.api}/venue`),
         axios.get(`${req.app.locals.kcapp.api}/office`),
         axios.get(`${req.app.locals.kcapp.api}/preset`),
-    ]).then(axios.spread((players, matchModes, oweTypes, matchTypes, outshots, venues, offices, presets) => {
+        axios.get(`${req.app.locals.kcapp.api}/option/default`),
+    ]).then(axios.spread((players, matchModes, oweTypes, matchTypes, outshots, venues, offices, presets, defaults) => {
         res.marko(indexTemplate, {
             players: _.sortBy(players.data, (player) => player.name),
             modes: matchModes.data,
@@ -30,10 +31,14 @@ router.get('/', function (req, res, next) {
             types: matchTypes.data,
             outshots: outshots.data,
             lives: [{ id: 1, name: 1 }, { id: 3, name: 3 }, { id: 5, name: 5 }, { id: 7, name: 7 }, { id: 10, name: 10 }],
+            points_to_win: [{ id: 1, name: 1 }, { id: 2, name: 2 }, { id: 3, name: 3 }, { id: 4, name: 4 }, { id: 5, name: 5 }],
+            max_rounds_170: [{ id: -1, name: '-' }, { id: 3, name: 3 }, { id: 5, name: 5 }, { id: 7, name: 7 }, { id: 10, name: 10 }, { id: 15, name: 15 }],
+            max_rounds_x01: [{ id: -1, name: '-' }, { id: 10, name: 10 }, { id: 12, name: 12 }, { id: 16, name: 16 }, { id: 20, name: 20 }, { id: 30, name: 30 }],
             venues: venues.data,
             stakes: oweTypes.data,
             offices: offices.data,
-            presets: presets.data
+            presets: presets.data,
+            defaults: defaults.data,
         });
     })).catch(error => {
         debug(`Error when getting data for / ${error}`);
@@ -59,6 +64,8 @@ router.get('/controller', function (req, res, next) {
             types: matchTypes.data,
             outshots: outshots.data,
             lives: [{ id: 1, name: 1 }, { id: 3, name: 3 }, { id: 5, name: 5 }, { id: 7, name: 7 }, { id: 10, name: 10 }],
+            points_to_win: [{ id: 1, name: 1 }, { id: 2, name: 2 }, { id: 3, name: 3 }, { id: 4, name: 4 }, { id: 5, name: 5 }],
+            max_rounds: [{ id: -1, name: 'Unlimited' }, { id: 5, name: 5 }, { id: 10, name: 10 }, { id: 15, name: 15 }, { id: 20, name: 20 }, { id: 30, name: 30 }],
             venues: venues.data,
             offices: offices.data,
             presets: presets.data,

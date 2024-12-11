@@ -173,6 +173,60 @@ router.put('/:id/order', function (req, res, next) {
         });
 });
 
+/** Method to finish a leg */
+router.put('/:id/finish', function (req, res, next) {
+    let legId = req.params.id;
+    axios.put(`${req.app.locals.kcapp.api}/leg/${legId}/finish`, req.body)
+        .then(response => {
+            axios.all([
+                axios.get(`${req.app.locals.kcapp.api}/leg/${legId}`),
+                axios.get(`${req.app.locals.kcapp.api}/leg/${legId}/players`),
+                axios.get(`${req.app.locals.kcapp.api}/statistics/global/fnc`)
+            ]).then(axios.spread((legData, playersData, globalData) => {
+                const leg = legData.data;
+                const players = playersData.data;
+                const currentPlayer = _.findWhere(players, { is_current_player: true });
+                const globalstat = globalData.data[0];
+
+                axios.get(`${req.app.locals.kcapp.api}/match/${leg.match_id}`)
+                    .then((response) => {
+                        const match = response.data;
+
+                        const winnerPlayer = _.findWhere(players, { player_id: leg.winner_player_id });
+                        //announceLegFinished(winnerPlayer, match)
+
+                        if (!match.is_finished) {
+                            this.socketHandler.setupLegsNamespace(match.current_leg_id);
+
+                            // Forward all spectating clients to next leg
+                            this.socketHandler.emitMessage(`/legs/${legId}`, 'new_leg', { match: match, leg: leg });
+                        }
+                        this.socketHandler.emitMessage(`/active`, 'leg_finished', { match: match, leg: leg });
+                        this.socketHandler.emitMessage(`/legs/${legId}`, 'score_update', { leg: leg, players: players, match: match });
+                        this.socketHandler.emitMessage(`/legs/${legId}`,'leg_finished', { leg: leg, match: match });
+
+                        setTimeout(() => {
+                            // Remove the namespace in a bit, once announcements are finished
+                            this.socketHandler.removeNamespace(legId);
+                        }, 15000);
+                        res.status(200).send({ leg_id: match.current_leg_id, match: match }).end();
+                    }).catch(error => {
+                        const message = `${error.message}(${error})`;
+                        debug(`[${legId}] Error when getting match: ${message}`);
+                        next(error);
+                    });
+            })).catch(error => {
+                const message = `${error.message} (${error})`;
+                debug(`[${legId}] Error when getting leg: ${message}`);
+                next(error);
+            });
+        }).catch(error => {
+            debug(`[${legId}] Unable to finish leg: ${error}`);
+            next(error);
+        });
+});
+
+
 /** Method to undo leg finish */
 router.put('/:id/undo', function (req, res, next) {
     axios.put(`${req.app.locals.kcapp.api}/leg/${req.params.id}/undo`)

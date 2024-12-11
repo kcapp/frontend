@@ -53,7 +53,7 @@ module.exports = {
         // If this is an official match, which has not had any darts thrown, and was not updated in the last two minutes
         // show the dialog to set player order
         const lastUpdated = (moment().valueOf() - moment.utc(this.input.leg.updated_at).valueOf()) / (1000 * 60);
-        if (this.input.match.tournament_id && this.input.leg.visits.length === 0 && lastUpdated > 2) {
+        if (this.input.match.tournament_id && this.input.leg.visits.length === 0 && !this.state.enableButtonInput &&lastUpdated > 2) {
             document.getElementById('change-player-order').click();
         } else {
             if (this.input.leg.visits.length === 0) {
@@ -203,6 +203,18 @@ module.exports = {
         } else {
             this.state.submitting = false;
         }
+    },
+
+    onMaxRoundsReached() {
+        setTimeout(() => {
+            // We might need to submit the throw here, if it's not done already
+            const component = this.findActive(this.getComponents('players'));
+            if (component.getDartsThrown() > 1) {
+                this.state.submitting = true;
+                this.state.socket.emit('throw', JSON.stringify(component.getPayload()));
+            }
+        }, 500);
+        $("#pick-winner-modal").modal("show");
     },
 
     onUndoThrow() {
@@ -454,33 +466,7 @@ module.exports = {
             }
         } else if (e.key === 'F2') {
             e.preventDefault();
-
-            if (this.state.matchType !== types.X01) {
-                // Only support checkout for X01
-                return;
-            }
-            let currentScore = component.state.player.current_score;
-            if (currentScore > 40 && currentScore !== 50) {
-                // Score is too high
-                return;
-            }
-            let isCheckoutPossible = currentScore % 2 === 0;
-            if (!isCheckoutPossible) {
-                // We don't have a even number, so can't checkout
-                return;
-            }
-
-            let value = currentScore / 2;
-            let multiplier = 2;
-
-            component.setDart(value, multiplier);
-            let dartsThrown = component.getDartsThrown();
-            if (dartsThrown > 2) {
-                this.state.submitting = true;
-                this.state.socket.emit('throw', JSON.stringify(component.getPayload()));
-            } else {
-                this.state.submitting = component.confirmThrow(false);
-            }
+            this.instantCheckout(component);
         }
         // Forward to normal key handler
         this.onKeyPress(e);
@@ -552,6 +538,11 @@ module.exports = {
             // Don't allow triple bull
             currentMultiplier = 2;
         }
+        if ((currentValue + text) === "55") {
+            component.removeLast();
+            this.instantCheckout(component);
+            return;
+        }
         component.setDart(text, currentMultiplier);
     },
 
@@ -605,4 +596,27 @@ module.exports = {
     onToggleCamera(enabled) {
         this.state.isPlayerBoardCam = enabled;
     },
+
+    instantCheckout(component) {
+        if (this.state.matchType !== types.X01) {
+            // Only support checkout for X01
+            return;
+        }
+        let currentScore = component.state.player.current_score;
+        if (currentScore > 40 && currentScore !== 50) {
+            // Score is too high
+            return;
+        }
+        let isCheckoutPossible = currentScore % 2 === 0;
+        if (!isCheckoutPossible) {
+            // We don't have a even number, so can't checkout
+            return;
+        }
+
+        let value = currentScore / 2;
+        let multiplier = 2;
+
+        component.setDart(value, multiplier);
+        this.state.submitting = component.confirmThrow(false);
+    }
 };

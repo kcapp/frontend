@@ -3,6 +3,7 @@ const localStorage = require('../../../../util/localstorage');
 module.exports = {
     onCreate(input) {
         this.state = {
+            layouts: [ {id: "wide", name: "Wide"}, {id: "compact", name: "Compact"}, {id: "compact-large", name: "Compact (Large)"} ],
             buttonLayout: "wide",
             volume: 100,
             confirmBusts: true,

@@ -18,22 +18,23 @@ $ const cricket = require("./components/cricket");
       <tr>
         <td style="padding: 3px;"/>
       </tr>
-      <if(state.type == types.X01 || state.type == types.X01HANDICAP || state.type == types.SHOOTOUT)>
+      <if(state.type == types.X01 || state.type == types.X01HANDICAP || state.type == types.SHOOTOUT || state.type == types.ONESEVENTY)>
         <tr>
           <td colspan="3">
-            <div class=["total-score", state.submitClass]>${state.totalScore}</div>
+            <div class="total-score-container">
+              <div class="total-score">
+                ${state.totalScore}
+              </div>
+              <if(state.type == types.X01 || state.type == types.X01HANDICAP || state.type == types.ONESEVENTY)>
+                <if(!state.player.player.options || state.player.player.options.show_checkout_guide)>
+                  <checkout-suggestion key="suggestion" score=state.player.current_score currentDart=state.currentDart />
+                </if>
+              </if>
+            </div>
           </td>
         </tr>
       </if>
-      <if(state.type == types.X01 || state.type == types.X01HANDICAP)>
-        <tr>
-          <td colspan="3" style="height: 44px;">
-            <if(!state.player.player.options || state.player.player.options.show_checkout_guide)>
-              <checkout-suggestion key="suggestion" score=state.player.current_score currentDart=state.currentDart />
-            </if>
-          </td>
-        </tr>
-      </if>
+
       <if(state.type == types.CRICKET)>
         <tr>
           <td colspan="3">
@@ -115,7 +116,6 @@ $ const cricket = require("./components/cricket");
       <if(state.type === types.AROUND_THE_WORLD || state.type === types.SHANGHAI || state.type === types.AROUND_THE_CLOCK)>
         <tr>
           <td colspan="3">
-            $ var number = state.leg.starting_score;
             <table id='table-aroundthe-scores' class='table-striped'>
               <thead>
                 <tr>
@@ -124,7 +124,7 @@ $ const cricket = require("./components/cricket");
               </thead>
               <tbody>
                   <tr>
-                    $ var value = state.type === types.AROUND_THE_CLOCK ? state.player.current_score + 1 : input.leg.round;
+                    $ let value = state.type === types.AROUND_THE_CLOCK ? state.player.current_score + 1 : input.leg.round;
                     <td class="text-center target-text">${value === 21 ? "Bull" : value}</td>
                   </tr>
               </tbody>

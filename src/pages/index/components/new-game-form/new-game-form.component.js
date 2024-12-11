@@ -15,14 +15,18 @@ module.exports = {
             officeId: 0,
             venues: input.venues,
             options: {
-                starting_score: 501,
-                game_type: types.X01,
-                game_mode: 1,
-                outshot_type: types.OUTSHOT_DOUBLE,
+                starting_score: input.defaults.starting_score || 501,
+                game_type: input.defaults.match_type.id,
+                game_mode: input.defaults.match_mode.id,
+                outshot_type: input.defaults.outshot_type.id,
+                max_rounds: input.defaults.max_rounds,
                 stake: null,
                 venue_id: null
             },
+            maxRounds: input.max_rounds_x01,
             playerId: "",
+            socket: {},
+            demo_mode: false,
             submitting: false
         }
     },
@@ -82,6 +86,18 @@ module.exports = {
                             modeComponent.state.index = preset.match_mode.id;
                             this.state.options.game_mode = modeComponent.state.index;
 
+                            if (preset.players) {
+                                // loop through and add each player
+                                preset.players.forEach((playerId) => {
+                                    const player = _.find(this.input.players, (p) => {
+                                        return p.id === playerId;
+                                    });
+                                    if (player && this.state.selected.indexOf(player) === -1) {
+                                        this.addPlayer(null, player);
+                                    }
+                                });
+                            }
+
                             alertify.success(`Configured preset "${preset.name}"`);
                             if (this.state.selected.length > 1) {
                                 this.newGame();
@@ -93,6 +109,39 @@ module.exports = {
                     }
                 }
             });
+            socket.on('demo', (data) => {
+                if (this.state.options.venue_id !== data.venue.id) {
+                    return;
+                }
+
+                const audioPlayers = [ ];
+                for (const file of data.audios) {
+                    audioPlayers.push(new Audio(file.file));
+                }
+
+                for (let i = 0; i < audioPlayers.length; i++) {
+                    const current = audioPlayers[i];
+                    const next = audioPlayers[i + 1];
+                    if (next) {
+                        current.addEventListener("ended", () => {
+                            next.play();
+                        }, false);
+                    } else {
+                        current.addEventListener("ended", () => {
+                            this.state.demo_mode = false;
+                        }, false);
+                    }
+                }
+                audioPlayers[0].play();
+
+                const messages = data.messages;
+                let delay = 0;
+                messages.forEach((message) => {
+                    delay += (message.delay ? message.delay : 0) * 1000;
+                    setTimeout(() => alertify.success(message.text), delay);
+                });
+            });
+            this.state.socket = socket;
         }
 
         document.addEventListener("keydown", this.onKeyDown.bind(this), false);
@@ -119,6 +168,19 @@ module.exports = {
                 if (playerId === '00') {
                     if (!this.state.submitting) {
                         this.newGame();
+                    }
+                    return;
+                } else if (playerId == '180180') {
+                    if (this.state.socket) {
+                        const venueId = localStorage.get('venue_id');
+                        const venue = _.find(this.state.venues, (venue) => venue.id == venueId);
+                        this.state.socket.emit('demo', { venue: venue, type: "demo" });
+
+                        const image = document.getElementById("kcapp-logo").children[0];
+                        image.style.animation = "none";
+                        setTimeout(() => image.style.animation = "", 2000);
+
+                        this.state.demo_mode = true;
                     }
                     return;
                 }
@@ -253,6 +315,10 @@ module.exports = {
                 scoreComponent.updateOptions(types.SCORES_GOTCHA);
                 scoreComponent.state.index = 200;
                 scoreComponent.state.enabled = true;
+            } else if (this.state.options.game_type === types.ONESEVENTY) {
+                scoreComponent.updateOptions(types.SCORES_170);
+                scoreComponent.state.index = 170;
+                scoreComponent.state.enabled = false;
             } else if (this.state.options.starting_score === 0) {
                 scoreComponent.state.index = scoreComponent.state.defaultValue;
                 scoreComponent.state.enabled = true;
@@ -261,6 +327,13 @@ module.exports = {
                 scoreComponent.state.enabled = true;
             }
             this.state.options.starting_score = scoreComponent.state.index
+
+
+            if (this.state.options.game_type === types.X01) {
+                this.state.maxRounds = this.input.max_rounds_x01;
+            } else if (this.state.options.game_type === types.ONESEVENTY) {
+                this.state.maxRounds = this.input.max_rounds_170;
+            }
 
             let selectedPlayers = this.getComponents('players');
             for (let i = 0; i < selectedPlayers.length; i++) {
@@ -298,7 +371,8 @@ module.exports = {
         let officeId = this.state.officeId;
         if (officeId <= 0) {
             if (officeId == 0 && this.state.options.venue_id && this.state.options.venue_id !== -1) {
-                officeId = this.input.venues[this.state.options.venue_id].office_id;
+                let venue = _.findWhere(this.input.venues, (venue) => venue.id == this.state.options.venue_id);
+                officeId = venue.office_id;
             } else {
                 officeId = null;
             }
@@ -326,6 +400,8 @@ module.exports = {
             match_stake: this.state.options.stake,
             outshot_type: this.state.options.outshot_type,
             starting_lives: this.state.options.starting_lives,
+            points_to_win: this.state.options.points_to_win,
+            max_rounds: this.state.options.max_rounds,
             venue: venueId,
             players: this.state.selected.map(player => player.id),
             office_id: officeId,

@@ -6,7 +6,7 @@ const DOMParser = require('xmldom').DOMParser;
 const XMLSerializer = require('xmldom').XMLSerializer;
 
 exports.generate = function(tournament, metadata, matches, players, current, callback) {
-    if (tournament.preset_id) {
+    if (tournament.manual_admin) {
         exports.generateLast16(metadata, matches, players, current, callback);
     } else {
         exports.generateNew(metadata, matches, players, current, callback);

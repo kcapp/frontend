@@ -1,3 +1,4 @@
+/*
 .modal.modal-left .modal-dialog,
 .modal.modal-right .modal-dialog {
     position: fixed;
@@ -21,6 +22,7 @@
 .modal.modal-right .modal-body {
     padding: 2px 15px 20px 15px;
 }
+*/
 
 /* Float Left */
 .modal.modal-left.fade .modal-dialog{
@@ -46,4 +48,18 @@
 
 .modal.modal-right.fade.in .modal-dialog {
     right: 0;
+}
+
+@media (min-width: 1400px) {
+    .modal-right-new {
+        position: fixed;
+        top: 50%;
+        left: auto !important;
+        right: 0;
+        transform: translateY(-50%);
+        margin: 0;
+        width: auto;
+        max-width: 50%;
+        height: 100%;
+    }
 }

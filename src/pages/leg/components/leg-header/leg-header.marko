@@ -1,9 +1,12 @@
-$ let types = require('../../../../components/scorecard/components/match_types');
-
 <div class="block-container-blue" style='margin-bottom: 5px;'>
   <div class="float-left font-24">Leg (${input.leg.leg_type.name})</div>
   <div class="float-left font-24 pl-10">${input.match.match_mode.short_name}</div>
-  <div class="float-left font-24">/R${input.leg.round}</div>
+  <div class="float-left font-24">
+    /R${input.leg.round}
+    <if(input.leg.parameters && input.leg.parameters.max_rounds)>
+      ${` of ${input.leg.parameters.max_rounds}`}
+    </if>
+  </div>
   <if(input.leg.parameters && input.leg.parameters.outshot_type)>
     <div class="float-left font-24">/${input.leg.parameters.outshot_type.short_name}</div>
   </if>
@@ -42,6 +45,13 @@ $ let types = require('../../../../components/scorecard/components/match_types')
         </if>
       </ul>
     </div>
+    <if(input.leg.visits.length < 1 && input.match.legs.length === 1)>
+      <div class="float-left">
+        <button class="btn btn-primary" style='margin-right: 4px;' type="button" on-click('swapPlayers')>
+          <i class="fas fa-exchange-alt"></i>
+        </button>
+      </div>
+    </if>
     <div class="btn-group">
       <ul class="dropdown-menu"/>
     </div>

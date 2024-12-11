@@ -4,10 +4,10 @@ function getKey(key) {
 
 exports.get = key => localStorage.getItem(getKey(key));
 exports.getInt = key => parseInt(localStorage.getItem(getKey(key)));
-exports.getBool = key => {
+exports.getBool = (key, defaultValue) => {
     const item = localStorage.getItem(getKey(key));
     if (!item) {
-        return false;
+        return defaultValue;
     }
     return item === 'true';
 }

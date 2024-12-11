@@ -16,11 +16,12 @@ var head2headTemplate = template.load(require.resolve('../src/pages/player-head2
 router.get('/', function (req, res, next) {
     axios.all([
         axios.get(`${req.app.locals.kcapp.api}/player/active`),
-        axios.get(`${req.app.locals.kcapp.api}/office`)
-    ]).then(axios.spread((playersResponse, officesResponse) => {
+        axios.get(`${req.app.locals.kcapp.api}/office`),
+        axios.get(`${req.app.locals.kcapp.api}/venue`)
+    ]).then(axios.spread((playersResponse, officesResponse, venueResponse) => {
         var players = playersResponse.data;
         players = _.sortBy(players, (player) => player.name)
-        res.marko(playersTemplate, { players: players, offices: officesResponse.data });
+        res.marko(playersTemplate, { players: players, offices: officesResponse.data, venues: venueResponse.data });
     })).catch(error => {
         debug(`Error when getting players: ${error}`);
         next(error);

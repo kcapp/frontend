@@ -1,7 +1,8 @@
 $ const clazz = state.clazz;
 $ const text = input.text || input.value;
+$ const id = input.value !== undefined && input.multiplier !== undefined ? `btn-score-${input.multiplier}-${input.value}` : null;
 
-<button type='button' class=clazz data-score=input.value data-multiplier=input.multiplier on-click("onClick")>
+<button type='button' id=id class=`${clazz}` data-score=input.value data-multiplier=input.multiplier on-click("onClick")>
      <if(input.icon)>
           <i class=input.icon></i>
      </if>

@@ -1,8 +1,12 @@
 exports.removeLast = function(dart, external) {
-    if (dart.getValue() === this.state.player.current_score && dart.getMultiplier() === 1) {
-        this.state.player.current_score--;
-        this.emit('score-change', this.state.player.current_score, this.state.player.player_id);
+    let scoredPrevious = false;
+    for (let i = 1; i <= 3; i++) {
+        let d = this.getDart(i);
+        if (this.state.player.current_score !== 0 && dart.getValue() === this.state.player.current_score && dart.getMultiplier() === 1) {
+            this.state.player.current_score--;
+        }
     }
+    this.emit('score-change', this.state.player.current_score, this.state.player.player_id);
     if (!external) {
         this.emit('possible-throw', false, false, this.state.currentDart, -dart.getScore(), dart.getMultiplier(), true, false);
     }
@@ -24,7 +28,6 @@ exports.confirmThrow = function (external) {
     }
     this.state.currentDart++;
     this.state.isSubmitted = true;
-
 
     if (dart.getValue() === (this.state.player.current_score + 1) && dart.getMultiplier() === 1) {
         this.state.player.current_score++;

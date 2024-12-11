@@ -53,7 +53,7 @@ router.get('/current', function (req, res, next) {
         });
 });
 
-/* Get current active tournament */
+/* Get tournament admin */
 router.get('/admin', function (req, res, next) {
     axios.all([
         axios.get(`${req.app.locals.kcapp.api}/tournament/groups`),
@@ -72,7 +72,8 @@ router.get('/admin', function (req, res, next) {
             offices: offices.data,
             venues: venues.data,
             modes: modes.data,
-            types: types.data
+            types: types.data,
+            max_rounds: [{ id: -1, name: '-' }, { id: 10, name: 10 }, { id: 12, name: 12 }, { id: 16, name: 16 }, { id: 20, name: 20 }, { id: 30, name: 30 }],
         });
     })).catch(error => {
         debug(`Error when getting data for tournament ${error}`);
@@ -202,51 +203,50 @@ router.post('/admin', function (req, res, next) {
 router.post('/admin/generate', function (req, res, next) {
     const body = req.body;
 
-    axios.get(`${req.app.locals.kcapp.api}/tournament/preset/${body.preset_id}`)
+    const players = [];
+    ["group1", "group2", "group3", "group4"].forEach(key => {
+        if (body[key]) {
+            body[key].players.forEach(player => {
+                players.push({
+                    player_id: player.id,
+                    tournament_group_id: body[key].group.id
+                });
+            });
+        }
+    });
+    const venues = {};
+    ["group1", "group2", "group3", "group4"].forEach(key => {
+        if (body[key]) {
+            venues[body[key].group.id] = body[key].venueId;
+        }
+    });
+
+    const name = body.name;
+    const shortName = `${name.substring(0, 1)}${moment().format('DDMM')}`;
+
+    const tournamentBody = {
+        name: name,
+        short_name: shortName,
+        match_mode_id: body.match_mode_id,
+        match_type_id: body.match_type_id,
+        starting_score: body.starting_score,
+        max_rounds: body.max_rounds,
+        venues: venues,
+        is_playoffs: false,
+        players: players,
+        manual_admin: true,
+        office_id: req.body.office_id
+    };
+    axios.post(`${req.app.locals.kcapp.api}/tournament/generate`, tournamentBody)
         .then(response => {
-            const preset = response.data;
-
-            const players = [];
-            for (let i = 0; i < body.group1.length; i++) {
-                const player = body.group1[i];
-                players.push({
-                    player_id: player.id,
-                    tournament_group_id: preset.group1_tournament_group.id
-                });
-            }
-            for (let i = 0; i < body.group2.length; i++) {
-                const player = body.group2[i];
-                players.push({
-                    player_id: player.id,
-                    tournament_group_id: preset.group2_tournament_group.id
-                });
-            }
-
-            const name = `${preset.name} ${moment().format('Do MMM')}`;
-            const shortName = `${name.substring(0, 1)}${moment().format('DDMM')}`;
-            const tournamentBody = {
-                name: name,
-                short_name: shortName,
-                is_playoffs: false,
-                players: players,
-                preset_id: body.preset_id,
-                manual_admin: true,
-                office_id: req.body.office_id
-            };
-            axios.post(`${req.app.locals.kcapp.api}/tournament/generate`, tournamentBody)
+            const tournament = response.data;
+            axios.get(`${req.app.locals.kcapp.api}/tournament/${tournament.id}/matches`)
                 .then(response => {
-                    const tournament = response.data;
-                    axios.get(`${req.app.locals.kcapp.api}/tournament/${tournament.id}/matches`)
-                        .then(response => {
-                            const matches = Object.values(response.data).flat();
-                            for (const match of matches) {
-                                this.socketHandler.setupLegsNamespace(match.current_leg_id);
-                            }
-                            res.send(tournament);
-                        }).catch(error => {
-                            debug(`Error when generating new tournament: ${error}`);
-                            next(error);
-                        });
+                    const matches = Object.values(response.data).flat();
+                    for (const match of matches) {
+                        this.socketHandler.setupLegsNamespace(match.current_leg_id);
+                    }
+                    res.send(tournament);
                 }).catch(error => {
                     debug(`Error when generating new tournament: ${error}`);
                     next(error);
@@ -259,7 +259,8 @@ router.post('/admin/generate', function (req, res, next) {
 
 /* Generate playoffs tournament  */
 router.post('/admin/generate/playoffs/:id', function (req, res, next) {
-    axios.post(`${req.app.locals.kcapp.api}/tournament/generate/playoffs/${req.params.id}`)
+    const body = req.body;
+    axios.post(`${req.app.locals.kcapp.api}/tournament/generate/playoffs/${req.params.id}`, body)
         .then(response => {
             const tournament = response.data;
             axios.get(`${req.app.locals.kcapp.api}/tournament/${tournament.id}/matches`)
@@ -316,8 +317,9 @@ router.get('/:id', function (req, res, next) {
         axios.get(`${req.app.locals.kcapp.api}/tournament/${req.params.id}/overview`),
         axios.get(`${req.app.locals.kcapp.api}/tournament/${req.params.id}/matches`),
         axios.get(`${req.app.locals.kcapp.api}/tournament/${req.params.id}/statistics`),
-        axios.get(`${req.app.locals.kcapp.api}/tournament/${req.params.id}/metadata`)
-    ]).then(axios.spread((playersResponse, tournamentResponse, overviewData, matchesData, statisticsResponse, metadataResponse) => {
+        axios.get(`${req.app.locals.kcapp.api}/tournament/${req.params.id}/metadata`),
+        axios.get(`${req.app.locals.kcapp.api}/match/modes`)
+    ]).then(axios.spread((playersResponse, tournamentResponse, overviewData, matchesData, statisticsResponse, metadataResponse, modesResponse) => {
         const statistics = statisticsResponse.data;
         if (!_.isEmpty(statistics)) {
             statistics.checkout_highest = _.sortBy(statistics.checkout_highest, (stats) => -stats.value);
@@ -353,7 +355,8 @@ router.get('/:id', function (req, res, next) {
                         players: players,
                         matches: matches,
                         playoffs_matches: playoffsMatches,
-                        statistics: statistics
+                        statistics: statistics,
+                        modes: modesResponse.data,
                     });
                 });
             })).catch(error => {
@@ -368,7 +371,8 @@ router.get('/:id', function (req, res, next) {
                     overview: overview,
                     players: players,
                     matches: matches,
-                    statistics: statistics
+                    statistics: statistics,
+                    modes: modesResponse.data,
                 });
             });
         }

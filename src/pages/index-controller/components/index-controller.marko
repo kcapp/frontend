@@ -1,4 +1,5 @@
 $ const types = require("../../../components/scorecard/components/match_types.js");
+$ const skills = require('kcapp-bot/bot-skill');
 <form>
     <if(state.step === state.steps.INITIAL)>
         <div style="height: 100vh;">
@@ -43,6 +44,23 @@ $ const types = require("../../../components/scorecard/components/match_types.js
             </div>
         </div>
     </else-if>
+    <else-if(state.step === state.steps.CONFIGURE_BOT && state.bot)>
+        <div>
+            <div class="block-container-header">
+                <i class="fas fa-cogs"/>
+                <span class="ml-10">Bot Skill</span>
+            </div>
+            <div class="block-container-with-header">
+                <div class="form-group form-check players-all">
+                    <for|skill| of=skills.all()>
+                        <selector-button key="skill[]" data=skill idAttr="skill" on-click("botSkillSelected") selected=state.bot_skill/>
+                    </for>
+                </div>
+            </div>
+            <button id="next-button" class="btn btn-info" on-click("onNext")>Next >></button>
+            <button id="prev-button" class="btn btn-info" on-click("onPrevious")><< Previous</button>
+        </div>
+    </else-if>
     <else-if(state.step === state.steps.SELECT_GAME_TYPE)>
         <div>
             <div class="block-container-header">
@@ -51,9 +69,15 @@ $ const types = require("../../../components/scorecard/components/match_types.js
             </div>
             <div class="block-container-with-header">
                 <div class="form-group form-check players-all">
-                    <for|type| of=input.types>
-                        <selector-button key="types[]" data=type on-click("gameTypeSelected") selected=state.gameType/>
-                    </for>
+                    <if(state.bot)>
+                        <!-- Only x01 is supported with Bots -->
+                        <selector-button key="types[]" data=input.types[0] on-click("gameTypeSelected") selected=state.gameType/>
+                    </if>
+                    <else>
+                        <for|t| of=input.types>
+                            <selector-button key="types[]" data=t on-click("gameTypeSelected") selected=state.gameType/>
+                        </for>
+                    </else>
                 </div>
             </div>
             <if(state.gameType)>
@@ -72,7 +96,7 @@ $ const types = require("../../../components/scorecard/components/match_types.js
                         </div>
                     </div>
                 </if>
-                <if(state.gameType === types.TIC_TAC_TOE)>
+                <if(state.gameType === types.X01 || state.gameType === types.TIC_TAC_TOE)>
                     <div>
                         <div class="block-container-header">
                             <i class="fas fa-list-ol"/>
@@ -121,6 +145,34 @@ $ const types = require("../../../components/scorecard/components/match_types.js
                         </div>
                     </div>
                 </else-if>
+                <else-if(state.gameType === types.ONESEVENTY)>
+                    <div>
+                        <div class="block-container-header">
+                            <i class="fas fa-heart"/>
+                            <span class="ml-10">Max Rounds</span>
+                        </div>
+                        <div class="block-container-with-header">
+                            <div class="form-group form-check players-all">
+                                <for|round| of=input.max_rounds>
+                                    <selector-button key="max_rounds[]" data=round on-click("maxRoundsSelected") selected=state.maxRounds/>
+                                </for>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="block-container-header">
+                            <i class="fas fa-heart"/>
+                            <span class="ml-10">Points to Win</span>
+                        </div>
+                        <div class="block-container-with-header">
+                            <div class="form-group form-check players-all">
+                                <for|point| of=input.points_to_win>
+                                    <selector-button key="points_to_win[]" data=point on-click("pointsToWinSelected") selected=state.pointsToWin/>
+                                </for>
+                            </div>
+                        </div>
+                    </div>                    
+                </else-if>                
                 <button id="next-button" class="btn btn-info" on-click("onNext")>Next >></button>
                 <button id="prev-button" class="btn btn-info" on-click("onPrevious")><< Previous</button>
             </if>

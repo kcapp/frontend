@@ -25,7 +25,7 @@ window.kcapp = {
 window.onload = () => {
     const isController = localStorage.getItem("kcapp:controller");
     if (isController && !location.href.includes('screensaver')) {
-        const screensaverTimeout = 5 /* minutes */ * 10 * 1000; // ms
+        const screensaverTimeout = 5 /* minutes */ * 60 * 1000; // ms
         const forwardToScreensaverFunc = () => {
             location.href = "/screensaver";
         }

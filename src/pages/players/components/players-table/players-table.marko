@@ -24,8 +24,7 @@
       <for|player| of=input.players>
         <tr>
           <td class="text-left" style="width: 30%;">
-            $ var displayName = player.first_name + (player.nickname ? ' "' + player.nickname + '"' : "") + (player.last_name ? " " + player.last_name : "");
-            <a href=`/players/${player.id}/statistics`>${displayName}</a>
+            <player-link player=player full=true />
           </td>
           <td style="width: 10%;">${input.offices[player.office_id].name}</td>
           <td>${player.matches_played}</td>

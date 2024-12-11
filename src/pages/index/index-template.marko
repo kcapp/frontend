@@ -2,8 +2,11 @@ import Layout from "../layout.marko"
 
 <${Layout}>
   <@body>
-    <new-game-form players=data.players modes=data.modes scores=data.scores types=data.types
-      outshots=data.outshots lives=data.lives venues=data.venues stakes=data.stakes offices=data.offices
-      presets=data.presets/>
+    <new-game-form players=input.players modes=input.modes scores=input.scores types=input.types
+      outshots=input.outshots lives=input.lives points_to_win=input.points_to_win
+      max_rounds_170=input.max_rounds_170
+      max_rounds_x01=input.max_rounds_x01
+      venues=input.venues stakes=input.stakes offices=input.offices presets=input.presets
+      defaults=input.defaults />
   </@body>
 </>

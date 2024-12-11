@@ -1,18 +1,23 @@
 const axios = require('axios');
+const speaker = require("../../../../util/speaker");
 
 module.exports = {
-    onInput(input) {
+    onCreate(input) {
         var office = input.offices[Object.keys(input.offices)[0]];
         this.state = {
             name: undefined,
             description: undefined,
+            ttsVoice: undefined,
             has_dual_monitor: false,
             has_led_lights: false,
+            has_wled_lights: false,
             has_smartboard: false,
             smartboard_uuid: undefined,
             smartboard_button_number: undefined,
             office_id: office ? office.id : undefined,
-            isAdd: input.isAdd
+            isAdd: input.isAdd,
+
+            voices: input.voices
         }
         if (input.venue) {
             this.state = {
@@ -20,15 +25,25 @@ module.exports = {
                 office_id: input.venue.office_id,
                 name: input.venue.name,
                 description: input.venue.description,
+                ttsVoice: input.venue.config.tts_voice,
                 has_dual_monitor: input.venue.config.has_dual_monitor,
                 has_led_lights: input.venue.config.has_led_lights,
+                has_wled_lights: input.venue.config.has_wled_lights,
                 has_smartboard: input.venue.config.has_smartboard,
                 smartboard_uuid: input.venue.config.smartboard_uuid,
                 smartboard_button_number: input.venue.config.smartboard_button_number,
-                isAdd: input.isAdd
+                isAdd: input.isAdd,
+
+                voices: input.voices
             }
         }
     },
+    onInput(input) {
+        if (input.voices) {
+            this.state.voices = input.voices;
+        }
+    },
+
     officeChanged(event) {
         this.state.office_id = event.target.value;
     },
@@ -38,11 +53,20 @@ module.exports = {
     descriptionChange(event) {
         this.state.description = event.target.value;
     },
+    ttsChange(event) {
+        this.state.ttsVoice = event.target.value;
+    },
+    playVoice(event) {
+        speaker.speakWithVoice({ text: "Welcome to k capp!" }, this.state.ttsVoice);
+    },
     dualMonitorChange(event) {
         this.state.has_dual_monitor = event.target.checked;
     },
     ledLightsChange(event) {
         this.state.has_led_lights = event.target.checked;
+    },
+    wledLightsChange(event) {
+        this.state.has_wled_lights = event.target.checked;
     },
     smartboardChange(event) {
         this.state.has_smartboard = event.target.checked;
@@ -69,6 +93,8 @@ module.exports = {
             config: {
                 has_dual_monitor: this.state.has_dual_monitor,
                 has_led_lights: this.state.has_led_lights,
+                has_wled_lights: this.state.has_wled_lights,
+                tts_voice: this.state.ttsVoice,
                 has_smartboard: this.state.has_smartboard,
                 smartboard_uuid: this.state.smartboard_uuid,
                 smartboard_button_number: this.state.smartboard_button_number

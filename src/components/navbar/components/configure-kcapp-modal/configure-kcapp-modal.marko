@@ -12,10 +12,10 @@
           <div class="block-container-with-header">
             <div class="form-group form-check">
               <select id="buttonLayout" class="form-select" style="width: 100%" name="button-layout">
-                <for|layout| of=[ "Wide", "Compact" ]>
-                  <option style="text-transform: capitalize;" value=layout.toLowerCase() selected=(layout.toLowerCase() === state.buttonLayout)>${layout}</option>
+                <for|layout| of=state.layouts>
+                  <option style="text-transform: capitalize;" value=layout.id selected=(layout.id === state.buttonLayout)>${layout.name}</option>
                 </for>
-              </select>
+              </select>              
             </div>
           </div>
         </div>
@@ -34,7 +34,7 @@
           <div class="block-container-header">
             <span>Leg Options</span>
           </div>
-          <div class="block-container-with-header" style="display: flex; align-items: center; min-height: 81px;">
+          <div class="block-container-with-header-flex" style="display: flex; align-items: center; min-height: 81px;">
             <div class="form-group form-check mr-2">
               <input type="checkbox" id="autoFinishLegs" class="form-check-input" checked=state.autoFinishLegs on-change("toggleAutoFinishLegs")>
               <label class="toggle-button" for="autoFinishLegs">
@@ -49,7 +49,7 @@
               </div>
             </if>
           </div>
-          <div class="block-container-with-header" style="margin-top: -30px;">
+          <div class="block-container-with-header-flex" style="margin-top: -30px;">
             <div class="form-group form-check">
               <input type="checkbox" id="confirmBusts" class="form-check-input" checked=state.confirmBusts on-change("toggleConfirmBusts")>
               <label class="toggle-button" for="confirmBusts">

@@ -14,7 +14,12 @@ function bootstrap() {
             instance.elements.root.onkeydown = function(e) {
                 if (e.key === "Backspace") {
                     // Close dialog if Backspace is pressed to easier navigate when using Numpad
-                    instance.settings.oncancel()
+                    instance.settings.oncancel();
+                    instance.close();
+                    e.stopPropagation();
+                } else if (e.key === "Enter") {
+                    // Android tablets cannot confirm the dialog with enter, so we do it here
+                    instance.settings.onok();
                     instance.close();
                     e.stopPropagation();
                 }

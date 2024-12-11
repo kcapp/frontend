@@ -78,3 +78,7 @@ public/images/players
 *.marko.js
 
 .DS_Store
+.aider*
+
+# Ignore SQL files
+*.sql

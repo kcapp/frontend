@@ -31,6 +31,7 @@ exports.onScoreUpdate = (data, thiz) => {
     const scorecardComponents = thiz.getComponents('players');
 
     let isLastVisitFishNChips = false;
+    let isSecondLastRound = false;
     let totalFishNChips = 0;
     const globalFish = globalstat ? globalstat.fish_n_chips : 0;
     const currentPlayerIdx = _.findIndex(scorecardComponents, (component) => component.state.player.player_id === leg.current_player_id);
@@ -44,6 +45,8 @@ exports.onScoreUpdate = (data, thiz) => {
             isLastVisitFishNChips = !previousPlayer.player.is_bot && previousPlayer.modifiers.is_fish_and_chips;
             component.reset();
             component.state.jdcDart = null;
+
+            isSecondLastRound = !leg.is_finished && leg.parameters && player.player_id === players[0].player_id && leg.parameters.max_rounds && leg.parameters.max_rounds === leg.round;
         } else {
             if (currentPlayerIdx <= i) {
                 component.state.jdcDart = null;
@@ -65,6 +68,9 @@ exports.onScoreUpdate = (data, thiz) => {
             let msg = alertify.notify(getFishNChipsHTML(totalFishNChips - 1, globalFish - 1), 'fish-n-chips', 5, () => { });
             setInterval(() => { msg.setContent(getFishNChipsHTML(totalFishNChips, globalFish)); }, 1000);
         }
+        if (isSecondLastRound) {
+            alertify.notify('Final 3 Darts per player!', 'warning');
+        }
     } else if (thiz.state.matchType == types.TIC_TAC_TOE) {
         thiz.getComponent("tic-tac-toe-board").resetBoard(leg.parameters);
     }
@@ -80,11 +86,16 @@ exports.onScoreUpdate = (data, thiz) => {
 
 exports.say = (data, thiz) => {
     // Check if an audio clip is currently playing, if it is we don't want to wait until it is finished, before saying anything else
-    if ((thiz.state.matchType !== types.X01 && thiz.state.matchType !== types.X01HANDICAP) && data.type === 'remaining_score') {
+    if ((thiz.state.matchType !== types.X01 && thiz.state.matchType !== types.X01HANDICAP && thiz.state.matchType !== types.ONESEVENTY) &&
+        data.type === 'remaining_score') {
         // Skip announcement of remaining score for non-x01 game types
         return;
     }
 
+    let voice = undefined;
+    if (thiz.state.venueConfig) {
+        voice = thiz.state.venueConfig.tts_voice;
+    }
     let volume = localStorage.get("volume");
     volume = volume ? Math.min(Math.max(parseFloat(volume), 0.0), 1.0) : 1.0;
 
@@ -93,7 +104,7 @@ exports.say = (data, thiz) => {
     if (data.audios) {
         const audioPlayers = [ ];
         for (const file of data.audios) {
-            const audioPlayer = file.file ? new Audio(file.file) : speaker.getUtterance(file);
+            const audioPlayer = file.file ? new Audio(file.file) : speaker.getUtteranceWithVoice(file, voice);
             audioPlayer.volume = volume;
             audioPlayers.push(audioPlayer);
         }
@@ -129,13 +140,13 @@ exports.say = (data, thiz) => {
     } else {
         if (isAudioAnnouncement) {
             oldPlayer.addEventListener("ended", () => {
-                speaker.speak(data, () => {
+                speaker.speakWithVoice(data, voice, () => {
                     thiz.state.socket.emit("speak_finish");
                 });
             }, false);
         }
         else {
-            speaker.speak(data, () => {
+            speaker.speakWithVoice(data, voice, () => {
                 thiz.state.socket.emit("speak_finish");
             });
         }

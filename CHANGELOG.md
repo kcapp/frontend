@@ -1,6 +1,36 @@
 # Changelog
 A preview of major changes can be found in the Wiki ([Latest Changes](https://github.com/kcapp/frontend/wiki/Latest_Changes))
 
+## [2.8.0] - 2024-12-11
+#### Feature
+- New game type `170`
+- "Badges" page showing overview of all badges and how many players have unlocked them
+- New Darts Per Leg `DPL` metric added to tournament overview
+- Convenience method for scoring a user checkout by pressing `55` on numpad
+- Option to select which TTS voice to use per venue
+- Tournament Predictor
+- Tournament generation from frontend
+- Ability to configure bots from Tablet Controller
+- New set of larger Compact buttons
+- Ability to configure: "Announcement Volume", "Auto Busting" and "Auto Leg Finish" from frontend
+- Holding score buttons to score same dart three times
+- Support `Max Rounds` to play for `x01`
+- Added option to configure `players` on match presets
+- Configurable default options for starting matches
+- Lots of new Badges
+
+#### Changed
+- Don't show `Rematch` and `Undo Leg Finish` on old legs
+- Display darts throw for certain badges
+- Don't show change order modal if button input is enabled
+- Hide Elo for players with Elo <1000
+- Use multipler as points in `Around the World` and `Shanghai` instead of value
+
+#### Fixed
+- Fixed player Elo Changelog
+- Minor fixes to Tablet controller
+- Issue where match wouldn't start if venue was selected on office all
+
 ## [2.7.0] - 2023-09-12
 #### Feature
 - Automatically start next leg without needing to reload the page to improve load time, and get back to throwing quicker
@@ -8,7 +38,6 @@ A preview of major changes can be found in the Wiki ([Latest Changes](https://gi
 - New "Explore" tab on player statistics, to explore darts thrown
 - Support for `ANY` and `MASTER` outs for `x01` legs
 - Simplified input for `x01` legs
-- Ability to configure: "Announcement Volume", "Auto Busting" and "Auto Leg Finish" from frontend
 
 #### Changed
 - Updated to use `Node.js v18`
@@ -202,6 +231,7 @@ A preview of major changes can be found in the Wiki ([Latest Changes](https://gi
 - Multiple score entry methods
     - Including [Unicorn Smartboard](https://github.com/kcapp/smartboard)
 
+[2.8.0]: https://github.com/kcapp/frontend/compare/v2.7.0...v2.8.0
 [2.7.0]: https://github.com/kcapp/frontend/compare/v2.6.0...v2.7.0
 [2.6.0]: https://github.com/kcapp/frontend/compare/v2.5.0...v2.6.0
 [2.5.0]: https://github.com/kcapp/frontend/compare/v2.4.0...v2.5.0

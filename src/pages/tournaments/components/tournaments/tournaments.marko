@@ -19,11 +19,11 @@
       <tbody>
         <for|tournament| of=state.tournaments>
           <tr>
-            <td style='width: 20%;' class="pl-10">${tournament.name}</td>
+            <td style='width: 20%; white-space: nowrap;' class="pl-10">${tournament.name}</td>
             <td class="text-center hidden-xs">
              <div style="display: inline-block; padding-right: 6px">${tournament.short_name}</div>
             </td>
-            <td style='width: 10%;' class="pl-10">${input.offices[tournament.office_id].name}</td>
+            <td style='width: 10%; white-space: nowrap;' class="pl-10">${input.offices[tournament.office_id].name}</td>
             <td class="text-center">
               <div style="display: inline-block; padding-right: 6px">${tournament.start_time}</div>
             </td>

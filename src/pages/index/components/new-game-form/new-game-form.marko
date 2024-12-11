@@ -1,5 +1,6 @@
 $ const types = require('../../../../components/scorecard/components/match_types');
 
+<a id="kcapp-logo" style=`display: ${state.demo_mode ? "block" : "none"}; opacity: ${state.demo_mode ? "1" : "0"};`><img src="/images/logo128V.png" /></a>
 <if(Object.keys(input.offices).length < 1)>
   <div class="pt-20">
     <div class="block-container-header">
@@ -63,11 +64,19 @@ $ const types = require('../../../../components/scorecard/components/match_types
         <div class="block-container-with-header">
           <game-option-selector values=input.types options=state.options key="game-type" label="Type" attribute="game_type" defaultValue=state.options.game_type on-value-changed('onGameTypeChanged')/>
           <game-option-selector values=input.scores options=state.options key="starting-score" label="Starting Score" attribute="starting_score" defaultValue=state.options.starting_score/>
-          <if(state.options.game_type == types.X01 || state.options.game_type == types.X01HANDICAP || state.options.game_type == types.TIC_TAC_TOE)>
-            <game-option-selector values=input.outshots options=state.options key="outshot-type" label="Outshot Type" attribute="outshot_type" defaultValue=types.OUTSHOT_DOUBLE/>
+          <if(state.options.game_type == types.X01 || state.options.game_type == types.X01HANDICAP)>
+            <game-option-selector values=input.outshots options=state.options key="outshot-type" label="Outshot Type" attribute="outshot_type" defaultValue=state.options.outshot_type/>
+            <game-option-selector values=state.maxRounds options=state.options key="max-rounds-x01" label="Max Rounds" attribute="max_rounds" defaultValue=state.options.max_rounds/>
+          </if>
+          <if(state.options.game_type == types.TIC_TAC_TOE)>
+            <game-option-selector values=input.outshots options=state.options key="outshot-type" label="Outshot Type" attribute="outshot_type" defaultValue=state.options.outshot_type/>
           </if>
           <if(state.options.game_type == types.KNOCKOUT)>
             <game-option-selector values=input.lives options=state.options key="starting-lives" label="Starting Lives" attribute="starting_lives" defaultValue=5/>
+          </if>
+          <if(state.options.game_type == types.ONESEVENTY)>
+            <game-option-selector values=input.points_to_win options=state.options key="points-to-win" label="Points To Win" attribute="points_to_win" defaultValue=1/>
+            <game-option-selector values=state.maxRounds options=state.options key="max-rounds-oneseventy" label="Max Rounds" attribute="max_rounds" defaultValue=-1/>
           </if>
           <game-option-selector values=input.modes options=state.options key="game-mode" label="Mode" attribute="game_mode" defaultValue=state.options.game_mode/>
           <game-option-selector values=input.stakes options=state.options key="stake" label="Stake" attribute="stake" addNull=true defaultAttrName="item"/>

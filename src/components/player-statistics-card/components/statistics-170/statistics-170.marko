@@ -1,0 +1,52 @@
+$ const types = require("../../../scorecard/components/match_types");
+
+$ let statistic = input.statistic;
+$ let player = input.player;
+<if(input.header)>
+  <div class="block-container-header-center">
+    <a href=`/players/${player.id}/statistics`>${player.name}</a>
+  </div>
+</if>
+<div class="block-container-with-header">
+  <div class="player-card-match">
+    <div style="padding-bottom: 20px;">
+      <div class="player-pic-cutout" style="margin: 0 auto;">
+        <player-profile-picture player=player/>
+      </div>
+    </div>
+    <statistics-row heading="Points" value=statistic.points />
+    <statistics-row heading="Three Dart Avg." value=statistic.three_dart_avg.toFixed(2) />
+    <statistics-row heading="Darts Thrown." value=statistic.darts_thrown />
+  
+    <statistics-row heading="Checkout %" value=`${statistic.checkout_percentage ? statistic.checkout_percentage.toFixed(2) : '-'} %` />
+    <statistics-row heading="Checkout Attempts" value=statistic.checkout_attempts />
+
+    <statistics-row heading="Highest Checkout" value=`${statistic.highest_checkout ? statistic.highest_checkout : '-'}` />
+
+    <statistics-row heading="Checkouts" clazz="pt-20" />
+    <table>
+      <tr>
+        <td/>
+        <score-pill text="3 Darts" value=statistic.checkout_darts[3]/>
+      </tr>
+      <tr>
+        <score-pill text="4 Darts" value=statistic.checkout_darts[4]/>
+        <score-pill text="5 Darts" value=statistic.checkout_darts[5]/>
+        <score-pill text="6 Darts" value=statistic.checkout_darts[6]/>
+      </tr>
+      <tr>
+        <score-pill text="7 Darts" value=statistic.checkout_darts[7]/>
+        <score-pill text="8 Darts" value=statistic.checkout_darts[8]/>
+        <score-pill text="9 Darts" value=statistic.checkout_darts[9]/>
+      </tr>
+    </table>
+
+
+    <if(input.isWinner)>
+        <div class="label-winner">WINNER</div>
+    </if>
+    <else>
+        <div class="label-loser">&nbsp;</div>
+    </else>
+  </div>
+</div>

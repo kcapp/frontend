@@ -6,12 +6,15 @@ module.exports = {
 
         let name = input.players[player.player_id].name;
         if (player.player.is_bot) {
-            if (player.bot_config.player_id) {
+            if (!player.bot_config) {
+                name = `${name} (${skill.fromInt(skill.MEDIUM.skill).name})`;
+            } else if (player.bot_config.player_id) {
                 name = `${name} as ${input.players[player.bot_config.player_id].name}`;
             } else {
                 name = `${name} (${skill.fromInt(player.bot_config.skill_level).name})`;
             }
         }
+
         this.state = {
             player: player,
             name: name,

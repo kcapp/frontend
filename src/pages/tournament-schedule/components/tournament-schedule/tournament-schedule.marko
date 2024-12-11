@@ -7,25 +7,27 @@
 </div>
 <div style="margin-top: 50px;">
     <for|data| of=state.metadata>
-        $ var match = state.matches[data.match_id]
-        <div class="block-container" style="height: 80px; margin-top: 40px;">
-           <span class="tournament-division-info">${data.tournament_group.name} - ${data.match_displayname}</span>
-            <div style="padding-top: 18px;">
-                <div class="pname" style="40%; float: left; text-align: right;">${input.players[data.player_home].name}</div>
-                <div class="pscore">
-                    <if(match.is_finished)>
-                        <span>${match.result}</span>
+        $ let match = state.matches[data.match_id]
+        <if(!match.is_bye)>
+            <div class="block-container" style="height: 80px; margin-top: 40px;">
+            <span class="tournament-division-info">${data.tournament_group.name} - ${data.match_displayname}</span>
+                <div style="padding-top: 18px;">
+                    <div class="pname" style="40%; float: left; text-align: right;">${input.players[data.player_home].name}</div>
+                    <div class="pscore">
+                        <if(match.is_finished)>
+                            <span>${match.result}</span>
+                        </if>
+                        <else>
+                            <span/>
+                        </else>
+                    </div>
+                    <div class="pname" style="float: right; text-align: left;">${input.players[data.player_away].name}
+                    <if(match.is_walkover)>
+                        <div class="walkover-title">walkover</div>
                     </if>
-                    <else>
-                        <span/>
-                    </else>
-                </div>
-                <div class="pname" style="float: right; text-align: left;">${input.players[data.player_away].name}
-                  <if(match.is_walkover)>
-                      <div class="walkover-title">walkover</div>
-                  </if>
+                    </div>
                 </div>
             </div>
-        </div>
+        </if>
     </for>
 </div>

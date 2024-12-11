@@ -11,9 +11,13 @@ module.exports = {
             unplayed[key] = m.filter(match => !match.is_finished);
         }
         const groups = new Set();
-        for (const key in input.overview) {
-            const g = input.overview[key];
+        const overview = input.overview;
+        for (const key in overview) {
+            const g = overview[key];
             groups.add(g[0].tournament_group);
+            // Filter out "placeholder"-players without any name
+            overview[key] = _.filter(g, player => input.players[player.player_id].name !== "")
+            unplayed[key] = _.sortBy(unplayed[key], "created_at");
         }
         const matchesMap = Object.values(input.matches).flat().reduce((acc, match) => {
             acc[match.id] = match;
@@ -25,13 +29,14 @@ module.exports = {
                 acc[match.id] = match;
                 return acc;
             }, {}));
-        }
+        }        
         this.state = {
             hasStatistics: !_.isEmpty(input.statistics.best_three_dart_avg),
             matches: matches,
             matchesMap: matchesMap,
             unplayed: unplayed,
-            groups: Array.from(groups)
+            groups: Array.from(groups),
+            overview: overview
         }
     },
 
@@ -70,5 +75,9 @@ module.exports = {
     },
     onShowModal(matchId) {
         this.getComponent('set-score-modal').setMatch(matchId);
+    },
+    onUpdatePredictions(groupId, overview) {
+        const comp = this.getComponent(`predictor-overview-${groupId}`);
+        comp.updateStandings(overview);
     }
 }

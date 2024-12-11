@@ -25,7 +25,7 @@ $ {
     <if(!input.tournament.is_finished && input.tournament.manual_admin && !input.tournament.is_playoffs)>
       <options-panel tournament=input.tournament/>
     </if>
-    <for|id, group| in=input.overview>
+    <for|id, group| in=state.overview>
       <div class="block-container p-10" style='margin-bottom: 0;'>
         <div class="float-left" style="font-size: 30px;">${group[0].tournament_group.name}</div>
         <div style="float: right; padding-top: 4px;">
@@ -39,6 +39,9 @@ $ {
             <li role="presentation">
               <a href=`#unplayed-matches-${group[0].tournament_group.id}` data-toggle="tab" class="tournament-group-unplayed-matches">Unplayed</a>
             </li>
+            <li role="presentation">
+              <a href=`#predictor-${group[0].tournament_group.id}` data-toggle="tab" class="tournament-group-unplayed-matches">Predictor</a>
+            </li>            
           </ul>
         </div>
       </div>
@@ -58,6 +61,10 @@ $ {
         <div role="tabpanel" id=`unplayed-matches-${group[0].tournament_group.id}` class="tab-pane">
           <matches-table players=input.players matches=state.unplayed[id] columns=columns on-show-modal("onShowModal")/>
         </div>
+        <div role="tabpanel" id=`predictor-${group[0].tournament_group.id}` class="tab-pane">
+          <tournament-overview-table tournament=input.tournament players=input.players statistics=input.statistics overview=group key=`predictor-overview-${group[0].tournament_group.id}`/>
+          <tournament-predictor players=input.players matches=state.unplayed[id] overview=group on-update-predictions("onUpdatePredictions")/>
+        </div>        
       </div>
     </for>
   </div>
@@ -99,7 +106,7 @@ $ {
         <table class="tournament-records">
           <tbody>
             <tr>
-              <td style="width: 25%;">
+              <td style="width: 25%; max-width: 285px;">
                 <div class="block-container-red mr-10">Highest Checkout</div>
                 <div class="highscore-card">
                   <table class="table table-tournament-statistics">
@@ -113,7 +120,7 @@ $ {
                   </table>
                 </div>
               </td>
-              <td style="width: 25%;">
+              <td style="width: 25%; max-width: 285px;">
                 <div class="block-container-red mr-10">Best Three Dart Avg</div>
                 <div class="highscore-card">
                   <table class="table table-tournament-statistics">
@@ -127,7 +134,7 @@ $ {
                   </table>
                 </div>
               </td>
-              <td style="width: 25%;">
+              <td style="width: 25%; max-width: 285px;">
                 <div class="block-container-red mr-10">Best First 9 Avg</div>
                 <div class="highscore-card">
                   <table class="table table-tournament-statistics">
@@ -141,14 +148,14 @@ $ {
                   </table>
                 </div>
               </td>
-              <td style="width: 25%;">
+              <td style="width: 25%; max-width: 285px;">
                 <div class="block-container-red">Least Darts Thrown</div>
                 <div class="highscore-card-no-margin">
                   <table class="table table-tournament-statistics">
                     <tbody>
                       <for|i| from=0 to=9>
                         <tr>
-                          $ var dartsThrown = input.statistics.best_501_darts_thrown ? input.statistics.best_501_darts_thrown : input.statistics.best_301_darts_thrown ? input.statistics.best_301_darts_thrown : null;
+                          $ let dartsThrown = input.statistics.best_501_darts_thrown ? input.statistics.best_501_darts_thrown : input.statistics.best_301_darts_thrown ? input.statistics.best_301_darts_thrown : null;
                           <top-statistics players=input.players statistics=dartsThrown idx=i rank=(i + 1)/>
                         </tr>
                       </for>
@@ -200,3 +207,4 @@ $ {
 </div>
 <set-score-form players=input.players matches=state.matchesMap key="set-score-modal"/>
 <add-player-form players=input.players overview=input.overview tournamentId=input.tournament.id officeId=input.tournament.office_id groups=state.groups/>
+<generate-playoffs-form overview=input.overview matches=input.matches tournamentId=input.tournament.id  modes=input.modes/>

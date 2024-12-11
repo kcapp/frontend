@@ -4,9 +4,6 @@ const alertify = require(`../../../../util/alertify`);
 
 module.exports = {
     onCreate(input) {
-        this.reset();
-    },
-    reset() {
         this.state = {
             id: undefined,
             first_name: undefined,
@@ -17,7 +14,7 @@ module.exports = {
             color: '#dfdfdf',
             profile_pic_url: undefined,
             smartcard_uid: undefined,
-            office_id: 1,
+            office_id: Object.keys(input.offices)[0],
             options: {
                 edited: false,
                 subtract_per_dart: true,
@@ -58,7 +55,7 @@ module.exports = {
                         speaker.speak( {text: vocalName } );
                     });
             } else {
-                speaker.speak( {text: vocalName } );
+                speaker.speakWithVoice( {text: vocalName }, this.input.ttsVoice );
             }
         }
     },
@@ -69,10 +66,18 @@ module.exports = {
         this.state.last_name = event.target.value;
     },
     nicknameChange(event) {
-        this.state.nickname = event.target.value;
+        let value = event.target.value
+        if (value === "") {
+            value = undefined;
+        }
+        this.state.nickname = value;
     },
     vocalNameChange(event) {
-        this.state.vocal_name = event.target.value;
+        let value = event.target.value
+        if (value === "") {
+            value = undefined;
+        }
+        this.state.vocal_name = value;
     },
     colorChange(event) {
         this.state.color = event.target.value;
@@ -93,7 +98,11 @@ module.exports = {
         alertify.notify(`Smartcard Scanned ${data.uid}`, 'success', 5);
     },
     slackHandleChange(event) {
-        this.state.slack_handle = event.target.value;
+        let value = event.target.value
+        if (value === "") {
+            value = undefined;
+        }
+        this.state.slack_handle = value;
     },
     officeChanged(event) {
         this.state.office_id = event.target.value;

@@ -1,6 +1,6 @@
 exports.removeLast = function(dart, external) {
     if (dart.getScore() === this.state.leg.round || (dart.getScore() === 25 && this.state.leg.round === 21)) {
-        this.state.player.current_score -= dart.getValue();
+        this.state.player.current_score -= dart.getMultiplier();
         this.emit('score-change', this.state.player.current_score, this.state.player.player_id);
     }
     if (!external) {
@@ -51,7 +51,7 @@ exports.confirmThrow = function (external) {
     this.state.isSubmitted = true;
 
     if (dart.getScore() === this.state.leg.round) {
-        this.state.player.current_score += dart.getValue();
+        this.state.player.current_score += dart.getMultiplier();
         this.emit('score-change', this.state.player.current_score, this.state.player.player_id);
     }
 

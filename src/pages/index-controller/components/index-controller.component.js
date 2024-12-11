@@ -9,10 +9,11 @@ module.exports = {
         const steps = {
             INITIAL: 0,
             SELECT_PLAYERS: 1,
-            SELECT_GAME_TYPE: 2,
-            SELECT_GAME_MODE: 3,
-            START: 4,
-            CONTINUE_MATCH: 5
+            CONFIGURE_BOT: 2,
+            SELECT_GAME_TYPE: 3,
+            SELECT_GAME_MODE: 4,
+            START: 5,
+            CONTINUE_MATCH: 6
         };
         this.state = {
             steps: steps,
@@ -27,11 +28,15 @@ module.exports = {
             startingScore: undefined,
             outshotType: undefined,
             startingLives: undefined,
+            maxRounds: undefined,
+            pointsToWin: undefined,
             gameMode: input.modes[0].id,
             handicaps: [ { id: 0, name: "0"}, { id: 100, name: "+100"}, { id: 200, name: "+200"}, { id: -1, name: "Custom"} ],
             playerHandicaps: {},
             matches: [],
-            filteredPlayers: undefined
+            filteredPlayers: undefined,
+            bot: undefined,
+            bot_skill: 1
         }
     },
     onMount() {
@@ -51,7 +56,7 @@ module.exports = {
                     return player.office_id !== this.state.officeId;
                 });
                 const venue = localStorage.get('venue_id');
-                if (venue) {
+                if (venue && venue !== "null") {
                     this.state.venueId = parseInt(venue);
                 }
                 this.setStateDirty('players');
@@ -60,9 +65,13 @@ module.exports = {
                 axios.get(`${window.location.protocol}//${window.location.hostname}${this.input.locals.kcapp.api_path}/venue/${this.state.venueId}/players`)
                     .then((ids) => {
                         const playerIds = ids.data;
-                        this.state.players = _.reject(this.input.players, (player) => {
-                            return !playerIds.includes(player.id);
-                        });
+                        if (playerIds.length === 0) {
+                            this.filterPlayers("All", undefined);
+                        } else {
+                            this.state.players = _.reject(this.input.players, (player) => {
+                                return !playerIds.includes(player.id);
+                            });
+                        }
                         this.setStateDirty('players');
                     }).catch(error => {
                         console.log(`Error when getting recent players ${error}`);
@@ -100,7 +109,11 @@ module.exports = {
         this.state.step = this.state.steps.SELECT_PLAYERS;
     },
     onContinueMatch(e) {
-        axios.get(`${window.location.protocol}//${window.location.hostname}${this.input.locals.kcapp.api_path}/venue/${this.state.venueId}/matches`)
+        let req = axios.get(`${window.location.protocol}//${window.location.hostname}${this.input.locals.kcapp.api_path}/match/active?since=200000000`);
+        if (this.state.venueId) {
+            req = axios.get(`${window.location.protocol}//${window.location.hostname}${this.input.locals.kcapp.api_path}/venue/${this.state.venueId}/matches`);
+        }
+        req
             .then((matchesData) => {
                 this.state.matches = matchesData.data;
                 this.setStateDirty('matches');
@@ -123,6 +136,9 @@ module.exports = {
     },
     onNext(e) {
         this.state.step++;
+        if (this.state.step === this.state.steps.CONFIGURE_BOT && !this.state.bot) {
+            this.state.step++;
+        }
         e.preventDefault();
     },
     onStart(e) {
@@ -130,6 +146,15 @@ module.exports = {
 
         const officeId = this.state.officeId;
         const venueId = this.state.venueId;
+
+        const botPlayerConfig = {};
+        if (this.state.bot) {
+            const bot = this.state.bot;
+            botPlayerConfig[bot.id] = {
+                player_id: null,
+                skill_level: this.state.bot_skill
+            }
+        }
 
         const body = {
             starting_score: this.state.startingScore,
@@ -140,6 +165,7 @@ module.exports = {
             venue: venueId,
             players: this.state.playersSelected.map(player => player.id),
             office_id: officeId,
+            bot_player_config: botPlayerConfig,
             player_handicaps: this.state.playerHandicaps
         }
         axios.post(`${window.location.origin}/matches/new`, body)
@@ -158,6 +184,9 @@ module.exports = {
     },
     addPlayer(event, selected) {
         const player = selected.input ? selected.input.data : selected;
+        if (player.is_bot) {
+            this.state.bot = player;
+        }
 
         if (!this.state.playersSelected.includes(player)) {
             this.state.playersSelected.push(player);
@@ -166,6 +195,9 @@ module.exports = {
     },
     removePlayer(event, selected) {
         const player = selected.input.data;
+        if (player.is_bot) {
+            this.state.bot = undefined;
+        }
 
         this.state.playersSelected = _.reject(this.state.playersSelected, (el) => {
             return el.id === player.id;
@@ -185,7 +217,7 @@ module.exports = {
             this.state.scores = null;
         } else if (type === types.TIC_TAC_TOE) {
             this.state.scores = types.SCORES_TIC_TAC_TOE;
-            this.state.outshotType = this.input.outshots[2].id;
+            this.state.outshotType = this.input.outshots[0].id;
         } else if (type === types.DARTS_AT_X) {
             this.state.scores = types.SCORES_DARTS_AT_X;
         } else if (type === types.FOUR_TWENTY) {
@@ -196,6 +228,7 @@ module.exports = {
             this.state.scores = types.SCORES_GOTCHA;
         } else if (type === types.X01) {
             this.state.scores = types.SCORES_x01;
+            this.state.outshotType = this.input.outshots[1].id;
         } else if (type === types.X01HANDICAP) {
             this.state.scores = types.SCORES_x01;
             _.forEach(this.state.playersSelected, (player) => {
@@ -206,6 +239,11 @@ module.exports = {
             this.state.startingScore = 0;
             this.state.scores = null;
             this.state.startingLives = this.input.lives[2].id;
+        } else if (type === types.ONESEVENTY) {
+            this.state.startingScore = 170;
+            this.state.scores = null;
+            this.state.maxRounds = this.input.max_rounds[0].id;
+            this.state.pointsToWin = this.input.points_to_win[0].id;
         } else {
             this.state.scores = this.input.scores;
         }
@@ -240,15 +278,27 @@ module.exports = {
     livesSelected(event, selected) {
         this.state.startingLives = selected.input.data.id;
     },
+    maxRoundsSelected(event, selected) {
+        this.state.maxRounds = selected.input.data.id;
+    },
+    pointsToWinSelected(event, selected) {
+        this.state.pointsToWin = selected.input.data.id;
+    },
     filterPlayers(letter, event) {
         this.state.filteredPlayers = letter;
 
         const players = _.filter(this.input.players, (player) => {
-            const filtered = letter === "All" ?  true : player.name.startsWith(letter)
-            return !player.is_bot && player.name !== "" && filtered;
+            const filtered = letter === "All" ? true : player.name.toLowerCase().startsWith(letter.toLowerCase())
+            return player.name !== "" && filtered;
         });
         this.state.players = _.sortBy(players, (player) => player.name);
         this.setStateDirty('players');
-        event.preventDefault();
+        if (event) {
+            event.preventDefault();
+        }
     },
+    botSkillSelected(event, selected) {
+        this.state.bot_skill = selected.input.data.skill;
+        console.log(this.state.bot_skill)
+    }
 }

@@ -9,9 +9,9 @@ const Chart = require("chart.js");
 module.exports = {
     onCreate(input) {
         const leg = input.leg;
-
         leg.started = moment(leg.created_at).format('YYYY-MM-DD HH:mm:ss');
         leg.finished = leg.end_time === null ? '-' : moment(leg.end_time).format('YYYY-MM-DD HH:mm:ss');
+        leg.minutes_since_end = moment.utc().diff(moment.utc(input.leg.end_time), 'minutes');
         leg.duration = "-";
         if (leg.visits.length > 0) {
             leg.duration = moment.duration(moment(leg.end_time).diff(leg.visits[0].created_at)).asMinutes().toFixed();
@@ -103,6 +103,9 @@ module.exports = {
                     if (current > chartMaxValue) {
                         chartMaxValue = current;
                     }
+                } else if (this.state.matchType === types.ONESEVENTY) {
+                    current = visit.scores[visit.player_id] - visit.score;
+                    values[visit.player_id].push(current);
                 } else {
                     values[visit.player_id].push(current - visit.score);
                 }
