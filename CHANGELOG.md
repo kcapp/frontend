@@ -2,6 +2,12 @@
 A preview of major changes can be found in the Wiki ([Latest Changes](https://github.com/kcapp/frontend/wiki/Latest_Changes))
 
 ## [2.9.0] - TBD
+#### Changed
+- Updated to latest version of dependencies
+- Update to NodeJS `22`
+
+#### Fixed
+- Issue with the `TTS` gets stuck in certain situations
 
 
 ## [2.8.0] - 2024-12-11
