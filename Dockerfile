@@ -1,5 +1,5 @@
 # Create our build image
-FROM node:18-alpine AS BUILD_IMAGE
+FROM node:22-alpine AS BUILD_IMAGE
 
 # Add git and curl
 RUN apk update && apk add --no-cache git curl
@@ -15,7 +15,7 @@ RUN npm install --only=production
 COPY . .
 
 # Create actual image
-FROM node:18-alpine
+FROM node:22-alpine
 
 WORKDIR /usr/src/kcapp
 
