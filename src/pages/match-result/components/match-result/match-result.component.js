@@ -23,7 +23,7 @@ module.exports = {
         document.addEventListener("keydown", this.onKeyDown.bind(this), false);
 
         // Don´t forward playoff matches
-        if (this.state.match.tournament && !this.state.match.tournament.is_playoffs) {
+        if (!this.state.match.tournament || (this.state.match.tournament && !this.state.match.tournament.is_playoffs)) {
             const finishedParam = new URLSearchParams(window.location.search).get('finished');
             if (finishedParam) {
                 // Move back to index page after 2 minutes
