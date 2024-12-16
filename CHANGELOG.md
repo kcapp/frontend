@@ -2,6 +2,9 @@
 A preview of major changes can be found in the Wiki ([Latest Changes](https://github.com/kcapp/frontend/wiki/Latest_Changes))
 
 ## [2.9.0] - TBD
+#### Feature
+- Option to see `All` or `Unique` tournament statistics per player
+
 #### Changed
 - Updated to latest version of dependencies
 - Update to NodeJS `22`

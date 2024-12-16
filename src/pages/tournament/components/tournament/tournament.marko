@@ -41,7 +41,7 @@ $ {
             </li>
             <li role="presentation">
               <a href=`#predictor-${group[0].tournament_group.id}` data-toggle="tab" class="tournament-group-unplayed-matches">Predictor</a>
-            </li>            
+            </li>
           </ul>
         </div>
       </div>
@@ -64,7 +64,7 @@ $ {
         <div role="tabpanel" id=`predictor-${group[0].tournament_group.id}` class="tab-pane">
           <tournament-overview-table tournament=input.tournament players=input.players statistics=input.statistics overview=group key=`predictor-overview-${group[0].tournament_group.id}`/>
           <tournament-predictor players=input.players matches=state.unplayed[id] overview=group on-update-predictions("onUpdatePredictions")/>
-        </div>        
+        </div>
       </div>
     </for>
   </div>
@@ -103,6 +103,15 @@ $ {
         </table>
       </div>
       <div class="table table-responsive">
+        <div>
+          // Add a checkbox to filter unique
+          <div class="float-right">
+            <div class="btn-group btn-toggle">
+              <button class=`btn ${state.showAllStats ? "btn-default" : "btn-primary"}` on-click("onToggleStats", false)>Unique</button>
+              <button class=`btn ${state.showAllStats ? "btn-primary" : "btn-default"}` on-click("onToggleStats", true)>All</button>
+            </div>
+          </div>
+        </div>
         <table class="tournament-records">
           <tbody>
             <tr>
@@ -111,9 +120,9 @@ $ {
                 <div class="highscore-card">
                   <table class="table table-tournament-statistics">
                     <tbody>
-                      <for|i| from=0 to=9>
+                      <for|i| from=0 to=14>
                         <tr>
-                          <top-statistics players=input.players statistics=input.statistics.checkout_highest idx=i rank=(i + 1)/>
+                          <top-statistics players=input.players statistics=state.statistics.checkout_highest idx=i rank=(i + 1)/>
                         </tr>
                       </for>
                     </tbody>
@@ -125,9 +134,9 @@ $ {
                 <div class="highscore-card">
                   <table class="table table-tournament-statistics">
                     <tbody>
-                      <for|i| from=0 to=9>
+                      <for|i| from=0 to=14>
                         <tr>
-                          <top-statistics players=input.players statistics=input.statistics.best_three_dart_avg idx=i rank=(i + 1) isFloat=true/>
+                          <top-statistics players=input.players statistics=state.statistics.best_three_dart_avg idx=i rank=(i + 1) isFloat=true/>
                         </tr>
                       </for>
                     </tbody>
@@ -139,9 +148,9 @@ $ {
                 <div class="highscore-card">
                   <table class="table table-tournament-statistics">
                     <tbody>
-                      <for|i| from=0 to=9>
+                      <for|i| from=0 to=14>
                         <tr>
-                          <top-statistics players=input.players statistics=input.statistics.best_first_nine_avg idx=i rank=(i + 1) isFloat=true/>
+                          <top-statistics players=input.players statistics=state.statistics.best_first_nine_avg idx=i rank=(i + 1) isFloat=true/>
                         </tr>
                       </for>
                     </tbody>
@@ -153,9 +162,9 @@ $ {
                 <div class="highscore-card-no-margin">
                   <table class="table table-tournament-statistics">
                     <tbody>
-                      <for|i| from=0 to=9>
+                      <for|i| from=0 to=14>
                         <tr>
-                          $ let dartsThrown = input.statistics.best_501_darts_thrown ? input.statistics.best_501_darts_thrown : input.statistics.best_301_darts_thrown ? input.statistics.best_301_darts_thrown : null;
+                          $ let dartsThrown = state.statistics.best_501_darts_thrown ? state.statistics.best_501_darts_thrown : state.statistics.best_301_darts_thrown ? state.statistics.best_301_darts_thrown : null;
                           <top-statistics players=input.players statistics=dartsThrown idx=i rank=(i + 1)/>
                         </tr>
                       </for>
