@@ -45,6 +45,7 @@ app.locals.kcapp = {};
 app.locals.kcapp.api = process.env.KCAPP_API || 'http://localhost:8001';
 app.locals.kcapp.api_path = process.env.KCAPP_API_PATH || ':8001';
 app.locals.kcapp.local_admin = process.env.KCAPP_LOCAL_ADMIN ? process.env.KCAPP_LOCAL_ADMIN === "true" : true;
+app.locals.serializedGlobals = { kcapp: true };
 
 // Create all routes
 const socketHandler = require('./routes/lib/socketio_handler')(io, app);
@@ -62,9 +63,6 @@ const elo = require('./routes/elo');
 const venues = require('./routes/venues')(app, socketHandler);
 const badges = require('./routes/badges');
 socketHandler.setupActiveNamespace();
-
-app.locals.moment = require('moment');
-app.locals._ = require('underscore');
 
 // Write access log to a daily rotated file in /log
 const pad = num => (num > 9 ? "" : "0") + num;

@@ -5,7 +5,7 @@ const alertify = require("../../../../../../util/alertify");
 
 module.exports = {
     onCreate(input) {
-        const generatedGroups = Object.values(input.groups).filter(group => group.is_generated);
+        const generatedGroups = Object.values(input.groups).filter(group => group.is_generated && !group.is_playoffs);
 
         this.state = {
             modes: _.sortBy(input.modes, 'name'),
@@ -70,14 +70,13 @@ module.exports = {
     },
     onAddGroup() {
         const numGroups = Object.keys(this.state.selected).length;
-        if (numGroups >= 4) {
-            alertify.notify(`Only 4 groups are supported`, 'warning');
+        if (numGroups >= 8) {
+            alertify.notify(`Only 8 groups are supported`, 'warning');
             return;
         }
-        if (numGroups === 2) {
-            this.state.selected.group3 = { group: this.state.generatedGroups[2], players: [] } ;
-        } else if (numGroups === 3) {
-            this.state.selected.group4 = { group: this.state.generatedGroups[3], players: [] } ;
+        if (numGroups >= 2 && numGroups <= 7) {
+            const groupIndex = numGroups + 1;
+            this.state.selected[`group${groupIndex}`] = { group: this.state.generatedGroups[numGroups], players: [] };
         }
         this.setStateDirty('selected');
     },
@@ -124,6 +123,10 @@ module.exports = {
             group2: this.state.selected.group2,
             group3: this.state.selected.group3,
             group4: this.state.selected.group4,
+            group5: this.state.selected.group5,
+            group6: this.state.selected.group6,
+            group7: this.state.selected.group7,
+            group8: this.state.selected.group8,
         }
         axios.post(window.location.origin + '/tournaments/admin/generate', body)
             .then(response => {

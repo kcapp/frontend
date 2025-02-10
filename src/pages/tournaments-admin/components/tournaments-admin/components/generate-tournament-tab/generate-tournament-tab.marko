@@ -59,25 +59,28 @@
                     on-add-player("onAddPlayer", "group2")
                     on-remove-player("onRemovePlayer", "group2") />
             </div>
-            <div style="display: flex;">
-                <if(Object.keys(state.selected).length > 2)>
-                    <group-selector group=state.selected.group3.group
-                        venues=state.venues
-                        selected=state.selected.group3.players
-                        playersAvailable=state.playersAvailable
-                        on-venue-change("onVenueChange", "group3")
-                        on-add-player("onAddPlayer", "group3")
-                        on-remove-player("onRemovePlayer", "group3") />
-                </if>
-                <if(Object.keys(state.selected).length > 3)>
-                    <group-selector group=state.selected.group4.group
-                        venues=state.venues
-                        selected=state.selected.group4.players
-                        on-venue-change("onVenueChange", "group4")
-                        on-add-player("onAddPlayer", "group4")
-                        on-remove-player("onRemovePlayer", "group4") />
-                </if>
-            </div>
+            <for|i| from=3 to=8 step=2>
+                <div style="display: flex;">
+                    <if(Object.keys(state.selected).length >= i)>
+                        <group-selector group=state.selected[`group${i}`].group
+                            venues=state.venues
+                            selected=state.selected[`group${i}`].players
+                            playersAvailable=state.playersAvailable
+                            on-venue-change("onVenueChange", `group${i}`)
+                            on-add-player("onAddPlayer", `group${i}`)
+                            on-remove-player("onRemovePlayer", `group${i}`) />
+                    </if>
+                    <if(Object.keys(state.selected).length >= i + 1)>
+                        <group-selector group=state.selected[`group${i + 1}`].group
+                            venues=state.venues
+                            selected=state.selected[`group${i + 1}`].players
+                            playersAvailable=state.playersAvailable
+                            on-venue-change("onVenueChange", `group${i + 1}`)
+                            on-add-player("onAddPlayer", `group${i + 1}`)
+                            on-remove-player("onRemovePlayer", `group${i + 1}`) />
+                    </if>
+                </div>
+            </for>
             <button class="btn btn-primary" type="button" on-click("onAddGroup")>Add Group</button>
             <button class="btn btn-primary ml-10" type="button" on-click("generateTournament")>Generate</button>
         </div>

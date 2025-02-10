@@ -92,7 +92,8 @@ $ var columns = input.columns;
     <if(!match.has_scores)>
       <td class="text-center">
         <match-button title="View" icon="fa-cog" modal=`set-score-modal` data=match.id on-show-modal("onShowModal")/>
-      </td>  
+        <match-button title="Start Remote" icon="fa-fast-forward" modal='start-remote-modal' data=match.id on-show-modal("onShowModal")/>
+      </td>
     </if>
     <else>
       <td/>

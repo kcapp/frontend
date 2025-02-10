@@ -4,6 +4,7 @@ A preview of major changes can be found in the Wiki ([Latest Changes](https://gi
 ## [2.9.0] - TBD
 #### Feature
 - Option to see `All` or `Unique` tournament statistics per player
+- Ability to "Remote Start" matches on a selected venue
 
 #### Changed
 - Updated to latest version of dependencies

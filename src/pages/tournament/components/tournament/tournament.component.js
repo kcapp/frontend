@@ -31,8 +31,6 @@ module.exports = {
             }, {}));
         }
 
-
-
         this.state = {
             hasStatistics: !_.isEmpty(input.statistics.best_three_dart_avg),
             matches: matches,
@@ -91,8 +89,8 @@ module.exports = {
             }
         });
     },
-    onShowModal(matchId) {
-        this.getComponent('set-score-modal').setMatch(matchId);
+    onShowModal(matchId, modal) {
+        this.getComponent(modal).setMatch(matchId);
     },
     onUpdatePredictions(groupId, overview) {
         const comp = this.getComponent(`predictor-overview-${groupId}`);
@@ -102,6 +100,5 @@ module.exports = {
         this.state.showAllStats = value;
         this.state.statistics = value ? this.input.statistics : this.state.unq_statistics;
         this.setStateDirty("statistics");
-        console.log(this.state.statistics);
     }
 }
