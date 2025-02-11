@@ -1,5 +1,6 @@
 # Create our build image
-FROM node:22-alpine AS BUILD_IMAGE
+# Must be node-18, ref https://github.com/docker/build-push-action/issues/1071
+FROM node:18-alpine AS BUILD_IMAGE
 
 # Add git and curl
 RUN apk update && apk add --no-cache git curl
