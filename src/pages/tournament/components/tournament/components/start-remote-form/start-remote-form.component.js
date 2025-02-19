@@ -31,7 +31,7 @@ module.exports = {
         const socket = io.connect(`${window.location.origin}/venue/${this.state.venueId}`);
         socket.on("connect", () => {
             const match = this.state.match;
-            match.venue.id = this.state.venueId;
+            match.venue = { id: this.state.venueId };
 
             axios.put(`${window.location.protocol}//${window.location.hostname}${this.state.locals.api_path}/match/${match.id}`, match)
                 .then(response => {
