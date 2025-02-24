@@ -1,6 +1,6 @@
 $ let match = state.match;
 $ let isOfficial = state.match.tournament_id || false;
-<page-header heading=`Match Result (${match.id})` style="block-container" rematch_button=!isOfficial next_match_button=isOfficial subheadings=[
+<page-header heading=`Match Result (${match.id})` style="block-container" rematch_button=!isOfficial next_match_button=(isOfficial && !state.match.tournament.is_finished) subheadings=[
   [
     {
       heading: `Started   ${match.started}`,

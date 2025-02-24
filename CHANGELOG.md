@@ -13,7 +13,7 @@ A preview of major changes can be found in the Wiki ([Latest Changes](https://gi
 #### Fixed
 - Issue with the `TTS` gets stuck in certain situations
 - Bug where matches were not correctly forwarded back to main screen
-
+- Minor UI improvements
 
 ## [2.8.0] - 2024-12-11
 #### Feature

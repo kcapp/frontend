@@ -461,7 +461,7 @@ router.get('/match/:id/next', function (req, res, next) {
     axios.get(`${req.app.locals.kcapp.api}/tournament/match/${req.params.id}/next`)
         .then(response => {
             if (response.status === 204) {
-                res.send(204);
+                res.sendStatus(204);
                 return;
             }
             res.send(response.data);
