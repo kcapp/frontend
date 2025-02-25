@@ -5,7 +5,7 @@ module.exports = {
     onCreate(input, out) {
         this.state = {
             match: undefined,
-            venueId: -1,
+            venueId: input.venues[0].id,
             locals: out.global.kcapp
         }
     },
@@ -22,10 +22,10 @@ module.exports = {
     onVenueChange(event) {
         this.state.venueId = parseInt(event.target.value);
     },
-    setMatch(matchId, isBracket) {
+    setMatch(matchId) {
         const match = this.input.matches[matchId];
         this.state.match = match;
-        this.state.venueId = match.venue ? match.venue.id : -1;
+        this.state.venueId = match.venue ? match.venue.id : this.input.venues[0].id;
     },
     startRemote(event) {
         const socket = io.connect(`${window.location.origin}/venue/${this.state.venueId}`);
