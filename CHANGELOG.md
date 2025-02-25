@@ -5,6 +5,7 @@ A preview of major changes can be found in the Wiki ([Latest Changes](https://gi
 #### Feature
 - Option to see `All` or `Unique` tournament statistics per player
 - Ability to "Remote Start" matches on a selected venue
+- Split tournaments into "Tournaments" and "Seasons"
 
 #### Changed
 - Updated to latest version of dependencies

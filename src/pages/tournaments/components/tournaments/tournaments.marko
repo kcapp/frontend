@@ -1,44 +1,29 @@
+$ const hasSeasons = state.seasons.length > 0;
 <page-header heading="Tournaments" subheading="List of tournaments"/>
 <if(input.locals.kcapp.local_admin)>
   <options-panel />
 </if>
 <div class="block-container no-padding">
   <office-selector offices=input.offices clazz="float-right" on-office-changed("officeChanged")/>
-  <div class="table table-responsive">
-    <table id="table-tournaments-list">
-      <thead>
-        <tr>
-          <th class="pl-10">Name</th>
-          <th class="text-center hidden-xs">Short Name</th>
-          <th class="text-center">Office</th>
-          <th class="text-center">Start Time</th>
-          <th class="text-center">End Time</th>
-          <th class="text-center">Overview</th>
-        </tr>
-      </thead>
-      <tbody>
-        <for|tournament| of=state.tournaments>
-          <tr>
-            <td style='width: 20%; white-space: nowrap;' class="pl-10">${tournament.name}</td>
-            <td class="text-center hidden-xs">
-             <div style="display: inline-block; padding-right: 6px">${tournament.short_name}</div>
-            </td>
-            <td style='width: 10%; white-space: nowrap;' class="pl-10">${input.offices[tournament.office_id].name}</td>
-            <td class="text-center">
-              <div style="display: inline-block; padding-right: 6px">${tournament.start_time}</div>
-            </td>
-            <td class="text-center">${tournament.end_time}</td>
-            <td class="text-center">
-              <a href=`/tournaments/${tournament.id}`>
-                <i class="fas fa-eye fas-option-button" data-toggle="tooltip" data-placement="top" title="View"/>
-              </a>
-            </td>
-          </tr>
-        </for>
-      </tbody>
-    </table>
-    <if(state.tournaments.length === 0)>
-      <div class='text-center pt-20'>No Tournaments yet</div>
+  <div class="block-container no-padding">
+    <if(hasSeasons)>
+      <ul class="nav nav-tabs">
+          <li role="presentation" class="active"><a href="#seasons" data-toggle="tab">Seasons</a></li>
+          <li role="presentation"><a href="#tournaments" data-toggle="tab">Tournaments</a></li>
+      </ul>
     </if>
   </div>
+  <div class="tab-content" style="width: 100%;">
+    <if(hasSeasons)>
+      <div class=`tab-pane ${hasSeasons ? "active" : ""}` role="tabpanel" id="seasons">
+        <tournament-table tournaments=state.seasons offices=input.offices />
+      </div>
+    </if>
+    <div class=`tab-pane ${!hasSeasons ? "active" : ""}` role="tabpanel" id="tournaments">
+      <tournament-table tournaments=state.tournaments offices=input.offices />
+    </div>
+  </div>
+  <if(input.tournaments.length === 0)>
+    <div class='text-center font-24'>No Tournaments yet</div>
+  </if>
 </div>

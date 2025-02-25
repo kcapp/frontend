@@ -74,14 +74,14 @@ module.exports = {
         this.state.venueId = parseInt(document.getElementById("venueSelect").value);
         if (this.state.venueId === -1) {
             localStorage.remove('venue_id');
+            localStorage.set('remote-control', false);
         } else {
             localStorage.set('venue_id', this.state.venueId);
+            localStorage.set('remote-control', this.state.remoteControl);
         }
-
         localStorage.set('confirm-busts', this.state.confirmBusts);
         localStorage.set('auto-finish-legs', this.state.autoFinishLegs);
         localStorage.set('auto-finish-time', this.state.autoFinishTime);
         localStorage.set('volume', this.state.volume / 100);
-        localStorage.set('remote-control', this.state.remoteControl);
     },
 }
