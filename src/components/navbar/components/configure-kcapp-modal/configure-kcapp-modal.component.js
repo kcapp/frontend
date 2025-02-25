@@ -72,7 +72,11 @@ module.exports = {
         localStorage.set('button-layout', this.state.buttonLayout);
 
         this.state.venueId = parseInt(document.getElementById("venueSelect").value);
-        localStorage.set('venue_id', this.state.venueId);
+        if (this.state.venueId === -1) {
+            localStorage.remove('venue_id');
+        } else {
+            localStorage.set('venue_id', this.state.venueId);
+        }
 
         localStorage.set('confirm-busts', this.state.confirmBusts);
         localStorage.set('auto-finish-legs', this.state.autoFinishLegs);

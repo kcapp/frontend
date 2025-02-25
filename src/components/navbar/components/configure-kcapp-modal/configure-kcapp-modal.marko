@@ -66,6 +66,7 @@
           <div class="block-container-with-header">
             <div class="form-group form-check" style="margin-bottom: 1em;">
               <select id='venueSelect' class="form-select" style="width: 100%">
+                <option value=-1 selected=(-1 === state.venueId)>-</option>
                 <for|venue| of=state.venues>
                   <option value=venue.id selected=(venue.id === state.venueId)>${venue.name}</option>
                 </for>
