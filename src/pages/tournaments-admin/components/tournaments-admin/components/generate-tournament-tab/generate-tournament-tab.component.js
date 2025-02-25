@@ -19,10 +19,10 @@ module.exports = {
                 group2: { group: generatedGroups[1], players: [] },
             },
             name: `Club Evening ${moment().format("Do MMM")}`,
-            matchType: input.types[0].id,
-            matchMode: input.modes[0].id,
-            startingScore: 501,
-            maxRounds: -1
+            matchType: input.defaults.match_type.id,
+            matchMode: input.defaults.match_mode.id,
+            startingScore: input.defaults.starting_score || 501,
+            maxRounds: input.defaults.max_rounds || -1
         }
     },
     onMount() {
