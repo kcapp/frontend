@@ -1,5 +1,6 @@
 const _ = require("underscore");
 const io = require('../../util/socket.io-helper.js');
+const localStorage = require('../../util/localstorage.js');
 const types = require('../scorecard/components/match_types');
 
 module.exports = {
@@ -50,7 +51,6 @@ module.exports = {
             venueSocket.on('venue_new_match', forwardFnc);
             venueSocket.on('warmup_started', forwardFnc);
         }
-
         this.state.audioAnnouncer = new Audio();
         this.state.socket = socket;
     },

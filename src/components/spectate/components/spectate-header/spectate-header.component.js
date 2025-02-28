@@ -9,6 +9,7 @@ module.exports = {
     },
     onMount() {
         this.state.enableAnnouncement = localStorage.getBool('spectate-announcements', false);
+        this.emit('enable-announcement', this.state.enableAnnouncement);
     },
     enableVoiceAnnouncement(event) {
         const enable = !this.state.enableAnnouncement;
