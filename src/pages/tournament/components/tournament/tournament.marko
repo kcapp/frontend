@@ -26,7 +26,7 @@ $ {
       <options-panel tournament=input.tournament/>
     </if>
     <for|id, group| in=state.overview>
-      <div class="block-container p-10" style='margin-bottom: 0;'>
+      <div class="block-container" style='margin-bottom: 0; padding-bottom: 0; padding-right: 0;'>
         <div class="float-left" style="font-size: 30px;">${group[0].tournament_group.name}</div>
         <div style="float: right; padding-top: 4px;">
           <ul class="nav nav-pills">
@@ -43,11 +43,15 @@ $ {
               <a href=`#predictor-${group[0].tournament_group.id}` data-toggle="tab" class="tournament-group-predictor">Predictor</a>
             </li>
           </ul>
+          <div class="float-right btn-group btn-toggle" style="padding-top: 1em;">
+            <button class=`btn ${state.showPerLeg ? "btn-primary" : "btn-default"}` style="font-size: 0.8em;" on-click("onTogglePerLeg", true)>Per Leg</button>
+            <button class=`btn ${state.showPerLeg ? "btn-default" : "btn-primary"}` style="font-size: 0.8em;" on-click("onTogglePerLeg", false)>Total</button>
+          </div>
         </div>
       </div>
       <div class="tab-content">
         <div role="tabpanel" id=`standings-${group[0].tournament_group.id}` class="tab-pane active">
-          <tournament-overview-table tournament=input.tournament players=input.players statistics=input.statistics overview=group/>
+          <tournament-overview-table tournament=input.tournament players=input.players statistics=input.statistics overview=group showPerLeg=state.showPerLeg/>
         </div>
         $ {
           let columns = ["start_time", "status", "players", "results", "options"];

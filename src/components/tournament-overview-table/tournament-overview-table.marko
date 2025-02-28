@@ -3,16 +3,15 @@
         <table class="table-tournament-overview">
             <thead>
                 <tr>
-                <th class="pl-10">Pos</th>
-                <th>Player</th>
-                <th class="text-right" title="Played">P</th>
-                <th class="text-right pl-20" title="Won">W</th>
-                <th class="text-right" title="Draw">D</th>
-                <th class="text-right" title="Lost">L</th>
-                <th class="text-center pl-10" title="For - Against">F - A</th>
-                <th class="text-right pl-10" title="Difference">+/-</th>
-                <th class="text-right" title="Points">PTS</th>
-                <if(state.hasStatistics)>
+                    <th class="pl-10">Pos</th>
+                    <th>Player</th>
+                    <th class="text-right" title="Played">P</th>
+                    <th class="text-right pl-20" title="Won">W</th>
+                    <th class="text-right" title="Draw">D</th>
+                    <th class="text-right" title="Lost">L</th>
+                    <th class="text-center pl-10" title="For - Against">F - A</th>
+                    <th class="text-right pl-10" title="Difference">+/-</th>
+                    <th class="text-right" title="Points">PTS</th>
                     <th class="text-center" title="3 Dart Avg. / First 9 Three Dart Avg.">3 Dart Avg.</th>
                     <th class="text-center" title="Checkout Percentage">Checkout %</th>
                     <th class="text-right" title="60+ scores">60s+</th>
@@ -25,7 +24,6 @@
                     <th class="text-center" title="Accuracy Overall">Overall</th>
                     <th class="text-center" title="Accuracy 20s">20s</th>
                     <th class="text-center" title="Accuracy 19s">19s</th>
-                </if>
                 </tr>
             </thead>
             <tbody>
@@ -47,31 +45,51 @@
                                 </else-if>
                             </div>
                             </td>
-                            <td style='width: 15%;'>
-                                <a style='white-space: nowrap; overflow: hidden; text-overflow: ellipsis;' href=`/tournaments/${input.tournament.id}/player/${player.player_id}`>${input.players[player.player_id].name}</a>
+                            <td style='max-width: 2em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;'>
+                                <a href=`/tournaments/${input.tournament.id}/player/${player.player_id}`>${input.players[player.player_id].name}</a>
                             </td>
                             <td class="text-right">${player.played}</td>
-                            <td class="text-right pl-20">${player.matches_won}</td>
+                            <td class="text-right">${player.matches_won}</td>
                             <td class="text-right">${player.matches_draw}</td>
                             <td class="text-right">${player.matches_lost}</td>
-                            <td class="text-center pl-10">${player.legs_for + " - " + player.legs_against}</td>
+                            <td class="text-center" style="min-width: 64px;">${player.legs_for + " - " + player.legs_against}</td>
                             <td class="text-right pl-10">${player.legs_difference > 0 ? "+" + player.legs_difference : player.legs_difference}</td>
                             <td class="text-right">${player.points}</td>
-                            <if(state.hasStatistics)>
-                                <td class="text-center">${player.three_dart_avg === -1 ? "- / -" : player.three_dart_avg.toFixed(2) + " / " + player.first_nine_three_dart_avg.toFixed(2)}</td>
-                                <td class="text-center">${player.checkout_percentage === -1 ? "-" : player.checkout_percentage.toFixed(2) + "%"}</td>
-                                <td class="text-right">${player.scores_60s_plus}</td>
-                                <td class="text-right">${player.scores_100s_plus}</td>
-                                <td class="text-right">${player.scores_140s_plus}</td>
-                                <td class="text-right">${player.scores_180s}</td>
-                                <td class="text-center">${player.darts_per_leg === -1 ? "-" : player.darts_per_leg.toFixed(2)}</td>
-                                <td class="text-center">${player.accuracy_overall === -1 ? "-" : player.accuracy_overall.toFixed(2)}</td>
-                                <td class="text-center">${player.accuracy_20 === -1 ? "-" : player.accuracy_20.toFixed(2)}</td>
-                                <td class="text-center">${player.accuracy_19 === -1 ? "-" : player.accuracy_19.toFixed(2)}</td>
-                            </if>
+                            <td class="text-center">${player.three_dart_avg === -1 ? "- / -" : player.three_dart_avg.toFixed(2) + " / " + player.first_nine_three_dart_avg.toFixed(2)}</td>
+                            <td class="text-center">${player.checkout_percentage === -1 ? "-" : player.checkout_percentage.toFixed(2) + "%"}</td>
+                            <td class="text-right td-multi-value">${input.showPerLeg ? (player.played === 0 ? 0 : player.scores_60s_plus / (player.legs_for + player.legs_against)).toFixed(2) : player.scores_60s_plus}</td>
+                            <td class="text-right td-multi-value">${input.showPerLeg ? (player.played === 0 ? 0 : player.scores_100s_plus / (player.legs_for + player.legs_against)).toFixed(2) : player.scores_100s_plus}</td>
+                            <td class="text-right td-multi-value">${input.showPerLeg ? (player.played === 0 ? 0 : player.scores_140s_plus / (player.legs_for + player.legs_against)).toFixed(2) : player.scores_140s_plus}</td>
+                            <td class="text-right td-multi-value">${input.showPerLeg ? (player.played === 0 ? 0 : player.scores_180s / (player.legs_for + player.legs_against)).toFixed(2) : player.scores_180s}</td>
+                            <td class="text-center">${player.darts_per_leg === -1 ? "-" : player.darts_per_leg.toFixed(2)}</td>
+                            <td class="text-center">${player.accuracy_overall === -1 ? "-" : player.accuracy_overall.toFixed(2)}</td>
+                            <td class="text-center">${player.accuracy_20 === -1 ? "-" : player.accuracy_20.toFixed(2)}</td>
+                            <td class="text-center">${player.accuracy_19 === -1 ? "-" : player.accuracy_19.toFixed(2)}</td>
                         </tr>
                     </if>
                 </for>
+                <tr>
+                    $ let total = state.total;
+                    <td class="pl-10"></td>
+                    <td style='width: 15%;'>TOTAL</td>
+                    <td class="text-right">${total.played}</td>
+                    <td class="text-right">${total.matches_won}</td>
+                    <td class="text-right">${total.matches_draw}</td>
+                    <td class="text-right">${total.matches_lost}</td>
+                    <td class="text-center"></td>
+                    <td class="text-right pl-10"></td>
+                    <td class="text-right">${total.points}</td>
+                    <td class="text-center">${!total.three_dart_avg ? "- / -" : total.three_dart_avg.toFixed(2) + " / " + total.first_nine_three_dart_avg.toFixed(2)}</td>
+                    <td class="text-center">${!total.checkout_percentage ? "-" : total.checkout_percentage.toFixed(2) + "%"}</td>
+                    <td class="text-right td-multi-value">${input.showPerLeg ? (total.played === 0 ? 0 : total.scores_60s_plus / (total.legs_for + total.legs_against)).toFixed(2) : total.scores_60s_plus}</td>
+                    <td class="text-right td-multi-value">${input.showPerLeg ? (total.played === 0 ? 0 : total.scores_100s_plus / (total.legs_for + total.legs_against)).toFixed(2) : total.scores_100s_plus}</td>
+                    <td class="text-right td-multi-value">${input.showPerLeg ? (total.played === 0 ? 0 : total.scores_140s_plus / (total.legs_for + total.legs_against)).toFixed(2) : total.scores_140s_plus}</td>
+                    <td class="text-right td-multi-value">${input.showPerLeg ? (total.played === 0 ? 0 : total.scores_180s / (total.legs_for + total.legs_against)).toFixed(2) : total.scores_180s}</td>
+                    <td class="text-center">${total.darts_per_leg === 0 ? "-" : total.darts_per_leg.toFixed(2)}</td>
+                    <td class="text-center">${total.accuracy_overall === 0 ? "-" : total.accuracy_overall.toFixed(2)}</td>
+                    <td class="text-center">${total.accuracy_20 === 0 ? "-" : total.accuracy_20.toFixed(2)}</td>
+                    <td class="text-center">${total.accuracy_19 === 0 ? "-" : total.accuracy_19.toFixed(2)}</td>
+                </tr>
             </tbody>
         </table>
     </div>

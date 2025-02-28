@@ -40,7 +40,8 @@ module.exports = {
             overview: overview,
             unq_statistics: {},
             statistics: input.statistics,
-            showAllStats: true
+            showAllStats: true,
+            showPerLeg: true
         }
         if (this.state.hasStatistics) {
             // Create unique statistics
@@ -100,5 +101,8 @@ module.exports = {
         this.state.showAllStats = value;
         this.state.statistics = value ? this.input.statistics : this.state.unq_statistics;
         this.setStateDirty("statistics");
+    },
+    onTogglePerLeg(value, event) {
+        this.state.showPerLeg = value;
     }
 }
