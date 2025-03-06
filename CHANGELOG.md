@@ -6,6 +6,7 @@ A preview of major changes can be found in the Wiki ([Latest Changes](https://gi
 - Option to see `All` or `Unique` tournament statistics per player
 - Ability to "Remote Start" matches on a selected venue
 - Split tournaments into "Tournaments" and "Seasons"
+- Inactive players can now be added via ID from the home page
 
 #### Changed
 - Updated to latest version of dependencies

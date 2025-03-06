@@ -14,7 +14,7 @@ const screensaverTemplate = template.load(require.resolve('../src/pages/screensa
 /* GET home page. */
 router.get('/', function (req, res, next) {
     axios.all([
-        axios.get(`${req.app.locals.kcapp.api}/player/active`),
+        axios.get(`${req.app.locals.kcapp.api}/player`),
         axios.get(`${req.app.locals.kcapp.api}/match/modes`),
         axios.get(`${req.app.locals.kcapp.api}/owetype`),
         axios.get(`${req.app.locals.kcapp.api}/match/types`),
