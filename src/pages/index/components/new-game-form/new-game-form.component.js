@@ -10,7 +10,7 @@ module.exports = {
     onCreate(input) {
         this.state = {
             selected: [],
-            players: _.reject(input.players, (player) => { return player.is_bot; }),
+            players: _.reject(input.players, (player) => { return player.is_bot || !player.is_active; }),
             input: input,
             officeId: 0,
             venues: input.venues,
@@ -186,18 +186,19 @@ module.exports = {
                 }
                 this.state.playerId = '';
 
-                let player = _.find(this.state.players, function (player) {
-                    return player.id == playerId;
-                });
+                let player = _.find(this.state.players, (player) => player.id == playerId);
                 if (player) {
                     // Player is not already added, so add it
                     this.addPlayer(null, { input: { player: player } });
                 } else {
                     // Player is already added, so remove it
-                    player = _.find(this.state.selected, function (player) {
-                        return player.id == playerId;
-                    });
+                    player = _.find(this.state.selected, (player) => player.id == playerId);
                     if (!player) {
+                        // Check all players, since it could be a inactive player
+                        let player = _.find(this.input.players, (player) => player.id == playerId);
+                        if (player) {
+                            this.addPlayer(null, { input: { player: player } });
+                        }
                         return;
                     }
                     this.removePlayer(null, { input: { player: player } });

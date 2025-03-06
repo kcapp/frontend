@@ -8,6 +8,7 @@ A preview of major changes can be found in the Wiki ([Latest Changes](https://gi
 - Split tournaments into "Tournaments" and "Seasons"
 - Persist "Enable Voice Announcements" on spectate page
 - Added totals view per group to Tournament Overview
+- Inactive players can now be added via ID from the home page
 
 #### Changed
 - Updated to latest version of dependencies
