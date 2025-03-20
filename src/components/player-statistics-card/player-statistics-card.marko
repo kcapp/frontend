@@ -61,6 +61,14 @@ $ const matchType = leg.leg_type.id || match.match_type.id;
   <div class="block-container-with-header">
     <div class="player-card-match">
       <div style="padding-bottom: 20px;">
+        <if(match.match_mode.is_challenge)>
+          <if(state.isWinner)>
+            <i class=`fas fa-crown fa-2x` style="color: #FFD43B;"></i>
+          </if>
+          <else>
+            <i class=`fas fa-skull-crossbones fa-2x`></i>
+          </else>
+        </if>
         <div class="player-pic-cutout" style="margin: 0 auto;">
           <player-profile-picture player=player/>
         </div>

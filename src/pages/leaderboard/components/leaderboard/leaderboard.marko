@@ -1,0 +1,19 @@
+$ let weeks_str = input.defaults.leaderboard_active_period_weeks == 1 ? `week` : `${input.defaults.leaderboard_active_period_weeks} weeks`;
+<page-header heading="Leaderboard" subheading=`Top players based on last ${input.defaults.leaderboard_last_legs_count} legs, having played in the past ${weeks_str}` icon="fa-medal"/>
+<div class="block-container no-padding">
+	<office-selector offices=input.offices clazz="float-right" on-office-changed("officeChanged")/>
+  <div class="block-container no-padding">
+    <ul class="nav nav-tabs">
+        <li role="presentation" class="active"><a href="#overall" data-toggle="tab">Overall</a></li>
+        <li role="presentation"><a href="#checkouts" data-toggle="tab">Checkouts</a></li>
+    </ul>
+  </div>
+  <div class="tab-content" style="width: 100%;">
+    <div class=`tab-pane active` role="tabpanel" id="overall">
+        <leaderboard-table statistics=state.statistics players=input.players />
+    </div>
+    <div class=`tab-pane` role="tabpanel" id="checkouts">
+				<checkouts-table statistics=state.checkouts players=input.players />
+    </div>
+  </div>
+</div>

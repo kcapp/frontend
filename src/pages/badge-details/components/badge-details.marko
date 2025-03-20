@@ -1,4 +1,6 @@
 $ const moment = require('moment');
+$ const KCAPP_DEVELOPER_BADGE_ID = 5;
+
 <div class="block-container no-padding">
     <div style="text-align: center;">
         <badge badge=input.badge statistics=input.statistics[0] />
@@ -32,6 +34,17 @@ $ const moment = require('moment');
                 <if(badge.darts)>
                     <th>Darts</th>
                 </if>
+                <if(badge.opponent_player_id)>
+                    <th>Opponent</th>
+                </if>
+                <if(badge.data)>
+                    <if(badge.badge.id === KCAPP_DEVELOPER_BADGE_ID)>
+                        <th>Commit</th>
+                    </if>
+                    <else>
+                        <th>Data</th>
+                    </else>
+                </if>
                 <th>When</th>
             </thead>
             <tbody>
@@ -64,6 +77,17 @@ $ const moment = require('moment');
                         </if>
                         <if(statistic.darts)>
                             <td><a href=`/legs/${statistic.leg_id}/result` title=statistic.created_at>${statistic.darts_string}</a></td>
+                        </if>
+                        <if(statistic.opponent_player_id)>
+                            <td><player-link player=input.players[statistic.opponent_player_id]/></td>
+                        </if>                        
+                        <if(statistic.data)>
+                            <if(badge.badge.id === KCAPP_DEVELOPER_BADGE_ID)>
+                                <td><a href=statistic.data title=statistic.created_at>${statistic.data.split('/').pop()}</a></td>
+                            </if>
+                            <else>
+                                <td>${statistic.data}</td>
+                            </else>
                         </if>
                         <td>${moment(statistic.created_at).format("YYYY-MM-DD")}</td>
                     </tr>

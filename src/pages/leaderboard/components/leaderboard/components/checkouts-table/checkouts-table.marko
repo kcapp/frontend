@@ -1,0 +1,31 @@
+import Table from "../../../../../../components/statistics-table/statistics-table-template.marko";
+
+<${Table} statistics=input.statistics>
+    <@headers>
+        <tr>
+            <th class="text-left">Rank</th>
+            <th>Player</th>
+            <th class="text-center">Played</th>
+            <th class="text-center">Won</th>
+            <th class="text-center">Win %</th>
+            <th class="text-center">Checkout %</th>
+            <th class="text-center">Checkout</th>
+        </tr>
+    </@headers>
+    <@body>
+        <for|stats, idx| of=input.statistics>
+            $ var player = input.players[stats.player_id];
+            <tr>
+                <td class="pl-10 text-left">${idx + 1}</td>
+                <td class="col-sm-3">
+                <a href=`/players/${player.id}/statistics`>${player.name}</a>
+                </td>
+                <td class="text-center">${stats.legs_played}</td>
+                <td class="text-center">${stats.legs_won ? stats.legs_won : 0}</td>
+                <td class="text-center">${stats.legs_won ? ((stats.legs_won / stats.legs_played) * 100).toFixed(2) + "" : "0.00"}%</td>
+                <statistic-cell clazz="text-center" value=stats.checkout_percentage defaultValue="-"  postfix=" %"/>
+                <statistic-cell clazz="text-center" value=stats.checkout decimals=0/>
+            </tr>
+        </for>
+    </@body>
+</>

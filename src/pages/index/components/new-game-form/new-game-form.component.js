@@ -10,7 +10,7 @@ module.exports = {
     onCreate(input) {
         this.state = {
             selected: [],
-            players: _.reject(input.players, (player) => { return player.is_bot || !player.is_active; }),
+            players: _.reject(input.players, (player) => player.is_bot || !player.is_active),
             input: input,
             officeId: 0,
             venues: input.venues,
@@ -433,23 +433,15 @@ module.exports = {
         this.state.officeId = officeId;
 
         if (officeId == 0) {
-            this.state.players =  _.reject(this.input.players, (player) => {
-                return player.is_bot;
-            });
+            this.state.players =  _.reject(this.input.players, (player) => player.is_bot || !player.is_active);
             this.state.venues = this.input.venues;
         } else {
             if (office.is_global) {
-                this.state.players =  _.reject(this.input.players, (player) => {
-                    return player.is_bot;
-                });
+                this.state.players = _.reject(this.input.players, (player) => player.is_bot || !player.is_active);
             } else {
-                this.state.players = _.reject(this.input.players, (player) => {
-                    return player.office_id != officeId || player.is_bot;
-                });
+                this.state.players = _.reject(this.input.players, (player) => player.is_bot || !player.is_active || player.office_id != officeId);
             }
-            this.state.venues = _.reject(this.input.venues, (venue) => {
-                return venue.office_id != officeId;
-            });
+            this.state.venues = _.reject(this.input.venues, (venue) => venue.office_id != officeId );
         }
         this.getComponent('venue').updateOptions(this.state.venues);
 

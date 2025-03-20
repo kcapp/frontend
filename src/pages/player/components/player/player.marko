@@ -6,7 +6,12 @@
         </div>
     </div>
     <div class="float-left pl-20">
-        <h2>${input.player.name}</h2>
+        <h2>
+            ${input.player.name}
+            <if(input.player.globalRank)>
+                <div id="circle" onclick="location.href='/statistics/leaderboard'" >#${input.player.globalRank}</div>
+            </if>
+        </h2>
         <h4 style="color: #a5a5a5;">${input.player.nickname ? input.player.nickname : '-'}</h4>
     </div>
     <div class="float-right"><label class="player-color-label" style=`background-color: ${input.player.color}; color: ${input.player.color};`>${input.player.color}</label></div>

@@ -1,5 +1,5 @@
-$ var style = input.style || "block-container-orange";
-$ var icon = input.icon || "fa-trophy";
+$ let style = input.style || "block-container-orange";
+$ let icon = input.icon || "fa-trophy";
 <div class="pt-20"/>
 <div class=`${style}`>
   <div class="container-info-icon">
@@ -11,7 +11,7 @@ $ var icon = input.icon || "fa-trophy";
       <for|column| of=input.subheadings>
         <div class="float-left" style="width: 250px;">
           <for|heading| of=column>
-            $ var type = heading.type || "fas";
+            $ let type = heading.type || "fas";
             <p style="padding-top: 3px;">
               <i class=`${type} ${heading.icon}`/>
               <span style=heading.style class="ml-5">${heading.heading}</span>

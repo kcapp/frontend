@@ -32,8 +32,17 @@ $ var heading = input.heading || "Add Venue";
           <div style="width: 95%; float: left;">
             <select class="form-control" on-change("ttsChange")>
               <option value=null>${"<Use Browser Default>"}</option>
+              <option disabled>──────────</option>
               <for|idx, voice| in=state.voices>
-                <option value=voice.name selected=(state.ttsVoice == voice.name)>${voice.name} (${voice.lang})</option>
+                <if(voice.localService)>
+                  <option value=voice.name selected=(state.ttsVoice == voice.name)>${voice.name} (${voice.lang})</option>
+                </if>
+              </for>
+              <option disabled>──────────</option>
+              <for|idx, voice| in=state.voices>
+                <if(!voice.localService)>
+                  <option value=voice.name selected=(state.ttsVoice == voice.name)>${voice.name} (${voice.lang})</option>
+                </if>
               </for>
             </select>
           </div>

@@ -9,8 +9,11 @@ A preview of major changes can be found in the Wiki ([Latest Changes](https://gi
 - Persist "Enable Voice Announcements" on spectate page
 - Added totals view per group to Tournament Overview
 - Inactive players can now be added via ID from the home page
+- "King Slayer" badge!
+- New Leaderboard page
 
 #### Changed
+- Include Git commit on kcapp developer badge
 - Updated to latest version of dependencies
 - Update to NodeJS `22`
 

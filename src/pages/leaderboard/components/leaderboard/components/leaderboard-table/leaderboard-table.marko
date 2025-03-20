@@ -1,0 +1,51 @@
+import Table from "../../../../../../components/statistics-table/statistics-table-template.marko";
+
+<${Table} statistics=input.statistics>
+    <@headers>
+        <tr>
+            <th class="text-right">Rank</th>
+            <th class="text-left">Player</th>
+            <th class="text-center">Played</th>
+            <th class="text-center">Won</th>
+            <th class="text-center" style="width: 15%">Win %</th>
+            <th class="text-center" style="width: 50%">Three Dart Avg.</th>
+            <th class="text-center">Checkout</th>
+            <th class="text-center">60s+</th>
+            <th class="text-center">100s+</th>
+            <th class="text-center">140s+</th>
+            <th class="text-center">180</th>
+            <th class="text-center">Overall</th>
+            <th class="text-center">20s</th>
+            <th class="text-center">19s</th>
+            <th class="text-center">Played</th>
+        </tr>
+    </@headers>
+    <@body>
+        <for|stats, idx| of=input.statistics>
+            $ let player = input.players[stats.player_id];
+            <tr>
+                <td class="pl-10 text-left">${idx + 1}</td>
+                <td class="col-sm-3">
+                    <a href=`/players/${player.id}/statistics`>${player.name}</a>
+                    <if(stats.isKing)>
+                        <i title="Current location king. Defeat them for a badge!" class="fas fa-crown fa-sm" style="padding-left: 0.3em; color: #FFD43B;"></i>
+                    </if>
+                </td>
+                <td class="text-center">${stats.legs_played}</td>
+                <td class="text-center">${stats.legs_won ? stats.legs_won : 0}</td>
+                <td class="text-right">${stats.legs_won ? ((stats.legs_won / stats.legs_played) * 100).toFixed(2) + "" : "0.00"}%</td>
+                <td class="text-center">${stats.three_dart_avg.toFixed(2) + " / " + stats.first_nine_three_dart_avg.toFixed(2)}</td>
+                <statistic-cell value=stats.checkout_percentage defaultValue="-"  postfix=" %"/>
+                <statistic-cell value=stats.scores_60s_plus played=stats.legs_played />
+                <statistic-cell value=stats.scores_100s_plus played=stats.legs_played />
+                <statistic-cell value=stats.scores_140s_plus played=stats.legs_played />
+                <statistic-cell value=stats.scores_180s played=stats.legs_played />
+                <statistic-cell value=stats.accuracy_overall defaultValue="-" />
+                <statistic-cell value=stats.accuracy_20 defaultValue="-" />
+                <statistic-cell value=stats.accuracy_19 defaultValue="-" />
+                $ let daysSinceLeg = Math.floor((Date.now() - new Date(stats.last_played_leg)) / (1000 * 60 * 60 * 24));
+                <td class="text-center">${daysSinceLeg === 0 ? "Today" : `${daysSinceLeg} days`}</td>
+            </tr>
+        </for>
+    </@body>
+</>

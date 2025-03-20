@@ -1,16 +1,16 @@
-var debug = require('debug')('kcapp:players');
+const debug = require('debug')('kcapp:players');
 
-var express = require('express');
-var router = express.Router();
+const express = require('express');
+const router = express.Router();
 
-var axios = require('axios');
-var _ = require('underscore');
+const axios = require('axios');
+const _ = require('underscore');
 
 const template = require('marko');
-var playerTemplate = template.load(require.resolve('../src/pages/player/player-template.marko'));
-var playersTemplate = template.load(require.resolve('../src/pages/players/players-template.marko'));
-var playerComparisonTemplate = template.load(require.resolve('../src/pages/player-comparison/player-comparison-template.marko'));
-var head2headTemplate = template.load(require.resolve('../src/pages/player-head2head/player-head2head-template.marko'));
+const playerTemplate = template.load(require.resolve('../src/pages/player/player-template.marko'));
+const playersTemplate = template.load(require.resolve('../src/pages/players/players-template.marko'));
+const playerComparisonTemplate = template.load(require.resolve('../src/pages/player-comparison/player-comparison-template.marko'));
+const head2headTemplate = template.load(require.resolve('../src/pages/player-head2head/player-head2head-template.marko'));
 
 /* Get a list of all players */
 router.get('/', function (req, res, next) {
@@ -62,12 +62,19 @@ router.get('/:id/statistics', function (req, res, next) {
         axios.get(`${req.app.locals.kcapp.api}/player/${playerId}/checkouts`),
         axios.get(`${req.app.locals.kcapp.api}/player/${playerId}/tournament`),
         axios.get(`${req.app.locals.kcapp.api}/player/${playerId}/badges`),
+        axios.get(`${req.app.locals.kcapp.api}/statistics/x01/player/50`),
         axios.get(`${req.app.locals.kcapp.api}/badge`),
         axios.get(`${req.app.locals.kcapp.api}/tournament`)
-    ]).then(axios.spread((players, player, statistics, previous, progression, checkouts, playerTournament, playerBadges, badges, tournaments) => {
+    ]).then(axios.spread((players, playerData, statistics, previous, progression, checkouts, playerTournament, playerBadges, leaderboardData, badges, tournaments) => {
+        const player = playerData.data;
+        const leaderboard = leaderboardData.data;
+        player.globalRank = _.findIndex(leaderboard, player => player.player_id == playerId) + 1;
+        const officeLeaderboard = _.filter(leaderboard, p => p.office_id == player.office_id);
+        player.isKing = _.first(officeLeaderboard)?.player_id == playerId;
+
         res.marko(playerTemplate, {
             players: players.data,
-            player: player.data,
+            player: player,
             statistics: statistics.data,
             previous_statistics: previous.data,
             progression: progression.data,

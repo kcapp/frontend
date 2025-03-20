@@ -115,7 +115,7 @@ $ let isOfficial = state.match.tournament_id || false;
     <tr>
       <td/>
       <for|statistic| of=input.statistics>
-        $ var player = input.players[statistic.player_id];
+        $ let player = input.players[statistic.player_id];
         <td>
           <player-statistics-card elo=true match=match statistic=statistic player=player isMatchResult=true/>
         </td>

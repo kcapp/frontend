@@ -1,14 +1,15 @@
-var debug = require('debug')('kcapp:statistics');
+const debug = require('debug')('kcapp:statistics');
 
-var express = require('express');
-var router = express.Router();
+const express = require('express');
+const router = express.Router();
 
-var axios = require('axios');
-var moment = require('moment');
-var _ = require('underscore');
+const axios = require('axios');
+const moment = require('moment');
+const _ = require('underscore');
 
 const template = require('marko');
-var statisticsTemplate = template.load(require.resolve('../src/pages/statistics/statistics-template.marko'));
+const statisticsTemplate = template.load(require.resolve('../src/pages/statistics/statistics-template.marko'));
+const leaderboardTemplate = template.load(require.resolve('../src/pages/leaderboard/leaderboard-template.marko'));
 
 /** Get statistics for all players during the given time */
 router.get('/:from/:to', function (req, res, next) {
@@ -22,6 +23,36 @@ router.get('/weekly', function (req, res, next) {
     var from = moment().isoWeekday(1).format('YYYY-MM-DD');
     var to = moment().isoWeekday(8).format('YYYY-MM-DD');
     getStatistics(from, to, req, res, next);
+});
+
+/** Get statistics fro the past two weeks for all players */
+router.get('/leaderboard', function (req, res, next) {
+    axios.all([
+        axios.get(`${req.app.locals.kcapp.api}/player`),
+        axios.get(`${req.app.locals.kcapp.api}/office`),
+        axios.get(`${req.app.locals.kcapp.api}/option/default`),
+        axios.get(`${req.app.locals.kcapp.api}/statistics/x01/player/50`)
+    ]).then(axios.spread((players, offices, defaults, leaderboardData) => {
+        const leaderboard = leaderboardData.data;
+
+        const kings = _.chain(leaderboard)
+            .groupBy('office_id')
+            .mapObject(players => _.first(players).player_id)
+            .value();
+
+        _.each(leaderboard, player => {
+            player.isKing = kings[player.office_id] === player.player_id;
+        });
+        res.marko(leaderboardTemplate, {
+            players: players.data,
+            offices: offices.data,
+            defaults: defaults.data,
+            leaderboard: leaderboard
+        });
+    })).catch(error => {
+        debug(`Error when getting data for leaderboard ${error}`);
+        next(error);
+    });
 });
 
 function getStatistics(from, to, req, res, next) {
@@ -43,17 +74,6 @@ function getStatistics(from, to, req, res, next) {
         debug(`Error when getting data for statistics ${error}`);
         next(error);
     });
-}
-
-function sort(statistics) {
-    statistics = _.sortBy(statistics, (stats) => stats.player_id);
-    statistics = _.sortBy(statistics, (stats) => {
-        if (stats.matches_won === undefined) {
-            return 0;
-        }
-        return -(stats.matches_won / stats.matches_played)
-    });
-    return statistics;
 }
 
 module.exports = router
