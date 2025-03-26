@@ -1,5 +1,5 @@
 $ let weeks_str = input.defaults.leaderboard_active_period_weeks == 1 ? `week` : `${input.defaults.leaderboard_active_period_weeks} weeks`;
-<page-header heading="Leaderboard" subheading=`Top players based on last ${input.defaults.leaderboard_last_legs_count} legs, having played in the past ${weeks_str}` icon="fa-medal"/>
+<page-header heading="Leaderboard" subheading=`Top players by Three Dart Avg based on last ${input.defaults.leaderboard_last_legs_count} legs, having played in the past ${weeks_str}` icon="fa-medal"/>
 <div class="block-container no-padding">
 	<office-selector offices=input.offices clazz="float-right" on-office-changed("officeChanged")/>
   <div class="block-container no-padding">

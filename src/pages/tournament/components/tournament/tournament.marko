@@ -60,10 +60,10 @@ $ {
           }
         }
         <div role="tabpanel" id=`matches-${group[0].tournament_group.id}` class="tab-pane">
-          <matches-table players=input.players matches=state.matches[id] columns=columns on-show-modal("onShowModal") />
+          <matches-table players=input.players matches=state.matches[id] no_update=true columns=columns on-show-modal("onShowModal") />
         </div>
         <div role="tabpanel" id=`unplayed-matches-${group[0].tournament_group.id}` class="tab-pane">
-          <matches-table players=input.players matches=state.unplayed[id] columns=columns on-show-modal("onShowModal") />
+          <matches-table players=input.players matches=state.unplayed[id] no_update=true columns=columns on-show-modal("onShowModal") />
         </div>
         <div role="tabpanel" id=`predictor-${group[0].tournament_group.id}` class="tab-pane">
           <tournament-overview-table tournament=input.tournament players=input.players statistics=input.statistics overview=group key=`predictor-overview-${group[0].tournament_group.id}`/>

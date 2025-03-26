@@ -66,7 +66,7 @@ module.exports = {
                 $('#set-score-modal').data('matchId', matchId);
                 $('#set-score-modal').modal('toggle');
             }
-        </script>`)
+        </script>`);
 
         $(function () {
             $('.table-matches-list').DataTable({
