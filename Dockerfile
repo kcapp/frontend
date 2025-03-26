@@ -16,7 +16,7 @@ RUN npm install --only=production
 COPY . .
 
 # Write version info into version.json
-RUN node scripts/write-version.js
+RUN node bin/write-version.js
 
 # Create actual image
 FROM node:22-alpine
