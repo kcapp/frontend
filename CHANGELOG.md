@@ -11,6 +11,7 @@ A preview of major changes can be found in the Wiki ([Latest Changes](https://gi
 - Inactive players can now be added via ID from the home page
 - "King Slayer" badge!
 - New Leaderboard page
+- About page showing current versions
 
 #### Changed
 - Include Git commit on kcapp developer badge

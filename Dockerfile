@@ -15,6 +15,9 @@ RUN npm install --only=production
 # Bundle app source
 COPY . .
 
+# Write version info into version.json
+RUN node scripts/write-version.js
+
 # Create actual image
 FROM node:22-alpine
 

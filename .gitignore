@@ -82,3 +82,6 @@ public/images/players
 
 # Ignore SQL files
 *.sql
+
+# Ignore version files
+version.json
