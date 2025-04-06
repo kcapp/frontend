@@ -1,6 +1,10 @@
 # Changelog
 A preview of major changes can be found in the Wiki ([Latest Changes](https://github.com/kcapp/frontend/wiki/Latest_Changes))
 
+## [2.10.0] - TBD
+#### Feature
+
+
 ## [2.9.0] - 2025-04-06
 #### Feature
 - Option to see `All` or `Unique` tournament statistics per player
@@ -253,6 +257,7 @@ A preview of major changes can be found in the Wiki ([Latest Changes](https://gi
 - Multiple score entry methods
     - Including [Unicorn Smartboard](https://github.com/kcapp/smartboard)
 
+[2.10.0]: https://github.com/kcapp/frontend/compare/v2.9.0...develop
 [2.9.0]: https://github.com/kcapp/frontend/compare/v2.8.0...v2.9.0
 [2.8.0]: https://github.com/kcapp/frontend/compare/v2.7.0...v2.8.0
 [2.7.0]: https://github.com/kcapp/frontend/compare/v2.6.0...v2.7.0
