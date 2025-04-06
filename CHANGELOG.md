@@ -3,7 +3,13 @@ A preview of major changes can be found in the Wiki ([Latest Changes](https://gi
 
 ## [2.10.0] - TBD
 #### Feature
+- Player progression is now reworked to group legs into buckets for better comparsion
+- Player progression can now be filtered in the frontend to only look at certain types of matches
+- New leaderboard for showing the best players of most match types
+- "Still Regining" badge
 
+#### Fixed
+- Bug where tournaments couldn't be filtered by location
 
 ## [2.9.0] - 2025-04-06
 #### Feature
