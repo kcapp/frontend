@@ -1,0 +1,57 @@
+$ const showScore = input.showScore === undefined || input.showScore;
+$ const showDartsThrown = input.showDartsThrown === undefined || input.showDartsThrown;
+
+<div class="col-sm-6 no-gutter">
+    <div class="table-container">
+        <if(!input.stats || input.stats.length === 0)>
+            <div class="text-center block-container-red">${input.heading} - no legs played</div>
+        </if>
+        <else>
+            <div style="margin-bottom: 0;" class=`${input.heading ? "block-container-red" : ''} text-center`>${input.heading}</div>
+            <div class="block-container no-padding">
+                <div class="table table-responsive">
+                    <table class="table-statistics">
+                        <thead>
+                            <tr>
+                                <th class="text-right">Rank</th>
+                                <th class="text-left">Player</th>
+                                <if(showDartsThrown)>
+                                    <th class="text-center">Darts Thrown</th>
+                                </if>
+                                <if(showScore)>
+                                    <th class="text-center">Score</th>
+                                </if>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <for|stats, idx| of=input.stats>
+                                $ let player = input.players[stats.player_id];
+                                <tr>
+                                    <td class="pl-10 text-left">${idx + 1}</td>
+                                    <td>
+                                        <a href=`/players/${player.id}/statistics`>${player.name}</a>
+                                    </td>
+                                    <if(showDartsThrown)>
+                                        <if(showScore)>
+                                            <td class="text-center">${stats.darts_thrown}</td>
+                                        </if>
+                                        <else>
+                                            <td class="text-center">
+                                                <a href=`/legs/${stats.leg_id}/result`>${stats.darts_thrown}</a>
+                                            </td>
+                                        </else>
+                                    </if>
+                                    <if(showScore)>
+                                        <td class="text-center">
+                                            <a href=`/legs/${stats.leg_id}/result`>${stats.score}</a>
+                                        </td>
+                                    </if>
+                                </tr>
+                            </for>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </else>
+    </div>
+</div>

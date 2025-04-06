@@ -1,0 +1,25 @@
+import Table from "./components/match-type-leaderboard-table/match-type-leaderboard-table.marko";
+
+<div class="row">
+    <${Table} heading="9 Dart Shootout" players=input.players stats=state.shootoutMax9 />
+    <${Table} heading="9 Dart Shootout (>9 darts thrown)" players=input.players stats=state.shootout />
+</div>
+<div class="row">
+    <${Table} heading="99 Darts" showDartsThrown=false players=input.players stats=input.leaderboard[5] />
+    <${Table} heading="Around the World" showDartsThrown=false players=input.players stats=input.leaderboard[6] />
+</div>
+<div class="row">
+    <${Table} heading="Shanghai" players=input.players stats=input.leaderboard[7] />
+    <${Table} heading="Around the Clock" showScore=false players=input.players stats=input.leaderboard[8] />
+</div>
+<div class="row">
+    <${Table} heading="Tic-Tac-Toe" players=input.players stats=input.leaderboard[9] />
+    <${Table} heading="Bermuda Triangle" showDartsThrown=false players=input.players stats=input.leaderboard[10] />
+</div>
+<div class="row">
+    <${Table} heading="420" showDartsThrown=false players=input.players stats=input.leaderboard[11] />
+    <${Table} heading="Kill Bull" players=input.players stats=input.leaderboard[12] />
+</div>
+<div class="row">
+    <${Table} heading="JDC Practice" showDartsThrown=false players=input.players stats=input.leaderboard[14] />
+</div>
