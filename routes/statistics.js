@@ -30,24 +30,28 @@ router.get('/leaderboard', function (req, res, next) {
     axios.all([
         axios.get(`${req.app.locals.kcapp.api}/player`),
         axios.get(`${req.app.locals.kcapp.api}/office`),
+        axios.get(`${req.app.locals.kcapp.api}/match/types`),
         axios.get(`${req.app.locals.kcapp.api}/option/default`),
-        axios.get(`${req.app.locals.kcapp.api}/statistics/x01/player/50`)
-    ]).then(axios.spread((players, offices, defaults, leaderboardData) => {
-        const leaderboard = leaderboardData.data;
+        axios.get(`${req.app.locals.kcapp.api}/statistics/x01/player/`),
+        axios.get(`${req.app.locals.kcapp.api}/leaderboard/matchtypes`)
+    ]).then(axios.spread((players, offices, matchTypes, defaults, x01LeaderboardData, matchTypesLeaderboard) => {
+        const x01Leaderboard = x01LeaderboardData.data;
 
-        const kings = _.chain(leaderboard)
+        const kings = _.chain(x01Leaderboard)
             .groupBy('office_id')
             .mapObject(players => _.first(players).player_id)
             .value();
 
-        _.each(leaderboard, player => {
+        _.each(x01Leaderboard, player => {
             player.isKing = kings[player.office_id] === player.player_id;
         });
         res.marko(leaderboardTemplate, {
             players: players.data,
             offices: offices.data,
             defaults: defaults.data,
-            leaderboard: leaderboard
+            matchTypes: matchTypes.data,
+            x01Leaderboard: x01Leaderboard,
+            matchTypesLeaderboard: matchTypesLeaderboard.data
         });
     })).catch(error => {
         debug(`Error when getting data for leaderboard ${error}`);
