@@ -1,0 +1,24 @@
+<div class="modal fade start-remote-modal" id=`start-remote-modal` data-matchId="-1" tabindex="-1" role="dialog" aria-labelledby=`start-remote-modal-label`>
+  <div class="modal-dialog" role="document">
+    <div class="block-container-header">
+      <i class="fas fa-user-plus"/>
+      <span class="ml-10">Start Remote</span>
+      <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="block-container-with-header">
+      <form>
+        <select class="form-control" onChange("onVenueChange")>
+          <for|venue| of=input.venues>
+            <option value=venue.id selected=(venue.id === state.venueId)>${venue.name}</option>
+          </for>
+        </select>
+        <button class="btn btn-primary btn-submit mt-10" type="submit" on-click("startRemote")>
+          <i class="fas fa-user-plus"/>
+          <span class="ml-10">Start Remote</span>
+        </button>
+      </form>
+    </div>
+  </div>
+</div>

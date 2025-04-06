@@ -1,0 +1,5 @@
+$ let clazz = input.clazz || "text-right";
+$ let decimals = input.decimals !== undefined ? input.decimals : 2;
+$ let defaultValue = input.default || "0.00";
+$ let value = input.value === null || input.value === 0 ? defaultValue : (input.played ? input.value / input.played : input.value).toFixed(decimals);
+<td class=clazz>${value}${input.postfix}</td>

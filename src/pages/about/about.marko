@@ -1,0 +1,49 @@
+import Layout from "../layout.marko"
+
+$ const frontend = input.frontend;
+$ const api = input.api;
+<${Layout}>
+  <@body>
+    <div style="text-align: center; padding: 2rem;">
+      <img src="/images/logo128V.png" alt="kcapp logo" style="width: 12em; height: 12em;" />
+
+      <h2 style="font-size: 1.8rem; margin-top: 1rem;">About</h2>
+
+      <div style="margin: 1rem 0;">
+        <p>
+          <strong>Frontend:</strong> ${frontend.version} (${frontend.git_commit})
+          <a href="https://github.com/kcapp/frontend" target="_blank" rel="noopener" class="external-link">
+            <img src="/images/icons/github.svg" alt="GitHub" class="brand-icon" />
+          </a>
+          <a href="https://hub.docker.com/r/kcapp/frontend" target="_blank" rel="noopener" class="external-link">
+            <img src="/images/icons/docker.svg" alt="GitHub" class="brand-icon" style="margin-left: -1em;"/>
+          </a>
+        </p>
+
+        <p>
+          <strong>API:</strong> ${api.version} (${api.git_commit})
+          <a href="https://github.com/kcapp/api" target="_blank" rel="noopener" class="external-link">
+            <img src="/images/icons/github.svg" alt="GitHub" class="brand-icon" />
+          </a>
+          <a href="https://hub.docker.com/r/kcapp/api" target="_blank" rel="noopener" class="external-link">
+            <img src="/images/icons/docker.svg" alt="GitHub" class="brand-icon" style="margin-left: -1em;"/>
+          </a>
+        </p>
+
+        <p><a href="https://github.com/kcapp/frontend/wiki/Latest_Changes" target="_blank">Latest Changes</a></p>
+      </div>
+      <div>
+        <strong>Locals</strong>
+        <pre class="code-block">
+          API: ${input.locals.kcapp.api}
+          API_PATH: ${input.locals.kcapp.api_path}
+          local_admin: ${input.locals.kcapp.local_admin}
+        </pre>
+      </div>
+
+      <footer style="margin-top: 2rem; font-size: 1rem; color: #666; padding-bottom: 1rem;">
+        Made with 🎯 by <a href="https://bsky.app/profile/thordy.bsky.social" target="_blank" rel="noopener" style="text-decoration: underline;">@thordy</a>
+      </footer>
+    </div>
+  </@body>
+</>

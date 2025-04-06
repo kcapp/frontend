@@ -63,7 +63,8 @@ router.get('/admin', function (req, res, next) {
         axios.get(`${req.app.locals.kcapp.api}/venue`),
         axios.get(`${req.app.locals.kcapp.api}/match/modes`),
         axios.get(`${req.app.locals.kcapp.api}/match/types`),
-    ]).then(axios.spread((groups, presets, playersData, offices, venues, modes, types) => {
+        axios.get(`${req.app.locals.kcapp.api}/option/default`),
+    ]).then(axios.spread((groups, presets, playersData, offices, venues, modes, types, defaults) => {
         const players = _.reject(playersData.data, (player) => player.is_placeholder);
         res.marko(tournamentsAdminTemplate, {
             groups: groups.data,
@@ -73,6 +74,7 @@ router.get('/admin', function (req, res, next) {
             venues: venues.data,
             modes: modes.data,
             types: types.data,
+            defaults: defaults.data,
             max_rounds: [{ id: -1, name: '-' }, { id: 10, name: 10 }, { id: 12, name: 12 }, { id: 16, name: 16 }, { id: 20, name: 20 }, { id: 30, name: 30 }],
         });
     })).catch(error => {
@@ -204,7 +206,7 @@ router.post('/admin/generate', function (req, res, next) {
     const body = req.body;
 
     const players = [];
-    ["group1", "group2", "group3", "group4"].forEach(key => {
+    ["group1", "group2", "group3", "group4", "group5", "group6", "group7", "group8"].forEach(key => {
         if (body[key]) {
             body[key].players.forEach(player => {
                 players.push({
@@ -215,7 +217,7 @@ router.post('/admin/generate', function (req, res, next) {
         }
     });
     const venues = {};
-    ["group1", "group2", "group3", "group4"].forEach(key => {
+    ["group1", "group2", "group3", "group4", "group5", "group6", "group7", "group8"].forEach(key => {
         if (body[key]) {
             venues[body[key].group.id] = body[key].venueId;
         }
@@ -313,13 +315,14 @@ router.post('/:id/player', function (req, res, next) {
 router.get('/:id', function (req, res, next) {
     axios.all([
         axios.get(`${req.app.locals.kcapp.api}/player`),
+        axios.get(`${req.app.locals.kcapp.api}/venue`),
         axios.get(`${req.app.locals.kcapp.api}/tournament/${req.params.id}`),
         axios.get(`${req.app.locals.kcapp.api}/tournament/${req.params.id}/overview`),
         axios.get(`${req.app.locals.kcapp.api}/tournament/${req.params.id}/matches`),
         axios.get(`${req.app.locals.kcapp.api}/tournament/${req.params.id}/statistics`),
         axios.get(`${req.app.locals.kcapp.api}/tournament/${req.params.id}/metadata`),
         axios.get(`${req.app.locals.kcapp.api}/match/modes`)
-    ]).then(axios.spread((playersResponse, tournamentResponse, overviewData, matchesData, statisticsResponse, metadataResponse, modesResponse) => {
+    ]).then(axios.spread((playersResponse, venueResponse, tournamentResponse, overviewData, matchesData, statisticsResponse, metadataResponse, modesResponse) => {
         const statistics = statisticsResponse.data;
         if (!_.isEmpty(statistics)) {
             statistics.checkout_highest = _.sortBy(statistics.checkout_highest, (stats) => -stats.value);
@@ -357,6 +360,7 @@ router.get('/:id', function (req, res, next) {
                         playoffs_matches: playoffsMatches,
                         statistics: statistics,
                         modes: modesResponse.data,
+                        venues: venueResponse.data,
                     });
                 });
             })).catch(error => {
@@ -373,6 +377,7 @@ router.get('/:id', function (req, res, next) {
                     matches: matches,
                     statistics: statistics,
                     modes: modesResponse.data,
+                    venues: venueResponse.data,
                 });
             });
         }
@@ -458,7 +463,7 @@ router.get('/match/:id/next', function (req, res, next) {
     axios.get(`${req.app.locals.kcapp.api}/tournament/match/${req.params.id}/next`)
         .then(response => {
             if (response.status === 204) {
-                res.send(204);
+                res.sendStatus(204);
                 return;
             }
             res.send(response.data);

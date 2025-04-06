@@ -1,4 +1,4 @@
-$ var types = require('../../../../components/scorecard/components/match_types');
+$ let types = require('../../../../components/scorecard/components/match_types');
 <page-header heading="Statistics" subheading=`${state.from} to ${state.to}` icon="fa-signal" navigation=true on-next("navigateNext") on-previous("navigatePrevious")/>
 <office-selector offices=input.offices clazz="float-right" on-office-changed("officeChanged")/>
 <statistics-selector addGlobal=true on-type-changed("typeChanged")/>
@@ -99,5 +99,5 @@ $ var types = require('../../../../components/scorecard/components/match_types')
   <statistics-table-global statistics=state.statistics players=input.players/>
 </else-if>
 <else>
-  <div>TODO</div>
+  <div>Not implemented</div>
 </else>

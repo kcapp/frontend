@@ -53,7 +53,6 @@ module.exports = {
         this.state.officeId = officeId;
         this.setStateDirty("statistics");
     },
-
     typeChanged(typeId) {
         if (typeId == GLOBAL) {
             axios.get(`${window.location.protocol}//${window.location.hostname}${this.input.locals.kcapp.api_path}/statistics/global`)

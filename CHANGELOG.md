@@ -1,6 +1,28 @@
 # Changelog
 A preview of major changes can be found in the Wiki ([Latest Changes](https://github.com/kcapp/frontend/wiki/Latest_Changes))
 
+## [2.9.0] - 2025-04-06
+#### Feature
+- Option to see `All` or `Unique` tournament statistics per player
+- Ability to "Remote Start" matches on a selected venue
+- Split tournaments into "Tournaments" and "Seasons"
+- Persist "Enable Voice Announcements" on spectate page
+- Added totals view per group to Tournament Overview
+- Inactive players can now be added via ID from the home page
+- "King Slayer" badge!
+- New Leaderboard page
+- About page showing current versions
+
+#### Changed
+- Include Git commit on kcapp developer badge
+- Updated to latest version of dependencies
+- Update to NodeJS `22`
+
+#### Fixed
+- Issue with the `TTS` gets stuck in certain situations
+- Bug where matches were not correctly forwarded back to main screen
+- Minor UI improvements
+
 ## [2.8.0] - 2024-12-11
 #### Feature
 - New game type `170`
@@ -231,6 +253,7 @@ A preview of major changes can be found in the Wiki ([Latest Changes](https://gi
 - Multiple score entry methods
     - Including [Unicorn Smartboard](https://github.com/kcapp/smartboard)
 
+[2.9.0]: https://github.com/kcapp/frontend/compare/v2.8.0...v2.9.0
 [2.8.0]: https://github.com/kcapp/frontend/compare/v2.7.0...v2.8.0
 [2.7.0]: https://github.com/kcapp/frontend/compare/v2.6.0...v2.7.0
 [2.6.0]: https://github.com/kcapp/frontend/compare/v2.5.0...v2.6.0

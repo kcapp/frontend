@@ -26,7 +26,7 @@ $ {
       <options-panel tournament=input.tournament/>
     </if>
     <for|id, group| in=state.overview>
-      <div class="block-container p-10" style='margin-bottom: 0;'>
+      <div class="block-container" style='margin-bottom: 0; padding-bottom: 0; padding-right: 0;'>
         <div class="float-left" style="font-size: 30px;">${group[0].tournament_group.name}</div>
         <div style="float: right; padding-top: 4px;">
           <ul class="nav nav-pills">
@@ -40,14 +40,18 @@ $ {
               <a href=`#unplayed-matches-${group[0].tournament_group.id}` data-toggle="tab" class="tournament-group-unplayed-matches">Unplayed</a>
             </li>
             <li role="presentation">
-              <a href=`#predictor-${group[0].tournament_group.id}` data-toggle="tab" class="tournament-group-unplayed-matches">Predictor</a>
-            </li>            
+              <a href=`#predictor-${group[0].tournament_group.id}` data-toggle="tab" class="tournament-group-predictor">Predictor</a>
+            </li>
           </ul>
+          <div class="float-right btn-group btn-toggle" style="padding-top: 1em;">
+            <button class=`btn ${state.showPerLeg ? "btn-primary" : "btn-default"}` style="font-size: 0.8em;" on-click("onTogglePerLeg", true)>Per Leg</button>
+            <button class=`btn ${state.showPerLeg ? "btn-default" : "btn-primary"}` style="font-size: 0.8em;" on-click("onTogglePerLeg", false)>Total</button>
+          </div>
         </div>
       </div>
       <div class="tab-content">
         <div role="tabpanel" id=`standings-${group[0].tournament_group.id}` class="tab-pane active">
-          <tournament-overview-table tournament=input.tournament players=input.players statistics=input.statistics overview=group/>
+          <tournament-overview-table tournament=input.tournament players=input.players statistics=input.statistics overview=group showPerLeg=state.showPerLeg/>
         </div>
         $ {
           let columns = ["start_time", "status", "players", "results", "options"];
@@ -56,15 +60,15 @@ $ {
           }
         }
         <div role="tabpanel" id=`matches-${group[0].tournament_group.id}` class="tab-pane">
-          <matches-table players=input.players matches=state.matches[id] columns=columns on-show-modal("onShowModal")/>
+          <matches-table players=input.players matches=state.matches[id] no_update=true columns=columns on-show-modal("onShowModal") />
         </div>
         <div role="tabpanel" id=`unplayed-matches-${group[0].tournament_group.id}` class="tab-pane">
-          <matches-table players=input.players matches=state.unplayed[id] columns=columns on-show-modal("onShowModal")/>
+          <matches-table players=input.players matches=state.unplayed[id] no_update=true columns=columns on-show-modal("onShowModal") />
         </div>
         <div role="tabpanel" id=`predictor-${group[0].tournament_group.id}` class="tab-pane">
           <tournament-overview-table tournament=input.tournament players=input.players statistics=input.statistics overview=group key=`predictor-overview-${group[0].tournament_group.id}`/>
           <tournament-predictor players=input.players matches=state.unplayed[id] overview=group on-update-predictions("onUpdatePredictions")/>
-        </div>        
+        </div>
       </div>
     </for>
   </div>
@@ -103,6 +107,15 @@ $ {
         </table>
       </div>
       <div class="table table-responsive">
+        <div>
+          // Add a checkbox to filter unique
+          <div class="float-right">
+            <div class="btn-group btn-toggle">
+              <button class=`btn ${state.showAllStats ? "btn-default" : "btn-primary"}` on-click("onToggleStats", false)>Unique</button>
+              <button class=`btn ${state.showAllStats ? "btn-primary" : "btn-default"}` on-click("onToggleStats", true)>All</button>
+            </div>
+          </div>
+        </div>
         <table class="tournament-records">
           <tbody>
             <tr>
@@ -111,9 +124,9 @@ $ {
                 <div class="highscore-card">
                   <table class="table table-tournament-statistics">
                     <tbody>
-                      <for|i| from=0 to=9>
+                      <for|i| from=0 to=14>
                         <tr>
-                          <top-statistics players=input.players statistics=input.statistics.checkout_highest idx=i rank=(i + 1)/>
+                          <top-statistics players=input.players statistics=state.statistics.checkout_highest idx=i rank=(i + 1)/>
                         </tr>
                       </for>
                     </tbody>
@@ -125,9 +138,9 @@ $ {
                 <div class="highscore-card">
                   <table class="table table-tournament-statistics">
                     <tbody>
-                      <for|i| from=0 to=9>
+                      <for|i| from=0 to=14>
                         <tr>
-                          <top-statistics players=input.players statistics=input.statistics.best_three_dart_avg idx=i rank=(i + 1) isFloat=true/>
+                          <top-statistics players=input.players statistics=state.statistics.best_three_dart_avg idx=i rank=(i + 1) isFloat=true/>
                         </tr>
                       </for>
                     </tbody>
@@ -139,9 +152,9 @@ $ {
                 <div class="highscore-card">
                   <table class="table table-tournament-statistics">
                     <tbody>
-                      <for|i| from=0 to=9>
+                      <for|i| from=0 to=14>
                         <tr>
-                          <top-statistics players=input.players statistics=input.statistics.best_first_nine_avg idx=i rank=(i + 1) isFloat=true/>
+                          <top-statistics players=input.players statistics=state.statistics.best_first_nine_avg idx=i rank=(i + 1) isFloat=true/>
                         </tr>
                       </for>
                     </tbody>
@@ -153,9 +166,9 @@ $ {
                 <div class="highscore-card-no-margin">
                   <table class="table table-tournament-statistics">
                     <tbody>
-                      <for|i| from=0 to=9>
+                      <for|i| from=0 to=14>
                         <tr>
-                          $ let dartsThrown = input.statistics.best_501_darts_thrown ? input.statistics.best_501_darts_thrown : input.statistics.best_301_darts_thrown ? input.statistics.best_301_darts_thrown : null;
+                          $ let dartsThrown = state.statistics.best_501_darts_thrown ? state.statistics.best_501_darts_thrown : state.statistics.best_301_darts_thrown ? state.statistics.best_301_darts_thrown : null;
                           <top-statistics players=input.players statistics=dartsThrown idx=i rank=(i + 1)/>
                         </tr>
                       </for>
@@ -206,5 +219,6 @@ $ {
   </if>
 </div>
 <set-score-form players=input.players matches=state.matchesMap key="set-score-modal"/>
+<start-remote-form venues=input.venues matches=state.matchesMap key="start-remote-modal"/>
 <add-player-form players=input.players overview=input.overview tournamentId=input.tournament.id officeId=input.tournament.office_id groups=state.groups/>
 <generate-playoffs-form overview=input.overview matches=input.matches tournamentId=input.tournament.id  modes=input.modes/>

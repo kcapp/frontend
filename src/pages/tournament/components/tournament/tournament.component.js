@@ -29,14 +29,31 @@ module.exports = {
                 acc[match.id] = match;
                 return acc;
             }, {}));
-        }        
+        }
+
         this.state = {
             hasStatistics: !_.isEmpty(input.statistics.best_three_dart_avg),
             matches: matches,
             matchesMap: matchesMap,
             unplayed: unplayed,
             groups: Array.from(groups),
-            overview: overview
+            overview: overview,
+            unq_statistics: {},
+            statistics: input.statistics,
+            showAllStats: true,
+            showPerLeg: true
+        }
+        if (this.state.hasStatistics) {
+            // Create unique statistics
+            if (input.statistics.best_301_darts_thrown) {
+                this.state.unq_statistics.best_301_darts_thrown  = _.uniq(input.statistics.best_301_darts_thrown, false, item => item.player_id);
+            }
+            if (input.statistics.best_501_darts_thrown) {
+                this.state.unq_statistics.best_501_darts_thrown  = _.uniq(input.statistics.best_501_darts_thrown, false, item => item.player_id);
+            }
+            this.state.unq_statistics.best_first_nine_avg    = _.uniq(input.statistics.best_first_nine_avg, false, item => item.player_id);
+            this.state.unq_statistics.best_three_dart_avg    = _.uniq(input.statistics.best_three_dart_avg, false, item => item.player_id);
+            this.state.unq_statistics.checkout_highest       = _.uniq(input.statistics.checkout_highest, false, item => item.player_id);
         }
     },
 
@@ -49,7 +66,7 @@ module.exports = {
                 $('#set-score-modal').data('matchId', matchId);
                 $('#set-score-modal').modal('toggle');
             }
-        </script>`)
+        </script>`);
 
         $(function () {
             $('.table-matches-list').DataTable({
@@ -73,11 +90,19 @@ module.exports = {
             }
         });
     },
-    onShowModal(matchId) {
-        this.getComponent('set-score-modal').setMatch(matchId);
+    onShowModal(matchId, modal) {
+        this.getComponent(modal).setMatch(matchId);
     },
     onUpdatePredictions(groupId, overview) {
         const comp = this.getComponent(`predictor-overview-${groupId}`);
         comp.updateStandings(overview);
+    },
+    onToggleStats(value, event) {
+        this.state.showAllStats = value;
+        this.state.statistics = value ? this.input.statistics : this.state.unq_statistics;
+        this.setStateDirty("statistics");
+    },
+    onTogglePerLeg(value, event) {
+        this.state.showPerLeg = value;
     }
 }

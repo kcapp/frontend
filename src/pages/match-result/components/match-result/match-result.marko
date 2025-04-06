@@ -1,6 +1,6 @@
 $ let match = state.match;
 $ let isOfficial = state.match.tournament_id || false;
-<page-header heading=`Match Result (${match.id})` style="block-container" rematch_button=!isOfficial next_match_button=isOfficial subheadings=[
+<page-header heading=`Match Result (${match.id})` style="block-container" rematch_button=!isOfficial next_match_button=(isOfficial && !state.match.tournament.is_finished) subheadings=[
   [
     {
       heading: `Started   ${match.started}`,
@@ -115,7 +115,7 @@ $ let isOfficial = state.match.tournament_id || false;
     <tr>
       <td/>
       <for|statistic| of=input.statistics>
-        $ var player = input.players[statistic.player_id];
+        $ let player = input.players[statistic.player_id];
         <td>
           <player-statistics-card elo=true match=match statistic=statistic player=player isMatchResult=true/>
         </td>

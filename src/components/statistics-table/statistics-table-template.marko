@@ -1,0 +1,26 @@
+<if(input.statistics.length === 0)>
+    <no-statistics heading=input.heading/>
+</if>
+<else>
+    <if(input.showPerLegButton)>
+        <div class="block-container" style='margin-bottom: 0; padding-bottom: 0; padding-right: 0;'>
+            <div class="float-right btn-group btn-toggle" style="padding-top: 1em;">
+                <button class=`btn ${input.showPerLeg ? "btn-primary" : "btn-default"}` style="font-size: 0.8em;" on-click("onTogglePerLeg", true)>Per Leg</button>
+                <button class=`btn ${input.showPerLeg ? "btn-default" : "btn-primary"}` style="font-size: 0.8em;" on-click("onTogglePerLeg", false)>Total</button>
+            </div>
+        </div>
+    </if>
+    <div class=`${input.heading ? "block-container-red" : ''}`>${input.heading}</div>
+    <div class="block-container no-padding">
+        <div class="table table-responsive">
+            <table class="table-statistics">
+                <thead>
+                    <${input.headers}/>
+                </thead>
+                <tbody>
+                        <${input.body}/>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</else>

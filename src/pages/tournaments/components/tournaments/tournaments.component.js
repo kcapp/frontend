@@ -3,25 +3,36 @@ const moment = require("moment");
 
 module.exports = {
     onCreate(input) {
-        const tournaments = input.tournaments;
-        for (let i = 0; i < tournaments.length; i++) {
-            const tournament = tournaments[i];
+        const tournaments = [];
+        const seasons = [];
+        for (let i = 0; i < input.tournaments.length; i++) {
+            const tournament = input.tournaments[i];
             tournament.start_time = moment(tournament.start_time).format('YYYY-MM-DD HH:mm');
             tournament.end_time = moment(tournament.end_time).format('YYYY-MM-DD HH:mm');
+
+            if (tournament.is_season) {
+                seasons.push(tournament);
+            } else {
+                tournaments.push(tournament);
+            }
         }
+
         this.state = {
-            tournaments: tournaments
+            tournaments: tournaments,
+            seasons: seasons
         }
     },
 
     officeChanged(officeId) {
         if (officeId == 0) {
-            this.state.tournaments = this.input.tournaments;
+            this.state.tournaments = this.state.tournaments;
+            this.state.seasons = this.state.seasons;
         } else {
             this.state.tournaments = _.reject(this.input.tournaments, (tournament) => {
                 return tournament.office_id != officeId ;
             });
         }
         this.setStateDirty("tournaments");
+        this.setStateDirty("seasons");
     }
 };

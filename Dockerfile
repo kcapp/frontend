@@ -1,5 +1,6 @@
 # Create our build image
-FROM node:18-alpine AS BUILD_IMAGE
+# Must be node-18, ref https://github.com/docker/build-push-action/issues/1071
+FROM node:18-alpine AS build_image
 
 # Add git and curl
 RUN apk update && apk add --no-cache git curl
@@ -14,13 +15,16 @@ RUN npm install --only=production
 # Bundle app source
 COPY . .
 
+# Write version info into version.json
+RUN node bin/write-version.js
+
 # Create actual image
-FROM node:18-alpine
+FROM node:22-alpine
 
 WORKDIR /usr/src/kcapp
 
 # Copy required files from build image
-COPY --from=BUILD_IMAGE /usr/src/kcapp /usr/src/kcapp
+COPY --from=build_image /usr/src/kcapp /usr/src/kcapp
 
 EXPOSE 3000
 CMD [ "npm", "run", "docker" ]

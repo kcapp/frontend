@@ -8,9 +8,10 @@ module.exports = {
         }
     },
     onMount() {
-        const isController = localStorage.get('controller');
-        const hasController = localStorage.get('has_controller');
-        if (isController || hasController) {
+        const isController = localStorage.getBool('controller', false);
+        const hasController = localStorage.getBool('has_controller', false);
+        const isRemote = localStorage.getBool('remote-control', false);
+        if (isController || hasController || isRemote) {
             const venue = localStorage.get('venue_id');
             if (venue) {
                 this.state.venueId = parseInt(venue);
@@ -28,6 +29,10 @@ module.exports = {
                         return;
                     }
                     location.href = isController ? `/legs/${data.leg.id}/controller` : `/legs/${data.leg.id}`;
+                });
+
+                socket.on('start_remote', (data) => {
+                    location.href = isController ? `/legs/${data.match.current_leg_id}/controller` : `/legs/${data.match.current_leg_id}`;
                 });
             }
         }

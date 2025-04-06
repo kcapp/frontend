@@ -115,6 +115,10 @@ module.exports = (io, app) => {
                 nsp.on('connection', function (client) {
                     const ip = getClientIP(client);
                     debug("Client %s connected to '%s'", ip, namespace);
+
+                    client.on('start_remote', (data) => {
+                        nsp.emit('start_remote', data);
+                    })
                 });
                 debug("Created socket.io namespace '%s'", namespace);
             }

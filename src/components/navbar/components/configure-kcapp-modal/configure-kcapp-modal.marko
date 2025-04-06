@@ -15,7 +15,7 @@
                 <for|layout| of=state.layouts>
                   <option style="text-transform: capitalize;" value=layout.id selected=(layout.id === state.buttonLayout)>${layout.name}</option>
                 </for>
-              </select>              
+              </select>
             </div>
           </div>
         </div>
@@ -56,6 +56,28 @@
                 <span class="toggle-slider"></span>
               </label>
               <span style="margin-left: 8px;">Confirm Busts?</span>
+            </div>
+          </div>
+        </div>
+        <div>
+          <div class="block-container-header">
+            <span>Venue Options</span>
+          </div>
+          <div class="block-container-with-header">
+            <div class="form-group form-check" style="margin-bottom: 1em;">
+              <select id='venueSelect' class="form-select" style="width: 100%">
+                <option value=-1 selected=(-1 === state.venueId)>-</option>
+                <for|venue| of=state.venues>
+                  <option value=venue.id selected=(venue.id === state.venueId)>${venue.name}</option>
+                </for>
+              </select>
+            </div>
+            <div class="form-group form-check">
+              <input type="checkbox" id="remoteControl" class="form-check-input" checked=state.remoteControl on-change("toggleRemoteControl")>
+              <label class="toggle-button" for="remoteControl">
+                <span class="toggle-slider"></span>
+              </label>
+              <span style="margin-left: 8px;">Remote Control</span>
             </div>
           </div>
         </div>

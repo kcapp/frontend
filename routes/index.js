@@ -1,20 +1,22 @@
-var debug = require('debug')('kcapp:index');
+const debug = require('debug')('kcapp:index');
 
 const express = require('express');
 const router = express.Router();
 
 const axios = require('axios');
 const _ = require('underscore');
+const versionInfo = require('../version.json');
 
 const template = require('marko');
 const indexTemplate = template.load(require.resolve('../src/pages/index/index-template.marko'));
 const indexControllerTemplate = template.load(require.resolve('../src/pages/index-controller/index-controller-template.marko'));
 const screensaverTemplate = template.load(require.resolve('../src/pages/screensaver/screensaver-template.marko'));
+const aboutTemplate = template.load(require.resolve('../src/pages/about/about.marko'));
 
 /* GET home page. */
 router.get('/', function (req, res, next) {
     axios.all([
-        axios.get(`${req.app.locals.kcapp.api}/player/active`),
+        axios.get(`${req.app.locals.kcapp.api}/player`),
         axios.get(`${req.app.locals.kcapp.api}/match/modes`),
         axios.get(`${req.app.locals.kcapp.api}/owetype`),
         axios.get(`${req.app.locals.kcapp.api}/match/types`),
@@ -79,6 +81,18 @@ router.get('/controller', function (req, res, next) {
 
 router.get('/screensaver', function (req, res, next) {
     res.marko(screensaverTemplate, {});
+});
+
+router.get('/about', (req, res) => {
+    axios.all([
+        axios.get(`${req.app.locals.kcapp.api}/version`),
+    ]).then(axios.spread((api) => {
+        res.marko(aboutTemplate, {
+            frontend: versionInfo,
+            api: api.data,
+            locals: req.app.locals
+        });
+    }));
 });
 
 module.exports = router;

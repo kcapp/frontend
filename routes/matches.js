@@ -337,7 +337,7 @@ router.post('/:id/rematch', function (req, res, next) {
 
 /* Method for finishing a match */
 router.put('/:id/finish', function (req, res, next) {
-    axios.put(`${req.app.locals.kcapp.api}/match/${req.params.id}`, req.body)
+    axios.put(`${req.app.locals.kcapp.api}/match/${req.params.id}/score`, req.body)
         .then(response => {
             res.end();
         }).catch(error => {

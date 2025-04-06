@@ -12,7 +12,9 @@ exports.getUtterance = function (data, callback) {
         }
     };
     msg.play = () => {
+        console.log(`getUtterance: speechSynthesis.speak - pending: ${speechSynthesis.pending}, speaking: ${speechSynthesis.speaking} paused: ${speechSynthesis.paused}`);
         // Adding custom play method to allow easier chaining with audio elements
+        speechSynthesis.cancel(); // Sometimes it gets stuck and refuses to speak any more, so cancel any existing before speaking again
         speechSynthesis.speak(msg);
     }
     return msg;
@@ -30,7 +32,8 @@ exports.getUtteranceWithVoice = function (data, voiceName, readyCallback, endCal
         }
     };
     msg.play = () => {
-        // Adding custom play method to allow easier chaining with audio elements
+        console.log(`getUtteranceWithVoice: speechSynthesis.speak - pending: ${speechSynthesis.pending}, speaking: ${speechSynthesis.speaking} paused: ${speechSynthesis.paused}`);        // Adding custom play method to allow easier chaining with audio elements
+        speechSynthesis.cancel(); // Sometimes it gets stuck and refuses to speak any more, so cancel any existing before speaking again
         speechSynthesis.speak(msg);
     }
     this.getVoice(voiceName, (voice) => {
@@ -66,12 +69,11 @@ exports.getVoice = function(name, callback) {
 
 exports.speak = function (data, callback) {
     const msg = this.getUtterance(data, callback);
-    speechSynthesis.cancel(); // Sometimes it gets stuck and refuses to speak any more, so cancel any existing before speaking again
-    speechSynthesis.speak(msg);
+    msg.play();
 };
 
 exports.speakWithVoice = function (data, voiceName, endCallback) {
     this.getUtteranceWithVoice(data, voiceName, (msg) => {
-        speechSynthesis.speak(msg);
+        msg.play();
     }, endCallback);
 };

@@ -13,7 +13,7 @@ module.exports = {
             match: match
         }
     },
-    onShowModal(matchId) {
-        this.emit('show-modal', matchId);
+    onShowModal(matchId, modal) {
+        this.emit('show-modal', matchId, modal);
     }
 }
