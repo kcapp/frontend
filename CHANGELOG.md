@@ -8,6 +8,9 @@ A preview of major changes can be found in the Wiki ([Latest Changes](https://gi
 - New leaderboard for showing the best players of most match types
 - "Still Regining" badge
 
+#### Changed
+- When switching match type, set match mode to `No Sets`
+
 #### Fixed
 - Bug where tournaments couldn't be filtered by location
 

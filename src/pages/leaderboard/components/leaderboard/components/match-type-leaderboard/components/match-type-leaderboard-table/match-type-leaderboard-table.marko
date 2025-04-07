@@ -1,5 +1,6 @@
 $ const showScore = input.showScore === undefined || input.showScore;
 $ const showDartsThrown = input.showDartsThrown === undefined || input.showDartsThrown;
+$ const showAvg = input.showAvg;
 
 <div class="col-sm-6 no-gutter">
     <div class="table-container">
@@ -7,7 +8,9 @@ $ const showDartsThrown = input.showDartsThrown === undefined || input.showDarts
             <div class="text-center block-container-red">${input.heading} - no legs played</div>
         </if>
         <else>
-            <div style="margin-bottom: 0;" class=`${input.heading ? "block-container-red" : ''} text-center`>${input.heading}</div>
+            <div style="margin-bottom: 0;" class=`${input.heading ? "block-container-red" : ''} text-center`>
+                ${input.heading}
+            </div>
             <div class="block-container no-padding">
                 <div class="table table-responsive">
                     <table class="table-statistics">
@@ -19,7 +22,10 @@ $ const showDartsThrown = input.showDartsThrown === undefined || input.showDarts
                                     <th class="text-center">Darts Thrown</th>
                                 </if>
                                 <if(showScore)>
-                                    <th class="text-center">Score</th>
+                                    <th class="text-center">${input.scoreHeader ? input.scoreHeader : "Score"}</th>
+                                </if>
+                                <if(showAvg)>
+                                    <th class="text-center">Three Dart Avg.</th>
                                 </if>
                             </tr>
                         </thead>
@@ -45,6 +51,9 @@ $ const showDartsThrown = input.showDartsThrown === undefined || input.showDarts
                                         <td class="text-center">
                                             <a href=`/legs/${stats.leg_id}/result`>${stats.score}</a>
                                         </td>
+                                    </if>
+                                    <if(showAvg)>
+                                        <td class="text-center">${stats.three_dart_avg.toFixed(2)}</td>
                                     </if>
                                 </tr>
                             </for>
