@@ -160,8 +160,7 @@ module.exports = {
             this.state.scoresChart.data.datasets[0].data = this.state.valuesMap.scores60s;
             this.state.scoresChart.data.datasets[1].data = this.state.valuesMap.scores100s;
             this.state.scoresChart.data.datasets[2].data = this.state.valuesMap.scores140s;
-            this.state.scoresChart.data.datasets[3].data = this.state.valuesMap.scores180;
-            this.state.scoresChart.update();
+            this.state.scoresChart.data.datasets[3].data = this.state.valuesMap.scores180s;
             this.state.scoresChart.update();
         }
     },
