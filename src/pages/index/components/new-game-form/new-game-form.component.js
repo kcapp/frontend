@@ -293,7 +293,7 @@ module.exports = {
                 // Reset the game mode from the default
                 const component = this.getComponent('game-mode');
                 component.state.index = 0;
-                this.state.options.game_mode = component.state.index;
+                this.state.options.game_mode = component.state.values[component.state.index].id;
                 this.state.isFirstChange = false;
             }
 

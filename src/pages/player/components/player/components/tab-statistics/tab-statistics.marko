@@ -152,6 +152,14 @@ $ var moment = require('moment');
                             <statistics-card label="Three Dart Avg." value=`${input.statistics.three_dart_avg.toFixed(2)}` icon="fas fa-circle-notch"/>
                         </td>
                     </else-if>
+                    <else-if(input.type == types.ONESEVENTY)>
+                        <td style="width: 25%;">
+                            <statistics-card label="Highest Checkout" value=`${input.statistics.highest_checkout ? input.statistics.highest_checkout : "-"}` icon="far fa-star"/>
+                        </td>
+                        <td style="width: 25%;">
+                            <statistics-card label="PPD" value=`${input.statistics.ppd ? input.statistics.ppd.toFixed(2) : "-"}` icon="fas fa-circle-notch"/>
+                        </td>
+                    </else-if>
                     <else>
                         <div>TODO</div>
                     </else>
@@ -274,6 +282,10 @@ $ var moment = require('moment');
                     <th class="text-center">MPR</th>
                     <th class="text-center">Three Dart Avg.</th>
                 </else-if>
+                <else-if(input.type == types.ONESEVENTY)>
+                    <th class="text-center">Checkout</th>
+                    <th class="text-center">PPD</th>
+                </else-if>
                 <th class="text-center"/>
             </tr>
         </thead>
@@ -391,6 +403,10 @@ $ var moment = require('moment');
                         <td class="text-center">${statistics.score}</td>
                         <td class="text-center">${statistics.mpr.toFixed(2)}</td>
                         <td class="text-center">${statistics.three_dart_avg.toFixed(2)}</td>
+                    </else-if>
+                    <else-if(input.type == types.ONESEVENTY)>
+                        <td class="text-center">${statistics.highest_checkout === 0 ? "-" : statistics.highest_checkout}</td>
+                        <td class="text-center">${statistics.ppd.toFixed(2)}</td>
                     </else-if>
                     <td>
                         <a href=`/legs/${history.id}/result`>
