@@ -61,8 +61,10 @@ module.exports = {
         this.emit('enable-all-buttons-mode', this.state.allButtonsMode)
     },
 
-    swapPlayers() {
+    swapPlayers(event) {
         this.emit('swap-players');
+        event.target.blur();
+
     },
 
     cancelLeg(event) {
