@@ -9,9 +9,10 @@ module.exports = {
             .filter(player => !existingPlayers.includes(player.id))
             .filter(player => !player.is_placeholder)
             .filter(player => !player.is_bot);
+
         this.state = {
             players: players,
-            playerID: players[0].id,
+            playerID: players.length === 0 ? -1 : players[0].id,
             groupID: input.groups[0].id
         }
     },
@@ -22,6 +23,9 @@ module.exports = {
         this.state.groupID = parseInt(event.target.value);
     },
     addPlayer(event) {
+        if (this.state.players.length === 0) {
+            return;
+        }
         const body = { tournament_group_id: this.state.groupID, player_id: this.state.playerID };
         axios.post(`${window.location.origin}/tournaments/${this.input.tournamentId}/player`, body)
             .then(response => {

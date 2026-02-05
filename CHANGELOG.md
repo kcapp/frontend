@@ -17,6 +17,7 @@ A preview of major changes can be found in the Wiki ([Latest Changes](https://gi
 - Bug where tournaments couldn't be filtered by location
 - Handle new setups where `version.json` doesn't exist
 - Bug where `max_rounds` would overwrite results from previous legs
+- Issue with adding players to tournament when no more players exist
 
 ## [2.9.0] - 2025-04-06
 #### Feature
