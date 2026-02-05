@@ -52,7 +52,7 @@ $ const types = require('../../../../components/scorecard/components/match_types
   </if>
 </div>
 <player-order players=state.players match=input.match legId=state.leg.id on-warmup-started("onWarmupStarted") on-smartboard-reconnect('onSmartboardReconnect')/>
-<pick-winner-modal players=state.players match=input.match legId=input.leg.id/>
+<pick-winner-modal players=state.players match=input.match legId=state.leg.id/>
 <qr-code-modal/>
 <confirm-checkout on-confirm-checkout("onConfirmCheckout")/>
 <if(state.enableButtonInput)>

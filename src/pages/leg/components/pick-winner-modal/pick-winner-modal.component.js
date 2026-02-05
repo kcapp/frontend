@@ -2,7 +2,7 @@ const _ = require("underscore");
 const axios = require('axios');
 
 module.exports = {
-    onCreate(input) {
+    onInput(input) {
         this.state = {
             legId: input.legId,
             players: input.players,
