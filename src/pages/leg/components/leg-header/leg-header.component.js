@@ -63,7 +63,7 @@ module.exports = {
 
     swapPlayers(event) {
         this.emit('swap-players');
-        event.target.blur();
+        event.target.closest('button').blur();
 
     },
 
