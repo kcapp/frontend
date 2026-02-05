@@ -11,6 +11,7 @@ A preview of major changes can be found in the Wiki ([Latest Changes](https://gi
 #### Changed
 - When switching match type, set match mode to `No Sets`
 - Drop focus from swap players button after clicked
+- Always show change player order modal on official matches
 
 #### Fixed
 - Bug where tournaments couldn't be filtered by location
