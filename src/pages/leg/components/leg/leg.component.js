@@ -216,7 +216,7 @@ module.exports = {
                 this.state.submitting = true;
                 this.state.socket.emit('throw', JSON.stringify(component.getPayload()));
             }
-        }, 500);
+        }, 1000);
         $("#pick-winner-modal").modal("show");
     },
 
