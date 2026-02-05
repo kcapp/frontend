@@ -5,7 +5,7 @@ const router = express.Router();
 
 const axios = require('axios');
 const _ = require('underscore');
-const versionInfo = require('../version.json');
+const versionInfo = (() => { try { return require('../version.json'); } catch (e) { return {}; } })();
 
 const template = require('marko');
 const indexTemplate = template.load(require.resolve('../src/pages/index/index-template.marko'));
