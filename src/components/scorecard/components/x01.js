@@ -104,6 +104,13 @@ exports.confirmThrow = function (external) {
         } else {
             alertify.success('Player busted');
             this.emit('player-busted', true);
+
+            // Need to check for max round again here, since busting might have made us reach it
+            isMaxRound = module.exports.isMaxRound(this.state.player, this.state.currentDart, this.state.leg, this.input.players, true);
+            if (isMaxRound) {
+                alertify.notify(`Maximum numbers of rounds reached.`, 'warning');
+                this.emit('max-rounds-reached', true);
+            }
         }
     } else if (isMaxRound) {
         alertify.notify(`Maximum numbers of rounds reached.`, 'warning');
