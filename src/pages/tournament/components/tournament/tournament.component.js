@@ -1,4 +1,5 @@
 const _ = require("underscore");
+const moment = require("moment");
 
 module.exports = {
     onCreate(input) {
@@ -18,6 +19,12 @@ module.exports = {
             // Filter out "placeholder"-players without any name
             overview[key] = _.filter(g, player => input.players[player.player_id].name !== "")
             unplayed[key] = _.sortBy(unplayed[key], "created_at");
+            // Sort matches based on updated_at DESC, created_at
+            matches[key] = matches[key].sort((a, b) => {
+                const cmp = moment(b.updated_at).diff(moment(a.updated_at));
+                if (cmp !== 0) return cmp;
+                return moment(a.created_at).diff(moment(b.created_at));
+            });
         }
         const matchesMap = Object.values(input.matches).flat().reduce((acc, match) => {
             acc[match.id] = match;
@@ -72,7 +79,7 @@ module.exports = {
             $('.table-matches-list').DataTable({
                 searching: false, bInfo: false, bLengthChange: false,
                 pageLength: 15,
-                order: [[0, 'asc']],
+                order: [],
                 bAutoWidth: false,
                 oLanguage: {
                     sEmptyTable: "No unplayed matches!"
