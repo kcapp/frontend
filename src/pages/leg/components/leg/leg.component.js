@@ -55,7 +55,7 @@ module.exports = {
         if (isSwitchedOrder) {
             localStorage.remove('switched-order');
         }
-        if (this.input.match.tournament_id && this.input.leg.visits.length === 0 && !this.state.enableButtonInput && !isSwitchedOrder) {
+        if (this.input.match.tournament_id && this.input.leg.visits.length === 0 && this.input.match.legs.length === 1 && !this.state.enableButtonInput && !isSwitchedOrder) {
             localStorage.set('switched-order', true);
             document.getElementById('change-player-order').click();
         } else {
