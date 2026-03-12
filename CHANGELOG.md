@@ -1,6 +1,27 @@
 # Changelog
 A preview of major changes can be found in the Wiki ([Latest Changes](https://github.com/kcapp/frontend/wiki/Latest_Changes))
 
+## [2.10.0] - 2026-03-12
+#### Feature
+- Player progression is now reworked to group legs into buckets for better comparsion
+- Player progression can now be filtered in the frontend to only look at certain types of matches
+- New leaderboard for showing the best players of most match types
+- "Still Regining" badge
+
+#### Changed
+- When switching match type, set match mode to `No Sets`
+- Drop focus from swap players button after clicked
+- Always show change player order modal on official matches
+- Sort tournament matches by putting played matches on top
+
+#### Fixed
+- Correctly show the total score for Around the World legs
+- Bug where tournaments couldn't be filtered by location
+- Handle new setups where `version.json` doesn't exist
+- Bug where `max_rounds` would overwrite results from previous legs
+- Issue with adding players to tournament when no more players exist
+- Correctly show Max Rounds dialog if player busts on last visit
+
 ## [2.9.0] - 2025-04-06
 #### Feature
 - Option to see `All` or `Unique` tournament statistics per player
@@ -253,6 +274,7 @@ A preview of major changes can be found in the Wiki ([Latest Changes](https://gi
 - Multiple score entry methods
     - Including [Unicorn Smartboard](https://github.com/kcapp/smartboard)
 
+[2.10.0]: https://github.com/kcapp/frontend/compare/v2.9.0...v2.10.0
 [2.9.0]: https://github.com/kcapp/frontend/compare/v2.8.0...v2.9.0
 [2.8.0]: https://github.com/kcapp/frontend/compare/v2.7.0...v2.8.0
 [2.7.0]: https://github.com/kcapp/frontend/compare/v2.6.0...v2.7.0

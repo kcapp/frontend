@@ -14,6 +14,7 @@ module.exports = {
         let dplCount = 0;
         let acc20Count = 0;
         let acc19Count = 0;
+        let accOverallCount = 0;
         const total = _.reduce(input.overview, (totals, player) => {
             _.each(keysToSum, (key) => {
                 if (player[key] !== -1) {
@@ -29,6 +30,9 @@ module.exports = {
             if (player.accuracy_19 !== -1) {
                 acc19Count++;
             }
+            if (player.accuracy_overall !== -1) {
+                accOverallCount++;
+            }
 
             return totals;
         }, _.object(keysToSum, _.map(keysToSum, () => 0)));
@@ -40,7 +44,7 @@ module.exports = {
             total.darts_per_leg = total.darts_per_leg / dplCount;
             total.accuracy_20 = total.accuracy_20 / acc20Count;
             total.accuracy_19 = total.accuracy_19 / acc19Count;
-            total.accuracy_overall = total.accuracy_overall / dplCount;
+            total.accuracy_overall = total.accuracy_overall / accOverallCount;
         }
 
         this.state = {

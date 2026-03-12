@@ -2,7 +2,7 @@ const _ = require("underscore");
 const axios = require('axios');
 
 module.exports = {
-    onCreate(input) {
+    onInput(input) {
         this.state = {
             legId: input.legId,
             players: input.players,
@@ -15,6 +15,12 @@ module.exports = {
         const modal = document.getElementById('pick-winner-modal');
         modal.addEventListener("keydown", this.onKeyDown.bind(this), false);
         modal.addEventListener("keypress", this.onKeyPress.bind(this), false);
+
+        $(function() {
+            $("#pick-winner-modal").on('shown.bs.modal', function(){
+                $(this).find("input:first").focus();
+            }.bind(this));
+        }.bind(this));
     },
     onKeyPress(e) {
         e.stopPropagation();

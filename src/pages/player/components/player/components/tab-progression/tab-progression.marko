@@ -1,4 +1,32 @@
 <div style="width: 100%;">
+    <div class="block-container" style="margin-bottom: 1rem;">
+        <label for="bucket-size-select">Bucket Size:</label>
+        <select id="bucket-size-select" on-change("onBucketSizeChange")>
+            <option value="10" selected=(state.bucketSize === 10)>10</option>
+            <option value="25" selected=(state.bucketSize === 25)>25</option>
+            <option value="50" selected=(state.bucketSize === 50)>50</option>
+            <option value="100" selected=(state.bucketSize === 100)>100</option>
+        </select>
+
+        <label for="starting-score-select" style="margin-left: 1rem;">Starting Score:</label>
+        <select id="starting-score-select" on-change("onStartingScoreChange")>
+            <option value="" selected=!state.startingScore>All</option>
+            <option value="301" selected=(state.startingScore === 301)>301</option>
+            <option value="501" selected=(state.startingScore === 501)>501</option>
+            <option value="701" selected=(state.startingScore === 701)>701</option>
+        </select>
+
+        <label style="margin-left: 1rem;">
+            <input type="checkbox" id="official-only-checkbox" on-input("onOfficialOnlyChange")/>
+            Only Official
+        </label>
+
+        <label style="margin-left: 1rem;">
+            <input type="checkbox" id="one-v-one-only-checkbox" on-input("on1v1OnlyChange")/>
+            Only 1v1
+        </label>
+    </div>
+
     <div class="block-container">
         <h3>Three Dart Avg.</h3>
         <canvas id="canvas-three-dart-avg"></canvas>

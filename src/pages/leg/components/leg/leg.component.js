@@ -50,10 +50,13 @@ module.exports = {
         this.state.socket = this.setupSio(this.state.leg.id);
         this.state.audioAnnouncer = new Audio();
 
-        // If this is an official match, which has not had any darts thrown, and was not updated in the last two minutes
-        // show the dialog to set player order
-        const lastUpdated = (moment().valueOf() - moment.utc(this.input.leg.updated_at).valueOf()) / (1000 * 60);
-        if (this.input.match.tournament_id && this.input.leg.visits.length === 0 && !this.state.enableButtonInput &&lastUpdated > 2) {
+        // If this is an official match, which has not had any darts thrown, show the dialog to set player order
+        const isSwitchedOrder = localStorage.getBool('switched-order');
+        if (isSwitchedOrder) {
+            localStorage.remove('switched-order');
+        }
+        if (this.input.match.tournament_id && this.input.leg.visits.length === 0 && this.input.match.legs.length === 1 && !this.state.enableButtonInput && !isSwitchedOrder) {
+            localStorage.set('switched-order', true);
             document.getElementById('change-player-order').click();
         } else {
             if (this.input.leg.visits.length === 0) {
@@ -213,7 +216,7 @@ module.exports = {
                 this.state.submitting = true;
                 this.state.socket.emit('throw', JSON.stringify(component.getPayload()));
             }
-        }, 500);
+        }, 1000);
         $("#pick-winner-modal").modal("show");
     },
 

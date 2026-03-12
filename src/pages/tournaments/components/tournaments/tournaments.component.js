@@ -25,12 +25,11 @@ module.exports = {
 
     officeChanged(officeId) {
         if (officeId == 0) {
-            this.state.tournaments = this.state.tournaments;
-            this.state.seasons = this.state.seasons;
+            this.state.tournaments = _.reject(this.input.tournaments, (tournament) => tournament.is_season );
+            this.state.seasons = _.reject(this.input.tournaments, (tournament) => !tournament.is_season );
         } else {
-            this.state.tournaments = _.reject(this.input.tournaments, (tournament) => {
-                return tournament.office_id != officeId ;
-            });
+            this.state.tournaments = _.reject(this.input.tournaments, (tournament) =>  tournament.is_season || tournament.office_id != officeId);
+            this.state.seasons = _.reject(this.input.tournaments, (tournament) => !tournament.is_season || tournament.office_id != officeId);
         }
         this.setStateDirty("tournaments");
         this.setStateDirty("seasons");

@@ -6,6 +6,7 @@ $ let weeks_str = input.defaults.leaderboard_active_period_weeks == 1 ? `week` :
     <ul class="nav nav-tabs">
         <li role="presentation" class="active"><a href="#overall" data-toggle="tab">Overall</a></li>
         <li role="presentation"><a href="#checkouts" data-toggle="tab">Checkouts</a></li>
+        <li role="presentation"><a href="#match-types" data-toggle="tab">Match Types</a></li>
     </ul>
   </div>
   <div class="tab-content" style="width: 100%;">
@@ -15,5 +16,8 @@ $ let weeks_str = input.defaults.leaderboard_active_period_weeks == 1 ? `week` :
     <div class=`tab-pane` role="tabpanel" id="checkouts">
 				<checkouts-table statistics=state.checkouts players=input.players />
     </div>
+    <div class=`tab-pane` role="tabpanel" id="match-types">
+				<match-type-leaderboard leaderboard=state.matchTypesLeaderboard matchTypes=input.matchTypes players=input.players />
+    </div>    
   </div>
 </div>

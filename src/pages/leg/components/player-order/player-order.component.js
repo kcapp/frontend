@@ -1,5 +1,5 @@
-var _ = require("underscore");
-var axios = require('axios');
+const _ = require("underscore");
+const axios = require('axios');
 
 module.exports = {
     onCreate(input) {
@@ -89,6 +89,7 @@ module.exports = {
             alert("All players must be selected before starting");
             return;
         }
+
         // Announce warmup if it's not already done
         this.startWarmup();
 

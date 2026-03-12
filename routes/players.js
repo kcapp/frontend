@@ -62,7 +62,7 @@ router.get('/:id/statistics', function (req, res, next) {
         axios.get(`${req.app.locals.kcapp.api}/player/${playerId}/checkouts`),
         axios.get(`${req.app.locals.kcapp.api}/player/${playerId}/tournament`),
         axios.get(`${req.app.locals.kcapp.api}/player/${playerId}/badges`),
-        axios.get(`${req.app.locals.kcapp.api}/statistics/x01/player/50`),
+        axios.get(`${req.app.locals.kcapp.api}/statistics/x01/player/`),
         axios.get(`${req.app.locals.kcapp.api}/badge`),
         axios.get(`${req.app.locals.kcapp.api}/tournament`)
     ]).then(axios.spread((players, playerData, statistics, previous, progression, checkouts, playerTournament, playerBadges, leaderboardData, badges, tournaments) => {

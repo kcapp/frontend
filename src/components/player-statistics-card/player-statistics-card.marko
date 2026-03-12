@@ -88,6 +88,12 @@ $ const matchType = leg.leg_type.id || match.match_type.id;
         <else>
           <div class="info" style="height: 40px"/>
         </else>
+        <if(statistic.darts_per_leg)>
+          <statistics-row heading="DPL" value=statistic.darts_per_leg />
+        </if>
+        <else>
+          <div class="info" style="height: 40px"/>
+        </else>
         <if(match.elo_change && input.elo)>
           $ var elo = match.elo_change[player.id];
           <if(match.tournament)>

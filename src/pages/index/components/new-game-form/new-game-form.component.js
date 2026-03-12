@@ -27,7 +27,8 @@ module.exports = {
             playerId: "",
             socket: {},
             demo_mode: false,
-            submitting: false
+            submitting: false,
+            isFirstChange: true
         }
     },
     onMount() {
@@ -288,6 +289,14 @@ module.exports = {
     },
     onGameTypeChanged(attribute, value) {
         if (attribute == 'game_type') {
+            if (this.state.isFirstChange) {
+                // Reset the game mode from the default
+                const component = this.getComponent('game-mode');
+                component.state.index = 0;
+                this.state.options.game_mode = component.state.values[component.state.index].id;
+                this.state.isFirstChange = false;
+            }
+
             // If this is 9 Dart Shootout or Cricket, make sure to set score to 0 and disable the selector
             let scoreComponent = this.getComponent('starting-score');
             scoreComponent.updateOptions(this.input.scores);
