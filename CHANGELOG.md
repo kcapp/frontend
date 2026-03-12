@@ -15,6 +15,7 @@ A preview of major changes can be found in the Wiki ([Latest Changes](https://gi
 - Sort tournament matches by putting played matches on top
 
 #### Fixed
+- Correctly show the total score for Around the World legs
 - Bug where tournaments couldn't be filtered by location
 - Handle new setups where `version.json` doesn't exist
 - Bug where `max_rounds` would overwrite results from previous legs
