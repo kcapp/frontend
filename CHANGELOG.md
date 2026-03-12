@@ -1,6 +1,9 @@
 # Changelog
 A preview of major changes can be found in the Wiki ([Latest Changes](https://github.com/kcapp/frontend/wiki/Latest_Changes))
 
+## [2.11.0] - TBD
+
+
 ## [2.10.0] - 2026-03-12
 #### Feature
 - Player progression is now reworked to group legs into buckets for better comparsion
@@ -274,6 +277,7 @@ A preview of major changes can be found in the Wiki ([Latest Changes](https://gi
 - Multiple score entry methods
     - Including [Unicorn Smartboard](https://github.com/kcapp/smartboard)
 
+[2.11.0]: https://github.com/kcapp/frontend/compare/v2.10.0...develop
 [2.10.0]: https://github.com/kcapp/frontend/compare/v2.9.0...v2.10.0
 [2.9.0]: https://github.com/kcapp/frontend/compare/v2.8.0...v2.9.0
 [2.8.0]: https://github.com/kcapp/frontend/compare/v2.7.0...v2.8.0
