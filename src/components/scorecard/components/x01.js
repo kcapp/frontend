@@ -2,7 +2,7 @@ const alertify = require("../../../util/alertify");
 const localStorage = require("../../../util/localstorage");
 const types = require("./match_types");
 
-exports.removeLast = function(dart, external) {
+exports.removeLast = function(dart, external, origin) {
     let value = dart.getValue();
     this.state.totalScore -= value;
     if (!this.state.player.player.options || this.state.player.player.options.subtract_per_dart) {
@@ -10,7 +10,7 @@ exports.removeLast = function(dart, external) {
     }
     this.emit('score-change', -value, this.state.player.player_id);
     if (!external) {
-        this.emit('possible-throw', false, false, this.state.currentDart, -dart.getScore(), dart.getMultiplier(), true, false);
+        this.emit('possible-throw', false, false, this.state.currentDart, -dart.getScore(), dart.getMultiplier(), true, false, origin);
     }
 }
 
@@ -57,7 +57,7 @@ exports.isCheckout = (player, dart, totalScore, leg) => {
     return false;
 }
 
-exports.confirmThrow = function (external) {
+exports.confirmThrow = function (external, origin) {
     let submitting = false;
 
     const dart = this.getCurrentDart();
@@ -122,7 +122,7 @@ exports.confirmThrow = function (external) {
     }
     if (!external) {
         // If an external event triggered the update don't emit a throw
-        this.emit('possible-throw', isCheckout, isBust, this.state.currentDart - 1, dart.getScore(), dart.getMultiplier(), false, false);
+        this.emit('possible-throw', isCheckout, isBust, this.state.currentDart - 1, dart.getScore(), dart.getMultiplier(), false, false, origin);
     }
     return submitting;
 }

@@ -14,6 +14,8 @@ module.exports = {
             has_smartboard: false,
             smartboard_uuid: undefined,
             smartboard_button_number: undefined,
+            has_autodarts: false,
+            autodarts_url: undefined,
             office_id: office ? office.id : undefined,
             isAdd: input.isAdd,
 
@@ -32,6 +34,8 @@ module.exports = {
                 has_smartboard: input.venue.config.has_smartboard,
                 smartboard_uuid: input.venue.config.smartboard_uuid,
                 smartboard_button_number: input.venue.config.smartboard_button_number,
+                has_autodarts: input.venue.config.has_autodarts,
+                autodarts_url: input.venue.config.autodarts_url,
                 isAdd: input.isAdd,
 
                 voices: input.voices
@@ -77,6 +81,12 @@ module.exports = {
     smartboardButtonNumberChange(event) {
         this.state.smartboard_button_number = event.target.value;
     },
+    autodartsChange(event) {
+        this.state.has_autodarts = event.target.checked;
+    },
+    autodartsURLChange(event) {
+        this.state.autodarts_url = event.target.value;
+    },
     addVenue(event) {
         if (!this.state.name) {
             alert("Name is required");
@@ -97,7 +107,9 @@ module.exports = {
                 tts_voice: this.state.ttsVoice,
                 has_smartboard: this.state.has_smartboard,
                 smartboard_uuid: this.state.smartboard_uuid,
-                smartboard_button_number: this.state.smartboard_button_number
+                smartboard_button_number: this.state.smartboard_button_number,
+                has_autodarts: this.state.has_autodarts,
+                autodarts_url: this.state.autodarts_url
             },
             office_id: this.state.office_id
         };

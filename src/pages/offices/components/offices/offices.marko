@@ -46,6 +46,7 @@
                                     <th>LED Lights</th>
                                     <th>WLED Lights</th>
                                     <th>Smartboard</th>
+                                    <th>Autodarts</th>
                                     <th>Options</th>
                                 </tr>
                                 </thead>
@@ -59,6 +60,7 @@
                                             <td><input type="checkbox" name="LED Lights" checked=venue.config.has_led_lights disabled></td>
                                             <td><input type="checkbox" name="LED Lights" checked=venue.config.has_wled_lights disabled></td>
                                             <td><input type="checkbox" name="Smartboard" checked=venue.config.has_smartboard disabled></td>
+                                            <td><input type="checkbox" name="Autodarts" checked=venue.config.has_autodarts disabled></td>
                                             <td>
                                                 $ let modalId = `edit-venue-${venue.id}-modal`;
                                                 <button class="btn btn-primary" type="button" data-toggle="modal" data-target=`#${modalId}`>

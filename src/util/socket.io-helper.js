@@ -160,11 +160,10 @@ exports.onPossibleThrow = function (data, thiz) {
         compactComponent.setStateDirty("players");
     }
 
-    if (data.origin === 'web' && data.uuid === component.state.uuid) {
+    if ((data.origin === 'web' || data.origin === 'autodarts') && data.uuid === component.state.uuid) {
         // No need to update possible throw if we just sent the throw
         return;
-    }
-    else if (data.origin === 'smartboard') {
+    } else if (data.origin === 'smartboard') {
         if (data.is_undo) {
             component.state.currentDart--;
         } else {

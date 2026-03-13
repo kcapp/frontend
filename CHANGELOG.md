@@ -2,7 +2,8 @@
 A preview of major changes can be found in the Wiki ([Latest Changes](https://github.com/kcapp/frontend/wiki/Latest_Changes))
 
 ## [2.11.0] - TBD
-
+#### Feature
+- (BETA) Support for [Autodarts](https://autodarts.io)
 
 ## [2.10.0] - 2026-03-12
 #### Feature

@@ -1,7 +1,7 @@
 const types = require("./match_types");
 const shanghai = require("./shanghai");
 
-exports.removeLast = function(dart, external) {
+exports.removeLast = function(dart, external, origin) {
     const target = types.TARGET_JDC_PRACTICE[this.state.leg.round];
     if (target.constructor === Array) {
         if (dart.getScore() === target[this.state.currentDart - 1].value && dart.getMultiplier() === 2) {
@@ -19,7 +19,7 @@ exports.removeLast = function(dart, external) {
         }
     }
     if (!external) {
-        this.emit('possible-throw', false, false, this.state.currentDart, -dart.getScore(), dart.getMultiplier(), true, false);
+        this.emit('possible-throw', false, false, this.state.currentDart, -dart.getScore(), dart.getMultiplier(), true, false, origin);
     }
     this.setState("jdcDart", this.state.currentDart - 1);
 }
@@ -32,7 +32,7 @@ exports.isCheckout = (leg, currentDart) => {
     return visits > 0 && (visits % (19 * leg.players.length) === 0);
 }
 
-exports.confirmThrow = function (external) {
+exports.confirmThrow = function (external, origin) {
     let submitting = false;
 
     const dart = this.getCurrentDart();
@@ -72,7 +72,7 @@ exports.confirmThrow = function (external) {
     }
     if (!external) {
         // If an external event triggered the update don't emit a throw
-        this.emit('possible-throw', isCheckout, false, this.state.currentDart - 1, dart.getScore(), dart.getMultiplier(), false, false);
+        this.emit('possible-throw', isCheckout, false, this.state.currentDart - 1, dart.getScore(), dart.getMultiplier(), false, false, origin);
     }
     this.setState("jdcDart", this.state.currentDart - 1);
     return submitting;

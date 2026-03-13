@@ -1,6 +1,6 @@
 const alertify = require("../../../util/alertify");
 
-exports.removeLast = function(dart, external) {
+exports.removeLast = function(dart, external, origin) {
     const value = dart.getValue();
     this.state.player.current_score -= value;
     this.state.player.darts_thrown--;
@@ -8,7 +8,7 @@ exports.removeLast = function(dart, external) {
 
     this.emit('score-change', value, this.state.player.player_id);
     if (!external) {
-        this.emit('possible-throw', false, false, this.state.currentDart, dart.getScore(), dart.getMultiplier(), true, false);
+        this.emit('possible-throw', false, false, this.state.currentDart, dart.getScore(), dart.getMultiplier(), true, false, origin);
     }
 }
 
@@ -36,7 +36,7 @@ exports.isCheckout = function(leg, currentDart, players) {
     return isCheckout;
 }
 
-exports.confirmThrow = function (external) {
+exports.confirmThrow = function (external, origin) {
     let submitting = false;
     const dart = this.getCurrentDart();
     const scored = dart.getValue();
@@ -63,7 +63,7 @@ exports.confirmThrow = function (external) {
     }
 
     if (!external) {
-        this.emit('possible-throw', isCheckout, false, this.state.currentDart - 1, dart.getScore(), dart.getMultiplier(), false, false);
+        this.emit('possible-throw', isCheckout, false, this.state.currentDart - 1, dart.getScore(), dart.getMultiplier(), false, false, origin);
     }
     return submitting;
 }

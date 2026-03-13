@@ -84,6 +84,16 @@ $ var heading = input.heading || "Add Venue";
             </select>
           </div>
         </div>
+        <div class="form-group">
+          <div style="width: 10%; float: left;">
+            <label class="control-label">Autodarts</label>
+            <input class="form-control small-checkbox" type="checkbox" checked=state.has_autodarts on-input("autodartsChange")/>
+          </div>
+          <div style="width: 90%; float: left;">
+            <label class="control-label">URL</label>
+            <input class="form-control" type="text" value=state.autodarts_url disabled=!state.has_autodarts placeholder="ws://localhost:3180" on-input("autodartsURLChange")/>
+          </div>
+        </div>
         <button class="btn btn-default btn-close" type="button" data-dismiss="modal">Close</button>
         <button class="btn btn-primary btn-submit" type="submit" on-click("addVenue")>
           <i class="fas fa-user-plus"/>

@@ -21,7 +21,7 @@ exports.reset = function() {
     hit = null;
 }
 
-exports.removeLast = function(dart, external) {
+exports.removeLast = function(dart, external, origin) {
     let scored = dart.getValue();
     this.state.player.current_score -= scored;
     this.emit('score-change', scored, this.state.player.player_id);
@@ -42,7 +42,7 @@ exports.removeLast = function(dart, external) {
     }
 
     if (!external) {
-        this.emit('possible-throw', false, false, this.state.currentDart, dart.getScore(), dart.getMultiplier(), true, false);
+        this.emit('possible-throw', false, false, this.state.currentDart, dart.getScore(), dart.getMultiplier(), true, false, origin);
     }
 }
 
@@ -85,7 +85,7 @@ exports.isCheckout = (leg, player) => {
     return false;
 }
 
-exports.confirmThrow = function (external) {
+exports.confirmThrow = function (external, origin) {
     let submitting = false;
 
     const dart = this.getCurrentDart();
@@ -125,7 +125,7 @@ exports.confirmThrow = function (external) {
 
     if (!external) {
         // If an external event triggered the update don't emit a throw
-        this.emit('possible-throw', isCheckout, false, this.state.currentDart - 1, dart.getScore(), dart.getMultiplier(), false, false);
+        this.emit('possible-throw', isCheckout, false, this.state.currentDart - 1, dart.getScore(), dart.getMultiplier(), false, false, origin);
     }
 
     return submitting;

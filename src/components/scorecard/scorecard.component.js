@@ -96,7 +96,7 @@ module.exports = {
         return this.state.currentDart;
     },
 
-    removeLast(external) {
+    removeLast(external, origin = "web") {
         if (this.state.currentDart <= 1 && this.state.isSubmitted) {
             this.emit('undo-throw');
             return;
@@ -107,53 +107,53 @@ module.exports = {
 
             switch (this.state.type) {
                 case types.SHOOTOUT:
-                    shootout.removeLast.bind(this)(dart, external);
+                    shootout.removeLast.bind(this)(dart, external, origin);
                     break;
                 case types.X01HANDICAP:
                 case types.X01:
-                    x01.removeLast.bind(this)(dart, external);
+                    x01.removeLast.bind(this)(dart, external, origin);
                     break;
                 case types.CRICKET:
-                    cricket.removeLast.bind(this)(dart, external);
+                    cricket.removeLast.bind(this)(dart, external, origin);
                     break;
                 case types.DARTS_AT_X:
-                    dartsAtX.removeLast.bind(this)(dart, external);
+                    dartsAtX.removeLast.bind(this)(dart, external, origin);
                     break;
                 case types.AROUND_THE_WORLD:
-                    aroundTheWorld.removeLast.bind(this)(dart, external);
+                    aroundTheWorld.removeLast.bind(this)(dart, external, origin);
                     break;
                 case types.SHANGHAI:
-                    shanghai.removeLast.bind(this)(dart, external);
+                    shanghai.removeLast.bind(this)(dart, external, origin);
                     break;
                 case types.AROUND_THE_CLOCK:
-                    aroundTheClock.removeLast.bind(this)(dart, external);
+                    aroundTheClock.removeLast.bind(this)(dart, external, origin);
                     break;
                 case types.TIC_TAC_TOE:
-                    ticTacToe.removeLast.bind(this)(dart, external);
+                    ticTacToe.removeLast.bind(this)(dart, external, origin);
                     break;
                 case types.BERMUDA_TRIANGLE:
-                    bermudaTriangle.removeLast.bind(this)(dart, external);
+                    bermudaTriangle.removeLast.bind(this)(dart, external, origin);
                     break;
                 case types.FOUR_TWENTY:
-                    fourTwenty.removeLast.bind(this)(dart, external);
+                    fourTwenty.removeLast.bind(this)(dart, external, origin);
                     break;
                 case types.KILL_BULL:
-                    killBull.removeLast.bind(this)(dart, external);
+                    killBull.removeLast.bind(this)(dart, external, origin);
                     break;
                 case types.GOTCHA:
-                    gotcha.removeLast.bind(this)(dart, external);
+                    gotcha.removeLast.bind(this)(dart, external, origin);
                     break;
                 case types.JDC_PRACTICE:
-                    jdcPractice.removeLast.bind(this)(dart, external);
+                    jdcPractice.removeLast.bind(this)(dart, external, origin);
                     break;
                 case types.KNOCKOUT:
-                    knockout.removeLast.bind(this)(dart, external);
+                    knockout.removeLast.bind(this)(dart, external, origin);
                     break;
                 case types.SCAM:
-                    scam.removeLast.bind(this)(dart, external);
+                    scam.removeLast.bind(this)(dart, external, origin);
                     break;
                 case types.ONESEVENTY:
-                    oneseventy.removeLast.bind(this)(dart, external);
+                    oneseventy.removeLast.bind(this)(dart, external, origin);
                     break;
             }
             dart.reset();
@@ -164,58 +164,58 @@ module.exports = {
         this.state.isSubmitted = true;
     },
 
-    confirmThrow(external) {
+    confirmThrow(external, origin = "web") {
         let submitting = false;
         if (this.state.currentDart <= 3 && !this.state.isBusted) {
             switch (this.state.type) {
                 case types.SHOOTOUT:
-                    submitting = shootout.confirmThrow.bind(this)(external);
+                    submitting = shootout.confirmThrow.bind(this)(external, origin);
                     break;
                 case types.X01HANDICAP:
                 case types.X01:
-                    submitting = x01.confirmThrow.bind(this)(external);
+                    submitting = x01.confirmThrow.bind(this)(external, origin);
                     break;
                 case types.CRICKET:
-                    submitting = cricket.confirmThrow.bind(this)(external);
+                    submitting = cricket.confirmThrow.bind(this)(external, origin);
                     break;
                 case types.DARTS_AT_X:
-                    submitting = dartsAtX.confirmThrow.bind(this)(external);
+                    submitting = dartsAtX.confirmThrow.bind(this)(external, origin);
                     break;
                 case types.AROUND_THE_WORLD:
-                    submitting = aroundTheWorld.confirmThrow.bind(this)(external);
+                    submitting = aroundTheWorld.confirmThrow.bind(this)(external, origin);
                     break;
                 case types.SHANGHAI:
-                    submitting = shanghai.confirmThrow.bind(this)(external);
+                    submitting = shanghai.confirmThrow.bind(this)(external, origin);
                     break;
                 case types.AROUND_THE_CLOCK:
-                    submitting = aroundTheClock.confirmThrow.bind(this)(external);
+                    submitting = aroundTheClock.confirmThrow.bind(this)(external, origin);
                     break;
                 case types.TIC_TAC_TOE:
-                    submitting = ticTacToe.confirmThrow.bind(this)(external);
+                    submitting = ticTacToe.confirmThrow.bind(this)(external, origin);
                     break;
                 case types.BERMUDA_TRIANGLE:
-                    submitting = bermudaTriangle.confirmThrow.bind(this)(external);
+                    submitting = bermudaTriangle.confirmThrow.bind(this)(external, origin);
                     break;
                 case types.FOUR_TWENTY:
-                    submitting = fourTwenty.confirmThrow.bind(this)(external);
+                    submitting = fourTwenty.confirmThrow.bind(this)(external, origin);
                     break;
                 case types.KILL_BULL:
-                    submitting = killBull.confirmThrow.bind(this)(external);
+                    submitting = killBull.confirmThrow.bind(this)(external, origin);
                     break;
                 case types.GOTCHA:
-                    submitting = gotcha.confirmThrow.bind(this)(external);
+                    submitting = gotcha.confirmThrow.bind(this)(external, origin);
                     break;
                 case types.JDC_PRACTICE:
-                    submitting = jdcPractice.confirmThrow.bind(this)(external);
+                    submitting = jdcPractice.confirmThrow.bind(this)(external, origin);
                     break;
                 case types.KNOCKOUT:
-                    submitting = knockout.confirmThrow.bind(this)(external);
+                    submitting = knockout.confirmThrow.bind(this)(external, origin);
                     break;
                 case types.SCAM:
-                    submitting = scam.confirmThrow.bind(this)(external);
+                    submitting = scam.confirmThrow.bind(this)(external, origin);
                     break;
                 case types.ONESEVENTY:
-                    submitting = oneseventy.confirmThrow.bind(this)(external);
+                    submitting = oneseventy.confirmThrow.bind(this)(external, origin);
                     break;
             }
         }

@@ -15,6 +15,23 @@
   </if>
   <div class="float-right">
     <div class="btn-group">
+      <if(state.hasAutodarts)>
+        <button class="btn btn-primary mr-10" type="button">
+            <i class="fas fa-circle mr-10" style=`color: ${state.autodarts.status === "Throw" ? "#48BB78" : "#FBD38D"};`/>
+            ${state.autodarts.status} (${state.autodarts.numThrows})
+        </button>
+        <button class="btn btn-primary mr-10" type="button" on-click("startStopAutodarts")>
+          <if(state.autodarts.running)>
+            <i class="fas fa-stop"></i>
+          </if>
+          <else>
+            <i class="fas fa-play"></i>
+          </else>
+        </button>
+        <button class="btn btn-primary mr-10" type="button" on-click("resetAutodarts")>
+          <i class="fas fa-sync"></i>
+        </button>
+      </if>
       <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
         Options&nbsp;&nbsp;<span class="caret"/>
         <span class="sr-only"/>

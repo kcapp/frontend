@@ -250,11 +250,29 @@ module.exports = {
         }
     },
 
-    onPossibleThrow(isCheckout, isBust, dartsThrown, score, multiplier, isUndo, submit) {
+    onAutodartsSubmitThrow() {
+        let component = this.findActive(this.getComponents('players'));
+        if (component.state.totalScore === 0 && component.state.currentDart === 1) {
+            // We don't want to submit if no darts are thrown, this happens if a throw
+            // is manually submitted, and then a TAKEOUT event fires afterwards
+            return;
+        }
+        this.state.submitting = true;
+        this.state.socket.emit('throw', JSON.stringify(component.getPayload()));
+    },
+
+    onAutodartsThrow(score, multiplier, origin) {
+        let component = this.findActive(this.getComponents('players'));
+        component.setDart(score, multiplier);
+        this.state.submitting = component.confirmThrow(false, origin);
+    },
+
+    onPossibleThrow(isCheckout, isBust, dartsThrown, score, multiplier, isUndo, submit, origin) {
         let component = this.findActive(this.getComponents('players'));
         if (isCheckout) {
             component.confirmLegFinish();
         }
+
         if (this.state.matchType == types.TIC_TAC_TOE) {
             this.getComponent("tic-tac-toe-board").updateBoard(score, multiplier, isUndo);
         }
@@ -268,7 +286,7 @@ module.exports = {
             is_finished: isCheckout,
             darts_thrown: dartsThrown,
             is_undo: isUndo,
-            origin: "web"
+            origin: origin
         });
         if (submit) {
             this.state.submitting = true;
