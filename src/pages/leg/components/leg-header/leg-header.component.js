@@ -17,11 +17,11 @@ module.exports = {
             this.state.hasAutodarts = true;
 
             const autodartsURL = input.match.venue.config.autodarts_url;
-            const raw = autodartsURL.replace(/^ws:\/\//, '');
+            const raw = autodartsURL.replace(/^wss?:\/\//, '');
             const [host, port] = raw.split(':');
 
             this.state.autodarts = {
-                url: `http://${host}:${port}`,
+                url: `${autodartsURL.startsWith('wss') ? 'https' : 'http'}://${host}:${port}`,
                 connected: undefined,
                 status: undefined,
                 running: false,
@@ -113,7 +113,7 @@ module.exports = {
 
             ws.onerror = (error) => {
                 console.log(`error: ${error.message}`);
-                alertify.success(`Error from Autodarts: ${error.message}`);
+                alertify.error(`Error from Autodarts: ${error.message}`);
             };
 
             ws.onclose = () => {
