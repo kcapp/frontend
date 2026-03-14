@@ -22,7 +22,7 @@ module.exports = {
 
             this.state.autodarts = {
                 url: `${autodartsURL.startsWith('wss') ? 'https' : 'http'}://${host}:${port}`,
-                connected: undefined,
+                connected: false,
                 status: undefined,
                 running: false,
                 numThrows: 0
@@ -114,6 +114,10 @@ module.exports = {
             ws.onerror = (error) => {
                 console.log(`error: ${error.message}`);
                 alertify.error(`Error from Autodarts: ${error.message}`);
+
+                this.state.autodarts.status = 'ERROR';
+                this.state.autodarts.connected = false;
+                this.state.autodarts.running = false;
             };
 
             ws.onclose = () => {

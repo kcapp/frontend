@@ -17,7 +17,7 @@
     <div class="btn-group">
       <if(state.hasAutodarts)>
         <button class="btn btn-primary mr-10" type="button">
-            <i class="fas fa-circle mr-10" style=`color: ${state.autodarts.status === "Throw" ? "#48BB78" : "#FBD38D"};`/>
+            <i class="fas fa-circle mr-10" style=`color: ${state.autodarts.connected ? state.autodarts.status === "Throw" ? "#48BB78" : "#FBD38D" : "#DC4242"};`/>
             ${state.autodarts.status} (${state.autodarts.numThrows})
         </button>
         <button class="btn btn-primary mr-10" type="button" on-click("startStopAutodarts")>
