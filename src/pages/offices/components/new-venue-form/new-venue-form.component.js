@@ -85,7 +85,8 @@ module.exports = {
         this.state.has_autodarts = event.target.checked;
     },
     autodartsURLChange(event) {
-        this.state.autodarts_url = event.target.value;
+        const value = event.target.value;
+        this.state.autodarts_url = value.endsWith('/') ? value.slice(0, -1) : value;
     },
     addVenue(event) {
         if (!this.state.name) {
