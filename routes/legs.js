@@ -141,13 +141,13 @@ router.post('/:id/result', function (req, res, next) {
 
 /* Method to cancel a leg in progress */
 router.delete('/:id/cancel', function (req, res, next) {
-    var legId = req.params.id;
-    axios.delete(`${req.app.locals.kcapp.api}/leg/${legId}`)
+    const legId = req.params.id;
+    axios.delete(`${req.app.locals.kcapp.api}/leg/${legId}`, { data: req.body })
         .then(() => {
             this.socketHandler.emitMessage(`/legs/${legId}`, 'cancelled', { });
             res.status(204).end();
         }).catch(error => {
-            debug(`Error when modifying scores: ${error}`);
+            debug(`Error when cancelling leg: ${error}`);
             next(error);
         });
 });
