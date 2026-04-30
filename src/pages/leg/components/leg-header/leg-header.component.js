@@ -69,7 +69,7 @@ module.exports = {
 
     cancelLeg(event) {
         alertify.confirm('Leg will be cancelled.', () => {
-            axios.delete(`${window.location.origin}/legs/${this.input.leg.id}/cancel`)
+            axios.delete(`${window.location.origin}/legs/${this.input.leg.id}/cancel`, { data: { abandoned: true } })
                 .then(response => {
                     location.href = '/matches';
                 }).catch(error => {

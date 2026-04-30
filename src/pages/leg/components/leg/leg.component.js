@@ -332,9 +332,26 @@ module.exports = {
 
         const component = this.findActive(this.getComponents('players'));
         if (e.key === 'Backspace') {
+            if (this.input.match.legs.length > 1 && component.state.currentDart === 1 && this.state.leg.visits.length === 0) {
+                const previous = this.input.match.legs[this.input.match.legs.length - 2];
+                console.log(previous);
+                alertify.confirm('Undo finish of previous leg?',
+                    () => {
+                        axios.delete(`${window.location.origin}/legs/${this.state.leg.id}/cancel`, { data: { abandoned: false } })
+                            .then(() => axios.put(`${window.location.origin}/legs/${previous.id}/undo`, null))
+                            .then(() => {
+                                location.href = `/legs/${previous.id}`;
+                            })
+                            .catch((error) => {
+                                const statusText = error?.response?.statusText || error?.statusText || 'unknown error';
+                                alert(`Unable to undo previous leg. Reload and try again (${statusText})`);
+                            });
+                    }, () => { /* NOOP */ });
+                return;
+            }
             component.removeLast();
             e.preventDefault();
-        } else if (e.key === '$' || e.key === '=') { 
+        } else if (e.key === '$' || e.key === '=') {
             this.state.keyboard.mode = this.state.keyboard.mode === "simple" ? "full" :  "simple";
             this.setStateDirty('keyboard');
             this.state.enableButtonInput = false;
