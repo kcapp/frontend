@@ -128,7 +128,7 @@ module.exports = (io, app) => {
                 return;
             }
             const namespace = `/legs/${legId}`;
-            if (this.io._nsps[namespace] === undefined) {
+            if (!this.io._nsps.has(namespace)) {
                 const nsp = this.io.of(namespace);
 
                 // To not spam the API with too many requests, we add a short limit to the requests here
@@ -158,6 +158,7 @@ module.exports = (io, app) => {
 
                 nsp.on('connection', function (client) {
                     const ip = getClientIP(client);
+
                     log('connection', namespace);
                     client.on('join', function () {
                         axios.all([

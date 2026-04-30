@@ -72,9 +72,8 @@ module.exports = {
         });
 
         window.addEventListener('pageshow', (event) => {
-            // If navigation happens via 'back; button make sure to reload to get correct state
-            var perfEntries = performance.getEntriesByType("navigation");
-            if (perfEntries[0].type === "back_forward") {
+            // If page is restored from bfcache, reload to get correct socket state
+            if (event.persisted) {
                 location.reload();
             }
         });
@@ -352,7 +351,6 @@ module.exports = {
         if (e.key === 'Backspace') {
             if (this.input.match.legs.length > 1 && component.state.currentDart === 1 && this.state.leg.visits.length === 0) {
                 const previous = this.input.match.legs[this.input.match.legs.length - 2];
-                console.log(previous);
                 alertify.confirm('Undo finish of previous leg?',
                     () => {
                         axios.delete(`${window.location.origin}/legs/${this.state.leg.id}/cancel`, { data: { abandoned: false } })
@@ -365,6 +363,7 @@ module.exports = {
                                 alert(`Unable to undo previous leg. Reload and try again (${statusText})`);
                             });
                     }, () => { /* NOOP */ });
+                e.preventDefault();
                 return;
             }
             component.removeLast();
