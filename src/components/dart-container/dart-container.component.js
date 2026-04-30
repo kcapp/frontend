@@ -22,7 +22,8 @@ module.exports = {
             class: '',
             value: 0,
             multiplier: 1,
-            initial: true
+            initial: true,
+            placeholder: false
         }
     },
     getValue() {

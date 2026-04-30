@@ -36,7 +36,8 @@ module.exports = {
                 mode: 'full',
                 timer: undefined,
                 previous: { value: 0, multiplier: 1 }
-            }
+            },
+            pendingPreviousVisit: null
         }
     },
 
@@ -85,6 +86,10 @@ module.exports = {
         socket.on('possible_throw', this.onPossibleThrowEvent.bind(this));
         socket.on('say', this.onSay.bind(this));
         socket.on('announce', io.onAnnounce.bind(this));
+        socket.on('undo_visit', (data) => {
+            const previous = this.state.leg.visits[this.state.leg.visits.length - 1];
+            this.state.pendingPreviousVisit = previous;
+        });
         socket.on('leg_finished', (data) => {
             let match = data.match;
 
@@ -167,7 +172,30 @@ module.exports = {
             return;
         }
         io.onScoreUpdate(data, this);
-        this.findActive(this.getComponents('players')).setLeg(this.state.leg);
+        const comp = this.findActive(this.getComponents('players'));
+        comp.setLeg(this.state.leg);
+
+        if (this.state.pendingPreviousVisit) {
+            const previous = this.state.pendingPreviousVisit;
+            const isBust = previous.is_bust;
+            console.log(previous);
+            comp.setDart(previous.first_dart.value, previous.first_dart.multiplier, 1, isBust);
+            comp.state.currentDart = 2;
+
+            if (previous.second_dart.value !== null) {
+                comp.setDart(previous.second_dart.value, previous.second_dart.multiplier, 2, isBust);
+                comp.state.currentDart = 3;
+            }
+            if (previous.third_dart.value !== null) {
+                comp.setDart(previous.third_dart.value, previous.third_dart.multiplier, 3, isBust);
+                comp.state.currentDart = 4;
+            }
+            comp.state.totalScore = previous.score;
+            this.getComponent(`player-${previous.player_id}`).state.player.current_score -= previous.score;
+            comp.state.isSubmitted = true;
+
+            this.state.pendingPreviousVisit = null;
+        }
     },
 
     onScoreChange(scored, playerId, component) {

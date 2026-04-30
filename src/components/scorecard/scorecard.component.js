@@ -104,57 +104,58 @@ module.exports = {
         if (this.state.isSubmitted) {
             this.state.currentDart--;
             const dart = this.getCurrentDart();
-
-            switch (this.state.type) {
-                case types.SHOOTOUT:
-                    shootout.removeLast.bind(this)(dart, external, origin);
-                    break;
-                case types.X01HANDICAP:
-                case types.X01:
-                    x01.removeLast.bind(this)(dart, external, origin);
-                    break;
-                case types.CRICKET:
-                    cricket.removeLast.bind(this)(dart, external, origin);
-                    break;
-                case types.DARTS_AT_X:
-                    dartsAtX.removeLast.bind(this)(dart, external, origin);
-                    break;
-                case types.AROUND_THE_WORLD:
-                    aroundTheWorld.removeLast.bind(this)(dart, external, origin);
-                    break;
-                case types.SHANGHAI:
-                    shanghai.removeLast.bind(this)(dart, external, origin);
-                    break;
-                case types.AROUND_THE_CLOCK:
-                    aroundTheClock.removeLast.bind(this)(dart, external, origin);
-                    break;
-                case types.TIC_TAC_TOE:
-                    ticTacToe.removeLast.bind(this)(dart, external, origin);
-                    break;
-                case types.BERMUDA_TRIANGLE:
-                    bermudaTriangle.removeLast.bind(this)(dart, external, origin);
-                    break;
-                case types.FOUR_TWENTY:
-                    fourTwenty.removeLast.bind(this)(dart, external, origin);
-                    break;
-                case types.KILL_BULL:
-                    killBull.removeLast.bind(this)(dart, external, origin);
-                    break;
-                case types.GOTCHA:
-                    gotcha.removeLast.bind(this)(dart, external, origin);
-                    break;
-                case types.JDC_PRACTICE:
-                    jdcPractice.removeLast.bind(this)(dart, external, origin);
-                    break;
-                case types.KNOCKOUT:
-                    knockout.removeLast.bind(this)(dart, external, origin);
-                    break;
-                case types.SCAM:
-                    scam.removeLast.bind(this)(dart, external, origin);
-                    break;
-                case types.ONESEVENTY:
-                    oneseventy.removeLast.bind(this)(dart, external, origin);
-                    break;
+            if (!dart.state.placeholder) {
+                switch (this.state.type) {
+                    case types.SHOOTOUT:
+                        shootout.removeLast.bind(this)(dart, external, origin);
+                        break;
+                    case types.X01HANDICAP:
+                    case types.X01:
+                        x01.removeLast.bind(this)(dart, external, origin);
+                        break;
+                    case types.CRICKET:
+                        cricket.removeLast.bind(this)(dart, external, origin);
+                        break;
+                    case types.DARTS_AT_X:
+                        dartsAtX.removeLast.bind(this)(dart, external, origin);
+                        break;
+                    case types.AROUND_THE_WORLD:
+                        aroundTheWorld.removeLast.bind(this)(dart, external, origin);
+                        break;
+                    case types.SHANGHAI:
+                        shanghai.removeLast.bind(this)(dart, external, origin);
+                        break;
+                    case types.AROUND_THE_CLOCK:
+                        aroundTheClock.removeLast.bind(this)(dart, external, origin);
+                        break;
+                    case types.TIC_TAC_TOE:
+                        ticTacToe.removeLast.bind(this)(dart, external, origin);
+                        break;
+                    case types.BERMUDA_TRIANGLE:
+                        bermudaTriangle.removeLast.bind(this)(dart, external, origin);
+                        break;
+                    case types.FOUR_TWENTY:
+                        fourTwenty.removeLast.bind(this)(dart, external, origin);
+                        break;
+                    case types.KILL_BULL:
+                        killBull.removeLast.bind(this)(dart, external, origin);
+                        break;
+                    case types.GOTCHA:
+                        gotcha.removeLast.bind(this)(dart, external, origin);
+                        break;
+                    case types.JDC_PRACTICE:
+                        jdcPractice.removeLast.bind(this)(dart, external, origin);
+                        break;
+                    case types.KNOCKOUT:
+                        knockout.removeLast.bind(this)(dart, external, origin);
+                        break;
+                    case types.SCAM:
+                        scam.removeLast.bind(this)(dart, external, origin);
+                        break;
+                    case types.ONESEVENTY:
+                        oneseventy.removeLast.bind(this)(dart, external, origin);
+                        break;
+                }
             }
             dart.reset();
         } else {
@@ -222,7 +223,7 @@ module.exports = {
         return submitting;
     },
 
-    setDart(value, multiplier, idx) {
+    setDart(value, multiplier, idx, fake = false) {
         let dart;
         if (idx) {
             dart = this.getDart(idx);
@@ -239,6 +240,7 @@ module.exports = {
             return;
         }
         dart.setDart(newValue, multiplier);
+        dart.state.placeholder = fake;
         this.state.isSubmitted = false;
     },
 
