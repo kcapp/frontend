@@ -7,6 +7,9 @@ A preview of major changes can be found in the Wiki ([Latest Changes](https://gi
 - Undo leg finish by clicking `Backspace` on start of next leg
 - Darts thrown in previous vist is now remembered when going back
 
+#### Fixed
+- Three Dart Avg. on stats cards and tables now indicates which value is overall vs first 9 (#153)
+
 ## [2.10.0] - 2026-03-12
 #### Feature
 - Player progression is now reworked to group legs into buckets for better comparsion

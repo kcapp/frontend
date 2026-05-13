@@ -15,7 +15,7 @@ $ var moment = require('moment');
                     </td>
                     <if(input.type == types.X01 || input.type == types.X01HANDICAP)>
                         <td style="width: 25%;">
-                            <statistics-card label="Three Dart Avg." value=`${(input.statistics.three_dart_avg).toFixed(2)} / ${(input.statistics.first_nine_three_dart_avg).toFixed(2)}` icon="fas fa-circle-notch"/>
+                            <statistics-card label="Three Dart Avg. / First 9" value=`${(input.statistics.three_dart_avg).toFixed(2)} / ${(input.statistics.first_nine_three_dart_avg).toFixed(2)}` icon="fas fa-circle-notch"/>
                         </td>
                         <td style="width: 25%;">
                             <statistics-card label="Checkout %" value=`${input.statistics.checkout_percentage ? input.statistics.checkout_percentage.toFixed(2) : "-"} %` icon="fas fa-star"/>
@@ -183,7 +183,7 @@ $ var moment = require('moment');
                 <th class="text-center" style='width: 18%;'>Start Time</th>
                 <th class="text-center" style='width: 30%;'>Players</th>
                 <if(input.type == types.X01 || input.type == types.X01HANDICAP)>
-                    <th class="text-center">Three Dart Avg.</th>
+                    <th class="text-center" title="3 Dart Avg. / First 9 Three Dart Avg.">Three Dart Avg.</th>
                     <th class="text-center">Checkout</th>
                     <th class="text-center">Overall</th>
                     <th class="text-center">20s</th>

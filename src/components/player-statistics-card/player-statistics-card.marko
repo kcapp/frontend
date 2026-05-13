@@ -74,7 +74,7 @@ $ const matchType = leg.leg_type.id || match.match_type.id;
         </div>
       </div>
       <if(matchType == type.X01 || matchType == type.X01HANDICAP)>
-        <statistics-row heading="Three Dart Avg." value=`${statistic.three_dart_avg.toFixed(2)} / ${statistic.first_nine_three_dart_avg.toFixed(2)}`/>
+        <statistics-row heading="Three Dart Avg. / First 9" value=`${statistic.three_dart_avg.toFixed(2)} / ${statistic.first_nine_three_dart_avg.toFixed(2)}`/>
         $ var accuracy_20 = statistic.accuracy_20 === null ? "-" : statistic.accuracy_20.toFixed(2);
         $ var accuracy_19 = statistic.accuracy_19 === null ? "-" : statistic.accuracy_19.toFixed(2);
         <statistics-row heading="Accuracy Overall / 20 / 19" value=`${statistic.accuracy_overall.toFixed(2)} / ${accuracy_20} / ${accuracy_19}`/>
