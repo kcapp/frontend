@@ -1,4 +1,5 @@
 $ const types = require("../scorecard/components/match_types");
+$ const computeAvgs = require("./avgs");
 
 <td>
   <div style=`position: relative; opacity: ${state.player.lives !== null && state.player.lives <= 0 ? "35%" : "100%"};` class=`${(input.player.is_current_player ? "scorecard scorecard-active" : "scorecard scorecard-inactive")} scorecard-header`>
@@ -6,6 +7,12 @@ $ const types = require("../scorecard/components/match_types");
       <i style="position: absolute; top: 5px; right: 5px; cursor: pointer;" class="fas fa-video fa-2x" title="Toggle Camera" on-click("toggleCamera")></i>
     </if>
     <div class="label-player-name">${state.name}</div>
+    $ const avgs = computeAvgs(input.player, input.leg, input.type);
+    <if(avgs.show)>
+      $ const running = avgs.running === null ? "-" : avgs.running.toFixed(2);
+      $ const firstNine = avgs.firstNine === null ? "-" : avgs.firstNine.toFixed(2);
+      <div class="label-player-avg" title="Three Dart Avg. / First 9 Three Dart Avg. (current leg)">⌀ ${running} / ⌀₉ ${firstNine}</div>
+    </if>
     <div class="label label-block label-player-score">${state.player.current_score}</div>
     <if(input.type == types.JDC_PRACTICE)>
       <div>

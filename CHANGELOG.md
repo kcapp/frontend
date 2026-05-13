@@ -6,6 +6,7 @@ A preview of major changes can be found in the Wiki ([Latest Changes](https://gi
 - (BETA) Support for [Autodarts](https://autodarts.io)
 - Undo leg finish by clicking `Backspace` on start of next leg
 - Darts thrown in previous vist is now remembered when going back
+- Live running 3-dart average / First 9 displayed under the player name during X01 / X01HANDICAP play
 
 ## [2.10.0] - 2026-03-12
 #### Feature
