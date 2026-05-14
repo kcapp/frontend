@@ -8,7 +8,7 @@ $ const computeAvgs = require("./avgs");
     </if>
     <div class="label-player-name">${state.name}</div>
     $ const avgs = computeAvgs(input.player, input.leg, input.type);
-    <if(avgs.show)>
+    <if(state.displayAvgs && avgs.show)>
       $ const running = avgs.running === null ? "-" : avgs.running.toFixed(2);
       $ const firstNine = avgs.firstNine === null ? "-" : avgs.firstNine.toFixed(2);
       <div class="label-player-avg" title="Three Dart Avg. / First 9 Three Dart Avg. (current leg)">⌀ ${running} / ⌀₉ ${firstNine}</div>

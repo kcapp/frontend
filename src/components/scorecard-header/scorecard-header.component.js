@@ -1,4 +1,5 @@
 const skill = require('kcapp-bot/bot-skill');
+const localStorage = require("../../util/localstorage");
 
 module.exports = {
     onCreate(input) {
@@ -19,7 +20,8 @@ module.exports = {
             player: player,
             name: name,
             wins: player.wins ? player.wins : 0,
-            cameraEnabled: true
+            cameraEnabled: true,
+            displayAvgs: true
         }
     },
     onInput(input) {
@@ -36,6 +38,7 @@ module.exports = {
                 }, 2000);
             }.bind(this));
         }
+        this.state.displayAvgs = localStorage.getBool("display-avgs", true);
     },
     setScored(scored) {
         this.setStateDirty('player');
