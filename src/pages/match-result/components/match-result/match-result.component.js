@@ -4,8 +4,7 @@ const moment = require("moment");
 module.exports = {
     onCreate(input) {
         const match = input.match;
-
-        match.started = moment(match.created_at).format('YYYY-MM-DD HH:mm:ss');
+        match.started = moment(match.started_at).format('YYYY-MM-DD HH:mm:ss');
         match.finished = match.end_time === undefined ? '-' : moment(match.end_time).format('YYYY-MM-DD HH:mm:ss');
 
         if (match.first_throw_time !== null) {
@@ -13,7 +12,6 @@ module.exports = {
         } else {
             match.duration = moment.duration(moment(match.end_time).diff(match.created_at)).asMinutes().toFixed();
         }
-
 
         this.state = {
             match: match
