@@ -59,6 +59,7 @@ exports.onScoreUpdate = (data, thiz) => {
         const headerComponent = thiz.getComponent(`player-${player.player_id}`);
         headerComponent.state.player = player;
         headerComponent.state.isCurrentPlayer = player.player_id === leg.current_player_id;
+        headerComponent.computeAvgs(leg, player);
 
         totalFishNChips += player.visit_statistics.fish_and_chips_counter;
     }
