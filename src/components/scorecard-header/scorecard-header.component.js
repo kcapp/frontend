@@ -82,15 +82,13 @@ module.exports = {
 
         const running = totalScore / darts * 3;
 
-        let firstNine = null;
-        if (darts >= 9) {
-            firstNine = firstNineScore / 9 * 3;
-        } else if (leg && leg.is_finished) {
-            // Leg ended in fewer than 9 darts (fast 301 checkout). Mirror the
-            // post-match `CalculateX01Statistics` formula so the live value seen
-            // briefly before the page transitions matches the Match Result card.
-            firstNine = running;
-        }
+        // Before 9 darts have been thrown every dart is in the first-9 window,
+        // so the value tracks the running average. Once 9+ darts are thrown,
+        // freeze to that snapshot. This also keeps the live value consistent
+        // with the post-match `CalculateX01Statistics` formula, which divides
+        // by `darts_thrown` (not 9) for short legs that end in fewer than 9
+        // darts (e.g. a fast 301 checkout).
+        const firstNine = darts >= 9 ? firstNineScore / 9 * 3 : running;
 
         this.state.avgs = { show: true, running, firstNine };
     }
