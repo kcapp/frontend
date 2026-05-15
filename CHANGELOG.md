@@ -6,10 +6,10 @@ A preview of major changes can be found in the Wiki ([Latest Changes](https://gi
 - (BETA) Support for [Autodarts](https://autodarts.io)
 - Undo leg finish by clicking `Backspace` on start of next leg
 - Darts thrown in previous vist is now remembered when going back
-- Live running 3-dart average / First 9 displayed under the player name during X01 / X01HANDICAP play
+- Live running averages displayed for players during X01 / X01HANDICAP play ([#154](https://github.com/kcapp/frontend/pull/154)) by [@perkrifj](https://github.com/perkrifj)
 
 #### Fixed
-- Three Dart Avg. on stats cards and tables now indicates which value is overall vs first 9 (#153)
+- Three Dart Avg. on stats cards and tables now indicates which value is overall vs first 9 ([#153](https://github.com/kcapp/frontend/pull/153)) by [@perkrifj](https://github.com/perkrifj)
 
 ## [2.10.0] - 2026-03-12
 #### Feature
