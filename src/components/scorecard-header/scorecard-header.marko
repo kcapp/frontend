@@ -7,6 +7,11 @@ $ const types = require("../scorecard/components/match_types");
     </if>
     <div class="label-player-name">${state.name}</div>
     <div class="label label-block label-player-score">${state.player.current_score}</div>
+    <if(state.displayAvgs && state.avgs.show)>
+      $ const running = state.avgs.running === null ? "-" : state.avgs.running.toFixed(2);
+      $ const firstNine = state.avgs.firstNine === null ? "-" : state.avgs.firstNine.toFixed(2);
+      <div class="label-player-avg" title="Three Dart Avg. / First 9 Three Dart Avg. (current leg)">⌀ ${running} / ⌀₉ ${firstNine}</div>
+    </if>
     <if(input.type == types.JDC_PRACTICE)>
       <div>
         <jdc-shirt score=state.player.current_score />

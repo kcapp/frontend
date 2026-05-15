@@ -124,6 +124,12 @@ module.exports = {
                         const scorecards = this.getComponents('players');
                         scorecards.forEach(scorecard => scorecard.reset());
 
+                        // Reset player averages
+                        players.forEach((player) => {
+                            const header = this.getComponent(`player-${player.player_id}`);
+                            header.computeAvgs(this.state.leg, player);
+                        });
+
                         if (this.state.matchType == types.TIC_TAC_TOE) {
                             this.getComponent("tic-tac-toe-board").resetBoard(leg.parameters);
                         }
@@ -167,8 +173,13 @@ module.exports = {
 
     onScoreUpdate(data) {
         window.kcapp.lastEvent = new Date();
+
         if (data.match && data.match.is_finished) {
-            /// Don't update UI when match is finished
+            // Update average for winning player before redirect
+            const headerComponent = this.getComponent(`player-${data.leg.current_player_id}`);
+            headerComponent.computeAvgs(data.leg, _.findWhere(data.players, { is_current_player: true }));
+
+            /// Don't update rest of UI when match is finished
             return;
         }
         io.onScoreUpdate(data, this);
@@ -178,7 +189,6 @@ module.exports = {
         if (this.state.pendingPreviousVisit) {
             const previous = this.state.pendingPreviousVisit;
             const isBust = previous.is_bust;
-            console.log(previous);
             comp.setDart(previous.first_dart.value, previous.first_dart.multiplier, 1, isBust);
             comp.state.currentDart = 2;
 

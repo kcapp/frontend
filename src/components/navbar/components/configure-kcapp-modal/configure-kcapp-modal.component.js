@@ -11,6 +11,7 @@ module.exports = {
             autoFinishLegs: false,
             autoFinishTime: 10,
             remoteControl: false,
+            displayAvgs: true,
             venueId: -1,
             venues: [],
             locals: out.global.kcapp
@@ -29,6 +30,7 @@ module.exports = {
 
         this.state.confirmBusts = localStorage.getBool("confirm-busts", true);
         this.state.autoFinishLegs = localStorage.getBool("auto-finish-legs", false);
+        this.state.displayAvgs = localStorage.getBool("display-avgs", true);
         this.state.remoteControl = localStorage.getBool("remote-control", false);
 
         const autoFinishTime = localStorage.get("auto-finish-time");
@@ -61,6 +63,9 @@ module.exports = {
     toggleAutoFinishLegs(event) {
         this.state.autoFinishLegs = event.target.checked;
     },
+    toggleDisplayAvgs(event) {
+        this.state.displayAvgs = event.target.checked;
+    },
     toggleRemoteControl(event) {
         this.state.remoteControl = event.target.checked;
     },
@@ -80,6 +85,7 @@ module.exports = {
             localStorage.set('remote-control', this.state.remoteControl);
         }
         localStorage.set('confirm-busts', this.state.confirmBusts);
+        localStorage.set("display-avgs", this.state.displayAvgs);
         localStorage.set('auto-finish-legs', this.state.autoFinishLegs);
         localStorage.set('auto-finish-time', this.state.autoFinishTime);
         localStorage.set('volume', this.state.volume / 100);

@@ -1,4 +1,6 @@
 const skill = require('kcapp-bot/bot-skill');
+const localStorage = require("../../util/localstorage");
+const types = require("../scorecard/components/match_types");
 
 module.exports = {
     onCreate(input) {
@@ -15,11 +17,14 @@ module.exports = {
             }
         }
 
+        const avgs = { show: (input.type === types.X01 || input.type === types.X01HANDICAP), running: null, firstNine: null };
         this.state = {
             player: player,
             name: name,
             wins: player.wins ? player.wins : 0,
-            cameraEnabled: true
+            cameraEnabled: true,
+            displayAvgs: true,
+            avgs: avgs
         }
     },
     onInput(input) {
@@ -36,6 +41,8 @@ module.exports = {
                 }, 2000);
             }.bind(this));
         }
+        this.computeAvgs(this.input.leg, this.state.player);
+        this.state.displayAvgs = localStorage.getBool("display-avgs", true);
     },
     setScored(scored) {
         this.setStateDirty('player');
@@ -43,5 +50,46 @@ module.exports = {
     toggleCamera() {
         this.state.cameraEnabled = !this.state.cameraEnabled;
         this.emit("toggle-camera", this.state.cameraEnabled);
+    },
+    computeAvgs(leg, player) {
+        // Compute the live running 3-dart average and the first-9 average for an X01
+        // or X01HANDICAP player, using only fields that the server updates atomically
+        // on visit commit: `player.darts_thrown` for the dart count, and the sum of
+        // `visit.score` over `leg.visits` for the score. Deliberately avoids
+        // `player.current_score`, which is mutated dart-by-dart on the client when
+        // `subtract_per_dart` is enabled and would produce wrong intermediate values.
+        const darts = (player && player.darts_thrown) || 0;
+        if (darts === 0) {
+            this.state.avgs = { show: true, running: null, firstNine: null };
+            return;
+        }
+
+        let totalScore = 0;
+        let firstNineScore = 0;
+        let visitCount = 0;
+        if (leg && leg.visits) {
+            for (const visit of leg.visits) {
+                if (visit.player_id !== player.player_id) continue;
+                if (!visit.is_bust) {
+                    totalScore += visit.score || 0;
+                    if (visitCount < 3) {
+                        firstNineScore += visit.score || 0;
+                    }
+                }
+                visitCount++;
+            }
+        }
+
+        const running = totalScore / darts * 3;
+
+        // Before 9 darts have been thrown every dart is in the first-9 window,
+        // so the value tracks the running average. Once 9+ darts are thrown,
+        // freeze to that snapshot. This also keeps the live value consistent
+        // with the post-match `CalculateX01Statistics` formula, which divides
+        // by `darts_thrown` (not 9) for short legs that end in fewer than 9
+        // darts (e.g. a fast 301 checkout).
+        const firstNine = darts >= 9 ? firstNineScore / 9 * 3 : running;
+
+        this.state.avgs = { show: true, running, firstNine };
     }
 };
