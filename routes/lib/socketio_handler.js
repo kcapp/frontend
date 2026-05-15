@@ -77,7 +77,7 @@ module.exports = (io, app) => {
             const nsp = io.of(namespace);
             nsp.removeAllListeners();
 
-            delete this.io._nsps[namespace];
+            this.io._nsps.delete(namespace);
             debug(`[${namespace}] removed`);
         },
         setupActiveNamespace: () => {
