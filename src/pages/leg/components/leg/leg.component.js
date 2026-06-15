@@ -714,6 +714,9 @@ module.exports = {
             return;
         }
         let currentScore = component.state.player.current_score;
+        if (component.state.player.player.options && !component.state.player.player.options.subtract_per_dart) {
+            currentScore -= component.state.totalScore;
+        }
         if (currentScore > 40 && currentScore !== 50) {
             // Score is too high
             return;
