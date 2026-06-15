@@ -7,6 +7,7 @@ A preview of major changes can be found in the Wiki ([Latest Changes](https://gi
 - Undo leg finish by clicking `Backspace` on start of next leg
 - Darts thrown in previous vist is now remembered when going back
 - Live running averages displayed for players during X01 / X01HANDICAP play ([#154](https://github.com/kcapp/frontend/pull/154)) by [@perkrifj](https://github.com/perkrifj)
+- For players not showing per-dart score changes, current score can now be peeked by holding `+`
 
 #### Fixed
 - Three Dart Avg. on stats cards and tables now indicates which value is overall vs first 9 ([#153](https://github.com/kcapp/frontend/pull/153)) by [@perkrifj](https://github.com/perkrifj)

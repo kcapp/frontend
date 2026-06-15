@@ -37,7 +37,9 @@ module.exports = {
                 timer: undefined,
                 previous: { value: 0, multiplier: 1 }
             },
-            pendingPreviousVisit: null
+            pendingPreviousVisit: null,
+            peekTimer: null,
+            isPeek: false
         }
     },
 
@@ -47,6 +49,7 @@ module.exports = {
             // to ensure we only send a single one
             this.onKeyDown(e);
         }.bind(this), 10), false);
+        document.addEventListener("keyup", this.onKeyUp.bind(this), false);
 
         this.state.socket = this.setupSio(this.state.leg.id);
         this.state.audioAnnouncer = new Audio();
@@ -542,9 +545,42 @@ module.exports = {
         } else if (e.key === 'F2') {
             e.preventDefault();
             this.instantCheckout(component);
+        } else if (e.key === '+' && !e.repeat) {
+            this.state.peekTimer = setTimeout(() => {
+                this.state.isPeek = true;
+                this.onKeyHold(e);
+            }, 250);
         }
         // Forward to normal key handler
         this.onKeyPress(e);
+    },
+
+    onKeyHold(e) {
+        const component = this.findActive(this.getComponents('players'));
+        if (!component.state.player.player.options.subtract_per_dart) {
+            const header = this.getComponent(`player-${component.state.player.player_id}`);
+            header.state.player.current_score -= component.state.totalScore;
+            header.setStateDirty('player');
+            e.preventDefault();
+        }
+    },
+
+    onKeyUp(e) {
+        if (e.key === '+') {
+            clearTimeout(this.state.peekTimer);
+
+            if (this.state.isPeek) {
+                const component = this.findActive(this.getComponents('players'));
+                if (!component.state.player.player.options.subtract_per_dart) {
+                    const header = this.getComponent(`player-${component.state.player.player_id}`);
+                    header.state.player.current_score += component.state.totalScore;
+                    header.setStateDirty('player');
+                }
+            }
+
+            this.state.isPeek = false;
+            e.preventDefault();
+        }
     },
 
     onKeyPress(e) {
